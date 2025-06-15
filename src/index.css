@@ -56,4 +56,42 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #14b8a6, #06b6d4);
+    border-radius: 3px;
+  }
+}
+
+@layer components {
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent;
+  }
+}
+
+@layer utilities {
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
 }

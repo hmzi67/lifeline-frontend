@@ -1,0 +1,11 @@
+export { HeroSection } from "./HeroSection";
+export { ReasonsSection } from "./ReasonsSection";
+export { MeditationSection } from "./MeditationSection";
+export { NutritionSection } from "./NutritionSection";
+export { ChallengeSection } from "./ChallengeSection";
+export { SleepSection } from "./SleepSection";
+export { TestimonialsSection } from "./TestimonialsSection";
+export { ProgressSection } from "./ProgressSection";
+export { BlogSection } from "./BlogSection";
+export { FAQSection } from "./FAQSection";
+export { CTASection } from "./CTASection";
