@@ -13,6 +13,7 @@ import Pricing from './pages/marketing/Pricing'
 import Contact from './pages/marketing/Contact'
 import Error from './pages/utility/Error'
 import Signup from './pages/auth/Signup'
+import Checkout from "@/pages/marketing/Checkout.tsx";
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path={"/checkout"} element={<Checkout />} />
           <Route path="/error" element={<Error type={'error4'} />} />
           <Route path="*" element={<Error type={'error2'} />} />
         </Routes>
