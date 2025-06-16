@@ -32,8 +32,8 @@ function App() {
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/error" element={<Error />} />
-          <Route path="*" element={<Error />} />
+          <Route path="/error" element={<Error type={'error4'} />} />
+          <Route path="*" element={<Error type={'error2'} />} />
         </Routes>
       </Layout>
     </Router>
