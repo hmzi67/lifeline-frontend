@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Heart, Clock, Star, ThumbsUp, ThumbsDown, Share2 } from 'lucide-react';
 import Phone from "../../assets/images/fitness/phone.svg"
+import Band from "../../assets/images/fitness/band.svg"
 
 interface BandColor {
     id: string;
@@ -161,22 +162,9 @@ export const FitnessBandProduct = () => {
 
                             {/* Fitness Band */}
                             <div className="absolute -right-8 top-1/2 transform -translate-y-1/2 z-20">
-                                <div className="relative">
+                                <div className={"relative"}>
                                     {/* Band */}
-                                    <div className={`w-24 h-64 ${currentBand.color} rounded-full shadow-xl transform rotate-12 transition-all duration-500`}>
-                                        <div className="absolute inset-2 bg-white/10 rounded-full"></div>
-                                    </div>
-
-                                    {/* Watch Face */}
-                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-20 bg-black rounded-lg shadow-2xl transition-all duration-500">
-                                        <div className="w-full h-full bg-gradient-to-br from-gray-900 to-black rounded-lg p-1">
-                                            <div className="w-full h-full bg-black rounded-md flex flex-col items-center justify-center text-white">
-                                                <div className="text-2xl font-bold text-teal-400">06</div>
-                                                <div className="text-2xl font-bold text-purple-400">08</div>
-                                                <div className="text-xs text-gray-400 mt-1">75 bpm</div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <img src={Band} alt={'Band'} className={`w-96 h-96 mt-96 ${currentBand.color}`} />
                                 </div>
                             </div>
                         </div>
