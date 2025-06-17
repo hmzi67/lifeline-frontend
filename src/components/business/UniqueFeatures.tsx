@@ -2,6 +2,8 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import uniqueFeaturesImage from '../../assets/images/business/UF-1.svg'
+import uniqueFeaturesImage2 from '../../assets/images/business/UF-2.svg'
+import uniqueFeaturesImage3 from '../../assets/images/business/UF-3.svg'
 
 const UniqueFeatures: React.FC = () => {
   return (
@@ -83,7 +85,7 @@ const UniqueFeatures: React.FC = () => {
           <div className="flex-1 relative">
            
               {/* Background people working out */}
-              <img src={uniqueFeaturesImage}  alt="" />
+              <img src={uniqueFeaturesImage2}  alt="" />
             
           </div>
         </div>
@@ -107,7 +109,7 @@ const UniqueFeatures: React.FC = () => {
 
           {/* Phone Mockup with Background */}
           <div className="flex-1 relative">
-            <img src={uniqueFeaturesImage}  alt="" />
+            <img src={uniqueFeaturesImage3}  alt="" />
           </div>
         </div>
       </div>
