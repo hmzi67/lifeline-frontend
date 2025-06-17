@@ -109,6 +109,6 @@ npm run dev
 2. Make your changes
 3. Submit a pull request
 
-## License
 
-[Your License]
+
+- LOGO COMPONENT IN AUTH (Delete In Future)
