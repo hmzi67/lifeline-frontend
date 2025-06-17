@@ -16,6 +16,7 @@ import Signup from './pages/auth/Signup'
 import Checkout from "@/pages/marketing/Checkout.tsx";
 import PrivacyPolicy from './pages/legal/PrivacyPolicy'
 import TermsAndConditions from './pages/legal/TermsAndConditions'
+import CommingSoon from './pages/utility/CommingSoon'
 
 function App() {
 
@@ -39,6 +40,7 @@ function App() {
           <Route path="/error" element={<Error type={'error4'} />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+          <Route path="/coming-soon" element={<CommingSoon />} />
           <Route path="*" element={<Error type={'error2'} />} />
         </Routes>
       </Layout>
