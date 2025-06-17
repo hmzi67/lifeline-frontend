@@ -3,8 +3,8 @@ import './App.css'
 import Layout from './components/common/Layout'
 import Landing from './pages/marketing/Landing'
 import Business from './pages/marketing/Business'
-import {Blog} from './pages/content/Blog'
-import {BlogReading} from './pages/content/BlogReading'
+import { Blog } from './pages/content/Blog'
+import { BlogReading } from './pages/content/BlogReading'
 import Login from './pages/auth/Login'
 import Dashboard from './pages/dashboard/Dashboard'
 import Goals from './pages/fitness/Goals'
@@ -14,6 +14,8 @@ import Contact from './pages/marketing/Contact'
 import Error from './pages/utility/Error'
 import Signup from './pages/auth/Signup'
 import Checkout from "@/pages/marketing/Checkout.tsx";
+import PrivacyPolicy from './pages/legal/PrivacyPolicy'
+import TermsAndConditions from './pages/legal/TermsAndConditions'
 
 function App() {
 
@@ -35,6 +37,8 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path={"/checkout"} element={<Checkout />} />
           <Route path="/error" element={<Error type={'error4'} />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="*" element={<Error type={'error2'} />} />
         </Routes>
       </Layout>
