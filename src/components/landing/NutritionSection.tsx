@@ -1,97 +1,155 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '../ui/button';
+import { CheckCircle } from 'lucide-react';
+import nutritionImage from "@/assets/images/landing/nutrition-1.svg"
+
+// Custom hook for counting animation
+const useCountUp = (end: number, duration: number = 2000) => {
+    const [count, setCount] = useState(0);
+    const [hasStarted, setHasStarted] = useState(false);
+    const elementRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting && !hasStarted) {
+                    setHasStarted(true);
+                    let startTime: number;
+
+                    const animate = (currentTime: number) => {
+                        if (!startTime) startTime = currentTime;
+                        const progress = Math.min((currentTime - startTime) / duration, 1);
+                        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                        setCount(Math.floor(easeOutQuart * end));
+
+                        if (progress < 1) {
+                            requestAnimationFrame(animate);
+                        }
+                    };
+
+                    requestAnimationFrame(animate);
+                }
+            },
+            { threshold: 0.5 }
+        );
+
+        if (elementRef.current) {
+            observer.observe(elementRef.current);
+        }
+
+        return () => {
+            if (elementRef.current) {
+                observer.unobserve(elementRef.current);
+            }
+        };
+    }, [end, duration, hasStarted]);
+
+    return { count, elementRef };
+};
 
 export const NutritionSection: React.FC = () => {
-    return (
-        <section className="py-20 bg-white">
-            <div className="container mx-auto px-6">
-                <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
-                    {/* Left Content - Text */}
-                    <div className="space-y-8">
-                        <div>
-                            <p className="text-teal-600 font-semibold text-lg mb-4">NUTRITION TRACKING</p>
-                            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-                                Tracking your nutrition<br />
-                                like it's your <span className="text-teal-600">secret</span><br />
-                                weapon
-                            </h2>
+    const { count, elementRef } = useCountUp(2345);
 
-                            <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                                Transform your relationship with food through intelligent tracking and
-                                personalized nutrition insights that adapt to your lifestyle and goals.
+    return (
+        <section className="py-20 bg-gray-50">
+            <div className="container mx-auto px-6">
+                <div className="grid lg:grid-cols-3 gap-12 items-center max-w-7xl mx-auto">
+                    {/* Left Content - Quote Card and Stats */}
+                    <div className="space-y-8">
+                        {/* Quote Card - No background, only shadow */}
+                        <div className="bg-transparent rounded-3xl p-8 shadow-lg">
+                            <h3 className="text-md font-bold text-gray-900 mb-6 leading-relaxed">
+                                "That's The Thing About<br />
+                                Weight Lose:<br />
+                                Eat For The Body You Want,<br />
+                                Not For The Body You<br />
+                                Have."
+                            </h3>
+                            <p className="text-teal-500 font-semibold text-lg">
+                                Lisa Lieberman-Wang
                             </p>
                         </div>
 
-                        <div className="space-y-6">
-                            <div className="flex items-center gap-4">
-                                <div className="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center">
-                                    <span className="text-teal-600 font-bold text-sm">✓</span>
-                                </div>
-                                <span className="text-gray-700 font-medium">Smart calorie and macro tracking</span>
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <div className="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center">
-                                    <span className="text-teal-600 font-bold text-sm">✓</span>
-                                </div>
-                                <span className="text-gray-700 font-medium">Personalized meal recommendations</span>
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <div className="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center">
-                                    <span className="text-teal-600 font-bold text-sm">✓</span>
-                                </div>
-                                <span className="text-gray-700 font-medium">Progress insights and analytics</span>
-                            </div>
-                        </div>
-
-                        <Button
-                            size="lg"
-                            className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
+                        {/* Active Users Card - Smaller size */}
+                        <div
+                            ref={elementRef}
+                            className="bg-teal-500 rounded-2xl p-6 text-white text-center w-64"
                         >
-                            Start Tracking
-                        </Button>
+                            <div className="text-3xl font-bold mb-1">
+                                + {count.toLocaleString()}
+                            </div>
+                            <p className="text-base font-medium">
+                                Active Users
+                            </p>
+                        </div>
                     </div>
 
-                    {/* Right Content - Image and Stats */}
+                    {/* Center Content - Food Image */}
                     <div className="relative">
                         <div className="relative">
                             <img
-                                src="/api/placeholder/500/600"
-                                alt="Healthy nutrition bowl"
-                                className="w-full h-auto rounded-2xl shadow-2xl"
+                                src={nutritionImage}
+                                alt="Healthy salad bowl with fresh vegetables"
+                                className="w-full h-auto rounded-3xl shadow-2xl"
                             />
+                        </div>
+                    </div>
 
-                            {/* Stats Card */}
-                            <div className="absolute -bottom-8 -left-8 bg-white rounded-2xl p-6 shadow-2xl border border-gray-100">
-                                <div className="text-center">
-                                    <div className="text-4xl font-bold text-teal-600 mb-2">2345</div>
-                                    <div className="text-gray-600 font-medium">Calories Today</div>
-                                    <div className="flex items-center justify-center mt-3">
-                                        <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                            <div className="w-16 h-full bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full"></div>
-                                        </div>
-                                        <span className="ml-2 text-sm text-gray-500">80%</span>
-                                    </div>
-                                </div>
+                    {/* Right Content - Text and Features */}
+                    <div className="space-y-8">
+                        <div>
+                            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                                <span className="text-teal-500">Treating</span> your nutrition<br />
+                                like it's your <span className="text-teal-500">secret</span><br />
+                                <span className="text-teal-500">weapon</span>
+                            </h2>
+
+                            <p className="text-lg text-gray-600 leading-relaxed mb-8">
+                                You can follow every routine, take all the right supplements,
+                                and eat on time — but if your diet habits are inconsistent,
+                                unbalanced, or filled with processed junk, your goals will
+                                always stay out of reach
+                            </p>
+                        </div>
+
+
+                        {/* Feature List */}
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-4">
+                                <CheckCircle className="w-6 h-6 text-teal-500 fill-current" />
+                                <span className="text-gray-700 font-medium">Traditional Diet Plan</span>
                             </div>
 
-                            {/* Floating Recipe Card */}
-                            <div className="absolute -top-6 -right-6 bg-white rounded-xl p-4 shadow-lg border border-gray-100">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                                        <span className="text-orange-600 text-xl">🥗</span>
-                                    </div>
-                                    <div>
-                                        <p className="font-medium text-gray-900">Today's Recipe</p>
-                                        <p className="text-sm text-gray-500">Superfood Bowl</p>
-                                    </div>
-                                </div>
+                            <div className="flex items-center gap-4">
+                                <CheckCircle className="w-6 h-6 text-teal-500 fill-current" />
+                                <span className="text-gray-700 font-medium">Vegetarian Diet Plan</span>
                             </div>
+
+                            <div className="flex items-center gap-4">
+                                <CheckCircle className="w-6 h-6 text-teal-500 fill-current" />
+                                <span className="text-gray-700 font-medium">Non Vegetarian Diet Plan</span>
+                            </div>
+                        </div>
+
+                        {/* Buttons */}
+                        <div className="flex gap-4">
+                            <Button
+                                size="lg"
+                                className="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
+                            >
+                                Try Now
+                            </Button>
+                            <Button
+                                size="lg"
+                                variant="ghost"
+                                className="text-teal-500 hover:text-teal-600 font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300"
+                            >
+                                Contact us
+                            </Button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
     );
-};
+};  
