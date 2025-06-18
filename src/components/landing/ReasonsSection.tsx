@@ -1,98 +1,149 @@
 import React from 'react';
+import phoneImage from "@/assets/images/landing/reasons-1.svg";
 
 export const ReasonsSection: React.FC = () => {
-    const reasons = [
-        {
-            title: "ENJOYABLE",
-            description: "Transform your workout routine into an enjoyable and engaging experience with personalized challenges.",
-            icon: "🎯"
-        },
-        {
-            title: "FEEL FREE",
-            description: "Experience the freedom of flexible workout schedules that adapt to your lifestyle and preferences.",
-            icon: "🕊️"
-        },
-        {
-            title: "SO EASY ON",
-            description: "Simple and intuitive interface makes tracking your fitness journey effortless and motivating.",
-            icon: "✨"
-        },
-        {
-            title: "BE STRONG",
-            description: "Build strength both physically and mentally with our comprehensive wellness approach.",
-            icon: "💪"
-        }
-    ];
-
     return (
-        <section className="py-20 bg-white">
-            <div className="container mx-auto px-6">
+        <section className="py-20 bg-white relative overflow-hidden">
+            {/* Background decorative circles */}
+            <div className="absolute top-10 left-10 w-32 h-32 bg-teal-100 rounded-full opacity-20"></div>
+            <div className="absolute bottom-10 right-10 w-40 h-40 bg-teal-100 rounded-full opacity-15"></div>
+            <div className="absolute top-1/3 right-20 w-24 h-24 bg-cyan-100 rounded-full opacity-25"></div>
+
+            <div className="container mx-auto px-6 relative">
                 {/* Section Header */}
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-                        Reasons To <span className="text-teal-600">Run</span> With Us!
+                <div className="text-center mb-20">
+                    <p className="text-teal-400 font-medium text-sm tracking-wider uppercase mb-4">
+                        OF THE PRINTING AND TYPE
+                    </p>
+                    <h2 className="text-4xl lg:text-6xl font-bold text-gray-800 leading-tight">
+                        Reasons To <span className="text-teal-400">Run</span> With Us!
                     </h2>
                 </div>
 
-                {/* Reasons Grid with Phone Mockup */}
-                <div className="grid lg:grid-cols-3 gap-12 items-center max-w-7xl mx-auto">
-                    {/* Left Reasons */}
-                    <div className="space-y-8">
-                        {reasons.slice(0, 2).map((reason, index) => (
-                            <div key={index} className="text-right lg:text-right">
-                                <div className="inline-flex items-center gap-3 mb-3">
-                                    <h3 className="text-xl font-bold text-gray-900">{reason.title}</h3>
-                                    <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center text-xl">
-                                        {reason.icon}
+                {/* Main Content Grid */}
+                <div className="grid lg:grid-cols-3 gap-16 items-center max-w-7xl mx-auto">
+                    {/* Left Column */}
+                    <div className="space-y-24">
+                        {/* BE HEALTHY - Left Aligned */}
+                        <div className="text-left relative">
+                            <div className="relative">
+                                {/* Large Background Number */}
+                                <div className="absolute -top-8 -left-12 text-8xl lg:text-9xl font-bold text-teal-100 opacity-50 z-0">
+                                    01
+                                </div>
+                                <div className="relative z-10">
+                                    <div className="flex items-center gap-4 mb-6">
+                                        <h3 className="text-2xl lg:text-3xl font-bold text-teal-400 tracking-wide whitespace-nowrap">
+                                            BE HEALTHY
+                                        </h3>
+                                        {/* Horizontal line extending to the right */}
+                                        <div className="flex-1 h-0.5 bg-teal-400"></div>
                                     </div>
+                                    <p className="text-gray-500 text-lg leading-relaxed max-w-sm">
+                                        Fresh air and early morning running trips sure can cure almost anything.
+                                    </p>
                                 </div>
-                                <p className="text-gray-600 leading-relaxed max-w-sm ml-auto">
-                                    {reason.description}
-                                </p>
                             </div>
-                        ))}
-                    </div>
+                            {/* Dotted line connecting to phone */}
+                            <div className="hidden lg:block mt-8">
+                                <div className="w-32 h-px border-t-2 border-dotted border-teal-300"></div>
+                            </div>
+                        </div>
 
-                    {/* Center Phone Mockup */}
-                    <div className="relative flex justify-center">
-                        <div className="relative">
-                            <div className="w-80 h-[600px] bg-gradient-to-b from-gray-900 to-gray-800 rounded-[3rem] p-2 shadow-2xl">
-                                <div className="w-full h-full bg-white rounded-[2.5rem] overflow-hidden">
-                                    <img
-                                        src="/api/placeholder/300/580"
-                                        alt="Fitness app interface"
-                                        className="w-full h-full object-cover"
-                                    />
+                        {/* FEEL FREE - Left Aligned */}
+                        <div className="text-left relative">
+                            <div className="relative">
+                                {/* Large Background Number */}
+                                <div className="absolute -top-8 -left-12 text-8xl lg:text-9xl font-bold text-teal-100 opacity-50 z-0">
+                                    02
+                                </div>
+                                <div className="relative z-10">
+                                    <div className="flex items-center gap-4 mb-6">
+                                        <h3 className="text-2xl lg:text-3xl font-bold text-teal-400 tracking-wide whitespace-nowrap">
+                                            FEEL FREE
+                                        </h3>
+                                        {/* Horizontal line extending to the right */}
+                                        <div className="flex-1 h-0.5 bg-teal-400"></div>
+                                    </div>
+                                    <p className="text-gray-500 text-lg leading-relaxed max-w-sm">
+                                        Nothing makes you feel more free and independent as running open road.
+                                    </p>
                                 </div>
                             </div>
-                            {/* Floating UI Elements */}
-                            <div className="absolute -top-4 -right-4 bg-teal-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
-                                Daily Goals
-                            </div>
-                            <div className="absolute -bottom-4 -left-4 bg-cyan-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
-                                Progress
+                            {/* Dotted line connecting to phone */}
+                            <div className="hidden lg:block mt-8">
+                                <div className="w-32 h-px border-t-2 border-dotted border-teal-300"></div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Right Reasons */}
-                    <div className="space-y-8">
-                        {reasons.slice(2, 4).map((reason, index) => (
-                            <div key={index} className="text-left">
-                                <div className="inline-flex items-center gap-3 mb-3">
-                                    <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center text-xl">
-                                        {reason.icon}
-                                    </div>
-                                    <h3 className="text-xl font-bold text-gray-900">{reason.title}</h3>
+                    {/* Center Phone Mockup - Using Your Image */}
+                    <div className="relative flex justify-center">
+                        <div className="relative">
+                            <img
+                                src={phoneImage}
+                                alt="Fitness app interface showing Emerson Dias profile with daily goals, water intake, calorie tracking, and workout challenges"
+                                className="w-80 h-auto max-w-full drop-shadow-2xl"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Right Column */}
+                    <div className="space-y-24">
+                        {/* BE ONE OF US - Right Aligned */}
+                        <div className="text-right relative">
+                            <div className="relative">
+                                {/* Large Background Number */}
+                                <div className="absolute -top-8 -right-12 text-8xl lg:text-9xl font-bold text-teal-100 opacity-50 z-0">
+                                    03
                                 </div>
-                                <p className="text-gray-600 leading-relaxed max-w-sm">
-                                    {reason.description}
-                                </p>
+                                <div className="relative z-10">
+                                    <div className="flex items-center gap-4 mb-6">
+                                        {/* Horizontal line extending to the left */}
+                                        <div className="flex-1 h-0.5 bg-teal-400"></div>
+                                        <h3 className="text-2xl lg:text-3xl font-bold text-teal-400 tracking-wide whitespace-nowrap">
+                                            BE ONE OF US
+                                        </h3>
+                                    </div>
+                                    <p className="text-gray-500 text-lg leading-relaxed max-w-sm ml-auto">
+                                        By joining our group, you get to experience 100% unforgettable moments.
+                                    </p>
+                                </div>
                             </div>
-                        ))}
+                            {/* Dotted line connecting to phone */}
+                            <div className="hidden lg:block mt-8">
+                                <div className="w-32 h-px border-t-2 border-dotted border-teal-300 ml-auto"></div>
+                            </div>
+                        </div>
+
+                        {/* BE STRONG - Right Aligned */}
+                        <div className="text-right relative">
+                            <div className="relative">
+                                {/* Large Background Number */}
+                                <div className="absolute -top-8 -right-12 text-8xl lg:text-9xl font-bold text-teal-100 opacity-50 z-0">
+                                    04
+                                </div>
+                                <div className="relative z-10">
+                                    <div className="flex items-center gap-4 mb-6">
+                                        {/* Horizontal line extending to the left */}
+                                        <div className="flex-1 h-0.5 bg-teal-400"></div>
+                                        <h3 className="text-2xl lg:text-3xl font-bold text-teal-400 tracking-wide whitespace-nowrap">
+                                            BE STRONG
+                                        </h3>
+                                    </div>
+                                    <p className="text-gray-500 text-lg leading-relaxed max-w-sm ml-auto">
+                                        Regular running helps you stay fit, healthy and hardy no matter what.
+                                    </p>
+                                </div>
+                            </div>
+                            {/* Dotted line connecting to phone */}
+                            <div className="hidden lg:block mt-8">
+                                <div className="w-32 h-px border-t-2 border-dotted border-teal-300 ml-auto"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
     );
-};
+};  
