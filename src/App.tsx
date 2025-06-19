@@ -10,6 +10,7 @@ import Dashboard from './pages/dashboard/Dashboard'
 import Goals from './pages/fitness/Goals'
 import Analytics from './pages/fitness/Analytics'
 import Pricing from './pages/marketing/Pricing'
+import Affiliate from './pages/marketing/Affiliate'
 import Contact from './pages/marketing/Contact'
 import Error from './pages/utility/Error'
 import Signup from './pages/auth/Signup'
@@ -34,6 +35,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/goals" element={<Goals />} />
           <Route path="/analytics" element={<Analytics />} />
+           <Route path="/affiliate" element={<Affiliate />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/contact" element={<Contact />} />
           <Route path={"/checkout"} element={<Checkout />} />

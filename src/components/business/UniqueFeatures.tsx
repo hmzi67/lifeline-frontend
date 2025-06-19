@@ -22,19 +22,23 @@ const UniqueFeatures: React.FC = () => {
       {/* Features Container with Timeline */}
       <div className="relative">
         {/* Timeline Line */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 w-px bg-gray-300 h-full hidden lg:block">
+        <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gray-300 h-full hidden lg:block">
           {/* Timeline dots */}
-          <div className="absolute top-0 w-3 h-3 bg-gray-300 rounded-full -translate-x-1/2"></div>
-          <div className="absolute right-0 top-1/3 -translate-y-1/2">
+          <div className="absolute top-0 w-4 h-4 bg-gray-300 rounded-full -translate-x-1"></div>
+          <div className="absolute left-0 top-32 -translate-y-1/2">
             <div className="w-20 h-1 bg-gray-300"></div>
            </div>
+
+          <div className="absolute right-0 top-64 -translate-y-1/2">
+            <div className="absolute right-0 top-96 w-20 h-1 bg-gray-300"></div>
+           </div>
            
-           <div className="absolute left-0 top-24 -translate-y-1/2">
+           <div className="absolute left-0 bottom-80 -translate-y-1/2">
             <div className="w-20 h-1 bg-gray-300"></div>
            </div>
 
           
-          <div className="absolute bottom-0 w-3 h-3 bg-gray-400 rounded-full -translate-x-1/2"></div>
+          <div className="absolute bottom-0 w-4 h-4 bg-gray-400 rounded-full -translate-x-1/2"></div>
         </div>
 
         {/* Feature 1 - Work out at home */}
