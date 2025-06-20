@@ -4,6 +4,8 @@ import LifeLineFitness from "@/components/questions/LifeLineFitness.tsx";
 import {FocusAreaSelector} from "@/components/questions/FocusAreaSelector.tsx";
 import PersonalizingPlans from "@/components/questions/PersonalizingPlans.tsx";
 import ThankYouCard from "@/components/questions/ThankYouCard.tsx";
+import { FitnessGraph } from "@/components/questions/fitnessgraph";
+import HeightSelector from "@/components/questions/HeightSelector";
 
 export default function Questions() {
     return (
@@ -38,6 +40,9 @@ export default function Questions() {
 
             <PersonalizingPlans />
             <ThankYouCard />
+            <FitnessGraph gender={"female"} />
+            <FitnessGraph gender={"male"} />
+            <HeightSelector/>
         </>
     )
 }

@@ -1,4 +1,4 @@
-import Cardsimg from "@/components/Affiliate/cardsimg";
+import Cardsimg from "@/components/Affiliate/Cardsimg";
 import ProductShowcase from "@/components/Affiliate/ProductShowcase";
 import AffiliateHero from "@/components/Affiliate/AffiliateHero";
 import Body from "@/components/Affiliate/Body";
