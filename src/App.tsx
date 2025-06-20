@@ -18,6 +18,7 @@ import Checkout from "@/pages/marketing/Checkout.tsx";
 import PrivacyPolicy from './pages/legal/PrivacyPolicy'
 import TermsAndConditions from './pages/legal/TermsAndConditions'
 import CommingSoon from './pages/utility/CommingSoon'
+import Questions from "@/pages/marketing/Questions.tsx";
 
 function App() {
 
@@ -32,6 +33,8 @@ function App() {
           <Route path="/blog/:id" element={<BlogReading />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          {/* Questions Screen */}
+          <Route path={"/questions"} element={<Questions />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/goals" element={<Goals />} />
           <Route path="/analytics" element={<Analytics />} />
