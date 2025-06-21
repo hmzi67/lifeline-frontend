@@ -6,6 +6,12 @@ import PersonalizingPlans from "@/components/questions/PersonalizingPlans.tsx";
 import ThankYouCard from "@/components/questions/ThankYouCard.tsx";
 import { FitnessGraph } from "@/components/questions/fitnessgraph";
 import HeightSelector from "@/components/questions/HeightSelector";
+import FitnessMotivationSelector from "../../components/questions/FitnessMotivation";
+import DietTypeSelector from "@/components/questions/dietTypes";
+import FitnessLevelSelector from "@/components/questions/FitnessLevelSelector";
+import FitnessGoalSelector from "@/components/questions/FitnessGoalSelector";
+import AllergenSelector from "@/components/questions/AllergenSelector";
+import TypicalDaySelector from "@/components/questions/TypicalDaySelector";
 
 export default function Questions() {
     return (
@@ -43,6 +49,13 @@ export default function Questions() {
             <FitnessGraph gender={"female"} />
             <FitnessGraph gender={"male"} />
             <HeightSelector/>
+            <FitnessMotivationSelector/>
+            <FitnessGoalSelector/>
+            <DietTypeSelector/>
+            <FitnessLevelSelector/>
+            <AllergenSelector/>
+            <TypicalDaySelector/>
+             
         </>
     )
 }
