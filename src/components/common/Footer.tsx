@@ -2,206 +2,98 @@ import { Link } from 'react-router-dom';
 import {
   FacebookIcon,
   TwitterIcon,
-  InstagramIcon,
-  LinkedinIcon,
-  MailIcon,
-  PhoneIcon,
-  MapPinIcon
+  LinkedinIcon
 } from 'lucide-react';
 
 export default function Footer() {
-  const footerLinks = {
-    product: [
-      { name: 'Features', href: '#features' },
-      { name: 'Pricing', href: '/pricing' },
-      { name: 'Download', href: '#download' },
-      { name: 'Integrations', href: '#integrations' }
-    ],
-    company: [
-      { name: 'About', href: '/about' },
-      { name: 'Blog', href: '/blog' },
-      { name: 'Careers', href: '/careers' },
-      { name: 'Press', href: '/press' }
-    ],
-    support: [
-      { name: 'Help Center', href: '/help' },
-      { name: 'Contact', href: '/contact' },
-      { name: 'Privacy Policy', href: '/privacy' },
-      { name: 'Terms of Service', href: '/terms' }
-    ],
-    resources: [
-      { name: 'Community', href: '/community' },
-      { name: 'Guides', href: '/guides' },
-      { name: 'API Docs', href: '/api' },
-      { name: 'Status', href: '/status' }
-    ]
-  };
+  const footerLinks = [
+    { name: 'About us', href: '/about' },
+    { name: 'Careers', href: '/careers' },
+    { name: 'Contact Us', href: '/contact' },
+    { name: 'Blogs', href: '/blogs' }
+  ];
 
   const socialLinks = [
+    { name: 'LinkedIn', icon: LinkedinIcon, href: '#' },
     { name: 'Facebook', icon: FacebookIcon, href: '#' },
-    { name: 'Twitter', icon: TwitterIcon, href: '#' },
-    { name: 'Instagram', icon: InstagramIcon, href: '#' },
-    { name: 'LinkedIn', icon: LinkedinIcon, href: '#' }
+    { name: 'Twitter', icon: TwitterIcon, href: '#' }
   ];
 
   return (
-    <footer className="bg-slate-900 text-white">
-      <div className="container mx-auto px-6 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-6 gap-8">
-          {/* Brand Section */}
-          <div className="lg:col-span-2 space-y-6">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold text-xl">L</span>
-              </div>
-              <span className="text-2xl font-bold">Lifeline</span>
-            </Link>
-
-            <p className="text-gray-400 leading-relaxed max-w-sm">
-              Your trusted fitness partner for achieving wellness goals.
-              Transform your health journey with personalized tracking and expert guidance.
-            </p>
-
-            {/* Contact Info */}
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center gap-3 text-gray-400">
-                <MailIcon className="w-4 h-4 text-teal-400" />
-                <span>hello@lifeline.com</span>
-              </div>
-              <div className="flex items-center gap-3 text-gray-400">
-                <PhoneIcon className="w-4 h-4 text-teal-400" />
-                <span>+1 (555) 123-4567</span>
-              </div>
-              <div className="flex items-center gap-3 text-gray-400">
-                <MapPinIcon className="w-4 h-4 text-teal-400" />
-                <span>San Francisco, CA</span>
-              </div>
+      <footer className="bg-teal-400 text-white">
+        {/* Main Footer Content */}
+        <div className="container mx-auto px-8 py-16">
+          <div className={"flex md:flex-row flex-col justify-between items-center gap-x-4 mb-12"}>
+            <div className="flex flex-wrap gap-x-16 gap-y-8">
+              {footerLinks.map((link) => (
+                  <Link
+                      key={link.name}
+                      to={link.href}
+                      className="text-white text-xl font-medium hover:text-white/80 transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+              ))}
             </div>
 
-            {/* Social Links */}
             <div className="flex space-x-4">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
                 return (
-                  <a
-                    key={social.name}
-                    href={social.href}
-                    className="w-10 h-10 bg-gray-800 hover:bg-teal-600 rounded-lg flex items-center justify-center transition-colors duration-200"
-                    aria-label={social.name}
-                  >
-                    <Icon className="w-5 h-5" />
-                  </a>
+                    <a
+                        key={social.name}
+                        href={social.href}
+                        className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-teal-400 hover:bg-gray-100 transition-colors"
+                        aria-label={social.name}
+                    >
+                      <Icon size={20} />
+                    </a>
                 );
               })}
             </div>
+
           </div>
 
-          {/* Links Sections */}
-          <div>
-            <h3 className="font-semibold text-lg mb-4 text-teal-400">Product</h3>
-            <ul className="space-y-3">
-              {footerLinks.product.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-gray-400 hover:text-white transition-colors duration-200"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
 
-          <div>
-            <h3 className="font-semibold text-lg mb-4 text-teal-400">Company</h3>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-gray-400 hover:text-white transition-colors duration-200"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-lg mb-4 text-teal-400">Support</h3>
-            <ul className="space-y-3">
-              {footerLinks.support.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-gray-400 hover:text-white transition-colors duration-200"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-lg mb-4 text-teal-400">Resources</h3>
-            <ul className="space-y-3">
-              {footerLinks.resources.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-gray-400 hover:text-white transition-colors duration-200"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Newsletter Signup */}
-        <div className="mt-12 pt-8 border-t border-gray-800">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div>
-              <h3 className="text-xl font-semibold mb-2">Stay Updated</h3>
-              <p className="text-gray-400">
-                Get the latest fitness tips, app updates, and exclusive content delivered to your inbox.
+          <div className={"flex items-center gap-x-4"}>
+            <div className=" max-w-2xl">
+              <p className="text-white text-lg leading-relaxed">
+                Hello, we are Lift Media. Our goal is to translate the positive effects from
+                revolutionizing how companies engage with their clients & their team.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-              />
-              <button className="px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 font-semibold rounded-lg transition-all duration-300 transform hover:scale-105">
-                Subscribe
-              </button>
-            </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <p className="text-gray-400 text-sm">
-            © 2025 Lifeline. All rights reserved.
-          </p>
-          <div className="flex space-x-6 text-sm">
-            <Link to="/privacy" className="text-gray-400 hover:text-white transition-colors duration-200">
-              Privacy Policy
-            </Link>
-            <Link to="/terms" className="text-gray-400 hover:text-white transition-colors duration-200">
-              Terms of Service
-            </Link>
-            <Link to="/cookies" className="text-gray-400 hover:text-white transition-colors duration-200">
-              Cookie Policy
-            </Link>
+        {/* Footer Bottom */}
+        <div className="border-t border-teal-300/50">
+          <div className="container mx-auto px-8 py-6 flex flex-col md:flex-row justify-between items-center">
+            {/* Logo with pulse line */}
+            <div className="flex items-center mb-4 md:mb-0">
+              <div className="relative">
+                <img src="/logo-dark.svg" alt="Lift Media" className="w-32 h-32" />
+              </div>
+            </div>
+
+            {/* Copyright */}
+            <div className="text-center mb-4 md:mb-0">
+              <p className="text-white">All copyrights reserved 2025</p>
+            </div>
+
+            {/* Footer Links */}
+            <div className="flex space-x-8">
+              <Link to="/terms" className="text-white hover:text-white/80 transition-colors">
+                Terms
+              </Link>
+              <Link to="/privacy" className="text-white hover:text-white/80 transition-colors">
+                Privacy
+              </Link>
+              <Link to="/cookies" className="text-white hover:text-white/80 transition-colors">
+                Cookies
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
-    </footer>
+      </footer>
   );
 }
