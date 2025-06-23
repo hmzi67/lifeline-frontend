@@ -34,14 +34,14 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue }) => {
     const minHeight = 150;
     const maxHeight = 180;
     const tickCount = 7; // Major ticks every 5cm
-    
+
     for (let i = 0; i < tickCount; i++) {
       const value = minHeight + (i * 5);
       const position = ((value - minHeight) / (maxHeight - minHeight)) * 100;
-      
+
       ticks.push(
-        <div 
-          key={i} 
+        <div
+          key={i}
           className="absolute flex flex-col items-center"
           style={{ left: `${position}%`, transform: 'translateX(-50%)' }}
         >
@@ -52,14 +52,14 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue }) => {
         </div>
       );
     }
-    
+
     // Add minor ticks
     for (let i = minHeight; i <= maxHeight; i++) {
       if (i % 5 !== 0) {
         const position = ((i - minHeight) / (maxHeight - minHeight)) * 100;
         ticks.push(
-          <div 
-            key={`minor-${i}`} 
+          <div
+            key={`minor-${i}`}
             className="absolute"
             style={{ left: `${position}%`, transform: 'translateX(-50%)' }}
           >
@@ -68,7 +68,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue }) => {
         );
       }
     }
-    
+
     return ticks;
   };
 
@@ -79,7 +79,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue }) => {
       {/* Background decorative elements */}
       <div className="absolute top-0 right-0 w-80 h-80 bg-teal-500/20 rounded-full -translate-y-20 translate-x-20"></div>
       <div className="absolute bottom-0 left-0 w-60 h-60 bg-cyan-500/30 rounded-full translate-y-20 -translate-x-20"></div>
-      
+
       <div className="w-full max-w-md relative z-10">
         {/* Header */}
         <div className="text-center mb-8">
@@ -95,21 +95,19 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue }) => {
         <div className="flex mb-8 bg-white/30 rounded-2xl p-1 backdrop-blur-sm">
           <button
             onClick={() => handleUnitChange('cm')}
-            className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-200 ${
-              unit === 'cm'
+            className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-200 ${unit === 'cm'
                 ? 'bg-teal-500 text-white shadow-lg'
                 : 'text-teal-700 hover:bg-white/20'
-            }`}
+              }`}
           >
             cm
           </button>
           <button
             onClick={() => handleUnitChange('ft')}
-            className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-200 ${
-              unit === 'ft'
+            className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-200 ${unit === 'ft'
                 ? 'bg-teal-500 text-white shadow-lg'
                 : 'text-teal-700 hover:bg-white/20'
-            }`}
+              }`}
           >
             ft
           </button>
@@ -131,10 +129,10 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue }) => {
                     ft
                   </span>
                 </div>
-                
+
                 {/* Divider Line */}
                 <div className="mx-8 w-0.5 h-20 bg-gray-300"></div>
-                
+
                 {/* Inches Display */}
                 <div className="text-center">
                   <span className="text-8xl font-bold text-teal-500">
@@ -202,11 +200,11 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue }) => {
                     onChange={handleSliderChange}
                     className="w-full h-1 bg-gray-300 rounded-lg appearance-none cursor-pointer"
                   />
-                  
+
                   {/* Custom slider thumb */}
-                  <div 
+                  <div
                     className="absolute top-1/2 w-8 h-8 bg-teal-500 rounded-full border-4 border-white shadow-lg transform -translate-y-1/2 pointer-events-none"
-                    style={{ 
+                    style={{
                       left: `calc(${sliderPercentage}% - 16px)`,
                       transition: 'left 0.1s ease-out'
                     }}
