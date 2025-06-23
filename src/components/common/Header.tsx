@@ -9,10 +9,11 @@ export default function Header() {
 
   const navigation = [
     { name: 'Home', href: '/' },
-    { name: 'Features', href: '#features' },
+    { name: 'For business', href: '/business' },
     { name: 'Pricing', href: '/pricing' },
+    { name: 'Fitness band', href: '/analytics' },
     { name: 'Blog', href: '/blog' },
-    { name: 'Contact', href: '/contact' },
+    { name: 'Affiliate program', href: '/affiliate' },
   ];
 
   const isActive = (href: string) => {

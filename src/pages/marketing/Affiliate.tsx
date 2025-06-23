@@ -1,18 +1,16 @@
 import Cardsimg from "@/components/Affiliate/Cardsimg";
 import ProductShowcase from "@/components/Affiliate/ProductShowcase";
-import AffiliateHero from "@/components/Affiliate/AffiliateHero";
-import Body from "@/components/Affiliate/Body";
 import UniqueFeatures from "@/components/business/UniqueFeatures";
+import { MeditationSection } from "@/components/landing";
 
 export default function Affiliate() {
   return (
   <>
-  < AffiliateHero />
+  <MeditationSection/>
   < Cardsimg />
   < UniqueFeatures />
   < ProductShowcase/>
-  < Body/>
-</>
+  </>
   
   )
 }
