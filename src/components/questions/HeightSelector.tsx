@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 
 interface HeightSelectorProps {
   onContinue?: (height: number, unit: 'cm' | 'ft') => void;
