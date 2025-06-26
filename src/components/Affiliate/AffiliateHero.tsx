@@ -1,99 +1,166 @@
 import React from 'react';
+import heroImg from "../../assets/images/landing/hero-1.jpg"
 
 const AffiliateHero: React.FC = () => {
+  const meditationCards = [
+    {
+      title: "Calm & Clarity",
+      subtitle: "Meditation",
+      description: "For moments of overwhelm",
+      duration: "10 min",
+      image: "/api/placeholder/300/200"
+    },
+    {
+      title: "Inner Peace",
+      subtitle: "Meditation",
+      description: "For moments when you need to reconnect with yourself",
+      duration: "10 min",
+      image: "/api/placeholder/300/200"
+    },
+    {
+      title: "Balance and Focus",
+      subtitle: "Meditation",
+      description: "Ideal for those looking for gentle stretching",
+      duration: "10 min",
+      image: "/api/placeholder/300/200"
+    },
+    {
+      title: "Evening Serenity",
+      subtitle: "Meditation",
+      description: "For winding down after a long day",
+      duration: "15 min",
+      image: "/api/placeholder/300/200"
+    }
+  ];
+
+  const workoutCards = [
+    {
+      title: "Full Body workout",
+      duration: "25 Exercises",
+      type: "Advanced",
+      image: "/api/placeholder/300/200"
+    },
+    {
+      title: "Full Body workout",
+      duration: "25 Exercises",
+      type: "Beginner",
+      image: "/api/placeholder/300/200"
+    },
+    {
+      title: "Cardio workout",
+      duration: "20 Exercises",
+      type: "Intermediate",
+      image: "/api/placeholder/300/200"
+    }
+  ];
+
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-20 w-32 h-32 bg-teal-400 rounded-full blur-xl"></div>
-        <div className="absolute top-40 right-32 w-24 h-24 bg-blue-400 rounded-full blur-lg"></div>
-        <div className="absolute bottom-32 left-1/4 w-40 h-40 bg-purple-400 rounded-full blur-2xl"></div>
-      </div>
+      <div className="min-h-screen bg-gray-100 relative overflow-hidden">
 
-      {/* Main Content Container */}
-      <div className="relative z-10 container mx-auto px-6 py-12 lg:py-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          
-          {/* Left Content */}
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-800 leading-tight">
-                Join LifeFeline's{' '}
-                <span className="text-primary-400">Affiliate</span>
-                <br />
-                <span className="text-gray-700">Business</span> Program
-              </h1>
-              
-              <p className="text-lg lg:text-xl text-gray-600 max-w-lg leading-relaxed">
-                Cultivate a healthy, thriving, and unstoppable workforce with 
-                BetterMe's health transformation ecosystem
-              </p>
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+              src={heroImg}
+              alt="Professional woman"
+              className="w-full h-full object-cover"
+          />
+        </div>
+
+        {/* Main Content */}
+        <div className="relative z-10 container mx-auto px-6 pt-16 pb-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div className="space-y-8">
+              <div className="space-y-6">
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
+                  RETHINK <span className="text-cyan-400">EMPLOYEE</span>
+                  <br />
+                  <span className="text-white">WELLBEING</span>
+                </h1>
+
+                <p className="text-lg text-gray-200 max-w-lg leading-relaxed">
+                  Cultivate a healthy, thriving, and unstoppable workforce with
+                  BetterMe's health transformation ecosystem
+                </p>
+
+                <button className="bg-cyan-400 hover:bg-cyan-500 text-white px-8 py-4 rounded-lg text-lg font-medium transition-all transform hover:scale-105">
+                  Get Started
+                </button>
+              </div>
             </div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button className= "text-primary hover:text-primary-500 font-semibold px-8 py-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                Start Earning
-              </button>
-              <button className="text-primary hover:text-primary-600 font-semibold px-8 py-4 rounded-lg border-2 border-transparent hover:border-#14b8a6-500 transition-all duration-300">
-                Contact us
-              </button>
-            </div>
-          </div>
-
-          {/* Right Content - People Image */}
-          <div className="relative">
-            <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden transform rotate-2 hover:rotate-0 transition-transform duration-500">
-              {/* Simulated people with phones */}
-              <div className="flex items-center justify-center p-8 bg-gradient-to-br from-blue-50 to-teal-50 h-96">
-                
-                {/* Person 1 */}
-                <div className="relative mr-4 transform -rotate-12 hover:rotate-0 transition-transform duration-300">
-                  <div className="w-32 h-32 bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-full flex items-center justify-center shadow-lg">
-                    <div className="w-24 h-24 bg-gradient-to-br from-yellow-100 to-yellow-300 rounded-full flex items-center justify-center">
-                      <div className="text-2xl">👩🏼</div>
-                    </div>
-                  </div>
-                  {/* Phone */}
-                  <div className="absolute -bottom-2 -right-2 w-12 h-20 bg-gradient-to-br from-orange-400 to-orange-500 rounded-lg shadow-md flex items-center justify-center">
-                    <div className="w-8 h-12 bg-orange-300 rounded-md"></div>
-                  </div>
-                  {/* Excitement indicators */}
-                  <div className="absolute -top-4 -left-4 text-2xl animate-bounce">🙌</div>
+            {/* Right Content - Mobile App Mockups */}
+            <div className="relative">
+              {/* Phone 1 - Meditation Cards */}
+              <div className="absolute right-0 top-0 w-72 h-[600px] bg-white rounded-3xl shadow-2xl p-4 transform rotate-3 hover:rotate-0 transition-transform duration-500">
+                <div className="flex items-center justify-between mb-6 px-2">
+                  <button className="p-2">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <h2 className="text-lg font-semibold">Exercise</h2>
+                  <div className="w-6"></div>
                 </div>
 
-                {/* Person 2 */}
-                <div className="relative ml-4 transform rotate-12 hover:rotate-0 transition-transform duration-300">
-                  <div className="w-32 h-32 bg-gradient-to-br from-purple-200 to-purple-400 rounded-full flex items-center justify-center shadow-lg">
-                    <div className="w-24 h-24 bg-gradient-to-br from-purple-100 to-purple-300 rounded-full flex items-center justify-center">
-                      <div className="text-2xl">👩🏽</div>
-                    </div>
-                  </div>
-                  {/* Phone */}
-                  <div className="absolute -bottom-2 -left-2 w-12 h-20 bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg shadow-md flex items-center justify-center">
-                    <div className="w-8 h-12 bg-gray-600 rounded-md"></div>
-                  </div>
-                  {/* Excitement indicators */}
-                  <div className="absolute -top-4 -right-4 text-2xl animate-bounce delay-300">🎉</div>
+                <div className="space-y-4 max-h-[500px] overflow-y-auto">
+                  {meditationCards.map((card, index) => (
+                      <div key={index} className="bg-gray-50 rounded-xl p-4 relative">
+                        <div className="flex justify-between items-start mb-3">
+                          <div className="flex-1">
+                            <p className="text-sm text-gray-500 mb-1">{card.subtitle}</p>
+                            <h3 className="font-semibold text-gray-800 mb-2">{card.title}</h3>
+                            <p className="text-sm text-gray-600">{card.description}</p>
+                            <p className="text-sm text-gray-500 mt-2">Duration: {card.duration}</p>
+                          </div>
+                          <button className="p-2">
+
+                          </button>
+                        </div>
+                        <div className="w-full h-20 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-lg"></div>
+                      </div>
+                  ))}
                 </div>
               </div>
 
-              {/* Floating elements */}
-              <div className="absolute top-4 right-4 w-8 h-8 text-primary rounded-full animate-pulse"></div>
-              <div className="absolute bottom-4 left-4 w-6 h-6 bg-yellow-400 rounded-full animate-pulse delay-500"></div>
-            </div>
+              {/* Phone 2 - Workout Cards */}
+              <div className="w-72 h-[600px] bg-white rounded-3xl shadow-2xl p-4 transform -rotate-3 hover:rotate-0 transition-transform duration-500 relative z-10">
+                <div className="flex items-center justify-between mb-6 px-2">
+                  <button className="p-2">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <h2 className="text-lg font-semibold">Exercise</h2>
+                  <div className="w-6"></div>
+                </div>
 
-            {/* Decorative floating elements */}
-            <div className="absolute -top-8 -right-8 w-16 h-16 text-primary rounded-full opacity-30 animate-float"></div>
-            <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-purple-300 rounded-full opacity-40 animate-float delay-1000"></div>
+                <div className="space-y-4 max-h-[500px] overflow-y-auto">
+                  {workoutCards.map((card, index) => (
+                      <div key={index} className="relative rounded-xl overflow-hidden group">
+                        <div className="h-32 bg-gradient-to-r from-cyan-400 to-blue-500 relative">
+                          <div className="absolute inset-0 bg-black/20"></div>
+                          <div className="absolute bottom-4 left-4 text-white">
+                            <p className="text-sm font-medium">{card.type}</p>
+                            <h3 className="font-semibold">{card.title}</h3>
+                            <p className="text-sm opacity-90">{card.duration}</p>
+                          </div>
+                          <button className="absolute top-4 right-4 w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+
+                          </button>
+                        </div>
+                      </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Additional decorative elements */}
-      <div className="absolute top-1/4 right-8 w-2 h-2 text-primary rounded-full animate-ping"></div>
-      <div className="absolute bottom-1/3 left-8 w-3 h-3 bg-purple-400 rounded-full animate-ping delay-700"></div>
-    </div>
+        {/* Decorative Elements */}
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-cyan-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 right-0 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl"></div>
+      </div>
   );
 };
 

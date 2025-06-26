@@ -12,7 +12,7 @@ export default function Header() {
   const transparentRoutes = [
     '/',
     '/business',
-    // Add more routes here as needed
+    '/affiliate',
   ];
 
   // Check if current route should have transparent header
