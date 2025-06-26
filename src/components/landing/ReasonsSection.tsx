@@ -28,7 +28,7 @@ export const ReasonsSection: React.FC = () => {
                         <div className="text-left relative">
                             <div className="relative">
                                 {/* Large Background Number */}
-                                <div className="absolute -top-8 -left-12 text-8xl lg:text-9xl font-bold text-teal-100 opacity-50 z-0">
+                                <div className="absolute -top-8 -left-12 text-8xl lg:text-9xl font-bold text-primary-200 opacity-50 z-0">
                                     01
                                 </div>
                                 <div className="relative z-10">
@@ -54,12 +54,12 @@ export const ReasonsSection: React.FC = () => {
                         <div className="text-left relative">
                             <div className="relative">
                                 {/* Large Background Number */}
-                                <div className="absolute -top-8 -left-12 text-8xl lg:text-9xl font-bold text-teal-100 opacity-50 z-0">
+                                <div className="absolute -top-8 -left-12 text-8xl lg:text-9xl font-bold text-primary-200 opacity-50 z-0">
                                     02
                                 </div>
                                 <div className="relative z-10">
                                     <div className="flex items-center gap-4 mb-6">
-                                        <h3 className="text-2xl lg:text-3xl font-bold text-teal-400 tracking-wide whitespace-nowrap">
+                                        <h3 className="text-2xl lg:text-3xl font-bold text-primary-400 tracking-wide whitespace-nowrap">
                                             FEEL FREE
                                         </h3>
                                         {/* Horizontal line extending to the right */}
@@ -94,7 +94,7 @@ export const ReasonsSection: React.FC = () => {
                         <div className="text-right relative">
                             <div className="relative">
                                 {/* Large Background Number */}
-                                <div className="absolute -top-8 -right-12 text-8xl lg:text-9xl font-bold text-teal-100 opacity-50 z-0">
+                                <div className="absolute -top-8 -right-12 text-8xl lg:text-9xl font-bold text-teal-200 opacity-50 z-0">
                                     03
                                 </div>
                                 <div className="relative z-10">
@@ -120,7 +120,7 @@ export const ReasonsSection: React.FC = () => {
                         <div className="text-right relative">
                             <div className="relative">
                                 {/* Large Background Number */}
-                                <div className="absolute -top-8 -right-12 text-8xl lg:text-9xl font-bold text-teal-100 opacity-50 z-0">
+                                <div className="absolute -top-8 -right-12 text-8xl lg:text-9xl font-bold text-teal-200 opacity-50 z-0">
                                     04
                                 </div>
                                 <div className="relative z-10">

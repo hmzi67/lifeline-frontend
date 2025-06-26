@@ -26,7 +26,7 @@ export const CTASection: React.FC = () => {
                             Your <span className="text-yellow-300">Wellness Journey?</span>
                         </h2>
 
-                        <p className="text-xl lg:text-2xl text-blue-100 leading-relaxed mb-8 max-w-3xl mx-auto">
+                        <p className="text-xl lg:text-2xl text-primary-100 leading-relaxed mb-8 max-w-3xl mx-auto">
                             Start your personalized fitness adventure today. Join thousands who have
                             already discovered the power of holistic wellness with our comprehensive platform.
                         </p>
@@ -35,7 +35,7 @@ export const CTASection: React.FC = () => {
                     <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
                         <Button
                             size="lg"
-                            className="bg-white text-teal-600 hover:bg-gray-100 font-bold px-8 py-4 text-lg rounded-full transition-all duration-300 transform hover:scale-105 shadow-xl"
+                            className="bg-white text-primary-600 hover:bg-gray-100 font-bold px-8 py-4 text-lg rounded-full transition-all duration-300 transform hover:scale-105 shadow-xl"
                         >
                             Get Started Free
                             <ArrowRightIcon className="w-5 h-5 ml-2" />
@@ -57,7 +57,7 @@ export const CTASection: React.FC = () => {
                                 <span className="text-2xl">🎯</span>
                             </div>
                             <h3 className="font-semibold text-lg mb-2">Personalized Plans</h3>
-                            <p className="text-blue-100 text-sm">Custom workouts and nutrition plans tailored to your goals</p>
+                            <p className="text-primary-100 text-sm">Custom workouts and nutrition plans tailored to your goals</p>
                         </div>
 
                         <div className="text-center">
@@ -65,7 +65,7 @@ export const CTASection: React.FC = () => {
                                 <span className="text-2xl">📊</span>
                             </div>
                             <h3 className="font-semibold text-lg mb-2">Smart Tracking</h3>
-                            <p className="text-blue-100 text-sm">Advanced analytics and insights for your wellness journey</p>
+                            <p className="text-primary-100 text-sm">Advanced analytics and insights for your wellness journey</p>
                         </div>
 
                         <div className="text-center">
@@ -73,7 +73,7 @@ export const CTASection: React.FC = () => {
                                 <span className="text-2xl">🤝</span>
                             </div>
                             <h3 className="font-semibold text-lg mb-2">Community Support</h3>
-                            <p className="text-blue-100 text-sm">Connect with like-minded individuals on your fitness journey</p>
+                            <p className="text-primary-100 text-sm">Connect with like-minded individuals on your fitness journey</p>
                         </div>
                     </div>
 

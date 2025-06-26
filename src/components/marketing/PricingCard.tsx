@@ -45,7 +45,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
         {hasCoupon && (
           <button className={`
             text-sm underline mb-4 hover:no-underline transition-all
-            ${isHighlighted ? 'text-white hover:text-gray-200' : 'text-teal-500 hover:text-teal-600'}
+            ${isHighlighted ? 'text-white hover:text-gray-200' : 'text-primary-500 hover:text-primary-600'}
           `}>
             Do you have a coupon?
           </button>
@@ -69,7 +69,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
       <button className={`
         w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:transform hover:scale-105
         ${isHighlighted 
-          ? 'bg-white text-teal-400 hover:bg-gray-50' 
+          ? 'bg-white text-primary-400 hover:bg-gray-50' 
           : 'bg-teal-400 text-white hover:bg-teal-500'
         }
       `}>

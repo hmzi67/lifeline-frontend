@@ -29,7 +29,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({title, excerpt, imageUrl, rea
             </p>
             <a
         href={readMoreLink}
-        className="text-teal-500 text-sm font-semibold hover:text-teal-600 transition-colors duration-200"
+        className="text-primary-500 text-sm font-semibold hover:text-primary-600 transition-colors duration-200"
             >
             READ MORE →
                     </a>
@@ -56,7 +56,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({title, excerpt, imageUrl, rea
         </p>
         <a
     href={readMoreLink}
-    className="text-teal-500 text-sm font-semibold hover:text-teal-600 transition-colors duration-200"
+    className="text-primary-500 text-sm font-semibold hover:text-primary-600 transition-colors duration-200"
         >
         READ MORE →
                 </a>

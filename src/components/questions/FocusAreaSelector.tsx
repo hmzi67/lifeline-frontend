@@ -170,7 +170,7 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                             {selectedAreas.map((area) => (
                                 <span
                                     key={area}
-                                    className="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm font-medium"
+                                    className="bg-teal-100 text-primary-800 px-3 py-1 rounded-full text-sm font-medium"
                                 >
                   {area}
                 </span>

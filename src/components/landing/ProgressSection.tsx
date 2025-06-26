@@ -10,11 +10,11 @@ export const ProgressSection: React.FC = () => {
                     {/* Left Content - Text */}
                     <div className="space-y-8">
                         <div>
-                            <p className="text-teal-600 font-semibold text-lg mb-4">PROGRESS TRACKING</p>
+                            <p className="text-primary-600 font-semibold text-lg mb-4">PROGRESS TRACKING</p>
                             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
                                 Track Your<br />
-                                <span className="text-teal-600">Fitness,</span> See Your<br />
-                                <span className="text-teal-600">Progress</span>
+                                <span className="text-primary-600">Fitness,</span> See Your<br />
+                                <span className="text-primary-600">Progress</span>
                             </h2>
 
                             <p className="text-xl text-gray-600 leading-relaxed mb-8">
@@ -27,7 +27,7 @@ export const ProgressSection: React.FC = () => {
                         <div className="space-y-6">
                             <div className="flex items-start gap-4">
                                 <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
-                                    <TrendingUpIcon className="w-6 h-6 text-teal-600" />
+                                    <TrendingUpIcon className="w-6 h-6 text-primary-600" />
                                 </div>
                                 <div>
                                     <h4 className="font-semibold text-gray-900 mb-2">Real-time Analytics</h4>
@@ -37,7 +37,7 @@ export const ProgressSection: React.FC = () => {
 
                             <div className="flex items-start gap-4">
                                 <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
-                                    <TargetIcon className="w-6 h-6 text-teal-600" />
+                                    <TargetIcon className="w-6 h-6 text-primary-600" />
                                 </div>
                                 <div>
                                     <h4 className="font-semibold text-gray-900 mb-2">Goal Achievement</h4>
@@ -47,7 +47,7 @@ export const ProgressSection: React.FC = () => {
 
                             <div className="flex items-start gap-4">
                                 <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
-                                    <CalendarIcon className="w-6 h-6 text-teal-600" />
+                                    <CalendarIcon className="w-6 h-6 text-primary-600" />
                                 </div>
                                 <div>
                                     <h4 className="font-semibold text-gray-900 mb-2">Historical Data</h4>
@@ -58,7 +58,7 @@ export const ProgressSection: React.FC = () => {
 
                         <Button
                             size="lg"
-                            className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
+                            className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-500 text-white font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
                         >
                             Start Tracking
                         </Button>
@@ -100,7 +100,7 @@ export const ProgressSection: React.FC = () => {
                         </div>
 
                         {/* Progress Stats */}
-                        <div className="absolute top-1/2 -right-8 transform -translate-y-1/2 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-2xl p-6 shadow-2xl text-white">
+                        <div className="absolute top-1/2 -right-8 transform -translate-y-1/2 bg-gradient-to-br from-teal-500 to-teal-400 rounded-2xl p-6 shadow-2xl text-white">
                             <div className="text-center">
                                 <div className="text-3xl font-bold mb-2">28</div>
                                 <div className="text-sm opacity-80">Day Streak</div>

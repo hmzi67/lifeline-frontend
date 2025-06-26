@@ -75,10 +75,10 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue }) => {
   const sliderPercentage = ((heightCm - 150) / (180 - 150)) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-400 via-teal-300 to-cyan-200 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-teal-400 via-teal-300 to-teal-200 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute top-0 right-0 w-80 h-80 bg-teal-500/20 rounded-full -translate-y-20 translate-x-20"></div>
-      <div className="absolute bottom-0 left-0 w-60 h-60 bg-cyan-500/30 rounded-full translate-y-20 -translate-x-20"></div>
+      <div className="absolute bottom-0 left-0 w-60 h-60 bg-teal-500/30 rounded-full translate-y-20 -translate-x-20"></div>
 
       <div className="w-full max-w-md relative z-10">
         {/* Header */}
@@ -106,7 +106,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue }) => {
             onClick={() => handleUnitChange('ft')}
             className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-200 ${unit === 'ft'
                 ? 'bg-teal-500 text-white shadow-lg'
-                : 'text-teal-700 hover:bg-white/20'
+                : 'text-primary-700 hover:bg-white/20'
               }`}
           >
             ft
@@ -122,10 +122,10 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue }) => {
               <div className="flex justify-center items-center">
                 {/* Feet Display */}
                 <div className="text-center">
-                  <span className="text-8xl font-bold text-teal-500">
+                  <span className="text-8xl font-bold text-primary-500">
                     {feet}
                   </span>
-                  <span className="text-3xl font-medium text-teal-500 ml-1">
+                  <span className="text-3xl font-medium text-primary-500 ml-1">
                     ft
                   </span>
                 </div>
@@ -135,10 +135,10 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue }) => {
 
                 {/* Inches Display */}
                 <div className="text-center">
-                  <span className="text-8xl font-bold text-teal-500">
+                  <span className="text-8xl font-bold text-primary-500">
                     {inches}
                   </span>
-                  <span className="text-3xl font-medium text-teal-500 ml-1">
+                  <span className="text-3xl font-medium text-primary-500 ml-1">
                     in
                   </span>
                 </div>
@@ -175,7 +175,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue }) => {
           <div className="mb-16">
             {/* Large CM Display */}
             <div className="text-center mb-12">
-              <div className="text-8xl font-bold text-teal-600 leading-none">
+              <div className="text-8xl font-bold text-primary-600 leading-none">
                 {heightCm}
                 <span className="text-4xl text-gray-600 ml-2">cm</span>
               </div>

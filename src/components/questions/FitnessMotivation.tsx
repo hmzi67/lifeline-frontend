@@ -30,8 +30,8 @@ const FitnessMotivationSelector: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cyan-50 relative overflow-hidden">
       {/* Decorative background elements */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-l from-teal-400 to-cyan-400 rounded-full opacity-20 transform translate-x-32 -translate-y-32"></div>
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full opacity-20 transform -translate-x-24 translate-y-24"></div>
+      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-l from-teal-400 to-teal-500 rounded-full opacity-20 transform translate-x-32 -translate-y-32"></div>
+      <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-r from-teal-400 to-teal-500 rounded-full opacity-20 transform -translate-x-24 translate-y-24"></div>
       
       <div className="container mx-auto px-6 py-12 max-w-md relative z-10">
         <div className="text-center mb-12">
@@ -47,7 +47,7 @@ const FitnessMotivationSelector: React.FC = () => {
               onClick={() => handleOptionSelect(option.id)}
               className={`w-full p-4 rounded-2xl border-2 transition-all duration-300 flex items-center space-x-4 ${
                 selectedMotivation === option.id
-                  ? 'bg-gradient-to-r from-teal-400 to-cyan-400 border-teal-400 text-white shadow-lg transform scale-105'
+                  ? 'bg-gradient-to-r from-teal-400 to-teal-500 border-teal-400 text-white shadow-lg transform scale-105'
                   : 'bg-white border-gray-200 text-gray-700 hover:border-teal-300 hover:shadow-md'
               }`}
             >
@@ -65,7 +65,7 @@ const FitnessMotivationSelector: React.FC = () => {
 
               {selectedMotivation === option.id && (
                 <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                  <Check className="w-5 h-5 text-teal-400" />
+                  <Check className="w-5 h-5 text-primary-400" />
                 </div>
               )}
             </button>
@@ -74,7 +74,7 @@ const FitnessMotivationSelector: React.FC = () => {
 
         <button
           onClick={handleContinue}
-          className="w-full bg-gradient-to-r from-teal-400 to-cyan-400 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-lg"
+          className="w-full bg-gradient-to-r from-teal-400 to-teal-500 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-lg"
         >
           Continue
         </button>

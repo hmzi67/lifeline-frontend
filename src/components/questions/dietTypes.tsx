@@ -65,7 +65,7 @@ const DietTypeSelector: React.FC = () => {
                 className={`
                   relative flex items-center justify-between p-4 rounded-2xl transition-all duration-200 border-2
                   ${isSelected 
-                    ? 'bg-gradient-to-r from-teal-400 to-cyan-400 border-teal-400 text-white shadow-lg transform scale-105' 
+                    ? 'bg-gradient-to-r from-teal-400 to-teal-400 border-teal-400 text-white shadow-lg transform scale-105' 
                     : 'bg-white border-gray-200 text-gray-700 hover:border-teal-300 hover:shadow-md hover:scale-102'
                   }
                 `}
@@ -82,7 +82,7 @@ const DietTypeSelector: React.FC = () => {
                 
                 {isSelected && (
                   <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                    <Check className="w-5 h-5 text-teal-500" />
+                    <Check className="w-5 h-5 text-primary-500" />
                   </div>
                 )}
               </button>
@@ -97,7 +97,7 @@ const DietTypeSelector: React.FC = () => {
             className={`
               px-12 py-4 rounded-2xl font-semibold text-lg transition-all duration-200
               ${selectedDiets.size > 0
-                ? 'bg-gradient-to-r from-teal-400 to-cyan-400 text-white hover:from-teal-500 hover:to-cyan-500 shadow-lg hover:shadow-xl transform hover:scale-105'
+                ? 'bg-gradient-to-r from-teal-400 to-teal-400 text-white hover:from-teal-500 hover:to-teal-500 shadow-lg hover:shadow-xl transform hover:scale-105'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }
             `}

@@ -27,7 +27,7 @@ export const CommentSection = () => {
                         console.log('Comment submitted:', comment);
                         setComment('');
                     }}
-                    className="bg-teal-500 text-white px-6 py-2 rounded-md hover:bg-teal-600 transition-colors duration-200"
+                    className="text-primary-500  px-6 py-2 rounded-md hover:bg-teal-600 transition-colors duration-200"
                 >
                     Post Comment
                 </button>
@@ -49,11 +49,11 @@ export const CommentSection = () => {
                             Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis ullamco cillum dolor. Voluptate exercitation incididunt aliqua deserunt. Nulla Lorem mollit cupidatat irure. Laborum in deserunt.
                         </p>
                         <div className="flex items-center space-x-4 mt-3">
-                            <button className="flex items-center space-x-1 text-gray-500 hover:text-teal-500 transition-colors">
+                            <button className="flex items-center space-x-1 text-gray-500 hover:text-primary-500 transition-colors">
                                 <Heart className="w-4 h-4" />
                                 <span className="text-sm">2</span>
                             </button>
-                            <button className="text-gray-500 hover:text-teal-500 transition-colors text-sm">
+                            <button className="text-gray-500 hover:text-primary-500 transition-colors text-sm">
                                 Reply
                             </button>
                         </div>

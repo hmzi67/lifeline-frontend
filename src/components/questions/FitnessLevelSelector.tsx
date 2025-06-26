@@ -42,8 +42,8 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-100 to-cyan-50 flex items-center justify-center p-4">
       {/* Decorative circles */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-teal-400 to-cyan-300 rounded-full opacity-20 transform translate-x-32 -translate-y-32"></div>
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-teal-300 to-cyan-200 rounded-full opacity-30 transform -translate-x-24 translate-y-24"></div>
+      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-teal-400 to-teal-300 rounded-full opacity-20 transform translate-x-32 -translate-y-32"></div>
+      <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-teal-300 to-teal-200 rounded-full opacity-30 transform -translate-x-24 translate-y-24"></div>
       
       <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-2xl w-full mx-auto relative">
         <div className="text-center mb-12">
@@ -56,7 +56,7 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
         <div className="mb-12">
           {/* Current level display */}
           <div className="flex justify-center mb-8">
-            <div className="bg-gradient-to-r from-teal-400 to-cyan-400 text-white px-8 py-4 rounded-full text-xl font-semibold shadow-lg">
+            <div className="bg-gradient-to-r from-teal-400 to-teal-400 text-white px-8 py-4 rounded-full text-xl font-semibold shadow-lg">
               {levels[selectedLevel - 1].label}
             </div>
           </div>
@@ -72,7 +72,7 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
                   <div
                     className={`w-4 h-4 rounded-full mb-2 transition-all duration-300 ${
                       level.value <= selectedLevel
-                        ? 'bg-gradient-to-r from-teal-400 to-cyan-400 shadow-md'
+                        ? 'bg-gradient-to-r from-teal-400 to-teal-400 shadow-md'
                         : 'bg-gray-300'
                     }`}
                   />
@@ -121,7 +121,7 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
         <div className="text-center">
           <button
             onClick={handleContinue}
-            className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-semibold py-4 px-12 rounded-2xl text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl active:scale-95"
+            className="bg-gradient-to-r from-teal-500 to-teal-500 hover:from-teal-600 hover:to-teal-600 text-white font-semibold py-4 px-12 rounded-2xl text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl active:scale-95"
           >
             Continue
           </button>

@@ -41,8 +41,8 @@ export const FAQSection: React.FC = () => {
                 <div className="max-w-4xl mx-auto">
                     <div className="text-center mb-16">
                         <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-                            FAQs - <span className="text-teal-600">Frequently</span><br />
-                            <span className="text-teal-600">Asked Questions</span>
+                            FAQs - <span className="text-primary-600">Frequently</span><br />
+                            <span className="text-primary-600">Asked Questions</span>
                         </h2>
                         <p className="text-xl text-gray-600">
                             Got questions? We've got answers! Here are the most common questions
@@ -65,7 +65,7 @@ export const FAQSection: React.FC = () => {
                                     </h3>
                                     <div className="flex-shrink-0">
                                         {openFAQ === index ? (
-                                            <ChevronUpIcon className="w-5 h-5 text-teal-600" />
+                                            <ChevronUpIcon className="w-5 h-5 text-primary-600" />
                                         ) : (
                                             <ChevronDownIcon className="w-5 h-5 text-gray-400" />
                                         )}

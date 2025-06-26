@@ -11,7 +11,7 @@ const UniqueFeatures: React.FC = () => {
       {/* Hero Section */}
       <div className="text-center mb-20">
         <h1 className="text-5xl font-bold text-gray-900 mb-6">
-          More <span className="text-cyan-500">Unique</span> Features
+          More <span className="text-primary">Unique</span> Features
         </h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
           Motivate users with benefits and positive reinforcement, and offer 
@@ -54,7 +54,7 @@ const UniqueFeatures: React.FC = () => {
               informative articles, as well as one of the most positive communities on the web, you'll 
               have everything you need to reach your personal fitness goals – for free!
             </p>
-            <button className="text-cyan-500 hover:text-cyan-600 font-semibold text-base flex items-center gap-2 transition-colors">
+            <button className="text-primary-500 hover:text-primary-600 font-semibold text-base flex items-center gap-2 transition-colors">
               See More <ArrowRight className="h-4 w-4" />
             </button>
           </div>
@@ -80,7 +80,7 @@ const UniqueFeatures: React.FC = () => {
               as well as one of the most positive communities on the web, you'll have everything you need to 
               reach your personal fitness goals – for free!
             </p>
-            <button className="text-cyan-500 hover:text-cyan-600 font-semibold text-base flex items-center gap-2 transition-colors">
+            <button className="text-primary-500 hover:text-primary-600 font-semibold text-base flex items-center gap-2 transition-colors">
               See More <ArrowRight className="h-4 w-4" />
             </button>
           </div>
@@ -106,7 +106,7 @@ const UniqueFeatures: React.FC = () => {
               your goals on your schedule. You let us know where you're at and we'll provide the 
               coaching to take you the rest of the way.
             </p>
-            <button className="text-cyan-500 hover:text-cyan-600 font-semibold text-base flex items-center gap-2 transition-colors">
+            <button className="text-primary-500 hover:text-primary-600 font-semibold text-base flex items-center gap-2 transition-colors">
               See More <ArrowRight className="h-4 w-4" />
             </button>
           </div>

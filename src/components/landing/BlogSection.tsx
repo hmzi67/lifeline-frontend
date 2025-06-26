@@ -35,7 +35,7 @@ export const BlogSection: React.FC = () => {
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-                        Recent <span className="text-teal-600">Blog</span> and Articles
+                        Recent <span className="text-primary-600">Blog</span> and Articles
                     </h2>
                     <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                         Explore expert tips and tricks for better workouts, nutrition, fitness, and
@@ -53,7 +53,7 @@ export const BlogSection: React.FC = () => {
                                     className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                                 />
                                 <div className="absolute top-4 left-4">
-                                    <span className="bg-teal-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                    <span className="text-primary-500  px-3 py-1 rounded-full text-sm font-medium">
                                         {post.category}
                                     </span>
                                 </div>
@@ -71,7 +71,7 @@ export const BlogSection: React.FC = () => {
                                     </div>
                                 </div>
 
-                                <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight group-hover:text-teal-600 transition-colors duration-200">
+                                <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight group-hover:text-primary-600 transition-colors duration-200">
                                     {post.title}
                                 </h3>
 
@@ -81,7 +81,7 @@ export const BlogSection: React.FC = () => {
 
                                 <Button
                                     variant="ghost"
-                                    className="p-0 h-auto font-semibold text-teal-600 hover:text-teal-700 group/btn"
+                                    className="p-0 h-auto font-semibold text-primary-600 hover:text-primary-700 group/btn"
                                 >
                                     Read More
                                     <ArrowRightIcon className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform duration-200" />
@@ -95,7 +95,7 @@ export const BlogSection: React.FC = () => {
                     <Button
                         size="lg"
                         variant="outline"
-                        className="border-teal-500 text-teal-600 hover:bg-teal-500 hover:text-white font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300"
+                        className="border-teal-500 text-primary-600 hover:bg-teal-500 hover:text-white font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300"
                     >
                         View All Articles
                     </Button>

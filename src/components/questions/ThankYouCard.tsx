@@ -77,7 +77,7 @@ const ThankYouCard: React.FC<PlanPreparationProps> = ({
 
         {/* Getting Ready Section */}
         <div className="mb-12 animate-slide-up">
-          <h2 className="text-3xl md:text-4xl font-semibold text-cyan-400 mb-6 drop-shadow-md">
+          <h2 className="text-3xl md:text-4xl font-semibold text-teal-400 mb-6 drop-shadow-md">
             Getting Ready Your Plan
           </h2>
           
@@ -95,7 +95,7 @@ const ThankYouCard: React.FC<PlanPreparationProps> = ({
         <div className="w-full max-w-md mx-auto mb-8">
           <div className="bg-white/30 backdrop-blur-sm rounded-full h-3 overflow-hidden shadow-lg">
             <div 
-              className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full transition-all duration-300 ease-out shadow-sm"
+              className="h-full bg-gradient-to-r from-teal-400 to-teal-500 rounded-full transition-all duration-300 ease-out shadow-sm"
               style={{ width: `${progress}%` }}
             />
           </div>

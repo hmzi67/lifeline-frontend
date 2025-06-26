@@ -19,7 +19,7 @@ const AffiliateHero: React.FC = () => {
             <div className="space-y-4">
               <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-800 leading-tight">
                 Join LifeFeline's{' '}
-                <span className="text-teal-400">Affiliate</span>
+                <span className="text-primary-400">Affiliate</span>
                 <br />
                 <span className="text-gray-700">Business</span> Program
               </h1>
@@ -32,10 +32,10 @@ const AffiliateHero: React.FC = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-teal-400 hover:bg-teal-500 text-white font-semibold px-8 py-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+              <button className= "text-primary hover:text-primary-500 font-semibold px-8 py-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                 Start Earning
               </button>
-              <button className="text-teal-500 hover:text-teal-600 font-semibold px-8 py-4 rounded-lg border-2 border-transparent hover:border-teal-500 transition-all duration-300">
+              <button className="text-primary hover:text-primary-600 font-semibold px-8 py-4 rounded-lg border-2 border-transparent hover:border-#14b8a6-500 transition-all duration-300">
                 Contact us
               </button>
             </div>
@@ -79,19 +79,19 @@ const AffiliateHero: React.FC = () => {
               </div>
 
               {/* Floating elements */}
-              <div className="absolute top-4 right-4 w-8 h-8 bg-teal-400 rounded-full animate-pulse"></div>
+              <div className="absolute top-4 right-4 w-8 h-8 text-primary rounded-full animate-pulse"></div>
               <div className="absolute bottom-4 left-4 w-6 h-6 bg-yellow-400 rounded-full animate-pulse delay-500"></div>
             </div>
 
             {/* Decorative floating elements */}
-            <div className="absolute -top-8 -right-8 w-16 h-16 bg-teal-300 rounded-full opacity-30 animate-float"></div>
+            <div className="absolute -top-8 -right-8 w-16 h-16 text-primary rounded-full opacity-30 animate-float"></div>
             <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-purple-300 rounded-full opacity-40 animate-float delay-1000"></div>
           </div>
         </div>
       </div>
 
       {/* Additional decorative elements */}
-      <div className="absolute top-1/4 right-8 w-2 h-2 bg-teal-400 rounded-full animate-ping"></div>
+      <div className="absolute top-1/4 right-8 w-2 h-2 text-primary rounded-full animate-ping"></div>
       <div className="absolute bottom-1/3 left-8 w-3 h-3 bg-purple-400 rounded-full animate-ping delay-700"></div>
     </div>
   );

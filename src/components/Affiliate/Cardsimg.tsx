@@ -77,7 +77,7 @@ const Cardsimg: React.FC = () => {
       <div className="flex justify-center mt-12 space-x-4">
         {steps.map((_, index) => (
           <div key={index} className="flex items-center">
-            <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-sm">
+            <div className="w-8 h-8 rounded-full text-primary flex items-center justify-center font-semibold text-sm">
               {index + 1}
             </div>
             {index < steps.length - 1 && (

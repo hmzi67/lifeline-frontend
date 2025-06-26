@@ -78,7 +78,7 @@ const AgeSelector: React.FC<AgeSelectorProps> = ({ onAgeSelect }) => {
         <div className="min-h-screen bg-gradient-to-br from-teal-300 via-teal-400 to-teal-500 flex items-center justify-center p-4 relative overflow-hidden">
             {/* Background decorative circles */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-teal-200/40 to-transparent rounded-full transform translate-x-48 -translate-y-48"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-cyan-200/30 to-transparent rounded-full transform -translate-x-32 translate-y-32"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-teal-200/30 to-transparent rounded-full transform -translate-x-32 translate-y-32"></div>
 
             <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center relative z-10 mx-4">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">

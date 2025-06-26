@@ -36,7 +36,7 @@ export const RecentPosts = () => {
                             className="w-16 h-12 rounded object-cover flex-shrink-0"
                         />
                         <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-medium text-gray-800 leading-tight hover:text-teal-500 cursor-pointer transition-colors">
+                            <h4 className="text-sm font-medium text-gray-800 leading-tight hover:text-primary-500 cursor-pointer transition-colors">
                                 {post.title}
                             </h4>
                         </div>

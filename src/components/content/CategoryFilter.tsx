@@ -18,10 +18,10 @@ export const CategoryFilter = () => {
             <div className="space-y-3">
                 {categories.map((category, index) => (
                     <div key={index} className="flex justify-between items-center">
-            <span className="text-gray-700 hover:text-teal-500 cursor-pointer transition-colors duration-200 text-sm">
+            <span className="text-gray-700 hover:text-primary-500 cursor-pointer transition-colors duration-200 text-sm">
               {category.name}
             </span>
-                        <span className="bg-teal-500 text-white text-xs px-2 py-1 rounded-full min-w-[24px] text-center">
+                        <span className="text-primary-500  text-xs px-2 py-1 rounded-full min-w-[24px] text-center">
               {category.count}
             </span>
                     </div>

@@ -54,7 +54,7 @@ const TypicalDaySelector: React.FC = () => {
               
               {selectedOption === option.id && (
                 <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                  <Check className="w-4 h-4 text-teal-400" />
+                  <Check className="w-4 h-4 text-primary-400" />
                 </div>
               )}
             </button>

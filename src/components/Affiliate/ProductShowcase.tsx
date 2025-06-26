@@ -7,7 +7,7 @@ const ProductShowcase = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            Let's <span className="text-cyan-400">Meet</span> the Product
+            Let's <span className="text-primary-400">Meet</span> the Product
           </h1>
           <p className="text-gray-600 text-lg">
             LifeLine where every heartbeat counts!
@@ -32,7 +32,7 @@ const ProductShowcase = () => {
                 <div className="p-6 bg-gradient-to-b from-blue-50 to-white h-full">
                   <div className="flex items-center mb-6">
                     <div className="w-10 h-10 bg-cyan-100 rounded-full flex items-center justify-center mr-3">
-                      <Heart className="w-5 h-5 text-cyan-600" />
+                      <Heart className="w-5 h-5 text-primary-600" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-800">Emerson Dias</h3>
@@ -79,7 +79,7 @@ const ProductShowcase = () => {
                     <p className="text-lg font-semibold text-gray-800">65 kg</p>
                   </div>
                   
-                  <div className="bg-cyan-400 rounded-2xl p-3 text-center">
+                  <div className="text-primary-400 rounded-2xl p-3 text-center">
                     <p className="text-white font-medium text-sm">Start</p>
                     <p className="text-white text-xs">Squad Jump Challenge</p>
                   </div>
@@ -144,14 +144,14 @@ const ProductShowcase = () => {
                   
                   {/* Sleep Sounds */}
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-teal-600 rounded-xl p-3 flex items-center">
+                    <div className="text-primary rounded-xl p-3 flex items-center">
                       <Play className="w-4 h-4 mr-2" />
                       <div>
                         <p className="text-xs font-medium">Sleep Sounds</p>
                         <p className="text-xs text-gray-200">Ocean sounds</p>
                       </div>
                     </div>
-                    <div className="bg-teal-600 rounded-xl p-3 flex items-center">
+                    <div className="text-primary rounded-xl p-3 flex items-center">
                       <Play className="w-4 h-4 mr-2" />
                       <div>
                         <p className="text-xs font-medium">Sleep Stories</p>
@@ -188,7 +188,7 @@ const ProductShowcase = () => {
                   
                   {/* Toggle */}
                   <div className="flex bg-gray-100 rounded-lg p-1 mb-6">
-                    <button className="flex-1 bg-cyan-400 text-white rounded-md py-2 text-sm font-medium">
+                    <button className="flex-1 text-primary-400 rounded-md py-2 text-sm font-medium">
                       Weekly
                     </button>
                     <button className="flex-1 text-gray-600 py-2 text-sm">
@@ -244,7 +244,7 @@ const ProductShowcase = () => {
                     </div>
                     
                     <div className="mt-2 bg-gray-100 rounded-full h-2">
-                      <div className="bg-cyan-400 h-2 rounded-full" style={{width: '65%'}}></div>
+                      <div className="text-primary h-2 rounded-full" style={{width: '65%'}}></div>
                     </div>
                   </div>
                 </div>

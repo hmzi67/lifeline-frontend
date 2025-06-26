@@ -67,7 +67,7 @@ export const ChallengeSection: React.FC = () => {
                                 </div>
                                 <div>
                                     <h4 className="font-semibold text-white mb-2">Daily Challenges</h4>
-                                    <p className="text-blue-100">New challenges every day to keep you motivated and engaged.</p>
+                                    <p className="text-primary-100">New challenges every day to keep you motivated and engaged.</p>
                                 </div>
                             </div>
 
@@ -77,7 +77,7 @@ export const ChallengeSection: React.FC = () => {
                                 </div>
                                 <div>
                                     <h4 className="font-semibold text-white mb-2">Community Support</h4>
-                                    <p className="text-blue-100">Connect with like-minded individuals and celebrate achievements together.</p>
+                                    <p className="text-primary-100">Connect with like-minded individuals and celebrate achievements together.</p>
                                 </div>
                             </div>
 
@@ -87,14 +87,14 @@ export const ChallengeSection: React.FC = () => {
                                 </div>
                                 <div>
                                     <h4 className="font-semibold text-white mb-2">Rewards System</h4>
-                                    <p className="text-blue-100">Earn points and unlock achievements as you complete challenges.</p>
+                                    <p className="text-primary-100">Earn points and unlock achievements as you complete challenges.</p>
                                 </div>
                             </div>
                         </div>
 
                         {/* App Download Buttons */}
                         <div className="space-y-4">
-                            <p className="text-blue-100 font-medium">Download the app and join the challenge:</p>
+                            <p className="text-primary-100 font-medium">Download the app and join the challenge:</p>
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Button
                                     variant="secondary"

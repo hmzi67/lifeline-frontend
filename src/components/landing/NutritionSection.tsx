@@ -65,7 +65,7 @@ export const NutritionSection: React.FC = () => {
                                 Not For The Body You<br />
                                 Have."
                             </h3>
-                            <p className="text-teal-500 font-semibold text-lg">
+                            <p className="text-primary-500 font-semibold text-lg">
                                 Lisa Lieberman-Wang
                             </p>
                         </div>
@@ -73,7 +73,7 @@ export const NutritionSection: React.FC = () => {
                         {/* Active Users Card - Smaller size */}
                         <div
                             ref={elementRef}
-                            className="bg-teal-500 rounded-2xl p-6 text-white text-center w-64"
+                            className="text-primary-500 rounded-2xl p-6  text-center w-64"
                         >
                             <div className="text-3xl font-bold mb-1">
                                 + {count.toLocaleString()}
@@ -99,9 +99,9 @@ export const NutritionSection: React.FC = () => {
                     <div className="space-y-8">
                         <div>
                             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-                                <span className="text-teal-500">Treating</span> your nutrition<br />
-                                like it's your <span className="text-teal-500">secret</span><br />
-                                <span className="text-teal-500">weapon</span>
+                                <span className="text-primary-500">Treating</span> your nutrition<br />
+                                like it's your <span className="text-primary-500">secret</span><br />
+                                <span className="text-primary-500">weapon</span>
                             </h2>
 
                             <p className="text-lg text-gray-600 leading-relaxed mb-8">
@@ -116,17 +116,17 @@ export const NutritionSection: React.FC = () => {
                         {/* Feature List */}
                         <div className="space-y-4">
                             <div className="flex items-center gap-4">
-                                <CheckCircle className="w-6 h-6 text-teal-500 fill-current" />
+                                <CheckCircle className="w-6 h-6 text-primary-500 fill-current" />
                                 <span className="text-gray-700 font-medium">Traditional Diet Plan</span>
                             </div>
 
                             <div className="flex items-center gap-4">
-                                <CheckCircle className="w-6 h-6 text-teal-500 fill-current" />
+                                <CheckCircle className="w-6 h-6 text-primary-500 fill-current" />
                                 <span className="text-gray-700 font-medium">Vegetarian Diet Plan</span>
                             </div>
 
                             <div className="flex items-center gap-4">
-                                <CheckCircle className="w-6 h-6 text-teal-500 fill-current" />
+                                <CheckCircle className="w-6 h-6 text-primary-500 fill-current" />
                                 <span className="text-gray-700 font-medium">Non Vegetarian Diet Plan</span>
                             </div>
                         </div>

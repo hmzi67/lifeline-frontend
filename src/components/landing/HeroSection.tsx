@@ -72,7 +72,7 @@ export const HeroSection: React.FC = () => {
                         {/* Main Heading */}
                         <h1 className="text-5xl lg:text-7xl font-bold leading-tight text-white mb-8">
                             YOUR FITNESS{' '}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-600">
                                 PARTNER!
                             </span>
                         </h1>

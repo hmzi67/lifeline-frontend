@@ -35,9 +35,9 @@ const Body: React.FC<BodyProps> = ({ onContinue }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-100 to-teal-200 flex items-center justify-center p-4">
       {/* Background decorative elements */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-teal-400 rounded-full opacity-60 transform translate-x-16 -translate-y-16"></div>
-      <div className="absolute bottom-0 left-0 w-24 h-24 bg-teal-300 rounded-full opacity-40 transform -translate-x-12 translate-y-12"></div>
-      <div className="absolute bottom-4 left-4 w-16 h-16 bg-teal-200 rounded-full opacity-60"></div>
+      <div className="absolute top-0 right-0 w-32 h-32 text-primary rounded-full opacity-60 transform translate-x-16 -translate-y-16"></div>
+      <div className="absolute bottom-0 left-0 w-24 h-24 text-primary rounded-full opacity-40 transform -translate-x-12 translate-y-12"></div>
+      <div className="absolute bottom-4 left-4 w-16 h-16 text-primary rounded-full opacity-60"></div>
       
       <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full border-2 border-blue-400">
         <div className="text-center mb-6">

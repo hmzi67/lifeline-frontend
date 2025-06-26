@@ -33,10 +33,10 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect }) => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cyan-100 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gradient-to-br from-teal-50 to-teal-100 flex items-center justify-center p-4">
             {/* Background decorative elements */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-full opacity-20 transform translate-x-32 -translate-y-32"></div>
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-teal-300 to-cyan-400 rounded-full opacity-30 transform -translate-x-24 translate-y-24"></div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-teal-400 to-teal-500 rounded-full opacity-20 transform translate-x-32 -translate-y-32"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-teal-300 to-teal-400 rounded-full opacity-30 transform -translate-x-24 translate-y-24"></div>
 
             <div className="relative z-10 max-w-2xl w-full">
                 {/* Header */}
@@ -100,11 +100,11 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect }) => {
                 <div className="text-center text-sm text-gray-500 space-y-2">
                     <p>
                         By selecting your gender and continuing you agree to our{' '}
-                        <a href="#" className="text-teal-500 hover:text-teal-600 underline">
+                        <a href="#" className="text-primary-500 hover:text-primary-600 underline">
                             Terms of Service
                         </a>{' '}
                         |{' '}
-                        <a href="#" className="text-teal-500 hover:text-teal-600 underline">
+                        <a href="#" className="text-primary-500 hover:text-primary-600 underline">
                             Privacy Policy
                         </a>
                     </p>
@@ -114,7 +114,7 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect }) => {
                 {/* Continue Button */}
                 {selectedGender && (
                     <div className="mt-8 text-center">
-                        <button className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-12 py-4 rounded-full font-semibold text-lg hover:from-teal-600 hover:to-cyan-600 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
+                        <button className="bg-gradient-to-r from-teal-500 to-teal-600 text-white px-12 py-4 rounded-full font-semibold text-lg hover:from-teal-600 hover:to-cyan-600 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
                             Continue
                         </button>
                     </div>

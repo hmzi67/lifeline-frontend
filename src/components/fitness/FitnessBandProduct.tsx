@@ -56,9 +56,9 @@ export const FitnessBandProduct = () => {
                     <div className="space-y-8">
                         <div className="space-y-4">
                             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-                                Track It, <span className="text-teal-500">Hack It</span>
+                                Track It, <span className="text-primary-500">Hack It</span>
                                 <br />
-                                Transform Your <span className="text-teal-500">Body</span>
+                                Transform Your <span className="text-primary-500">Body</span>
                             </h1>
                             <p className="text-gray-600 text-lg leading-relaxed max-w-md">
                                 Lorem Ipsum is simply dummy text of the printing Lorem Ipsum is simply dummy.
@@ -102,7 +102,7 @@ export const FitnessBandProduct = () => {
 
                         {/* Price */}
                         <div className="flex items-baseline gap-3">
-                            <span className="text-4xl md:text-5xl font-bold text-teal-500">$99.0</span>
+                            <span className="text-4xl md:text-5xl font-bold text-primary-500">$99.0</span>
                             <span className="text-xl text-red-400 line-through">$149.99</span>
                         </div>
 
@@ -129,15 +129,15 @@ export const FitnessBandProduct = () => {
                         {/* Action Buttons */}
                         <div className="flex items-center gap-6">
                             <div className="flex items-center gap-4">
-                                <button className="flex items-center gap-2 text-gray-600 hover:text-teal-500 transition-colors">
+                                <button className="flex items-center gap-2 text-gray-600 hover:text-primary-500 transition-colors">
                                     <ThumbsUp className="w-5 h-5" />
                                     <span className="font-medium">1.8k Like</span>
                                 </button>
-                                <button className="flex items-center gap-2 text-gray-600 hover:text-red-500 transition-colors">
+                                <button className="flex items-center gap-2 text-gray-600 hover:text-primary-500 transition-colors">
                                     <ThumbsDown className="w-5 h-5" />
                                     <span className="font-medium">Dislike</span>
                                 </button>
-                                <button className="flex items-center gap-2 text-gray-600 hover:text-blue-500 transition-colors">
+                                <button className="flex items-center gap-2 text-gray-600 hover:text-primary-500 transition-colors">
                                     <Share2 className="w-5 h-5" />
                                     <span className="font-medium">Share</span>
                                 </button>

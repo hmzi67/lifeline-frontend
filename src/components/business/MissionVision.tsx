@@ -4,11 +4,24 @@ const MissionVision = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 bg-gray-50">
       {/* Header */}
-      <div className="mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-2">
-          <span className="text-teal-400">A</span> Our Mission & Vision
-        </h1>
-      </div>
+       <div className="space-y-24 pb-12">
+         {/* BE HEALTHY - Left Aligned */}
+            <div className="text-left relative ">
+                  <div className="relative">
+                    {/* Large Background Number */}
+                       <div className="absolute -top-8 -left-24 text-8xl lg:text-9xl font-bold text-primary-200 opacity-50 z-0">
+                       ABOUT US
+                       </div>
+                       <div className="relative z-10">
+                          <div className="flex items-center gap-4 pt-4">
+                            <h3 className="text-2xl lg:text-4xl font-bold text-gray-700 tracking-wide whitespace-nowrap">
+                             Our Mission & Vision
+                            </h3>
+                          </div>
+                       </div>
+                  </div>
+            </div>
+        </div>
 
       {/* Mission and Vision Cards */}
       <div className="grid md:grid-cols-2 gap-8">

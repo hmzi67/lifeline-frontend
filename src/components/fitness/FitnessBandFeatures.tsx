@@ -4,17 +4,17 @@ import FeaturesImage from "../../assets/images/fitness/features.svg"
 export const FitnessBandFeatures = () => {
     const features = [
         {
-            icon: <Activity className="w-8 h-8 text-cyan-400" />,
+            icon: <Activity className="w-8 h-8 text-primary" />,
             title: "Your Daily Step Counter",
             description: "Lorem ipsum is a dummy data simply used for type within and type setting."
         },
         {
-            icon: <Heart className="w-8 h-8 text-cyan-400" />,
+            icon: <Heart className="w-8 h-8 text-primary" />,
             title: "Tracking Your Heart Rate",
             description: "Lorem ipsum is a dummy data simply used for type within and type setting.lorem ipsum amet ipsum is dolor"
         },
         {
-            icon: <Moon className="w-8 h-8 text-cyan-400" />,
+            icon: <Moon className="w-8 h-8 text-primary" />,
             title: "Tracking Your Sleep",
             description: "Lorem ipsum is a dummy data simply used for type within and type setting."
         }
@@ -29,7 +29,7 @@ export const FitnessBandFeatures = () => {
                         <div>
                             <h1 className="text-5xl lg:text-6xl font-bold text-gray-800 leading-tight">
                                 One App{' '}
-                                <span className="text-cyan-400">Thousands</span>
+                                <span className="text-primary">Thousands</span>
                                 <br />
                                 Of Features
                             </h1>

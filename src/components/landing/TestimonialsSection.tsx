@@ -79,15 +79,15 @@ export const TestimonialsSection: React.FC = () => {
                 {/* Stats Section */}
                 <div className="mt-20 grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
                     <div className="text-center">
-                        <div className="text-4xl font-bold text-teal-600 mb-2">50K+</div>
+                        <div className="text-4xl font-bold text-primary-600 mb-2">50K+</div>
                         <div className="text-gray-600">Active Users</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-4xl font-bold text-teal-600 mb-2">4.9★</div>
+                        <div className="text-4xl font-bold text-primary-600 mb-2">4.9★</div>
                         <div className="text-gray-600">App Store Rating</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-4xl font-bold text-teal-600 mb-2">95%</div>
+                        <div className="text-4xl font-bold text-primary-600 mb-2">95%</div>
                         <div className="text-gray-600">User Satisfaction</div>
                     </div>
                 </div>
