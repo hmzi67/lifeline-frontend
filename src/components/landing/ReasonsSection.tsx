@@ -44,10 +44,6 @@ export const ReasonsSection: React.FC = () => {
                                     </p>
                                 </div>
                             </div>
-                            {/* Dotted line connecting to phone */}
-                            <div className="hidden lg:block mt-8">
-                                <div className="w-32 h-px border-t-2 border-dotted border-teal-300"></div>
-                            </div>
                         </div>
 
                         {/* FEEL FREE - Left Aligned */}
@@ -69,10 +65,6 @@ export const ReasonsSection: React.FC = () => {
                                         Nothing makes you feel more free and independent as running open road.
                                     </p>
                                 </div>
-                            </div>
-                            {/* Dotted line connecting to phone */}
-                            <div className="hidden lg:block mt-8">
-                                <div className="w-32 h-px border-t-2 border-dotted border-teal-300"></div>
                             </div>
                         </div>
                     </div>
@@ -110,10 +102,6 @@ export const ReasonsSection: React.FC = () => {
                                     </p>
                                 </div>
                             </div>
-                            {/* Dotted line connecting to phone */}
-                            <div className="hidden lg:block mt-8">
-                                <div className="w-32 h-px border-t-2 border-dotted border-teal-300 ml-auto"></div>
-                            </div>
                         </div>
 
                         {/* BE STRONG - Right Aligned */}
@@ -135,10 +123,6 @@ export const ReasonsSection: React.FC = () => {
                                         Regular running helps you stay fit, healthy and hardy no matter what.
                                     </p>
                                 </div>
-                            </div>
-                            {/* Dotted line connecting to phone */}
-                            <div className="hidden lg:block mt-8">
-                                <div className="w-32 h-px border-t-2 border-dotted border-teal-300 ml-auto"></div>
                             </div>
                         </div>
                     </div>
