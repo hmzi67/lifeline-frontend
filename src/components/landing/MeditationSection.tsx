@@ -34,7 +34,7 @@ export const MeditationSection: React.FC = () => {
     }, [cards.length]);
 
     return (
-        <section className="relative min-h-screen overflow-hidden">
+        <section className="relative h-[80vh] overflow-hidden">
             {/* Background Image */}
             <div className="absolute inset-0">
                 <img
@@ -47,16 +47,16 @@ export const MeditationSection: React.FC = () => {
             </div>
 
             {/* Content */}
-            <div className="relative z-10 min-h-screen flex items-center">
+            <div className="relative z-10 min-h-screen flex items-start justify-center py-20">
                 <div className="container mx-auto px-6 lg:px-12">
                     <div className="max-w-2xl">
                         {/* Small subtitle */}
-                        <p className="text-white text-lg mb-4 font-medium">
+                        <p className="text-white text-2xl mb-4 font-medium">
                             More power efficiency
                         </p>
 
                         {/* Main heading */}
-                        <h1 className="text-5xl lg:text-7xl font-bold text-white mb-12 leading-tight">
+                        <h1 className="text-3xl lg:text-5xl font-bold text-white mb-12 leading-relaxed">
                             Where Sustainability<br />
                             Meets Meditation
                         </h1>
@@ -64,7 +64,7 @@ export const MeditationSection: React.FC = () => {
                         {/* CTA Button */}
                         <Button
                             size="lg"
-                            className="bg-white hover:bg-gray-100 text-gray-900 font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
+                            className="bg-white hover:bg-gray-100 text-gray-900 font-semibold px-10 py-6 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
                         >
                             Start doing today
                         </Button>
