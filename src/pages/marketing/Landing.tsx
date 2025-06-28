@@ -9,8 +9,7 @@ import {
   TestimonialsSection,
   ProgressSection,
   BlogSection,
-  FAQSection,
-  CTASection
+  FAQSection
 } from '../../components/landing';
 
 
@@ -30,9 +29,7 @@ export default function Landing() {
       <TestimonialsSection />
       <BlogSection />
       <FAQSection />
-      <div id="download">
-        <CTASection />
-      </div>
+      
     </div>
   );
 }
