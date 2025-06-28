@@ -79,7 +79,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue }) => {
       {/* Background decorative elements */}
       <div className="absolute top-0 right-0 w-80 h-80 bg-teal-500/20 rounded-full -translate-y-20 translate-x-20"></div>
       <div className="absolute bottom-0 left-0 w-60 h-60 bg-teal-500/30 rounded-full translate-y-20 -translate-x-20"></div>
-
+      <div className="bg-white/5 backdrop-blur-sm rounded-2xl  border border-white/10">
       <div className="w-full max-w-md relative z-10">
         {/* Header */}
         <div className="text-center mb-8">
@@ -226,6 +226,9 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue }) => {
           Continue
         </button>
       </div>
+      </div>
+
+      {/* Decorative elements */}
 
       {/* Custom CSS for slider */}
       <style dangerouslySetInnerHTML={{

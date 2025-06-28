@@ -53,34 +53,36 @@ export const NutritionSection: React.FC = () => {
     return (
         <section className="py-20 bg-gray-50">
             <div className="container mx-auto px-6">
-                <div className="grid lg:grid-cols-3 gap-12 items-center max-w-7xl mx-auto">
+                <div className="grid grid-cols-[240px_400px_1fr] gap-8 items-center ms-20">
                     {/* Left Content - Quote Card and Stats */}
                     <div className="space-y-8">
                         {/* Quote Card - No background, only shadow */}
-                        <div className="bg-transparent rounded-3xl p-8 shadow-lg">
-                            <h3 className="text-md font-bold text-gray-900 mb-6 leading-relaxed">
+                        <div className="bg-transparent rounded-3xl p-4 shadow-lg">
+                            <h3 className="text-md font-semibold text-black leading-relaxed mt-12 mb-12">
                                 "That's The Thing About<br />
                                 Weight Lose:<br />
                                 Eat For The Body You Want,<br />
                                 Not For The Body You<br />
                                 Have."
                             </h3>
-                            <p className="text-primary-500 font-semibold text-lg">
+                            <p className="text-primary-500 font-semibold text-lg mb-16">
                                 Lisa Lieberman-Wang
                             </p>
                         </div>
 
                         {/* Active Users Card - Smaller size */}
-                        <div
+                        <div className="bg-teal-400 rounded-2xl">
+                            <div
                             ref={elementRef}
-                            className="text-primary-500 rounded-2xl p-6  text-center w-64"
+                            className="text-white rounded-2xl p-4 text-center "
                         >
-                            <div className="text-3xl font-bold mb-1">
+                            <div className="text-5xl font-bold mb-1">
                                 + {count.toLocaleString()}
                             </div>
-                            <p className="text-base font-medium">
+                            <p className="text-2xl text-center font-medium">
                                 Active Users
                             </p>
+                        </div>
                         </div>
                     </div>
 
@@ -90,7 +92,7 @@ export const NutritionSection: React.FC = () => {
                             <img
                                 src={nutritionImage}
                                 alt="Healthy salad bowl with fresh vegetables"
-                                className="w-full h-auto rounded-3xl shadow-2xl"
+                                className="w-full h-auto mt-3"
                             />
                         </div>
                     </div>
@@ -105,9 +107,9 @@ export const NutritionSection: React.FC = () => {
                             </h2>
 
                             <p className="text-lg text-gray-600 leading-relaxed mb-8">
-                                You can follow every routine, take all the right supplements,
-                                and eat on time — but if your diet habits are inconsistent,
-                                unbalanced, or filled with processed junk, your goals will
+                                You can follow every routine, take all the right supplements,<br/>
+                                and eat on time — but if your diet habits are inconsistent,<br/>
+                                unbalanced, or filled with processed junk,<br/> your goals will
                                 always stay out of reach
                             </p>
                         </div>
@@ -135,7 +137,7 @@ export const NutritionSection: React.FC = () => {
                         <div className="flex gap-4">
                             <Button
                                 size="lg"
-                                className="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
+                                className="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-8 py-4 text-lg  transition-all duration-300 transform hover:scale-105"
                             >
                                 Try Now
                             </Button>

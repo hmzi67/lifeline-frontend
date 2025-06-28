@@ -1,3 +1,4 @@
+import { AppDownload } from '@/components/content/AppDownload';
 import {
   HeroSection,
   ReasonsSection,
@@ -12,6 +13,7 @@ import {
   CTASection
 } from '../../components/landing';
 
+
 export default function Landing() {
   return (
     <div className="overflow-x-hidden">
@@ -20,6 +22,7 @@ export default function Landing() {
         <ReasonsSection />
         <MeditationSection />
         <NutritionSection />
+        <AppDownload />
         <ProgressSection />
       </div>
       <ChallengeSection />

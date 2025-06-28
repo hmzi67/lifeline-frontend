@@ -41,6 +41,7 @@ const AllergenSelector: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-400 via-teal-500 to-teal-600 flex items-center justify-center p-4">
+     <div className="bg-white/5 backdrop-blur-sm rounded-2xl  border border-white/10 p-28">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">
@@ -90,7 +91,9 @@ const AllergenSelector: React.FC = () => {
           Continue
         </button>
       </div>
+    </div>
 
+      {/* Background decorative elements */}
       {/* Decorative background elements */}
       <div className="fixed top-0 right-0 w-32 h-32 bg-white bg-opacity-10 rounded-full -translate-y-16 translate-x-16"></div>
       <div className="fixed bottom-0 left-0 w-24 h-24 bg-white bg-opacity-10 rounded-full translate-y-12 -translate-x-12"></div>
