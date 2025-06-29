@@ -1,123 +1,161 @@
 import React from 'react';
 import { Button } from '../ui/button';
+import { Check } from 'lucide-react';
 
 export const SleepSection: React.FC = () => {
     return (
-        <section className="py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 text-white">
+        <section className="py-20 bg-white">
             <div className="container mx-auto px-6">
-                <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
-                    {/* Left Content - Sleep Visualization */}
+                <div className="grid lg:grid-cols-3 gap-8 items-center max-w-7xl mx-auto">
+                    {/* Left Content - Moonlit Bedroom Scene */}
                     <div className="relative">
-                        <div className="relative bg-gradient-to-br from-blue-900/50 to-purple-900/50 rounded-3xl p-8 backdrop-blur-sm border border-white/10">
-                            <img
-                                src="/api/placeholder/500/400"
-                                alt="Sleep tracking interface"
-                                className="w-full h-auto rounded-2xl"
-                            />
-
-                            {/* Sleep Stats Overlay */}
+                        <div className="relative bg-gradient-to-br from-slate-800 via-slate-700 to-blue-900 rounded-3xl overflow-hidden h-96 lg:h-[500px]">
+                            {/* Bedroom Scene Background */}
+                            <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 to-slate-800/60">
+                                {/* Moon */}
+                                <div className="absolute top-8 right-8 w-16 h-16 bg-yellow-200 rounded-full shadow-lg opacity-90">
+                                    <div className="absolute inset-1 bg-yellow-100 rounded-full"></div>
+                                </div>
+                                
+                                {/* Clouds */}
+                                <div className="absolute top-12 left-8 w-20 h-8 bg-gray-600/40 rounded-full blur-sm"></div>
+                                <div className="absolute top-16 left-16 w-16 h-6 bg-gray-600/30 rounded-full blur-sm"></div>
+                                
+                                {/* Bed silhouette */}
+                                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-900 to-transparent">
+                                    <div className="absolute bottom-4 left-4 right-4 h-20 bg-slate-800/60 rounded-t-3xl"></div>
+                                    <div className="absolute bottom-8 left-8 right-8 h-12 bg-slate-700/40 rounded-full"></div>
+                                </div>
+                            </div>
+                            
+                            {/* Play Button Overlay */}
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                                    <div className="text-center">
-                                        <div className="text-3xl mb-2">🌙</div>
-                                        <div className="text-2xl font-bold text-blue-300 mb-1">7h 32m</div>
-                                        <div className="text-sm text-blue-200">Last Night</div>
-                                    </div>
+                                <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30">
+                                    <div className="w-0 h-0 border-l-[12px] border-l-white border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent ml-1"></div>
                                 </div>
-                            </div>
-                        </div>
-
-                        {/* Floating Sleep Quality Card */}
-                        <div className="absolute -bottom-6 -right-6 bg-white rounded-2xl p-6 shadow-2xl">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
-                                    <span className="text-indigo-600 text-xl">⭐</span>
-                                </div>
-                                <div>
-                                    <div className="text-lg font-bold text-gray-900">85%</div>
-                                    <div className="text-sm text-gray-500">Sleep Quality</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Sleep Cycle Indicator */}
-                        <div className="absolute -top-6 -left-6 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl p-4 shadow-xl">
-                            <div className="text-center">
-                                <div className="text-white font-semibold text-sm">REM</div>
-                                <div className="text-white/80 text-xs">Sleep Phase</div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Right Content - Text */}
+                    {/* Center Content - Phone Mockup */}
+                    <div className="relative mx-auto">
+                        <div className="relative w-64 h-[520px] bg-black rounded-[3rem] p-2 shadow-2xl">
+                            {/* Phone Screen */}
+                            <div className="w-full h-full bg-teal-100 rounded-[2.5rem] overflow-hidden relative">
+                                {/* Status Bar */}
+                                <div className="bg-teal-200/50 px-6 py-3 flex justify-between items-center text-xs">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-4 h-4 text-gray-600">←</div>
+                                        <span className="text-gray-700 font-medium">Better Sleep</span>
+                                    </div>
+                                </div>
+                                
+                                {/* App Content Grid */}
+                                <div className="p-4 grid grid-cols-2 gap-3 h-full">
+                                    {/* Sleep content cards */}
+                                    {Array.from({ length: 8 }).map((_, index) => (
+                                        <div key={index} className="bg-teal-200/60 rounded-2xl p-3 relative overflow-hidden">
+                                            <div className="absolute top-2 left-2 text-xs text-gray-600">Lorem Ipsum</div>
+                                            <div className="mt-6 h-16 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl relative">
+                                                {/* Mini play button */}
+                                                <div className="absolute inset-0 flex items-center justify-center">
+                                                    <div className="w-6 h-6 bg-white/80 rounded-full flex items-center justify-center">
+                                                        <div className="w-0 h-0 border-l-[4px] border-l-gray-600 border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent ml-0.5"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="mt-2 text-xs text-gray-600">
+                                                {index === 0 ? "Calm & Mindful Music for Better Sleep" : "Lorem Ipsum"}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            
+                            {/* Phone notch */}
+                            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-black rounded-b-2xl"></div>
+                        </div>
+                    </div>
+
+                    {/* Right Content - Text and Features */}
                     <div className="space-y-8">
                         <div>
-                            <h2 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
-                                Get <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Better</span> Sleep<br />
-                                Now With <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Us!</span>
+                            <h2 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight text-gray-900">
+                                Get <span className="text-teal-400">Better</span> Sleep<br />
+                                Now With <span className="text-teal-400">Us!</span>
                             </h2>
-
-                            <p className="text-xl text-gray-300 leading-relaxed mb-8">
-                                Transform your sleep quality with intelligent tracking, personalized insights,
-                                and science-backed recommendations for optimal rest and recovery.
-                            </p>
                         </div>
 
+                        {/* Stats Section */}
                         <div className="space-y-6">
-                            <div className="flex items-start gap-4">
-                                <div className="w-6 h-6 bg-blue-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold text-white mb-2">Smart Sleep Tracking</h4>
-                                    <p className="text-gray-300">Advanced algorithms monitor your sleep cycles and provide detailed insights.</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start gap-4">
-                                <div className="w-6 h-6 bg-purple-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold text-white mb-2">Personalized Recommendations</h4>
-                                    <p className="text-gray-300">Get custom sleep tips based on your unique patterns and lifestyle.</p>
+                            <div>
+                                <div className="grid grid-cols-4">
+                                  <div>
+                                    <div className="text-sm text-black-400">Sound</div>
+                                    <div className="text-2xl font-bold text-black-400">99+</div>
+                                  </div>
+                                  <div className='col-span-3 text-center'>
+                                    <div className="text-sm text-gray-400">Need of about 100 people</div>
+                                    <div className="text-2xl font-bold text-purple-400">Calm & Mindful Sleep</div>
+                                  </div>
                                 </div>
                             </div>
 
-                            <div className="flex items-start gap-4">
-                                <div className="w-6 h-6 bg-indigo-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <div className="w-2 h-2 bg-indigo-400 rounded-full"></div>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold text-white mb-2">Sleep Environment Control</h4>
-                                    <p className="text-gray-300">Optimize your bedroom conditions for the perfect night's rest.</p>
+                            <div className="border-b border-gray-200 my-4"></div>
+                                 <div>
+                                <div className="grid grid-cols-4">
+                                  <div>
+                                    <div className="text-sm text-black-400">Sound</div>
+                                    <div className="text-2xl font-bold text-black-400">99+</div>
+                                  </div>
+                                  <div className='col-span-3 text-center'>
+                                    <div className="text-sm text-gray-400">Need of about 100 people</div>
+                                    <div className="text-2xl font-bold text-purple-400">Calm & Mindful Sleep</div>
+                                  </div>
                                 </div>
                             </div>
+
+                            <div className="border-b border-gray-200 my-4"></div>
                         </div>
 
-                        <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                            <div className="grid grid-cols-3 gap-4 text-center">
-                                <div>
-                                    <div className="text-2xl font-bold text-blue-400">7.5h</div>
-                                    <div className="text-sm text-gray-400">Avg Sleep</div>
-                                </div>
-                                <div>
-                                    <div className="text-2xl font-bold text-purple-400">92%</div>
-                                    <div className="text-sm text-gray-400">Efficiency</div>
-                                </div>
-                                <div>
-                                    <div className="text-2xl font-bold text-indigo-400">4</div>
-                                    <div className="text-sm text-gray-400">REM Cycles</div>
-                                </div>
-                            </div>
-                        </div>
+                       {/* Benefits */}
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="bg-teal-400 rounded-full p-1">
+                    <Check className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-gray-700">Increase Muscle and Strength</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="bg-teal-400 rounded-full p-1">
+                    <Check className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-gray-700">Be Healthier than before</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="bg-teal-400 rounded-full p-1">
+                    <Check className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-gray-700">Increase Stamina</span>
+                </div>
+              </div>
 
-                        <Button
-                            size="lg"
-                            className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
-                        >
-                            Improve Sleep Quality
-                        </Button>
+                        {/* Buttons */}
+             <div className="flex gap-4">
+                 <Button
+                     size="lg"
+                     className="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-8 py-4 text-lg  transition-all duration-300 transform hover:scale-105"
+                 >
+                     Try Now
+                 </Button>
+                 <Button
+                     size="lg"
+                     variant="ghost"
+                     className="text-teal-500 hover:text-teal-600 font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300"
+                 >
+                     Contact us
+                 </Button>
+             </div>
                     </div>
                 </div>
             </div>

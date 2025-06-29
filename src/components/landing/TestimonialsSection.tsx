@@ -5,28 +5,24 @@ export const TestimonialsSection: React.FC = () => {
     const testimonials = [
         {
             name: "Sarah Williams",
-            role: "Fitness Enthusiast",
             avatar: "/api/placeholder/60/60",
             rating: 5,
             text: "This app has completely transformed my fitness journey. The personalized challenges keep me motivated every single day!"
         },
         {
             name: "Maria Lopez",
-            role: "Yoga Instructor",
             avatar: "/api/placeholder/60/60",
             rating: 5,
             text: "The meditation features are incredible. I use it daily with my students and we've seen amazing results in mindfulness practice."
         },
         {
             name: "John Smith",
-            role: "Marathon Runner",
             avatar: "/api/placeholder/60/60",
             rating: 5,
             text: "The nutrition tracking helped me optimize my diet for better performance. I've never felt stronger or more energetic!"
         },
         {
             name: "Emily Chen",
-            role: "Wellness Coach",
             avatar: "/api/placeholder/60/60",
             rating: 5,
             text: "As a wellness coach, I recommend this app to all my clients. The holistic approach to health is exactly what people need."
@@ -60,7 +56,6 @@ export const TestimonialsSection: React.FC = () => {
                                 />
                                 <div>
                                     <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
-                                    <p className="text-sm text-gray-500">{testimonial.role}</p>
                                 </div>
                             </div>
 
@@ -77,22 +72,6 @@ export const TestimonialsSection: React.FC = () => {
                             </p>
                         </div>
                     ))}
-                </div>
-
-                {/* Stats Section */}
-                <div className="mt-20 grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-                    <div className="text-center">
-                        <div className="text-4xl font-bold text-primary-600 mb-2">50K+</div>
-                        <div className="text-gray-600">Active Users</div>
-                    </div>
-                    <div className="text-center">
-                        <div className="text-4xl font-bold text-primary-600 mb-2">4.9★</div>
-                        <div className="text-gray-600">App Store Rating</div>
-                    </div>
-                    <div className="text-center">
-                        <div className="text-4xl font-bold text-primary-600 mb-2">95%</div>
-                        <div className="text-gray-600">User Satisfaction</div>
-                    </div>
                 </div>
             </div>
         </section>

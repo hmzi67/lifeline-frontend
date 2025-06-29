@@ -4,13 +4,13 @@ import {
   ReasonsSection,
   MeditationSection,
   NutritionSection,
-  ChallengeSection,
   SleepSection,
   TestimonialsSection,
   ProgressSection,
   BlogSection,
   FAQSection
 } from '../../components/landing';
+
 
 
 export default function Landing() {
@@ -24,7 +24,6 @@ export default function Landing() {
         <AppDownload />
         <ProgressSection />
       </div>
-      <ChallengeSection />
       <SleepSection />
       <TestimonialsSection />
       <BlogSection />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '../ui/button';
-import { CheckCircle } from 'lucide-react';
+import { Check } from 'lucide-react';
 import nutritionImage from "@/assets/images/landing/nutrition-1.svg"
 
 // Custom hook for counting animation
@@ -116,22 +116,27 @@ export const NutritionSection: React.FC = () => {
 
 
                         {/* Feature List */}
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-4">
-                                <CheckCircle className="w-6 h-6 text-primary-500 fill-current" />
-                                <span className="text-gray-700 font-medium">Traditional Diet Plan</span>
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <CheckCircle className="w-6 h-6 text-primary-500 fill-current" />
-                                <span className="text-gray-700 font-medium">Vegetarian Diet Plan</span>
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <CheckCircle className="w-6 h-6 text-primary-500 fill-current" />
-                                <span className="text-gray-700 font-medium">Non Vegetarian Diet Plan</span>
-                            </div>
-                        </div>
+                        {/* Benefits */}
+                                     <div className="space-y-4">
+                                       <div className="flex items-center space-x-3">
+                                         <div className="bg-teal-400 rounded-full p-1">
+                                           <Check className="w-4 h-4 text-white" />
+                                         </div>
+                                         <span className="text-gray-700">Traditional Diet Plan</span>
+                                       </div>
+                                       <div className="flex items-center space-x-3">
+                                         <div className="bg-teal-400 rounded-full p-1">
+                                           <Check className="w-4 h-4 text-white" />
+                                         </div>
+                                         <span className="text-gray-700">Vegetarian Diet Plan</span>
+                                       </div>
+                                       <div className="flex items-center space-x-3">
+                                         <div className="bg-teal-400 rounded-full p-1">
+                                           <Check className="w-4 h-4 text-white" />
+                                         </div>
+                                         <span className="text-gray-700">Non Vegetarian Diet Plan</span>
+                                       </div>
+                                     </div>
 
                         {/* Buttons */}
                         <div className="flex gap-4">

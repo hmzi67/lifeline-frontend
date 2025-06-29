@@ -1,67 +1,72 @@
 import React from 'react';
 import { Button } from '../ui/button';
-import { TrendingUpIcon, TargetIcon, CalendarIcon } from 'lucide-react';
+import { TrendingUpIcon, Check } from 'lucide-react';
 
 export const ProgressSection: React.FC = () => {
     return (
-        <section className="py-20 bg-white">
+        <section className="py-8 bg-white">
             <div className="container mx-auto px-6">
                 <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
                     {/* Left Content - Text */}
-                    <div className="space-y-8">
+                    <div className="space-y-12">
                         <div>
-                            <p className="text-primary-600 font-semibold text-lg mb-4">PROGRESS TRACKING</p>
-                            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-16 leading-tight">
                                 Track Your<br />
                                 <span className="text-primary-600">Fitness,</span> See Your<br />
                                 <span className="text-primary-600">Progress</span>
                             </h2>
-
-                            <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                                Monitor your journey with comprehensive analytics and insights.
-                                Visualize your progress, celebrate milestones, and stay motivated
-                                with detailed tracking across all aspects of your wellness.
-                            </p>
                         </div>
 
-                        <div className="space-y-6">
-                            <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
-                                    <TrendingUpIcon className="w-6 h-6 text-primary-600" />
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold text-gray-900 mb-2">Real-time Analytics</h4>
-                                    <p className="text-gray-600">Get instant insights into your performance with live data tracking and analysis.</p>
-                                </div>
-                            </div>
+                        {/* Benefits */}
+                       <div className="space-y-4 ms-2">
+                         <div className="flex items-center space-x-3">
+                           <div className="bg-teal-400 rounded-full p-1">
+                             <Check className="w-4 h-4 text-white" />
+                           </div>
+                           <span className="text-gray-700">Traditional Diet Plan</span>
+                         </div>
+                         <div className="flex items-center space-x-3">
+                           <div className="bg-teal-400 rounded-full p-1">
+                             <Check className="w-4 h-4 text-white" />
+                           </div>
+                           <span className="text-gray-700">Vegetarian Diet Plan</span>
+                         </div>
+                         <div className="flex items-center space-x-3">
+                           <div className="bg-teal-400 rounded-full p-1">
+                             <Check className="w-4 h-4 text-white" />
+                           </div>
+                           <span className="text-gray-700">Non Vegetarian Diet Plan</span>
+                         </div>
+                         <div className="flex items-center space-x-3">
+                           <div className="bg-teal-400 rounded-full p-1">
+                             <Check className="w-4 h-4 text-white" />
+                           </div>
+                           <span className="text-gray-700">Non Vegetarian Diet Plan</span>
+                         </div>
+                         <div className="flex items-center space-x-3">
+                           <div className="bg-teal-400 rounded-full p-1">
+                             <Check className="w-4 h-4 text-white" />
+                           </div>
+                           <span className="text-gray-700">Non Vegetarian Diet Plan</span>
+                         </div>
+                       </div>
 
-                            <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
-                                    <TargetIcon className="w-6 h-6 text-primary-600" />
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold text-gray-900 mb-2">Goal Achievement</h4>
-                                    <p className="text-gray-600">Set personalized goals and track your progress with detailed milestone tracking.</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
-                                    <CalendarIcon className="w-6 h-6 text-primary-600" />
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold text-gray-900 mb-2">Historical Data</h4>
-                                    <p className="text-gray-600">Review your fitness journey with comprehensive historical data and trends.</p>
-                                </div>
-                            </div>
+                        {/* Buttons */}
+                        <div className="flex gap-4">
+                            <Button
+                                size="lg"
+                                className="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-8 py-4 text-lg  transition-all duration-300 transform hover:scale-105"
+                            >
+                                Buy Now
+                            </Button>
+                            <Button
+                                size="lg"
+                                variant="ghost"
+                                className="text-teal-500 hover:text-teal-600 font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300"
+                            >
+                                Download App
+                            </Button>
                         </div>
-
-                        <Button
-                            size="lg"
-                            className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-500 text-white font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
-                        >
-                            Start Tracking
-                        </Button>
                     </div>
 
                     {/* Right Content - Progress Dashboard */}
