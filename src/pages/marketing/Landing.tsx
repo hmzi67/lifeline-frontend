@@ -6,10 +6,9 @@ import {
   NutritionSection,
   SleepSection,
   TestimonialsSection,
-  ProgressSection,
   BlogSection,
   FAQSection
-} from '../../components/landing';
+} from '@/components/landing';
 
 
 
@@ -21,8 +20,7 @@ export default function Landing() {
         <ReasonsSection />
         <MeditationSection />
         <NutritionSection />
-        <AppDownload />
-        <ProgressSection />
+        <AppDownload isLandingPage={true} />
       </div>
       <SleepSection />
       <TestimonialsSection />

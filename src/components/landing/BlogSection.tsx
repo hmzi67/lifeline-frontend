@@ -6,19 +6,19 @@ export const BlogSection: React.FC = () => {
     const blogPosts = [
         {
             title: "We give you the best Fitness Platforms",
-            image: "/api/placeholder/300/200",
+            image: "/sample.png",
             readTime: "5 min read",
             date: "Jun 12, 2025"
         },
         {
             title: "We give you the best Fitness Platforms",
-            image: "/api/placeholder/300/200",
+            image: "/sample.png",
             readTime: "8 min read",
             date: "Jun 10, 2025"
         },
         {
             title: "We give you the best Fitness Platforms",
-            image: "/api/placeholder/300/200",
+            image: "/sample.png",
             readTime: "6 min read",
             date: "Jun 8, 2025"
         }
@@ -44,7 +44,7 @@ export const BlogSection: React.FC = () => {
                                 <img
                                     src={post.image}
                                     alt={post.title}
-                                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300 rounded-xl"
                                 />
                             </div>
 

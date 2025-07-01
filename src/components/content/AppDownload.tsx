@@ -1,6 +1,7 @@
 import AppImage from '../../assets/images/blogs/fitnessAppImage.svg'
+import LandingAppImage from '../../assets/images/landing/appDownloadImg.svg'
 
-export const AppDownload = () => {
+export const AppDownload  = ({ isLandingPage }) => {
     return (
         <div className="bg-gradient-to-br from-teal-400 via-teal-400 to-teal-500 my-28 py-14 flex items-center relative overflow-visible">
             <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full relative">
@@ -8,14 +9,25 @@ export const AppDownload = () => {
                     {/* Left Content */}
                     <div className="text-white space-y-8 lg:pr-8">
                         <div className="space-y-6">
-                            <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                                Download the most
-                                <br />
-                                loved fitness app
-                            </h1>
+                            {isLandingPage ?
+                                <h1 className={"text-5xl lg:text-6xl font-bold leading-tight"}>
+                                    Ready, Set, Run! The
+                                    <br/>
+                                    Challenge is Live – Don’t
+                                    <br/>
+                                    Miss Out!
+                                </h1>
+                                :
+                                <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+                                    Download the most
+                                    <br/>
+                                    loved fitness app
+                                </h1>
+                            }
                             <p className="text-xl opacity-90 max-w-md">
                                 Start your fitness journey with us. Join the cult!
                             </p>
+
                         </div>
 
                         {/* App Store Buttons */}
@@ -50,7 +62,7 @@ export const AppDownload = () => {
 
                     {/* Right Content - Phone Mockups */}
                     <div className="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/4 overflow-visible z-0">
-                        <img src={AppImage} alt="App Preview" className="w-[500px] max-w-none" />
+                        <img src={isLandingPage ? LandingAppImage : AppImage} alt="App Preview" className="w-[500px] max-w-none" />
                     </div>
                 </div>
             </div>

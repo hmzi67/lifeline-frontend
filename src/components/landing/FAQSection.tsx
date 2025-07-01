@@ -38,7 +38,7 @@ export const FAQSection: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-white min-h-screen">
+    <div className="max-w-6xl mx-auto p-6 bg-white py-32">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left Section */}
         <div className="space-y-6">
