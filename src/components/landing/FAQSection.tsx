@@ -30,6 +30,11 @@ export const FAQSection: React.FC = () => {
       id: 4,
       question: "What meditation features does the app offer?",
       answer: "The app offers a comprehensive meditation library with guided sessions for anxiety, stress relief, and relaxation. Features include soothing background sounds, customizable session lengths, breathing exercises, mindfulness practices, and progress tracking to help you build a consistent meditation habit."
+    },
+    {
+      id: 5,
+      question: "What features we offer?",
+      answer: "The app offers a comprehensive meditation library with guided sessions for anxiety, stress relief, and relaxation. Features include soothing background sounds, customizable session lengths, breathing exercises, mindfulness practices, and progress tracking to help you build a consistent meditation habit."
     }
   ];
 

@@ -95,3 +95,18 @@
     }
   }
 }
+
+/* Swipper Css */
+.testimonials-swiper .swiper-pagination {
+  position: absolute;
+  bottom: 0 !important;
+  z-index: 10;
+}
+
+.swiper-pagination-bullet {
+  background: #2dd4bf !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: #0d9488 !important;
+}

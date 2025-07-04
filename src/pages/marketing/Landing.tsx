@@ -1,13 +1,13 @@
 import { AppDownload } from '@/components/content/AppDownload';
 import {
-  HeroSection,
-  ReasonsSection,
-  MeditationSection,
-  NutritionSection,
-  SleepSection,
-  TestimonialsSection,
-  BlogSection,
-  FAQSection
+    HeroSection,
+    ReasonsSection,
+    MeditationSection,
+    NutritionSection,
+    SleepSection,
+    TestimonialsSection,
+    BlogSection,
+    FAQSection, ProgressSection
 } from '@/components/landing';
 
 
@@ -24,6 +24,7 @@ export default function Landing() {
       </div>
       <SleepSection />
       <TestimonialsSection />
+        <ProgressSection />
       <BlogSection />
       <FAQSection />
       
