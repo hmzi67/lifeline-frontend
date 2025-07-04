@@ -23,15 +23,24 @@ export const MeditationSection: React.FC = () => {
     ];
 
     // Auto-slide functionality for cards
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentCardIndex((prevIndex) =>
-                prevIndex === cards.length - 1 ? 0 : prevIndex + 1
-            );
-        }, 4000); // Change card every 4 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+        setCurrentCardIndex(prev => {
+            const nextIndex = prev + 1;
+            // Reset to 0 when we reach the end of the first set
+            if (nextIndex >= cards.length) {
+                // Use setTimeout to reset without animation
+                setTimeout(() => {
+                    setCurrentCardIndex(0);
+                }, 50); // Small delay to ensure smooth transition
+                return nextIndex;
+            }
+            return nextIndex;
+        });
+    }, 3000); // Change every 3 seconds
 
-        return () => clearInterval(interval);
-    }, [cards.length]);
+    return () => clearInterval(interval);
+   }, [cards.length]);
 
     return (
         <section className="relative h-[80vh] overflow-hidden">
@@ -72,78 +81,45 @@ export const MeditationSection: React.FC = () => {
                 </div>
             </div>
 
-            {/* Floating Cards with Invisible Slider - Bottom Right */}
+           {/* Floating Cards with Invisible Slider - Bottom Right */}
             <div className="absolute bottom-8 right-8 w-[600px] overflow-hidden">
                 <div
-                    className="flex transition-transform duration-1000 ease-in-out"
-                    style={{ transform: `translateX(-${currentCardIndex * 520}px)` }}
-                >
-                    {cards.map((card, index) => (
-                        <React.Fragment key={index}>
-                            {/* Main Card */}
-                            <div className="relative bg-white/15 backdrop-blur-lg rounded-3xl p-5 shadow-2xl w-[380px] h-[120px] border border-white/20 flex-shrink-0 mr-4">
-                                <div className="flex gap-4 h-full">
-                                    {/* Image with Play Button */}
-                                    <div className="relative flex-shrink-0">
-                                        <img
-                                            src={card.image}
-                                            alt="Meditation scene"
-                                            className="w-20 h-16 object-cover rounded-xl"
-                                        />
-                                        {/* Play Button Overlay */}
-                                        <button className="absolute inset-0 flex items-center justify-center group">
-                                            <div className="w-7 h-7 bg-white/90 rounded-full flex items-center justify-center group-hover:bg-white transition-all duration-300 group-hover:scale-110 shadow-lg">
-                                                <PlayIcon className="w-2.5 h-2.5 text-gray-700 ml-0.5" fill="currentColor" />
-                                            </div>
-                                        </button>
-                                    </div>
-
-                                    {/* Text Content */}
-                                    <div className="flex-1 flex flex-col justify-center">
-                                        <h3 className="text-base font-bold text-white mb-1 leading-tight">
-                                            {card.title}
-                                        </h3>
-                                        <p className="text-white/70 text-xs leading-relaxed line-clamp-3">
-                                            {card.description}
-                                        </p>
-                                    </div>
-                                </div>
+                      className="flex transition-transform duration-1000 ease-in-out"
+                      style={{ transform: `translateX(-${currentCardIndex * 396}px)` }}
+                  >
+                 {/* Render cards twice for seamless circular effect */}
+                 {[...cards, ...cards].map((card, index) => (
+                  <div key={index} className="relative bg-white/15 backdrop-blur-lg rounded-3xl p-5 shadow-2xl w-[380px] h-[120px] border border-white/20 flex-shrink-0 mr-4">
+                   <div className="flex gap-4 h-full">
+                    {/* Image with Play Button */}
+                    <div className="relative flex-shrink-0">
+                        <img
+                            src={card.image}
+                            alt="Meditation scene"
+                            className="w-20 h-16 object-cover rounded-xl"
+                        />
+                        {/* Play Button Overlay */}
+                        <button className="absolute inset-0 flex items-center justify-center group">
+                            <div className="w-7 h-7 bg-white/90 rounded-full flex items-center justify-center group-hover:bg-white transition-all duration-300 group-hover:scale-110 shadow-lg">
+                                <PlayIcon className="w-2.5 h-2.5 text-gray-700 ml-0.5" fill="currentColor" />
                             </div>
+                        </button>
+                    </div>
 
-                            {/* Second Card for the next item */}
-                            <div className="relative bg-white/15 backdrop-blur-lg rounded-3xl p-5 shadow-2xl w-[380px] h-[120px] border border-white/20 flex-shrink-0">
-                                <div className="flex gap-4 h-full">
-                                    {/* Image with Play Button */}
-                                    <div className="relative flex-shrink-0">
-                                        <img
-                                            src={cards[(index + 1) % cards.length].image}
-                                            alt="Meditation scene"
-                                            className="w-20 h-16 object-cover rounded-xl"
-                                        />
-                                        {/* Play Button Overlay */}
-                                        <button className="absolute inset-0 flex items-center justify-center group">
-                                            <div className="w-7 h-7 bg-white/90 rounded-full flex items-center justify-center group-hover:bg-white transition-all duration-300 group-hover:scale-110 shadow-lg">
-                                                <PlayIcon className="w-2.5 h-2.5 text-gray-700 ml-0.5" fill="currentColor" />
-                                            </div>
-                                        </button>
-                                    </div>
-
-                                    {/* Text Content */}
-                                    <div className="flex-1 flex flex-col justify-center">
-                                        <h3 className="text-base font-bold text-white mb-1 leading-tight">
-                                            {cards[(index + 1) % cards.length].title}
-                                        </h3>
-                                        <p className="text-white/70 text-xs leading-relaxed line-clamp-3">
-                                            {cards[(index + 1) % cards.length].description}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </React.Fragment>
-                    ))}
+                    {/* Text Content */}
+                    <div className="flex-1 flex flex-col justify-center">
+                        <h3 className="text-base font-bold text-white mb-1 leading-tight">
+                            {card.title}
+                        </h3>
+                        <p className="text-white/70 text-xs leading-relaxed line-clamp-3">
+                            {card.description}
+                        </p>
+                    </div>
                 </div>
             </div>
-
+        ))}
+    </div>
+            </div>
             {/* Decorative Elements */}
             <div className="absolute top-20 left-10 w-2 h-2 bg-white bg-opacity-30 rounded-full animate-pulse"></div>
             <div className="absolute top-1/3 right-20 w-1.5 h-1.5 bg-white bg-opacity-40 rounded-full animate-pulse delay-75"></div>

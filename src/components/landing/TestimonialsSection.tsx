@@ -45,7 +45,7 @@ export const TestimonialsSection: React.FC = () => {
 
     return (
         <section className="py-12 bg-gray-50">
-            <div className="">
+            <div className="px-6">
                 <div className="text-center mb-16">
                     <h4 className="text-xl text-teal-400 mb-5">Hear from our satisfied users!</h4>
                     <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">You can experience the change too!</h2>

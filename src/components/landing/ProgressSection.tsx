@@ -11,9 +11,9 @@ export const ProgressSection: React.FC = () => {
         <div className={'flex items-center justify-end py-16'}>
             <div className={'me-24'}>
                 <div className="max-w-lg text-center lg:text-left mb-10 lg:mb-0">
-                             <h1 className="text-4xl font-bold mb-4">
-                                 <span className="text-primary">Track</span> Your Fitness,
-                                 <span className="text-primary">See</span> Your Progress
+                             <h1 className="text-6xl font-bold mb-4">
+                                 <span className="text-primary">Track</span> Your <br/> Fitness,
+                                 <span className="text-primary">See</span> Your <br/>  Progress
                              </h1>
 
                              <ul className="mt-6 space-y-3">
@@ -43,7 +43,7 @@ export const ProgressSection: React.FC = () => {
             </div>
             <div className={'flex items-center justify-start'}>
                 {/*<img src={mobilePhoneImage} alt={''} />*/}
-                <img src={progressTrackerImage} alt={''} />
+                <img className='w-[950px]' src={progressTrackerImage} alt={''} />
             </div>
         </div>
     );
