@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { CheckCircle } from "lucide-react";
-import progressTrackerImage from "../../assets/images/landing/trackerSection.svg"
-import mobilePhoneImage from '../../assets/images/fitness/phone.svg'
+import progressTrackerImage from "../../assets/images/landing/trackerSectionBoth.svg"
+// import mobilePhoneImage from '../../assets/images/fitness/phone.svg'
 
 import { Button } from '../ui/button';
 
@@ -42,7 +42,7 @@ export const ProgressSection: React.FC = () => {
                          </div>
             </div>
             <div className={'flex items-center justify-start'}>
-                <img src={mobilePhoneImage} alt={''} />
+                {/*<img src={mobilePhoneImage} alt={''} />*/}
                 <img src={progressTrackerImage} alt={''} />
             </div>
         </div>
