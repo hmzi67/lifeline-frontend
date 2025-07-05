@@ -7,7 +7,7 @@ import uniqueFeaturesImage3 from '../../assets/images/business/UF-3.svg'
 
 const UniqueFeatures: React.FC = () => {
   return (
-    <section className="py-20 px-4 max-w-7xl mx-auto bg-gray-50">
+    <section className="py-20 px-4 max-w-7xl mx-auto">
       {/* Hero Section */}
       <div className="text-center mb-20">
         <h1 className="text-5xl font-bold text-gray-900 mb-6">
