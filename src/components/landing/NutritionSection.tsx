@@ -51,7 +51,7 @@ export const NutritionSection: React.FC = () => {
     const { count, elementRef } = useCountUp(2345);
 
     return (
-        <section className="py-20 bg-gray-50">
+        <section className="py-20">
             <div className="container mx-auto px-6">
                 <div className="grid grid-cols-[240px_400px_1fr] gap-8 items-center ms-20">
                     {/* Left Content - Quote Card and Stats */}
