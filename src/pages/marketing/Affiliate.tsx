@@ -7,8 +7,8 @@ import AffiliateHero from "@/components/Affiliate/AffiliateHero.tsx";
 export default function Affiliate() {
   return (
   <>
-    <AffiliateHero />
-  <MeditationSection/>
+  < AffiliateHero />
+  < MeditationSection/>
   < Cardsimg />
   < UniqueFeatures />
   < ProductShowcase/>

@@ -11,7 +11,7 @@ export default function Business() {
   <MeditationSection />
   <UniqueFeatures />
   <MissionVision />
-  <AppDownload />
+  <AppDownload isLandingPage={undefined} />
   <TestimonialsSection />
   <FAQSection />
   </>
