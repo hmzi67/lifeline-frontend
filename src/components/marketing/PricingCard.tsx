@@ -1,4 +1,5 @@
 import React from 'react';
+
 interface PricingCardProps {
   title: string;
   price: string;

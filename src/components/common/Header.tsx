@@ -13,6 +13,7 @@ export default function Header() {
     '/',
     '/business',
     '/affiliate',
+    '/pricing',
   ];
 
   // Check if current route should have transparent header
