@@ -9,7 +9,7 @@ const PricingHero: React.FC = () => {
         <img
             src={PricingHeroBgImage}
             alt="Running group stretching outdoors"
-            className="w-full h-full object-contain"
+            className="object-contain w-full"
         />
     </div>
 

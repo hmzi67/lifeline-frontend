@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 interface PricingCardProps {
   title: string;
@@ -10,72 +10,236 @@ interface PricingCardProps {
 }
 
 export const PricingCard: React.FC<PricingCardProps> = ({
-  title,
-  price,
-  originalPrice,
-  isHighlighted = false,
-  features,
-  hasCoupon = true
-}) => {
+                                                   title,
+                                                   price,
+                                                   originalPrice,
+                                                   isHighlighted = false,
+                                                   features,
+                                                   hasCoupon = true
+                                                 }) => {
+  const [showCouponField, setShowCouponField] = useState(false);
+  const [couponCode, setCouponCode] = useState('');
+  const [couponStatus, setCouponStatus] = useState<'idle' | 'valid' | 'invalid'>('idle');
+  const [finalPrice, setFinalPrice] = useState(price);
+
+  // Mock coupon validation - you can replace this with actual API call
+  const validateCoupon = (code: string): number | undefined => {
+    const validCoupons: { [key: string]: number } = {
+      'SAVE20': 0.8,      // 20% off
+      'SAVE50': 0.5,      // 50% off
+      'WELCOME10': 0.9    // 10% off
+    };
+
+    return validCoupons[code.toUpperCase()];
+  };
+
+
+  const handleCouponSubmit = () => {
+    if (!couponCode.trim()) return;
+
+    const discount = validateCoupon(couponCode);
+    if (discount) {
+      setCouponStatus('valid');
+      const newPrice = (parseFloat(price) * discount).toFixed(2);
+      setFinalPrice(newPrice);
+    } else {
+      setCouponStatus('invalid');
+      setFinalPrice(price);
+    }
+  };
+
+  const handleCouponChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCouponCode(e.target.value);
+    setCouponStatus('idle');
+    setFinalPrice(price);
+  };
+
+  const handleCouponToggle = () => {
+    setShowCouponField(!showCouponField);
+    if (showCouponField) {
+      // Reset when closing
+      setCouponCode('');
+      setCouponStatus('idle');
+      setFinalPrice(price);
+    }
+  };
+
   return (
-    <div className={`
+      <div className={`
       relative p-6 rounded-2xl border-2 transition-all duration-300 hover:shadow-lg
-      ${isHighlighted 
-        ? 'bg-teal-400 text-white border-teal-400 transform scale-105' 
-        : 'bg-white text-gray-800 border-gray-200 hover:border-teal-300'
+      ${isHighlighted
+          ? 'bg-teal-400 text-white border-teal-400 transform scale-105'
+          : 'bg-white text-gray-800 border-gray-200 hover:border-teal-300'
       }
     `}>
-      <div className="text-center mb-6">
-        <h3 className={`text-lg font-semibold mb-4 ${isHighlighted ? 'text-white' : 'text-gray-800'}`}>
-          {title}
-        </h3>
-        
-        <div className="mb-2">
-          <span className="text-4xl font-bold">${price}</span>
-          <span className={`text-lg ${isHighlighted ? 'text-white' : 'text-gray-600'}`}>/m</span>
+        <div className="text-center mb-6">
+          <h3 className={`text-lg font-semibold mb-4 ${isHighlighted ? 'text-white' : 'text-gray-800'}`}>
+            {title}
+          </h3>
+
+          <div className="mb-2">
+            <span className="text-4xl font-bold">${finalPrice}</span>
+            <span className={`text-lg ${isHighlighted ? 'text-white' : 'text-gray-600'}`}>/m</span>
+          </div>
+
+          <div className={`text-sm mb-4 ${isHighlighted ? 'text-white' : 'text-gray-500'}`}>
+            <span className="line-through">{originalPrice}</span>
+          </div>
+
+          <p className={`text-sm mb-4 ${isHighlighted ? 'text-white' : 'text-gray-600'}`}>
+            Get our Monthly Plan, now discounted to just ${finalPrice}! Act now and start achieving your fitness goals for less!
+          </p>
+
+          {hasCoupon && (
+              <div className="mb-4">
+                <button
+                    onClick={handleCouponToggle}
+                    className={`
+                text-sm underline hover:no-underline transition-all
+                ${isHighlighted ? 'text-white hover:text-gray-200' : 'text-teal-500 hover:text-teal-600'}
+              `}
+                >
+                  {showCouponField ? 'Hide coupon field' : 'Do you have a coupon?'}
+                </button>
+
+                {showCouponField && (
+                    <div className="mt-4 space-y-3">
+                      <div className="flex gap-2">
+                        <input
+                            type="text"
+                            value={couponCode}
+                            onChange={handleCouponChange}
+                            placeholder="Enter coupon code"
+                            className={`
+                      flex-1 px-3 py-2 rounded-lg border text-sm
+                      ${isHighlighted
+                                ? 'bg-white/20 border-white/30 text-white placeholder-white/70'
+                                : 'bg-white border-gray-300 text-gray-800 placeholder-gray-500'
+                            }
+                      focus:outline-none focus:ring-2 focus:ring-teal-300
+                    `}
+                        />
+                        <button
+                            onClick={handleCouponSubmit}
+                            className={`
+                      px-4 py-2 rounded-lg text-sm font-medium transition-all
+                      ${isHighlighted
+                                ? 'bg-white text-teal-400 hover:bg-gray-50'
+                                : 'bg-teal-400 text-white hover:bg-teal-500'
+                            }
+                    `}
+                        >
+                          Apply
+                        </button>
+                      </div>
+
+                      {couponStatus === 'valid' && (
+                          <div className={`
+                    text-sm p-2 rounded-lg
+                    ${isHighlighted
+                              ? 'bg-white/20 text-white'
+                              : 'bg-green-100 text-green-800'
+                          }
+                  `}>
+                            ✓ Coupon applied successfully!
+                          </div>
+                      )}
+
+                      {couponStatus === 'invalid' && (
+                          <div className={`
+                    text-sm p-2 rounded-lg
+                    ${isHighlighted
+                              ? 'bg-white/20 text-white'
+                              : 'bg-red-100 text-red-800'
+                          }
+                  `}>
+                            ✗ Invalid coupon code
+                          </div>
+                      )}
+                    </div>
+                )}
+              </div>
+          )}
         </div>
-        
-        <div className={`text-sm mb-4 ${isHighlighted ? 'text-white' : 'text-gray-500'}`}>
-          <span className="line-through">{originalPrice}</span>
-        </div>
-        
-        <p className={`text-sm mb-4 ${isHighlighted ? 'text-white' : 'text-gray-600'}`}>
-          Get our Monthly Plan, now discounted to just $19.99! Act now and start achieving your fitness goals for less!
-        </p>
-        
-        {hasCoupon && (
-          <button className={`
-            text-sm underline mb-4 hover:no-underline transition-all
-            ${isHighlighted ? 'text-white hover:text-gray-200' : 'text-primary-500 hover:text-primary-600'}
-          `}>
-            Do you have a coupon?
-          </button>
-        )}
-      </div>
-      
-      <div className="space-y-3 mb-6">
-        {features.map((feature, index) => (
-          <div key={index} className="flex items-start">
-            <div className={`
+
+        <div className="space-y-3 mb-6">
+          {features.map((feature, index) => (
+              <div key={index} className="flex items-start">
+                <div className={`
               w-2 h-2 rounded-full mt-2 mr-3 flex-shrink-0
               ${isHighlighted ? 'bg-white' : 'bg-teal-400'}
             `}></div>
-            <span className={`text-sm ${isHighlighted ? 'text-white' : 'text-gray-600'}`}>
+                <span className={`text-sm ${isHighlighted ? 'text-white' : 'text-gray-600'}`}>
               {feature}
             </span>
-          </div>
-        ))}
-      </div>
-      
-      <button className={`
+              </div>
+          ))}
+        </div>
+
+        <button className={`
         w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:transform hover:scale-105
-        ${isHighlighted 
-          ? 'bg-white text-primary-400 hover:bg-gray-50' 
-          : 'bg-teal-400 text-white hover:bg-teal-500'
+        ${isHighlighted
+            ? 'bg-white text-teal-400 hover:bg-gray-50'
+            : 'bg-teal-400 text-white hover:bg-teal-500'
         }
       `}>
-        Get Started
-      </button>
-    </div>
+          Get Started
+        </button>
+      </div>
   );
 };
+
+// Demo component showing all three cards
+export default function PricingDemo() {
+  const features = [
+    'Steps Counter track by band',
+    'Heart Rate by our premium fitness band',
+    'Calorie Counter on daily basis',
+    'Progress Tracking weekly and monthly as well',
+    'Water Intake by your every intake',
+    'Sleep Counter track by band'
+  ];
+
+  return (
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h1 className="text-3xl font-bold text-gray-800 mb-4">
+              Select Payment Method
+            </h1>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              LifeLine will help you in this fitness journey with science based approach this
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <PricingCard
+                title="12 Months Plan"
+                price="19.99"
+                originalPrice="$39.99/m"
+                features={features}
+            />
+
+            <PricingCard
+                title="12 Months Plan"
+                price="19.99"
+                originalPrice="$39.99/m"
+                features={features}
+                isHighlighted={true}
+            />
+
+            <PricingCard
+                title="12 Months Plan"
+                price="19.99"
+                originalPrice="$39.99/m"
+                features={features}
+            />
+          </div>
+
+          <div className="mt-8 text-center text-sm text-gray-600">
+            <p>Try these coupon codes: <span className="font-mono bg-gray-200 px-2 py-1 rounded">SAVE20</span>, <span className="font-mono bg-gray-200 px-2 py-1 rounded">SAVE50</span>, <span className="font-mono bg-gray-200 px-2 py-1 rounded">WELCOME10</span></p>
+          </div>
+        </div>
+      </div>
+  );
+}
