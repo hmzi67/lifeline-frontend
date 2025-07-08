@@ -9,7 +9,7 @@ const ProductShowcase = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            Let's <span className="text-primary-400">Meet</span> the Product
+            Let's <span className="text-primary">Meet</span> the Product
           </h1>
           <p className="text-gray-600 text-lg">
             LifeLine where every heartbeat counts!

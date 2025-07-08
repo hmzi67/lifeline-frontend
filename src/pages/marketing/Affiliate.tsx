@@ -7,10 +7,10 @@ import { Herosection } from "@/components/Affiliate/Herosection";
 export default function Affiliate() {
   return (
   <>
-  < Herosection/>
-  < Cardsimg />
-  < UniqueFeatures />
-  < ProductShowcase/>
+    <Herosection/>
+    <Cardsimg />
+    <UniqueFeatures />
+    <ProductShowcase/>
   </>
   
   )

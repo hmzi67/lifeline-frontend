@@ -66,10 +66,10 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
   return (
       <div className={`
-      relative p-6 rounded-2xl border-2 transition-all duration-300 hover:shadow-lg
+      relative p-6 rounded-2xl border-2 transition-all duration-300 hover:shadow-lg cursor-pointer
       ${isHighlighted
-          ? 'bg-teal-400 text-white border-teal-400 transform scale-105'
-          : 'bg-white text-gray-800 border-gray-200 hover:border-teal-300'
+          ? 'bg-primary text-white border-primary transform scale-105'
+          : 'bg-white text-gray-800 border-gray-200 hover:border-primary-300'
       }
     `}>
         <div className="text-center mb-6">
@@ -96,7 +96,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
                     onClick={handleCouponToggle}
                     className={`
                 text-sm underline hover:no-underline transition-all
-                ${isHighlighted ? 'text-white hover:text-gray-200' : 'text-teal-500 hover:text-teal-600'}
+                ${isHighlighted ? 'text-white hover:text-gray-200' : 'text-primary hover:text-primary-600'}
               `}
                 >
                   {showCouponField ? 'Hide coupon field' : 'Do you have a coupon?'}
@@ -124,8 +124,8 @@ export const PricingCard: React.FC<PricingCardProps> = ({
                             className={`
                       px-4 py-2 rounded-lg text-sm font-medium transition-all
                       ${isHighlighted
-                                ? 'bg-white text-teal-400 hover:bg-gray-50'
-                                : 'bg-teal-400 text-white hover:bg-teal-500'
+                                ? 'bg-white text-primary hover:bg-gray-50'
+                                : 'bg-primary text-white hover:bg-primary'
                             }
                     `}
                         >
@@ -167,7 +167,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
               <div key={index} className="flex items-start">
                 <div className={`
               w-2 h-2 rounded-full mt-2 mr-3 flex-shrink-0
-              ${isHighlighted ? 'bg-white' : 'bg-teal-400'}
+              ${isHighlighted ? 'bg-white' : 'bg-primary'}
             `}></div>
                 <span className={`text-sm ${isHighlighted ? 'text-white' : 'text-gray-600'}`}>
               {feature}
@@ -179,8 +179,8 @@ export const PricingCard: React.FC<PricingCardProps> = ({
         <button className={`
         w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:transform hover:scale-105
         ${isHighlighted
-            ? 'bg-white text-teal-400 hover:bg-gray-50'
-            : 'bg-teal-400 text-white hover:bg-teal-500'
+            ? 'bg-white text-primary hover:bg-gray-50'
+            : 'bg-primary text-white hover:bg-primary'
         }
       `}>
           Get Started
@@ -188,58 +188,3 @@ export const PricingCard: React.FC<PricingCardProps> = ({
       </div>
   );
 };
-
-// Demo component showing all three cards
-export default function PricingDemo() {
-  const features = [
-    'Steps Counter track by band',
-    'Heart Rate by our premium fitness band',
-    'Calorie Counter on daily basis',
-    'Progress Tracking weekly and monthly as well',
-    'Water Intake by your every intake',
-    'Sleep Counter track by band'
-  ];
-
-  return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h1 className="text-3xl font-bold text-gray-800 mb-4">
-              Select Payment Method
-            </h1>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              LifeLine will help you in this fitness journey with science based approach this
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <PricingCard
-                title="12 Months Plan"
-                price="19.99"
-                originalPrice="$39.99/m"
-                features={features}
-            />
-
-            <PricingCard
-                title="12 Months Plan"
-                price="19.99"
-                originalPrice="$39.99/m"
-                features={features}
-                isHighlighted={true}
-            />
-
-            <PricingCard
-                title="12 Months Plan"
-                price="19.99"
-                originalPrice="$39.99/m"
-                features={features}
-            />
-          </div>
-
-          <div className="mt-8 text-center text-sm text-gray-600">
-            <p>Try these coupon codes: <span className="font-mono bg-gray-200 px-2 py-1 rounded">SAVE20</span>, <span className="font-mono bg-gray-200 px-2 py-1 rounded">SAVE50</span>, <span className="font-mono bg-gray-200 px-2 py-1 rounded">WELCOME10</span></p>
-          </div>
-        </div>
-      </div>
-  );
-}

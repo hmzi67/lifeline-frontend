@@ -59,9 +59,9 @@ export const Blog = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}
-            <div className="bg-white py-12">
+            <div className="bg-white py-12 mt-6">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <span className={'uppercase text-teal-500'}>connect with our community</span>
+                    <span className={'uppercase text-primary'}>connect with our community</span>
                     <h1 className="text-4xl font-bold text-gray-900 m-2">
                         Our latest blogs & articles
                     </h1>
@@ -100,7 +100,7 @@ export const Blog = () => {
 
                         {/* Load More Button */}
                         <div className="text-center">
-                            <button className="bg-teal-500 text-white px-8 py-3 rounded-full hover:bg-teal-600 transition-colors duration-200 font-medium">
+                            <button className="bg-primary text-white px-8 py-3 rounded-full hover:bg-primary-600 transition-colors duration-200 font-medium">
                                 Explore more
                             </button>
                         </div>
@@ -117,41 +117,6 @@ export const Blog = () => {
 
             {/* App Download Section */}
             <AppDownload />
-
-            {/*<div className="bg-gradient-to-r from-teal-400 to-teal-500 py-16">*/}
-            {/*    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">*/}
-            {/*        <div className="flex flex-col lg:flex-row items-center justify-between">*/}
-            {/*            <div className="text-white mb-8 lg:mb-0 lg:flex-1">*/}
-            {/*                <h2 className="text-3xl font-bold mb-4">*/}
-            {/*                    Download the most<br />*/}
-            {/*                    loved fitness app*/}
-            {/*                </h2>*/}
-            {/*                <p className="text-lg mb-6 opacity-90">*/}
-            {/*                    Start your fitness journey with us. Join the club!*/}
-            {/*                </p>*/}
-            {/*                <div className="flex space-x-4">*/}
-            {/*                    <div className="bg-black rounded-lg px-4 py-2 flex items-center space-x-2 cursor-pointer hover:bg-gray-800 transition-colors">*/}
-            {/*                        <div className="text-white">*/}
-            {/*                            <div className="text-xs">GET IT ON</div>*/}
-            {/*                            <div className="text-sm font-semibold">Google Play</div>*/}
-            {/*                        </div>*/}
-            {/*                    </div>*/}
-            {/*                    <div className="bg-black rounded-lg px-4 py-2 flex items-center space-x-2 cursor-pointer hover:bg-gray-800 transition-colors">*/}
-            {/*                        <div className="text-white">*/}
-            {/*                            <div className="text-xs">Download on the</div>*/}
-            {/*                            <div className="text-sm font-semibold">App Store</div>*/}
-            {/*                        </div>*/}
-            {/*                    </div>*/}
-            {/*                </div>*/}
-            {/*            </div>*/}
-            {/*            <div className="lg:flex-1 flex justify-center lg:justify-end">*/}
-            {/*                <div className="relative">*/}
-            {/*                    <img src={AppImage} alt={'App Image'} className={'w-80'} />*/}
-            {/*                </div>*/}
-            {/*            </div>*/}
-            {/*        </div>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
 
             {/* Testimonial Section */}
             <TestimonialsSection />

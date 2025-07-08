@@ -21,13 +21,12 @@ export const Herosection: React.FC = () => {
             </div>
 
             {/* Content */}
-            <div className="relative z-10 min-h-screen flex items-start justify-center py-20">
+            <div className=" z-10 min-h-screen flex items-start justify-center py-20">
                 <div className="container mx-auto lg:px-12 bg-opacity-10">
-                    <div className="max-w-2xl absolute left-16">
-
+                    <div className="max-w-2xl absolute">
                         {/* Main heading */}
                         <h1 className="text-3xl lg:text-5xl uppercase font-bold text-white mb-6 leading-[2.5] mt-16">
-                            join lifeline's <span className='text-primary-400 font-semibold'>affiliate</span><br /> <span className='text-primary-400 font-semibold'> Business</span> program
+                            join lifeline's <span className='text-primary font-semibold'>affiliate</span><br /> <span className='text-primary font-semibold'> Business</span> program
                         </h1>
 
                         {/* Subheading */}
@@ -39,14 +38,14 @@ export const Herosection: React.FC = () => {
                          <div className="flex gap-4">
                              <Button
                                  size="lg"
-                                 className="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-8 py-6 text-lg  transition-all duration-300 transform hover:scale-105"
+                                 className="bg-primary hover:bg-primary-600 text-white font-semibold px-8 py-6 text-lg  transition-all duration-300 transform hover:scale-105"
                              >
                                  Start Earning
                              </Button>
                              <Button
                                  size="lg"
                                  variant="ghost"
-                                 className="text-teal-500 hover:text-teal-600 font-semibold px-8 py-6 text-lg transition-all duration-300"
+                                 className="text-primary hover:text-primary-600 font-semibold px-8 py-6 text-lg transition-all duration-300"
                              >
                                  Contact us
                              </Button>
