@@ -3,12 +3,12 @@ import MissionVision from "@/components/business/MissionVision";
 import UniqueFeatures from "@/components/business/UniqueFeatures";
 import {TestimonialsSection} from "@/components/landing";
 import {FAQSection} from "@/components/landing" ;
-import { MeditationSection } from "@/components/landing/MeditationSection";
+import AffiliateHero from "@/components/Affiliate/AffiliateHero";
 
 export default function Business() {
   return (
   <>
-  <MeditationSection />
+  <AffiliateHero />
   <UniqueFeatures />
   <MissionVision />
   <AppDownload isLandingPage={undefined} />
