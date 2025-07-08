@@ -9,12 +9,12 @@ const PricingHero: React.FC = () => {
         <img
             src={PricingHeroBgImage}
             alt="Running group stretching outdoors"
-            className="w-full h-full object-contain"
+            className="object-cover"
         />
     </div>
 
     {/* Dark overlay */}
-    <div className="absolute inset-0 bg-black/50"></div>
+    <div className="absolute inset-0 bg-black/30"></div>
 
     {/* Content */}
     <div className="relative z-10 flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">

@@ -16,6 +16,10 @@ import TypicalDaySelector from "@/components/questions/TypicalDaySelector";
 export default function Questions() {
     return (
         <>
+            
+          //gender selector
+          //
+            
             <GenderSelector />
             <AgeSelector />
             // For women

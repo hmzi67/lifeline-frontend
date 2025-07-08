@@ -5,7 +5,7 @@ import heroimg2 from '../../assets/images/affiliatehero/himg.svg'
 
 const EmployeeWellbeingLanding: React.FC = () => {
   return (
-    <div className="relative h-[90vh] overflow-hidden">
+    <div className="h-[90vh] overflow-hidden pb-2">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img 
@@ -110,7 +110,7 @@ const EmployeeWellbeingLanding: React.FC = () => {
           </div>
           
           {/* Mobile App Image */}
-          <div className="absolute top-16 right-0 w-full lg:w-80 lg:h-80">
+          <div className="absolute top-12 right-0 w-full lg:w-80 lg:h-80">
             <img
               src={heroimg}
               alt="Mobile App"
