@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import SideImage from '../../assets/images/auth/sideImage.jpeg';
+import {Link} from "react-router-dom";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -43,7 +44,7 @@ const Login: React.FC = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Email"
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-colors"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-primary outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -57,7 +58,7 @@ const Login: React.FC = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Password"
-                      className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-colors"
+                      className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors"
                   />
                   <button
                       type="button"
@@ -76,11 +77,11 @@ const Login: React.FC = () => {
                       type="checkbox"
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
-                      className="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
+                      className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 focus:ring-2"
                   />
                   <span className="ml-2 text-sm text-gray-600">Remember me</span>
                 </label>
-                <button className="text-sm text-gray-600 hover:text-teal-600">
+                <button className="text-sm text-gray-600 hover:text-primary-600">
                   Forgot password?
                 </button>
               </div>
@@ -88,7 +89,7 @@ const Login: React.FC = () => {
               {/* Sign In Button */}
               <button
                   onClick={handleSubmit}
-                  className="w-full bg-teal-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-teal-600 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-colors"
+                  className="w-full bg-primary-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-600 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors"
               >
                 Sign In
               </button>
@@ -98,9 +99,9 @@ const Login: React.FC = () => {
             <div className="mt-6 text-center">
               <p className="text-gray-600">
                 Don't have an account?{' '}
-                <button className="text-teal-600 hover:text-teal-700 font-medium">
+                <Link className="text-primary-600 hover:text-primary-700 font-medium" to={'/signup'}>
                   Sign up
-                </button>
+                </Link>
               </p>
             </div>
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import SideImage from '../../assets/images/auth/sideImage.jpeg';
+import {Link} from "react-router-dom";
 
 
 const Signup: React.FC = () => {
@@ -55,7 +56,7 @@ const Signup: React.FC = () => {
                     value={formData.name}
                     onChange={handleInputChange}
                     placeholder="Name"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-colors"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
                     required
                 />
               </div>
@@ -71,7 +72,7 @@ const Signup: React.FC = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="Email"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-colors"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
                     required
                 />
               </div>
@@ -87,7 +88,7 @@ const Signup: React.FC = () => {
                     value={formData.password}
                     onChange={handleInputChange}
                     placeholder="Password"
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-colors"
+                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
                     required
                 />
                 <button
@@ -107,7 +108,7 @@ const Signup: React.FC = () => {
               <button
                   type="button"
                   onClick={handleSubmit}
-                  className="w-full bg-teal-500 text-white py-3 rounded-lg font-semibold hover:bg-teal-600 transition-colors transform hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full bg-primary-500 text-white py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors transform hover:scale-[1.02] active:scale-[0.98]"
               >
                 Sign Up
               </button>
@@ -116,9 +117,9 @@ const Signup: React.FC = () => {
               <div className="text-center">
                 <p className="text-gray-600">
                   Already have an account?{' '}
-                  <a href="#" className="text-teal-500 hover:text-teal-600 font-medium">
+                  <Link to={'/login'} className="text-primary-500 hover:text-primary-600 font-medium">
                     Sign in
-                  </a>
+                  </Link>
                 </p>
               </div>
 
