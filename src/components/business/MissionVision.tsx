@@ -1,5 +1,7 @@
 import MenImage from '../../assets/images/missionvision/men.svg'
 import WomenImage from '../../assets/images/missionvision/women.svg'
+
+
 const MissionVision = () => {
   return (
     <div className="mx-auto px-24 py-12 ">

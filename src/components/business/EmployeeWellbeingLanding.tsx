@@ -1,7 +1,7 @@
 import React from 'react';
 import { Heart } from 'lucide-react';
-import heroimg from '../../assets/images/affiliatehero/heroimg.svg'
-import heroimg2 from '../../assets/images/affiliatehero/himg.svg'
+import heroImg from '../../assets/images/affiliatehero/heroimg.svg'
+import heroImg2 from '../../assets/images/affiliatehero/himg.svg'
 
 const EmployeeWellbeingLanding: React.FC = () => {
   return (
@@ -9,7 +9,7 @@ const EmployeeWellbeingLanding: React.FC = () => {
       {/* Background Image */}
       <div className="absolute inset-0">
         <img 
-          src={heroimg2} 
+          src={heroImg2}
           alt="Background" 
           className="w-full h-full object-cover"
         />
@@ -21,7 +21,7 @@ const EmployeeWellbeingLanding: React.FC = () => {
         <div className="lg:w-1/2 text-white mb-12 lg:mb-0">
           <h1 className="text-5xl lg:text-5xl font-semibold leading-tight mt-10">
             RETHINK{' '}
-            <span className="text-teal-400">EMPLOYEE</span>
+            <span className="text-primary">EMPLOYEE</span>
             <br/>
           </h1>
           <h1 className="text-5xl lg:text-9xl leading-tight text mb-6">
@@ -30,7 +30,7 @@ const EmployeeWellbeingLanding: React.FC = () => {
           <p className="text-xl text-gray-300 mb-8 max-w-lg leading-relaxed">
             Cultivate a healthy, thriving, and unstoppable workforce with BetterMe's health transformation ecosystem
           </p>
-          <button className="bg-teal-400 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-teal-500 transition-all duration-300 transform hover:scale-105">
+          <button className="bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-600 transition-all duration-300 transform hover:scale-105">
             Get Started
           </button>
         </div>
@@ -112,7 +112,7 @@ const EmployeeWellbeingLanding: React.FC = () => {
           {/* Mobile App Image */}
           <div className="absolute top-12 right-0 w-full lg:w-80 lg:h-80">
             <img
-              src={heroimg}
+              src={heroImg}
               alt="Mobile App"
               className="w-full h-[485px] rounded-lg shadow-lg transform transition-transform duration-500 hover:scale-105"
             />
@@ -121,8 +121,8 @@ const EmployeeWellbeingLanding: React.FC = () => {
       </div>
 
       {/* Decorative Elements */}
-      <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-teal-400 rounded-full opacity-60 animate-pulse"></div>
-      <div className="absolute top-1/3 right-1/4 w-3 h-3 bg-teal-400 rounded-full opacity-40 animate-pulse delay-1000"></div>
+      <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-primary rounded-full opacity-60 animate-pulse"></div>
+      <div className="absolute top-1/3 right-1/4 w-3 h-3 bg-primary rounded-full opacity-40 animate-pulse delay-1000"></div>
       <div className="absolute bottom-1/4 left-1/3 w-1 h-1 bg-white rounded-full opacity-80 animate-pulse delay-500"></div>
     </div>
   );

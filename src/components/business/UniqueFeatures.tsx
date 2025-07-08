@@ -54,7 +54,7 @@ const UniqueFeatures: React.FC = () => {
               informative articles, as well as one of the most positive communities on the web, you'll 
               have everything you need to reach your personal fitness goals – for free!
             </p>
-            <button className="text-primary-500 hover:text-primary-600 font-semibold text-base flex items-center gap-2 transition-colors">
+            <button className="text-primary hover:text-primary font-semibold text-base flex items-center gap-2 transition-colors">
               See More <ArrowRight className="h-4 w-4" />
             </button>
           </div>
@@ -80,7 +80,7 @@ const UniqueFeatures: React.FC = () => {
               as well as one of the most positive communities on the web, you'll have everything you need to 
               reach your personal fitness goals – for free!
             </p>
-            <button className="text-primary-500 hover:text-primary-600 font-semibold text-base flex items-center gap-2 transition-colors">
+            <button className="text-primary hover:text-primary-600 font-semibold text-base flex items-center gap-2 transition-colors">
               See More <ArrowRight className="h-4 w-4" />
             </button>
           </div>
@@ -106,7 +106,7 @@ const UniqueFeatures: React.FC = () => {
               your goals on your schedule. You let us know where you're at and we'll provide the 
               coaching to take you the rest of the way.
             </p>
-            <button className="text-primary-500 hover:text-primary-600 font-semibold text-base flex items-center gap-2 transition-colors">
+            <button className="text-primary hover:text-primary-600 font-semibold text-base flex items-center gap-2 transition-colors">
               See More <ArrowRight className="h-4 w-4" />
             </button>
           </div>
