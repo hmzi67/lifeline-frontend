@@ -65,13 +65,13 @@ export const NutritionSection: React.FC = () => {
                                 Not For The Body You<br />
                                 Have."
                             </h3>
-                            <p className="text-primary-500 font-semibold text-lg mb-16">
+                            <p className="text-primary font-semibold text-lg mb-16">
                                 Lisa Lieberman-Wang
                             </p>
                         </div>
 
                         {/* Active Users Card - Smaller size */}
-                        <div className="bg-teal-400 rounded-2xl">
+                        <div className="bg-primary rounded-2xl">
                             <div
                             ref={elementRef}
                             className="text-white rounded-2xl p-4 text-center "
@@ -101,9 +101,9 @@ export const NutritionSection: React.FC = () => {
                     <div className="space-y-8">
                         <div>
                             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-                                <span className="text-primary-500">Treating</span> your nutrition<br />
-                                like it's your <span className="text-primary-500">secret</span><br />
-                                <span className="text-primary-500">weapon</span>
+                                <span className="text-primary">Treating</span> your nutrition<br />
+                                like it's your <span className="text-primary">secret</span><br />
+                                <span className="text-primary">weapon</span>
                             </h2>
 
                             <p className="text-lg text-gray-600 leading-relaxed mb-8">
@@ -119,19 +119,19 @@ export const NutritionSection: React.FC = () => {
                         {/* Benefits */}
                                      <div className="space-y-4">
                                        <div className="flex items-center space-x-3">
-                                         <div className="bg-teal-400 rounded-full p-1">
+                                         <div className="bg-primary rounded-full p-1">
                                            <Check className="w-4 h-4 text-white" />
                                          </div>
                                          <span className="text-gray-700">Traditional Diet Plan</span>
                                        </div>
                                        <div className="flex items-center space-x-3">
-                                         <div className="bg-teal-400 rounded-full p-1">
+                                         <div className="bg-primary rounded-full p-1">
                                            <Check className="w-4 h-4 text-white" />
                                          </div>
                                          <span className="text-gray-700">Vegetarian Diet Plan</span>
                                        </div>
                                        <div className="flex items-center space-x-3">
-                                         <div className="bg-teal-400 rounded-full p-1">
+                                         <div className="bg-primary-400 rounded-full p-1">
                                            <Check className="w-4 h-4 text-white" />
                                          </div>
                                          <span className="text-gray-700">Non Vegetarian Diet Plan</span>
@@ -142,14 +142,14 @@ export const NutritionSection: React.FC = () => {
                         <div className="flex gap-4">
                             <Button
                                 size="lg"
-                                className="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-8 py-4 text-lg  transition-all duration-300 transform hover:scale-105"
+                                className="bg-primary hover:bg-primary-600 text-white font-semibold px-8 py-4 text-lg  transition-all duration-300 transform hover:scale-105"
                             >
                                 Try Now
                             </Button>
                             <Button
                                 size="lg"
                                 variant="ghost"
-                                className="text-teal-500 hover:text-teal-600 font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300"
+                                className="text-primary hover:text-primary-600 font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300"
                             >
                                 Contact us
                             </Button>

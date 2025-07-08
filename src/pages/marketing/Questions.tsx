@@ -18,7 +18,23 @@ export default function Questions() {
         <>
             
           //gender selector
-          //
+          //LifeLineFitness
+          //FitnessGoalSelector
+          //DietTypeSelector
+          //AllergenSelector
+          //ThankYouCard
+          //FitnessLevelSelector
+          //TypicalDaySelector
+          //physical limitation selector
+          //FocusAreaSelector
+          //ThankYouCard
+          //AgeSelector
+          //HeightSelector
+          //weight selector
+          //goal weight selector
+          //FitnessMotivationSelector
+          //PersonalizingPlans
+          // FitnessGraph
             
             <GenderSelector />
             <AgeSelector />

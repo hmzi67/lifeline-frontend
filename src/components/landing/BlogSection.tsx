@@ -29,7 +29,7 @@ export const BlogSection: React.FC = () => {
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-                        Recent <span className="text-primary-600">Blog</span> and Articles
+                        Recent <span className="text-primary">Blog</span> and Articles
                     </h2>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                         Explore our blogs and articles for expert workout tips, fitness advice, and effective exercise routines.
@@ -51,7 +51,7 @@ export const BlogSection: React.FC = () => {
                             <div className="p-6">
                                 <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
                                     <div className="flex items-center gap-1">
-                                       <Circle size={10} fill="#14b8a6" className='text-teal-500' />
+                                       <Circle size={10}  className='fill-primary text-teal-500' />
                                         <span>{post.date}</span>
                                     </div>
                                     <div className="flex items-center gap-1">
@@ -60,7 +60,7 @@ export const BlogSection: React.FC = () => {
                                     </div>
                                 </div>
 
-                                <h3 className="text-2xl font-semibold text-gray-700 mb-3 leading-tight group-hover:text-primary-600 transition-colors duration-200">
+                                <h3 className="text-2xl font-semibold text-gray-900 mb-3 leading-tight group-hover:text-primary transition-colors duration-200 hover:cursor-pointer">
                                     {post.title}
                                 </h3>
 
@@ -76,7 +76,7 @@ export const BlogSection: React.FC = () => {
                     <Button
                         size="lg"
                         variant="outline"
-                        className="border-teal-500 text-primary-600 hover:bg-teal-500 hover:text-white font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300"
+                        className="border-primary text-primary hover:bg-primary hover:text-white font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300"
                     >
                         Read More   <ArrowRightIcon className="w-4 h-4" />
                     </Button>

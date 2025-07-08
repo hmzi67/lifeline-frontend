@@ -88,7 +88,7 @@ export const HeroSection: React.FC = () => {
                         <div>
                             <Button
                                 size="lg"
-                                className="bg-teal-400 hover:bg-teal-500 text-gray-900 font-semibold px-8 py-4 text-lg rounded-lg transition-all duration-300 transform hover:scale-105"
+                                className="bg-primary hover:bg-primary-600 text-white font-semibold px-8 py-4 text-lg rounded-lg transition-all duration-300 transform hover:scale-105"
                             >
                                 Get Started
                             </Button>

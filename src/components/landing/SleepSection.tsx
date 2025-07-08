@@ -35,7 +35,7 @@ export const SleepSection: React.FC = () => {
                                         <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-24 h-6 bg-slate-800 rounded-full"></div>
 
                                         {/* Screen Content */}
-                                        <div className="pt-8 px-4 h-full bg-gradient-to-br from-teal-600 to-teal-700">
+                                        <div className="pt-8 px-4 h-full bg-gradient-to-br bg-primary">
                                             {/* Header */}
                                             <div className="flex items-center justify-between mb-6">
                                                 <button className="text-white/80">
@@ -70,8 +70,8 @@ export const SleepSection: React.FC = () => {
                         {/* Text Content */}
                         <div className="text-center lg:text-left">
                             <h1 className="text-4xl lg:text-5xl font-bold  mb-6">
-                                Get <span className="text-teal-400">Better</span> Sleep<br />
-                                Now With <span className="text-teal-400">Us!</span>
+                                Get <span className="text-primary">Better</span> Sleep<br />
+                                Now With <span className="text-primary">Us!</span>
                             </h1>
 
                             {/* Stats */}
@@ -82,7 +82,7 @@ export const SleepSection: React.FC = () => {
                                         <div className="text-2xl font-bold">99+</div>
                                     </div>
                                     <div>
-                                        <div className="text-teal-400 text-sm">Next of sleep 10 sounds</div>
+                                        <div className="text-primary text-sm">Next of sleep 10 sounds</div>
                                         <div className="font-semibold">Calm & Mindful Sleep</div>
                                     </div>
                                 </div>
@@ -93,7 +93,7 @@ export const SleepSection: React.FC = () => {
                                         <div className="text-2xl font-bold">99+</div>
                                     </div>
                                     <div>
-                                        <div className="text-teal-400 text-sm">Next of sleep 10 sounds</div>
+                                        <div className="text-primary text-sm">Next of sleep 10 sounds</div>
                                         <div className="font-semibold">Calm & Mindful Sleep</div>
                                     </div>
                                 </div>
@@ -102,19 +102,19 @@ export const SleepSection: React.FC = () => {
                             {/* Features */}
                             <div className="space-y-3 mb-8">
                                 <div className="flex items-center justify-center lg:justify-start gap-3">
-                                    <div className="w-5 h-5 bg-teal-400 rounded-full flex items-center justify-center">
+                                    <div className="w-5 h-5 bg-primary-400 rounded-full flex items-center justify-center">
                                         <Check className="w-3 h-3" />
                                     </div>
                                     <span className="">Decrease Muscle and Strength</span>
                                 </div>
                                 <div className="flex items-center justify-center lg:justify-start gap-3">
-                                    <div className="w-5 h-5 bg-teal-400 rounded-full flex items-center justify-center">
+                                    <div className="w-5 h-5 bg-primary-400 rounded-full flex items-center justify-center">
                                         <Check className="w-3 h-3" />
                                     </div>
                                     <span className="">Be Healthier than before</span>
                                 </div>
                                 <div className="flex items-center justify-center lg:justify-start gap-3">
-                                    <div className="w-5 h-5 bg-teal-400 rounded-full flex items-center justify-center">
+                                    <div className="w-5 h-5 bg-primary-400 rounded-full flex items-center justify-center">
                                         <Check className="w-3 h-3" />
                                     </div>
                                     <span className="">Increase Stamina</span>
@@ -123,7 +123,7 @@ export const SleepSection: React.FC = () => {
 
                             {/* Buttons */}
                             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                                <button className="px-8 py-3 bg-teal-400 hover:bg-teal-500 font-semibold rounded-full transition-all duration-300 hover:scale-105 shadow-lg">
+                                <button className="px-8 py-3 bg-primary hover:bg-primary-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 shadow-lg">
                                     Try Now
                                 </button>
                                 <button className="px-8 py-3 bg-white/10 hover:bg-white/20 font-semibold rounded-full transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-white/20 flex items-center justify-center gap-2">
