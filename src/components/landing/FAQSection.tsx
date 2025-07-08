@@ -49,9 +49,9 @@ export const FAQSection: React.FC = () => {
         <div className="space-y-6">
           <div>
             <h1 className="text-4xl font-bold text-gray-800 mb-2">
-              <span className="text-teal-400">FAQs</span>
+              <span className="text-primary">FAQs</span>
               <span className="text-gray-800"> - Frequently Asked </span>
-              <span className="text-teal-400">Questions</span>
+              <span className="text-primary">Questions</span>
             </h1>
           </div>
           

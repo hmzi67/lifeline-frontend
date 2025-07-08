@@ -4,7 +4,7 @@ import AppBgImage from '../../assets/images/landing/appDownloadBgImg.svg';
 
 export const AppDownload = ({ isLandingPage = false }) => {
     return (
-        <div className="bg-gradient-to-br from-teal-400 via-teal-400 to-teal-500 my-28 py-14 flex items-center relative overflow-visible">
+        <div className="bg-gradient-to-br bg-primary my-28 py-14 flex items-center relative overflow-visible">
             <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full relative">
                 <div className="grid lg:grid-cols-2 gap-12 items-center relative z-10">
 

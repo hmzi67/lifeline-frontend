@@ -47,7 +47,7 @@ export const TestimonialsSection: React.FC = () => {
         <section className="py-12">
             <div className="px-6">
                 <div className="text-center mb-16">
-                    <h4 className="text-xl text-teal-400 mb-5">Hear from our satisfied users!</h4>
+                    <h4 className="text-xl text-primary mb-5">Hear from our satisfied users!</h4>
                     <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">You can experience the change too!</h2>
                     <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                         Join thousands of satisfied users who have transformed their lives with our comprehensive wellness platform.
@@ -85,7 +85,7 @@ export const TestimonialsSection: React.FC = () => {
 
                                     <div className="flex items-center gap-1 mb-4">
                                         {[...Array(testimonial.rating)].map((_, i) => (
-                                            <Star key={i} className="w-4 h-4 text-teal-400 fill-teal-400" />
+                                            <Star key={i} className="w-4 h-4 text-primary fill-primary" />
                                         ))}
                                     </div>
 
