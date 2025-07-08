@@ -5,7 +5,11 @@ import heroimg2 from '../../assets/images/affiliatehero/himg.svg'
 
 const EmployeeWellbeingLanding: React.FC = () => {
   return (
+<<<<<<< HEAD:src/components/business/EmployeeWellbeingLanding.tsx
     <div className="h-[90vh] overflow-hidden pb-2">
+=======
+    <div className=" h-[90vh] overflow-hidden">
+>>>>>>> a5024f6eb5bfdc399e95aab431194d911b3571ac:src/components/Affiliate/AffiliateHero.tsx
       {/* Background Image */}
       <div className="absolute inset-0">
         <img 

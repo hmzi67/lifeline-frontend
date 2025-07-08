@@ -28,7 +28,7 @@ const Pricing: React.FC = () => {
   return (
       <>
         <PricingHero />
-        <div className="py-24 px-4">
+        <div className="py-24 px-4 mt-20">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <h1 className="text-3xl font-bold text-gray-800 mb-4">
