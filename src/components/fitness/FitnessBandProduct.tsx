@@ -2,50 +2,55 @@ import { useState } from 'react';
 import { Clock, Star, ThumbsUp, ThumbsDown, Share2 } from 'lucide-react';
 import Phone from "../../assets/images/fitness/phone.svg"
 import Band from "../../assets/images/fitness/band.svg"
+import Band1 from "../../assets/images/fitness/band-1.svg"
+import Band2 from "../../assets/images/fitness/band-2.svg"
+import Band3 from "../../assets/images/fitness/band-3.svg"
+import Band4 from "../../assets/images/fitness/band-4.svg"
 
-interface BandColor {
+interface BandVariant {
     id: string;
     name: string;
-    color: string;
-    bandImage: string;
-    phoneImage: string;
+    image: string;
+    thumbnail: string;
 }
 
 export const FitnessBandProduct = () => {
-    const [selectedColor, setSelectedColor] = useState('teal');
+    const [selectedBand, setSelectedBand] = useState('band1');
 
-    const bandColors: BandColor[] = [
+    const bandVariants: BandVariant[] = [
         {
-            id: 'purple',
-            name: 'Purple',
-            color: 'bg-purple-400',
-            bandImage: '/api/placeholder/120/300',
-            phoneImage: '/api/placeholder/300/600'
+            id: 'band1',
+            name: 'Classic Band',
+            image: Band,
+            thumbnail: Band
         },
         {
-            id: 'black',
-            name: 'Black',
-            color: 'bg-gray-900',
-            bandImage: '/api/placeholder/120/300',
-            phoneImage: '/api/placeholder/300/600'
+            id: 'band2',
+            name: 'Sport Band',
+            image: Band1,
+            thumbnail: Band1
         },
         {
-            id: 'green',
-            name: 'Green',
-            color: 'bg-green-600',
-            bandImage: '/api/placeholder/120/300',
-            phoneImage: '/api/placeholder/300/600'
+            id: 'band3',
+            name: 'Premium Band',
+            image: Band2,
+            thumbnail: Band2
         },
         {
-            id: 'teal',
-            name: 'Teal',
-            color: 'bg-teal-400',
-            bandImage: '/api/placeholder/120/300',
-            phoneImage: '/api/placeholder/300/600'
+            id: 'band4',
+            name: 'Elite Band',
+            image: Band3,
+            thumbnail: Band3
+        },
+        {
+            id: 'band5',
+            name: 'Pro Band',
+            image: Band4,
+            thumbnail: Band4
         }
     ];
 
-    const currentBand = bandColors.find(band => band.id === selectedColor) || bandColors[3];
+    const currentBand = bandVariants.find(band => band.id === selectedBand) || bandVariants[0];
 
     return (
         <div className="min-h-screen mt-24 p-4 md:p-8">
@@ -162,26 +167,34 @@ export const FitnessBandProduct = () => {
                             <div className="absolute -right-8 top-1/2 transform -translate-y-1/2 z-20">
                                 <div className="relative">
                                     {/* Band */}
-                                    <img src={Band} alt="Band" className={`w-96 h-96 mt-96 ${currentBand.color}`} />
+                                    <img 
+                                        src={currentBand.image} 
+                                        alt={currentBand.name} 
+                                        className="w-96 h-96 mt-96 object-contain transition-all duration-300" 
+                                    />
                                 </div>
                             </div>
                         </div>
-                        {/* Color Selection */}
+                        {/* Band Selection */}
                         <div className="flex justify-center gap-4 mt-8">
-                            {bandColors.map((band) => (
+                            {bandVariants.map((band) => (
                                 <button
                                     key={band.id}
-                                    onClick={() => setSelectedColor(band.id)}
-                                    className={`relative w-16 h-16 rounded-full transition-all duration-300 transform hover:scale-110 ${
-                                        selectedColor === band.id
-                                            ? 'ring-4 ring-teal-400 ring-offset-2 scale-110 shadow-lg'
-                                            : 'hover:shadow-md'
+                                    onClick={() => setSelectedBand(band.id)}
+                                    className={`relative p-2 rounded-2xl transition-all duration-300 transform hover:scale-105 ${
+                                        selectedBand === band.id
+                                            ? 'ring-4 ring-teal-400 ring-offset-2 scale-105 shadow-lg bg-teal-50'
+                                            : 'hover:shadow-md bg-gray-50 hover:bg-gray-100'
                                     }`}
                                 >
-                                    <div className={`w-full h-full ${band.color} rounded-full shadow-lg`}>
-                                        <div className="absolute inset-2 bg-white/20 rounded-full"></div>
+                                    <div className="w-16 h-20 flex items-center justify-center">
+                                        <img 
+                                            src={band.thumbnail} 
+                                            alt={band.name}
+                                            className="w-full h-full object-contain"
+                                        />
                                     </div>
-                                    {selectedColor === band.id && (
+                                    {selectedBand === band.id && (
                                         <div className="absolute -top-2 -right-2 w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center">
                                             <div className="w-2 h-2 bg-white rounded-full"></div>
                                         </div>
