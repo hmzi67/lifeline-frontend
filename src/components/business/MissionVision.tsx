@@ -2,7 +2,7 @@ import MenImage from '../../assets/images/missionvision/men.svg'
 import WomenImage from '../../assets/images/missionvision/women.svg'
 const MissionVision = () => {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12 ">
+    <div className="mx-auto px-24 py-12 ">
       {/* Header */}
        <div className="space-y-24 pb-12">
          {/* BE HEALTHY - Left Aligned */}

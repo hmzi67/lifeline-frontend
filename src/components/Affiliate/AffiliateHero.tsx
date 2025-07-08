@@ -1,22 +1,30 @@
-   
 import React from 'react';
 import { Heart } from 'lucide-react';
 import heroimg from '../../assets/images/affiliatehero/heroimg.svg'
-
+import heroimg2 from '../../assets/images/affiliatehero/himg.svg'
 
 const EmployeeWellbeingLanding: React.FC = () => {
   return (
-    <div className="h-[90vh] bg-gray-900 overflow-hidden">
+    <div className="relative h-[90vh] overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <img 
+          src={heroimg2} 
+          alt="Background" 
+          className="w-full h-full object-cover"
+        />
+      </div>
+
       {/* Main Content */}
-      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between px-8 py-16 max-w-7xl mx-auto">
+      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between px-8 py-10 max-w-7xl mx-auto">
         {/* Left Content */}
         <div className="lg:w-1/2 text-white mb-12 lg:mb-0">
-          <h1 className="text-5xl lg:text-5xl font-bold leading-tight mb-6">
+          <h1 className="text-5xl lg:text-5xl font-semibold leading-tight mt-10">
             RETHINK{' '}
             <span className="text-teal-400">EMPLOYEE</span>
-            <br />
+            <br/>
           </h1>
-          <h1 className="text-5xl lg:text-7xl font-bold leading-tight text mb-6">
+          <h1 className="text-5xl lg:text-9xl leading-tight text mb-6">
             WELLBEING
           </h1>
           <p className="text-xl text-gray-300 mb-8 max-w-lg leading-relaxed">
@@ -30,7 +38,7 @@ const EmployeeWellbeingLanding: React.FC = () => {
         {/* Right Content - Floating Cards and Mobile App */}
         <div className="lg:w-1/2 relative flex items-center justify-center">
           {/* Floating Meditation Cards */}
-          <div className="absolute top-0  space-y-4 transform -translate-x-8 lg:translate-x-0 w-96">
+          <div className="absolute top-0 space-y-4 transform -translate-x-8 lg:translate-x-0 w-96">
             {[
               {
                   heading: "Meditation",
@@ -71,18 +79,18 @@ const EmployeeWellbeingLanding: React.FC = () => {
                 <img
                   src={card.image}
                   alt="Meditation scene"
-                  className="w-24 h-24  object-cover rounded-xl"
+                  className="w-24 h-24 object-cover rounded-xl"
                 />
               </div>
 
               {/* Text Content */}
               <div className="flex-1 flex flex-col">
-                <div className="flex items-center justify-between ">
+                <div className="flex items-center justify-between">
                   <h3 className="text-white/70 text-sm">
                     {card.heading}
                   </h3>            
                   <span className="text-white/60 font-medium mt-1">
-                    <Heart size={20}  />
+                    <Heart size={20} />
                   </span>
                 </div>
                 <h2 className="text-base font-bold text-white leading-relaxed">
@@ -92,8 +100,7 @@ const EmployeeWellbeingLanding: React.FC = () => {
                 <p className="text-white/70 text-xs leading-tight line-clamp-3 mb-1" style={{ whiteSpace: 'pre-line' }}>
                   {card.description}
                 </p>
-                <p
-                  className="text-white/70 text-xs leading-tight line-clamp-3">
+                <p className="text-white/70 text-xs leading-tight line-clamp-3">
                   Duration: {card.duration} 
                 </p>
               </div>
@@ -103,7 +110,7 @@ const EmployeeWellbeingLanding: React.FC = () => {
           </div>
           
           {/* Mobile App Image */}
-          <div className="absolute top-16 right-0 w-full  lg:w-80 lg:h-80">
+          <div className="absolute top-16 right-0 w-full lg:w-80 lg:h-80">
             <img
               src={heroimg}
               alt="Mobile App"
