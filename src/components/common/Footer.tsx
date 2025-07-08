@@ -20,7 +20,7 @@ export default function Footer() {
   ];
 
   return (
-      <footer className="bg-teal-400 text-white">
+    <footer className="bg-primary text-white">
         {/* Main Footer Content */}
         <div className="container mx-auto px-8 py-16">
           <div className={"flex md:flex-row flex-col justify-between items-center gap-x-4 mb-12"}>
