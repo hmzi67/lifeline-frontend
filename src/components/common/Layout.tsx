@@ -7,13 +7,17 @@ const Layout = ({ children }: { children: ReactNode }) => {
     const location = useLocation();
     const isLandingPage = location.pathname === '/';
 
+    // Define auth pages where header and footer should be hidden
+    const authPages = ['/login', '/signup'];
+    const isAuthPage = authPages.includes(location.pathname);
+
     return (
         <div className="min-h-screen flex flex-col">
-            <Header />
-            <main className={`flex-1 ${!isLandingPage ? 'pt-20' : ''}`}>
+            {!isAuthPage && <Header />}
+            <main className={`flex-1 ${!isLandingPage && !isAuthPage ? 'pt-20' : ''}`}>
                 {children}
             </main>
-            <Footer />
+            {!isAuthPage && <Footer />}
         </div>
     )
 }
