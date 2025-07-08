@@ -60,9 +60,9 @@ export const FitnessBandProduct = () => {
                     <div className="space-y-8">
                         <div className="space-y-4">
                             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-                                Track It, <span className="text-teal-500">Hack It</span>
+                                Track It, <span className="text-primary">Hack It</span>
                                 <br />
-                                Transform Your <span className="text-teal-500">Body</span>
+                                Transform Your <span className="text-primary">Body</span>
                             </h1>
                             <p className="text-gray-600 text-lg leading-relaxed max-w-md">
                                 Lorem Ipsum is simply dummy text of the printing Lorem Ipsum is simply dummy.
@@ -70,7 +70,7 @@ export const FitnessBandProduct = () => {
                         </div>
                         {/* Discount Badge */}
                         <div className="flex items-center gap-3">
-                            <div className="bg-gradient-to-r from-teal-500 to-blue-500 text-white px-4 py-2 rounded-full font-semibold">
+                            <div className="bg-gradient-to-r bg-primary text-white px-4 py-2 rounded-full font-semibold">
                                 Up to 92% off
                             </div>
                             <span className="text-gray-500 text-sm flex items-center gap-1">
@@ -103,7 +103,7 @@ export const FitnessBandProduct = () => {
                         </div>
                         {/* Price */}
                         <div className="flex items-baseline gap-3">
-                            <span className="text-4xl md:text-5xl font-bold text-teal-500">$99.0</span>
+                            <span className="text-4xl md:text-5xl font-bold text-primary">$99.0</span>
                             <span className="text-xl text-red-400 line-through">$149.99</span>
                         </div>
                         {/* Product Details */}
@@ -136,22 +136,22 @@ export const FitnessBandProduct = () => {
                         {/* Action Buttons */}
                         <div className="flex items-center gap-6">
                             <div className="flex items-center gap-4">
-                                <button className="flex items-center gap-2 text-gray-600 hover:text-teal-500 transition-colors">
+                                <button className="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors">
                                     <ThumbsUp className="w-5 h-5" />
                                     <span className="font-medium">1.8k Like</span>
                                 </button>
-                                <button className="flex items-center gap-2 text-gray-600 hover:text-teal-500 transition-colors">
+                                <button className="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors">
                                     <ThumbsDown className="w-5 h-5" />
                                     <span className="font-medium">Dislike</span>
                                 </button>
-                                <button className="flex items-center gap-2 text-gray-600 hover:text-teal-500 transition-colors">
+                                <button className="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors">
                                     <Share2 className="w-5 h-5" />
                                     <span className="font-medium">Share</span>
                                 </button>
                             </div>
                         </div>
                         {/* Buy Button */}
-                        <button className="w-8/12 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold py-4 px-12 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                        <button className="w-8/12 bg-gradient-to-r bg-primary hover:bg-primary-600 text-white font-semibold py-4 px-12 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                             Buy Now
                         </button>
                     </div>
@@ -183,7 +183,7 @@ export const FitnessBandProduct = () => {
                                     onClick={() => setSelectedBand(band.id)}
                                     className={`relative p-2 rounded-2xl transition-all duration-300 transform hover:scale-105 ${
                                         selectedBand === band.id
-                                            ? 'ring-4 ring-teal-400 ring-offset-2 scale-105 shadow-lg bg-teal-50'
+                                            ? 'ring-4 ring-primary ring-offset-2 scale-105 shadow-lg bg-teal-50'
                                             : 'hover:shadow-md bg-gray-50 hover:bg-gray-100'
                                     }`}
                                 >
@@ -195,7 +195,7 @@ export const FitnessBandProduct = () => {
                                         />
                                     </div>
                                     {selectedBand === band.id && (
-                                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center">
+                                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
                                             <div className="w-2 h-2 bg-white rounded-full"></div>
                                         </div>
                                     )}
