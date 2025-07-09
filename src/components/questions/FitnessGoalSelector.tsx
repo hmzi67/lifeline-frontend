@@ -7,7 +7,12 @@ interface FitnessGoal {
   icon: string;
 }
 
-const FitnessGoalSelector: React.FC = () => {
+interface FitnessGoalSelectorProps {
+    handleContinue?: () => void;
+    onGoalChange?: (goalId: string) => void;  // Add this line
+}
+
+const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({ handleContinue, onGoalChange }) => {
   const [selectedGoal, setSelectedGoal] = useState<string>('lose-weight');
 
   const fitnessGoals: FitnessGoal[] = [
@@ -19,21 +24,20 @@ const FitnessGoalSelector: React.FC = () => {
     { id: 'intermittent-fasting', label: 'Intermittent Fasting', icon: '⏰' }
   ];
 
-  const handleGoalSelect = (goalId: string) => {
-    setSelectedGoal(goalId);
-  };
+    const handleGoalSelect = (goalId: string) => {
+        setSelectedGoal(goalId);
+        if (onGoalChange) {
+            onGoalChange(goalId);
+        }
+    };
 
-  const handleContinue = () => {
-    console.log('Selected goal:', selectedGoal);
-    // Handle continue action here
-  };
 
-  return (
+    return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6">
       {/* Decorative background elements */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-teal-400 rounded-full opacity-20 transform translate-x-16 -translate-y-16"></div>
       <div className="absolute bottom-0 left-0 w-40 h-40 bg-teal-300 rounded-full opacity-30 transform -translate-x-20 translate-y-20"></div>
-      
+
       <div className="w-full max-w-md mx-auto">
         {/* Header */}
         <h1 className="text-3xl font-bold text-gray-900 text-center mb-12">
@@ -60,7 +64,7 @@ const FitnessGoalSelector: React.FC = () => {
                 </div>
                 <span className="text-lg font-medium">{goal.label}</span>
               </div>
-              
+
               {selectedGoal === goal.id && (
                 <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
                   <Check className="w-5 h-5 text-teal-400" />

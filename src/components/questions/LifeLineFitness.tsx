@@ -1,9 +1,9 @@
 import React from 'react';
 
-type GenderType = 'women' | 'men';
+// type GenderType = 'women' | 'men';
 
 interface LifeLineFitnessProps {
-    gender: GenderType;
+    gender: string;
     onContinue?: () => void;
 }
 
@@ -36,18 +36,18 @@ const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue })
                 {/* Main Content */}
                 <div className="text-center max-w-4xl mx-auto">
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-6 leading-tight">
-                        {content[gender].title}
+                        {gender == 'male' ? content.men.title : content.women.title}
                     </h1>
 
                     <p className="text-lg md:text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
-                        {content[gender].subtitle}
+                        {gender == 'male' ? content.men.subtitle : content.women.subtitle}
                     </p>
 
                     {/* Image Section */}
                     <div className="mb-12 relative">
                         <div className="relative inline-block">
                             <img
-                                src={content[gender].image}
+                                src={gender == 'male' ? content.men.image : content.women.image}
                                 alt={`${gender} fitness group`}
                                 className="w-full max-w-md mx-auto rounded-2xl shadow-2xl transition-all duration-500 transform hover:scale-105"
                             />

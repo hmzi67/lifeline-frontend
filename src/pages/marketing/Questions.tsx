@@ -19,6 +19,9 @@ const LOCAL_STORAGE_KEY = "currentStepIndex";
 
 export default function Questions() {
     const [currentStep, setCurrentStep] = useState(0);
+    const [gender, setGender] = useState("men")
+    const [selectedGoal, setSelectedGoal] = useState<string>('lose-weight');
+    const [selectDiet, setSelectedDiet] = useState<string>("")
 
     // Load saved step from localStorage
     useEffect(() => {
@@ -33,12 +36,23 @@ export default function Questions() {
         return localStorage.setItem(LOCAL_STORAGE_KEY, String(currentStep));
     }, [currentStep]);
 
+
     const steps = [
-        <GenderSelector key="GenderSelector" />,
-        <LifeLineFitness key="LifeLineFitness" gender="women" onContinue={() => goToNext()} />,
-        <FitnessGoalSelector key="FitnessGoalSelector" />,
-        <DietTypeSelector key="DietTypeSelector" />,
+        <GenderSelector key="GenderSelector" onContinue={(gender) => goToNext(gender)} />,
+        <LifeLineFitness key="LifeLineFitness" gender={gender} onContinue={() => goToNext(gender)} />,
+        <FitnessGoalSelector key="FitnessGoalSelector" handleContinue={() => goToNext(gender)} onGoalChange={(goalId: string) => setSelectedGoal(goalId)} />,
+        <DietTypeSelector key="DietTypeSelector" onContinue={() => goToNext(gender)} onDietChange={(diet) => setSelectedDiet(diet)} />,
+
+
+
+
+
+
         <AllergenSelector key="AllergenSelector" />,
+
+
+
+
         <ThankYouCard key="ThankYouCard1" />,
         <FitnessLevelSelector key="FitnessLevelSelector" />,
         <TypicalDaySelector key="TypicalDaySelector" />,
@@ -47,7 +61,7 @@ export default function Questions() {
             key="FocusAreaSelector"
             gender="female"
             onSelectionChange={(areas) => console.log(areas)}
-            onContinue={() => goToNext()}
+            onContinue={() => goToNext(gender)}
         />,
         <ThankYouCard key="ThankYouCard2" />,
         <AgeSelector key="AgeSelector" />,
@@ -59,7 +73,8 @@ export default function Questions() {
         <FitnessGraph key="FitnessGraph" gender="female" />
     ];
 
-    const goToNext = () => {
+    const goToNext = (gender: string) => {
+        setGender(gender)
         if (currentStep < steps.length - 1) {
             setCurrentStep(prev => prev + 1);
         }
@@ -89,13 +104,13 @@ export default function Questions() {
                 >
                     Back
                 </button>
-                <button
-                    onClick={goToNext}
-                    disabled={currentStep === steps.length - 1}
-                    className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-                >
-                    Next
-                </button>
+                {/*<button*/}
+                {/*    onClick={goToNext}*/}
+                {/*    disabled={currentStep === steps.length - 1}*/}
+                {/*    className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"*/}
+                {/*>*/}
+                {/*    Next*/}
+                {/*</button>*/}
             </div>
         </div>
     );
