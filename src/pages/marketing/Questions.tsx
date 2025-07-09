@@ -20,8 +20,11 @@ const LOCAL_STORAGE_KEY = "currentStepIndex";
 export default function Questions() {
     const [currentStep, setCurrentStep] = useState(0);
     const [gender, setGender] = useState("men")
-    const [selectedGoal, setSelectedGoal] = useState<string>('lose-weight');
+    const [selectedGoal, setSelectedGoal] = useState<string>("");
     const [selectDiet, setSelectedDiet] = useState<string>("")
+    const [allergies, setAllergies] = useState<string[]>([])
+    const [selectedLevel, setSelectedLevel] = useState<number>(0);
+    const [selectedDayOption, setSelectedDayOption] = useState<string>("");
 
     // Load saved step from localStorage
     useEffect(() => {
@@ -42,27 +45,25 @@ export default function Questions() {
         <LifeLineFitness key="LifeLineFitness" gender={gender} onContinue={() => goToNext(gender)} />,
         <FitnessGoalSelector key="FitnessGoalSelector" handleContinue={() => goToNext(gender)} onGoalChange={(goalId: string) => setSelectedGoal(goalId)} />,
         <DietTypeSelector key="DietTypeSelector" onContinue={() => goToNext(gender)} onDietChange={(diet) => setSelectedDiet(diet)} />,
+        <AllergenSelector key="AllergenSelector" onContinue={() => goToNext(gender)} onAllergiesChange={(allergens: string[]) => setAllergies(allergens)} />,
+        <ThankYouCard key="ThankYouCard1" onComplete={() => goToNext(gender)}  />,
+        <FitnessLevelSelector key="FitnessLevelSelector" onContinue={() => goToNext(gender)} onLevelChange={(level) => setSelectedLevel(level)} />,
+        <TypicalDaySelector key="TypicalDaySelector" onContinue={() => goToNext(gender)} onSelection={(optionId: string) => setSelectedDayOption(optionId)} />,
 
 
 
 
-
-
-        <AllergenSelector key="AllergenSelector" />,
-
-
-
-
-        <ThankYouCard key="ThankYouCard1" />,
-        <FitnessLevelSelector key="FitnessLevelSelector" />,
-        <TypicalDaySelector key="TypicalDaySelector" />,
-        // <PhysicalLimitationSelector key="PhysicalLimitationSelector" />,
         <FocusAreaSelector
             key="FocusAreaSelector"
             gender="female"
             onSelectionChange={(areas) => console.log(areas)}
             onContinue={() => goToNext(gender)}
         />,
+
+
+
+
+
         <ThankYouCard key="ThankYouCard2" />,
         <AgeSelector key="AgeSelector" />,
         <HeightSelector key="HeightSelector" />,
