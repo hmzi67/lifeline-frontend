@@ -50,7 +50,7 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({ handleContinu
             <button
               key={goal.id}
               onClick={() => handleGoalSelect(goal.id)}
-              className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all duration-200 ${
+              className={`w-full flex items-center justify-between p-4 rounded-full transition-all duration-200 pr-6 ${
                 selectedGoal === goal.id
                   ? 'bg-teal-400 text-white shadow-lg'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -62,7 +62,7 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({ handleContinu
                 }`}>
                   {goal.icon}
                 </div>
-                <span className="text-lg font-medium">{goal.label}</span>
+                <span className="text-lg font-medium text-black">{goal.label}</span>
               </div>
 
               {selectedGoal === goal.id && (
@@ -77,7 +77,7 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({ handleContinu
         {/* Continue Button */}
         <button
           onClick={handleContinue}
-          className="w-full bg-teal-400 text-white text-lg font-semibold py-4 rounded-2xl hover:bg-teal-500 transition-colors duration-200 shadow-lg"
+          className="w-full bg-teal-400 text-white text-lg font-semibold py-4 rounded-xl hover:bg-teal-500 transition-colors duration-200 shadow-lg"
         >
           Continue
         </button>
