@@ -25,6 +25,9 @@ export default function Questions() {
     const [allergies, setAllergies] = useState<string[]>([])
     const [selectedLevel, setSelectedLevel] = useState<number>(0);
     const [selectedDayOption, setSelectedDayOption] = useState<string>("");
+    const [focusAreas, setfocusAreas] = useState<string[]>([])
+    const [age, setAge] = useState<number>(24);
+    const [birthYear, setBirthYear] = useState<number>(2025 - 24);
 
     // Load saved step from localStorage
     useEffect(() => {
@@ -46,26 +49,18 @@ export default function Questions() {
         <FitnessGoalSelector key="FitnessGoalSelector" handleContinue={() => goToNext(gender)} onGoalChange={(goalId: string) => setSelectedGoal(goalId)} />,
         <DietTypeSelector key="DietTypeSelector" onContinue={() => goToNext(gender)} onDietChange={(diet) => setSelectedDiet(diet)} />,
         <AllergenSelector key="AllergenSelector" onContinue={() => goToNext(gender)} onAllergiesChange={(allergens: string[]) => setAllergies(allergens)} />,
-        <ThankYouCard key="ThankYouCard1" onComplete={() => goToNext(gender)}  />,
+        <ThankYouCard key="ThankYouCard1" onComplete={() => goToNext(gender)} />,
         <FitnessLevelSelector key="FitnessLevelSelector" onContinue={() => goToNext(gender)} onLevelChange={(level) => setSelectedLevel(level)} />,
         <TypicalDaySelector key="TypicalDaySelector" onContinue={() => goToNext(gender)} onSelection={(optionId: string) => setSelectedDayOption(optionId)} />,
+        <FocusAreaSelector key="FocusAreaSelector" gender={gender} onSelectionChange={(areas) => setfocusAreas(areas)} onContinue={() => goToNext(gender)}/>,
+        <ThankYouCard key="ThankYouCard2" onComplete={() => goToNext(gender)} />,
+
+
+        <AgeSelector key="AgeSelector" onSelection={(selectedAge: number, selectedBirthYear: number) => {setAge(selectedAge);setBirthYear(selectedBirthYear);}} onContinue={() => goToNext(gender)} />,
 
 
 
 
-        <FocusAreaSelector
-            key="FocusAreaSelector"
-            gender="female"
-            onSelectionChange={(areas) => console.log(areas)}
-            onContinue={() => goToNext(gender)}
-        />,
-
-
-
-
-
-        <ThankYouCard key="ThankYouCard2" />,
-        <AgeSelector key="AgeSelector" />,
         <HeightSelector key="HeightSelector" />,
         // <WeightSelector key="WeightSelector" />,
         // <GoalWeightSelector key="GoalWeightSelector" />,

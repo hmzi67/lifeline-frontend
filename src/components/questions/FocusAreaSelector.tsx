@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface FocusAreaSelectorProps {
-    gender: 'male' | 'female';
+    gender: string;
     onSelectionChange?: (selectedAreas: string[]) => void;
     onContinue?: (selectedAreas: string[]) => void;
 }
