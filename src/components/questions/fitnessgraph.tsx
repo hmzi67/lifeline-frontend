@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
+import GoBack from "@/components/common/GoBack.tsx";
 
 interface FitnessGoalCardProps {
-  gender: 'male' | 'female';
+  gender: string;
   onSelect?: (isSelected: boolean) => void;
   isSelected?: boolean;
+  onBack?: () => void;
+
 }
 
 export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({ 
   gender, 
   onSelect,
-  isSelected = false 
+  isSelected = false,
+  onBack
 }) => {
   const [selected, setSelected] = useState(isSelected);
 
@@ -60,6 +64,7 @@ export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
       }`}
       onClick={handleClick}
     >
+      <GoBack onClick={onBack} />
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-pink-500 mb-2">

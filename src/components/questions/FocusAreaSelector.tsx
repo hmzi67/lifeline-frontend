@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
+import GoBack from "@/components/common/GoBack.tsx";
 
 interface FocusAreaSelectorProps {
     gender: string;
     onSelectionChange?: (selectedAreas: string[]) => void;
     onContinue?: (selectedAreas: string[]) => void;
+    onBack?: () => void;
 }
 
 export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                                                                  gender,
                                                                  onSelectionChange,
-                                                                 onContinue
+                                                                 onContinue,
+                                                                 onBack
                                                              }) => {
     const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
     const handleAreaToggle = (area: string) => {
@@ -41,6 +44,7 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+            <GoBack onClick={onBack} />
             <div className="w-full max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-12">

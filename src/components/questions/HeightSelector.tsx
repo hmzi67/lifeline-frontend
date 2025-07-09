@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import GoBack from "@/components/common/GoBack.tsx";
 
 interface HeightSelectorProps {
   onContinue?: (height: number, unit: 'cm' | 'ft') => void;
+  onBack?: () => void;
 }
 
-const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue }) => {
+const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue, onBack }) => {
   const [unit, setUnit] = useState<'cm' | 'ft'>('ft');
   const [heightCm, setHeightCm] = useState(165);
   const [feet, setFeet] = useState(4);
@@ -76,6 +78,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-400 via-teal-300 to-teal-200 flex items-center justify-center p-4 relative overflow-hidden">
+      <GoBack onClick={onBack} />
       {/* Background decorative elements */}
       <div className="absolute top-0 right-0 w-80 h-80 bg-teal-500/20 rounded-full -translate-y-20 translate-x-20"></div>
       <div className="absolute bottom-0 left-0 w-60 h-60 bg-teal-500/30 rounded-full translate-y-20 -translate-x-20"></div>

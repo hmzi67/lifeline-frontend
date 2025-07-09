@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
+import GoBack from "@/components/common/GoBack.tsx";
 
 interface AgeSelectorProps {
     onAgeSelect?: (age: number) => void;
     onSelection?: (age: number, birthYear: number) => void;
     onContinue?: (age: number, birthYear: number) => void;
+    onBack?: () => void;
 }
 
-const AgeSelector: React.FC<AgeSelectorProps> = ({ onAgeSelect, onSelection, onContinue }) => {
+const AgeSelector: React.FC<AgeSelectorProps> = ({ onAgeSelect, onSelection, onContinue, onBack }) => {
     const [selectedAge, setSelectedAge] = useState<number>(24);
     const scrollRef = useRef<HTMLDivElement>(null);
     const isDragging = useRef(false);
@@ -77,6 +79,7 @@ const AgeSelector: React.FC<AgeSelectorProps> = ({ onAgeSelect, onSelection, onC
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-teal-300 via-teal-400 to-teal-500 flex items-center justify-center p-4 relative overflow-hidden">
+            <GoBack onClick={onBack} />
             <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-teal-200/40 to-transparent rounded-full transform translate-x-48 -translate-y-48"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-teal-200/30 to-transparent rounded-full transform -translate-x-32 translate-y-32"></div>
 

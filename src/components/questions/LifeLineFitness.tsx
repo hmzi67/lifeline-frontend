@@ -1,13 +1,13 @@
 import React from 'react';
-
-// type GenderType = 'women' | 'men';
+import GoBack from "@/components/common/GoBack.tsx";
 
 interface LifeLineFitnessProps {
     gender: string;
     onContinue?: () => void;
+    onBack?: () => void;
 }
 
-const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue }) => {
+const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue, onBack }) => {
 
     const content = {
         women: {
@@ -28,6 +28,11 @@ const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue })
 
     return (
         <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-teal-50 to-white">
+
+            {/* go back icon */}
+            <GoBack onClick={onBack} />
+
+
             {/* Background Decorative Elements */}
             <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-teal-400 to-teal-300 rounded-full opacity-20 -translate-y-20 translate-x-20"></div>
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-teal-300 to-teal-200 rounded-full opacity-30 translate-y-32 -translate-x-32"></div>

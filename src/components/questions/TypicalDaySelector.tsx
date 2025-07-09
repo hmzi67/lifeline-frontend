@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Check } from 'lucide-react';  // Assuming you're using lucide-react for icons
+import { Check } from 'lucide-react';
+import GoBack from "@/components/common/GoBack.tsx";  // Assuming you're using lucide-react for icons
 
 interface DayOption {
   id: string;
@@ -10,11 +11,13 @@ interface DayOption {
 interface TypicalDaySelectorProps {
   onContinue?: (selectedOption: string) => void;
   onSelection?: (selectedOption: string) => void;
+  onBack?: () => void;
 }
 
 const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({
                                                                  onContinue,
                                                                  onSelection,
+                                                                 onBack
                                                                }) => {
   const [selectedOption, setSelectedOption] = useState<string>('at-office');
 
@@ -42,6 +45,7 @@ const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({
 
   return (
       <div className="min-h-screen bg-gradient-to-br from-teal-100 to-teal-200 flex items-center justify-center p-4">
+        <GoBack onClick={onBack} />
         <div className="w-full max-w-md">
           <h1 className="text-2xl font-bold text-gray-800 text-center mb-8">
             What does your typical day look like?

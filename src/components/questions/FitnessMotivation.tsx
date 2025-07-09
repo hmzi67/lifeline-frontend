@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
+import GoBack from "@/components/common/GoBack.tsx";
 
 interface MotivationOption {
   id: string;
@@ -7,7 +8,12 @@ interface MotivationOption {
   icon: string;
 }
 
-const FitnessMotivationSelector: React.FC = () => {
+interface MotivationActions {
+  onContinue?: (selectedMotivaton: string) => void;
+  onBack?: () => void;
+}
+
+const FitnessMotivationSelector: React.FC<MotivationActions> = ({ onContinue, onBack }) => {
   const [selectedMotivation, setSelectedMotivation] = useState<string>('birthday');
 
   const motivationOptions: MotivationOption[] = [
@@ -23,12 +29,12 @@ const FitnessMotivationSelector: React.FC = () => {
   };
 
   const handleContinue = () => {
-    console.log('Selected motivation:', selectedMotivation);
-    // Handle continue logic here
-  };
+    onContinue?.(selectedMotivation)
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cyan-50 relative overflow-hidden">
+      <GoBack onClick={onBack} />
       {/* Decorative background elements */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-l from-teal-400 to-teal-500 rounded-full opacity-20 transform translate-x-32 -translate-y-32"></div>
       <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-r from-teal-400 to-teal-500 rounded-full opacity-20 transform -translate-x-24 translate-y-24"></div>

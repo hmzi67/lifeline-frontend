@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
+import GoBack from "@/components/common/GoBack.tsx";
 
 interface DietType {
   id: string;
@@ -10,6 +11,7 @@ interface DietType {
 interface DietTypeProp {
   onContinue?: () => void;
   onDietChange?: (selectedDiet: string) => void;
+  onBack?: () => void;
 }
 
 const dietTypes: DietType[] = [
@@ -27,7 +29,7 @@ const dietTypes: DietType[] = [
   { id: 'high-calories', name: 'High Calories', emoji: '🍰' }
 ];
 
-const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange }) => {
+const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, onBack }) => {
   const [selectedDiet, setSelectedDiet] = useState<string>('traditional');
 
   const handleSelectDiet = (dietId: string) => {
@@ -37,6 +39,9 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange }) 
 
   return (
       <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cyan-50 relative overflow-hidden">
+
+        <GoBack onClick={onBack} />
+
         {/* Decorative background */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-teal-400 to-cyan-400 rounded-full opacity-20 transform translate-x-32 -translate-y-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-teal-400 to-cyan-400 rounded-full opacity-20 transform -translate-x-24 translate-y-24"></div>
