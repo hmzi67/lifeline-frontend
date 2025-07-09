@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 
 interface FitnessLevelSelectorProps {
+  onContinue?: () => void;
   onLevelChange?: (level: number) => void;
   initialLevel?: number;
 }
 
-const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({ 
+const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
+  onContinue,
   onLevelChange, 
   initialLevel = 3 
 }) => {
@@ -32,11 +34,6 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
 
   const handleMouseUp = () => {
     setIsDragging(false);
-  };
-
-  const handleContinue = () => {
-    console.log(`Selected fitness level: ${selectedLevel} (${levels[selectedLevel - 1].label})`);
-    // Add your continue logic here
   };
 
   return (
@@ -120,7 +117,7 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
 
         <div className="text-center">
           <button
-            onClick={handleContinue}
+            onClick={onContinue}
             className="bg-gradient-to-r from-teal-500 to-teal-500 hover:from-teal-600 hover:to-teal-600 text-white font-semibold py-4 px-12 rounded-2xl text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl active:scale-95"
           >
             Continue
