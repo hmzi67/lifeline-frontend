@@ -47,13 +47,15 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
 
     return (
         <div className="min-h-screen bg-white flex items-center justify-center p-4 relative overflow-hidden">
-            {/* Background */}
-              <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-100 transform translate-x-24 -translate-y-16 rotate-6 ">
+            {/* Background  -y for up x for right -x for down x for left */}
+              <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-100 transform translate-x-44 -translate-y-32 rotate-6 hidden md:block ">
                 <img src={eimg} alt="" />
               </div>
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary rounded-full opacity-80 transform -translate-x-40 translate-y-40 -scale-y-150 scale-x-150 shadow-2xl -rotate-90"></div>
+            <div className="absolute bottom-0 left-0 w-96 h-96 opacity-100 transform -translate-x-24 translate-y-44 rotate-45 hidden md:block">
+                <img src={eimg} alt="" />
+            </div>
 
-            <div className="relative z-10 max-w-3xl w-full">
+            <div className="relative z-10 max-w-7xl w-full rounded-3xl p-8 bg-white/60 backdrop-blur-sm">
                 {/* Header */}
                 <div className="text-center mb-16">
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
