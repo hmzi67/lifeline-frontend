@@ -17,7 +17,7 @@ interface GenderSelectorProps {
 }
 
 const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onContinue }) => {
-    const [selectedGender, setSelectedGender] = useState<'male' | 'female' | null>('male');
+    const [selectedGender, setSelectedGender] = useState<'male' | 'female' | null>(null);
 
     const genderOptions: GenderOption[] = [
         {
@@ -35,6 +35,8 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
     const handleGenderSelect = (gender: 'male' | 'female') => {
         setSelectedGender(gender);
         onGenderSelect?.(gender);
+
+        onContinue?.(gender);
     };
 
     const handleContinue = () => {
