@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';  // assuming you're using lucide-react icons
+import menimg from "@/assets/images/question/man-gender.jpg";
+import womenimg from "@/assets/images/question/women-gender.jpeg";
+import eimg from "@/assets/images/question/Ellipse 4.svg";
+
 
 interface GenderOption {
     id: 'male' | 'female';
@@ -19,12 +23,12 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
         {
             id: 'male',
             label: 'Male',
-            image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face'
+            image: menimg
         },
         {
             id: 'female',
             label: 'Female',
-            image: 'https://images.unsplash.com/photo-1485875437342-9b39470b3d95?w=300&h=300&fit=crop&crop=face'
+            image: womenimg 
         }
     ];
 
@@ -42,8 +46,10 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
     return (
         <div className="min-h-screen bg-white flex items-center justify-center p-4 relative overflow-hidden">
             {/* Background */}
-            <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-teal-400 to-teal-500 rounded-full opacity-100 transform translate-x-40 -translate-y-40"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-teal-300 to-teal-400 rounded-full opacity-80 transform -translate-x-32 translate-y-32"></div>
+              <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-100 transform translate-x-24 -translate-y-16 rotate-6 ">
+                <img src={eimg} alt="" />
+              </div>
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary rounded-full opacity-80 transform -translate-x-40 translate-y-40 -scale-y-150 scale-x-150 shadow-2xl -rotate-90"></div>
 
             <div className="relative z-10 max-w-3xl w-full">
                 {/* Header */}
