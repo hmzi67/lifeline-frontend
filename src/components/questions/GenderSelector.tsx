@@ -46,7 +46,7 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
     return (
         <div className="min-h-screen bg-white flex items-center justify-center p-4 relative overflow-hidden">
             {/* Background  -y for up x for right -x for down x for left */}
-              <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-100 transform translate-x-44 -translate-y-32 rotate-6 hidden md:block ">
+              <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-100 transform translate-x-32 -translate-y-32 rotate-6 hidden md:block ">
                 <img src={eimg} alt="" />
               </div>
             <div className="absolute bottom-0 left-0 w-96 h-96 opacity-100 transform -translate-x-24 translate-y-44 rotate-45 hidden md:block">
@@ -108,16 +108,7 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                 </div>
 
                 {/* Continue Button */}
-                {selectedGender && (
-                    <div className="text-center">
-                        <button
-                            onClick={handleContinue}
-                            className="bg-gradient-to-r from-teal-500 to-teal-600 text-white px-16 py-5 rounded-full font-semibold text-xl hover:from-teal-600 hover:to-teal-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
-                        >
-                            Continue
-                        </button>
-                    </div>
-                )}
+               
             </div>
         </div>
     );
