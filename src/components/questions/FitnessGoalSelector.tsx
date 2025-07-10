@@ -67,7 +67,9 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({ handleContinu
                 }`}>
                   {goal.icon}
                 </div>
-                <span className="text-lg font-medium text-black">{goal.label}</span>
+               <span className={`text-lg font-medium ${
+                  selectedGoal === goal.id ? 'text-white' : 'text-black'
+                }`}>{goal.label}</span>
               </div>
 
               {selectedGoal === goal.id && (
