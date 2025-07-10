@@ -13,7 +13,7 @@ interface GenderSelectorProps {
 }
 
 const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onContinue }) => {
-    const [selectedGender, setSelectedGender] = useState<'male' | 'female' | null>(null);
+    const [selectedGender, setSelectedGender] = useState<'male' | 'female' | null>('male');
 
     const genderOptions: GenderOption[] = [
         {
@@ -24,7 +24,7 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
         {
             id: 'female',
             label: 'Female',
-            image: 'https://images.unsplash.com/photo-1494790108755-2616b332b1a?w=300&h=300&fit=crop&crop=face'
+            image: 'https://images.unsplash.com/photo-1485875437342-9b39470b3d95?w=300&h=300&fit=crop&crop=face'
         }
     ];
 
@@ -62,18 +62,16 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                         <div
                             key={option.id}
                             onClick={() => handleGenderSelect(option.id)}
-                            className={`relative flex-1 bg-white rounded-3xl p-8 cursor-pointer transition-all duration-300 transform hover:scale-105 ${
-                                selectedGender === option.id ? 'ring-4 ring-teal-400 shadow-2xl' : 'shadow-lg hover:shadow-xl'
-                            }`}
+                            className={`relative flex-1 bg-white rounded-3xl p-8 cursor-pointer transition-all duration-300 transform hover:scale-105 
+                            `}
                         >
-                            {selectedGender === option.id && (
-                                <div className="absolute top-6 right-6 w-10 h-10 bg-teal-400 rounded-full flex items-center justify-center shadow-lg">
-                                    <Check className="w-6 h-6 text-white" />
-                                </div>
-                            )}
-
                             <div className="flex justify-center mb-8">
-                                <div className="w-48 h-48 rounded-2xl overflow-hidden shadow-lg">
+                                {selectedGender === option.id && (
+                                    <div className="absolute top-6 right-6 w-10 h-10 bg-teal-400 rounded-full flex items-center justify-center shadow-lg">
+                                        <Check className="w-6 h-6 text-white" />
+                                    </div>
+                                )}
+                                <div className={`w-64 h-64 rounded-2xl overflow-hidden shadow-lg ${selectedGender === option.id ? 'ring-4 ring-teal-400 shadow-2xl' : 'shadow-lg hover:shadow-xl'}`}>
                                     <img
                                         src={option.image}
                                         alt={`${option.label} representative`}
