@@ -57,12 +57,12 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                 </div>
 
                 {/* Gender Cards */}
-                <div className="flex flex-col md:flex-row gap-8 md:gap-12 mb-12">
+                <div className="flex flex-col md:flex-row gap-8 md:gap-12 mb-12 items-center justify-center">
                     {genderOptions.map((option) => (
                         <div
                             key={option.id}
                             onClick={() => handleGenderSelect(option.id)}
-                            className={`relative flex-1 bg-white rounded-3xl p-8 cursor-pointer transition-all duration-300 transform hover:scale-105 
+                            className={`relative bg-white rounded-3xl cursor-pointer transition-all duration-300 transform hover:scale-105 
                             `}
                         >
                             <div className="flex justify-center mb-8">
