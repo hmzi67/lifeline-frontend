@@ -35,8 +35,6 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
     const handleGenderSelect = (gender: 'male' | 'female') => {
         setSelectedGender(gender);
         onGenderSelect?.(gender);
-
-        onContinue?.(gender);
     };
 
     const handleContinue = () => {
