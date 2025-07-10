@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import GoBack from "@/components/common/GoBack.tsx";
 
 interface PlanPreparationProps {
   planType?: 'diet' | 'exercise';
   onComplete?: () => void;
+  onBack?: () => void;
 }
 
 const ThankYouCard: React.FC<PlanPreparationProps> = ({
                                                         planType = 'diet',
-                                                        onComplete
+                                                        onComplete,
+                                                        onBack
                                                       }) => {
   const [currentPlan, setCurrentPlan] = useState<'diet' | 'exercise'>(planType);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,6 +50,7 @@ const ThankYouCard: React.FC<PlanPreparationProps> = ({
 
   return (
       <div className="relative w-full h-screen overflow-hidden">
+        <GoBack onClick={onBack} />
         {/* Background */}
         <div
             className="absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out"

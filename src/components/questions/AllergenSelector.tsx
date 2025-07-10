@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
+import GoBack from "@/components/common/GoBack.tsx";
 
 interface AllergenOption {
   id: string;
@@ -10,11 +11,13 @@ interface AllergenOption {
 interface AllergenSelectorProps {
   onContinue?: (allergens: string[]) => void;
   onAllergiesChange?: (allergens: string[]) => void;
+  onBack?: () => void;
 }
 
 const AllergenSelector: React.FC<AllergenSelectorProps> = ({
                                                              onContinue,
                                                              onAllergiesChange,
+                                                             onBack
                                                            }) => {
   const [selectedAllergens, setSelectedAllergens] = useState<string[]>(['dairy']);
 
@@ -52,6 +55,7 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({
 
   return (
       <div className="min-h-screen bg-gradient-to-br from-teal-400 via-teal-500 to-teal-600 flex items-center justify-center p-4">
+        <GoBack onClick={onBack} />
         <div className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-28">
           <div className="w-full max-w-md">
             <div className="text-center mb-8">

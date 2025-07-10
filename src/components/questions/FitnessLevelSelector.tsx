@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import GoBack from "@/components/common/GoBack.tsx";
 
 interface FitnessLevelSelectorProps {
   onContinue?: () => void;
+  onBack?: () => void;
   onLevelChange?: (level: number) => void;
   initialLevel?: number;
 }
@@ -9,7 +11,8 @@ interface FitnessLevelSelectorProps {
 const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
   onContinue,
   onLevelChange, 
-  initialLevel = 3 
+  initialLevel = 3,
+  onBack
 }) => {
   const [selectedLevel, setSelectedLevel] = useState<number>(initialLevel);
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -38,6 +41,7 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-100 to-cyan-50 flex items-center justify-center p-4">
+      <GoBack onClick={onBack} />
       {/* Decorative circles */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-teal-400 to-teal-300 rounded-full opacity-20 transform translate-x-32 -translate-y-32"></div>
       <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-teal-300 to-teal-200 rounded-full opacity-30 transform -translate-x-24 translate-y-24"></div>

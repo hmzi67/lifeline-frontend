@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import GoBack from "@/components/common/GoBack.tsx";
 
-const PersonalizingPlans: React.FC = () => {
+
+interface PersonalizePlansActions {
+    onContinue?: () => void;
+    onBack?: () => void;
+}
+
+const PersonalizingPlans: React.FC<PersonalizePlansActions> = ({ onContinue, onBack }) => {
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
@@ -16,6 +23,7 @@ const PersonalizingPlans: React.FC = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-white px-4">
+            <GoBack onClick={onBack} />
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Personalizing plans for you!</h1>
             <p className="text-sm text-gray-600 mb-6">Please wait.....</p>
 
@@ -37,6 +45,7 @@ const PersonalizingPlans: React.FC = () => {
             </p>
 
             <button
+                onClick={onContinue}
                 className="bg-[#21C8C2] text-white font-semibold py-2 px-6 rounded-md disabled:opacity-50"
                 disabled={progress < 100}
             >

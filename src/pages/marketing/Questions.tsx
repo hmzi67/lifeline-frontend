@@ -25,6 +25,9 @@ export default function Questions() {
     const [allergies, setAllergies] = useState<string[]>([])
     const [selectedLevel, setSelectedLevel] = useState<number>(0);
     const [selectedDayOption, setSelectedDayOption] = useState<string>("");
+    const [focusAreas, setfocusAreas] = useState<string[]>([])
+    const [age, setAge] = useState<number>(24);
+    const [birthYear, setBirthYear] = useState<number>(2025 - 24);
 
     // Load saved step from localStorage
     useEffect(() => {
@@ -41,37 +44,108 @@ export default function Questions() {
 
 
     const steps = [
-        <GenderSelector key="GenderSelector" onContinue={(gender) => goToNext(gender)} />,
-        <LifeLineFitness key="LifeLineFitness" gender={gender} onContinue={() => goToNext(gender)} />,
-        <FitnessGoalSelector key="FitnessGoalSelector" handleContinue={() => goToNext(gender)} onGoalChange={(goalId: string) => setSelectedGoal(goalId)} />,
-        <DietTypeSelector key="DietTypeSelector" onContinue={() => goToNext(gender)} onDietChange={(diet) => setSelectedDiet(diet)} />,
-        <AllergenSelector key="AllergenSelector" onContinue={() => goToNext(gender)} onAllergiesChange={(allergens: string[]) => setAllergies(allergens)} />,
-        <ThankYouCard key="ThankYouCard1" onComplete={() => goToNext(gender)}  />,
-        <FitnessLevelSelector key="FitnessLevelSelector" onContinue={() => goToNext(gender)} onLevelChange={(level) => setSelectedLevel(level)} />,
-        <TypicalDaySelector key="TypicalDaySelector" onContinue={() => goToNext(gender)} onSelection={(optionId: string) => setSelectedDayOption(optionId)} />,
+        <GenderSelector
+            key="GenderSelector"
+            onContinue={(gender) => goToNext(gender)}
+        />,
 
+        <LifeLineFitness
+            key="LifeLineFitness"
+            gender={gender}
+            onContinue={() => goToNext(gender)}
+            onBack={() => goToPrevious()}
+        />,
 
+        <FitnessGoalSelector
+            key="FitnessGoalSelector"
+            handleContinue={() => goToNext(gender)}
+            onGoalChange={(goalId: string) => setSelectedGoal(goalId)}
+            onBack={() => goToPrevious()}
+        />,
 
+        <DietTypeSelector
+            key="DietTypeSelector"
+            onContinue={() => goToNext(gender)}
+            onDietChange={(diet) => setSelectedDiet(diet)}
+            onBack={() => goToPrevious()}
+        />,
+
+        <AllergenSelector
+            key="AllergenSelector"
+            onContinue={() => goToNext(gender)}
+            onAllergiesChange={(allergens: string[]) => setAllergies(allergens)}
+            onBack={() => goToPrevious()}
+        />,
+
+        <ThankYouCard
+            key="ThankYouCard1"
+            onComplete={() => goToNext(gender)}
+            onBack={() => goToPrevious()}
+        />,
+
+        <FitnessLevelSelector
+            key="FitnessLevelSelector"
+            onContinue={() => goToNext(gender)}
+            onLevelChange={(level) => setSelectedLevel(level)}
+            onBack={() => goToPrevious()}
+        />,
+
+        <TypicalDaySelector
+            key="TypicalDaySelector"
+            onContinue={() => goToNext(gender)}
+            onSelection={(optionId: string) => setSelectedDayOption(optionId)}
+            onBack={() => goToPrevious()}
+        />,
 
         <FocusAreaSelector
             key="FocusAreaSelector"
-            gender="female"
-            onSelectionChange={(areas) => console.log(areas)}
+            gender={gender}
+            onSelectionChange={(areas) => setfocusAreas(areas)}
             onContinue={() => goToNext(gender)}
+            onBack={() => goToPrevious()}
         />,
 
+        <ThankYouCard
+            key="ThankYouCard2"
+            onComplete={() => goToNext(gender)}
+            onBack={() => goToPrevious()}
+        />,
 
+        <AgeSelector
+            key="AgeSelector"
+            onSelection={(selectedAge: number, selectedBirthYear: number) => {setAge(selectedAge);setBirthYear(selectedBirthYear);}}
+            onContinue={() => goToNext(gender)}
+            onBack={() => goToPrevious()}
+        />,
 
+        <HeightSelector
+            key="HeightSelector"
+            onContinue={(height: number, unit: 'cm' | 'ft') => {
+                console.log(`Height: ${height} ${unit}`);
+                goToNext(gender);
+            }}
+            onBack={() => goToPrevious()}
+        />,
 
+        <FitnessMotivationSelector
+            key="FitnessMotivationSelector"
+            onContinue={(selectedMotivaton: string) => {
+                console.log(selectedMotivaton);
+                goToNext(gender);
+            }}
+            onBack={() => goToPrevious()} />,
 
-        <ThankYouCard key="ThankYouCard2" />,
-        <AgeSelector key="AgeSelector" />,
-        <HeightSelector key="HeightSelector" />,
-        // <WeightSelector key="WeightSelector" />,
-        // <GoalWeightSelector key="GoalWeightSelector" />,
-        <FitnessMotivationSelector key="FitnessMotivationSelector" />,
-        <PersonalizingPlans key="PersonalizingPlans" />,
-        <FitnessGraph key="FitnessGraph" gender="female" />
+        <PersonalizingPlans
+            key="PersonalizingPlans"
+            onContinue={() => goToNext(gender)}
+            onBack={() => goToPrevious()}
+        />,
+
+        <FitnessGraph
+            key="FitnessGraph"
+            gender={gender}
+            onBack={() => goToPrevious()}
+        />
     ];
 
     const goToNext = (gender: string) => {
@@ -88,31 +162,8 @@ export default function Questions() {
     };
 
     return (
-        <div className="p-4">
-            <div className="mb-4">
-                <p>Step {currentStep + 1} of {steps.length}</p>
-            </div>
-
-            <div className="mb-4">
-                {steps[currentStep]}
-            </div>
-
-            <div className="flex justify-between">
-                <button
-                    onClick={goToPrevious}
-                    disabled={currentStep === 0}
-                    className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
-                >
-                    Back
-                </button>
-                {/*<button*/}
-                {/*    onClick={goToNext}*/}
-                {/*    disabled={currentStep === steps.length - 1}*/}
-                {/*    className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"*/}
-                {/*>*/}
-                {/*    Next*/}
-                {/*</button>*/}
-            </div>
+        <div className="">
+            {steps[currentStep]}
         </div>
     );
 }
