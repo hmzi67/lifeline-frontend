@@ -25,7 +25,7 @@ export default function Questions() {
     const [allergies, setAllergies] = useState<string[]>([])
     const [selectedLevel, setSelectedLevel] = useState<number>(0);
     const [selectedDayOption, setSelectedDayOption] = useState<string>("");
-    const [focusAreas, setfocusAreas] = useState<string[]>([])
+    const [focusAreas, setFocusAreas] = useState<string[]>([])
     const [age, setAge] = useState<number>(24);
     const [birthYear, setBirthYear] = useState<number>(2025 - 24);
 
@@ -40,7 +40,7 @@ export default function Questions() {
         console.log(focusAreas);
         console.log(age);
         console.log(birthYear);
-    }, []);
+    }, [age, birthYear, focusAreas, gender, selectedDayOption, selectedGoal, selectDiet, selectedLevel, allergies]);
 
 
     // Load saved a step from localStorage
@@ -114,7 +114,7 @@ export default function Questions() {
         <FocusAreaSelector
             key="FocusAreaSelector"
             gender={gender}
-            onSelectionChange={(areas) => setfocusAreas(areas)}
+            onSelectionChange={(areas) => setFocusAreas(areas)}
             onContinue={() => goToNext(gender)}
             onBack={() => goToPrevious()}
         />,
@@ -143,8 +143,8 @@ export default function Questions() {
 
         <FitnessMotivationSelector
             key="FitnessMotivationSelector"
-            onContinue={(selectedMotivaton: string) => {
-                console.log(selectedMotivaton);
+            onContinue={(selectedMotivation: string) => {
+                console.log(selectedMotivation);
                 goToNext(gender);
             }}
             onBack={() => goToPrevious()} />,
