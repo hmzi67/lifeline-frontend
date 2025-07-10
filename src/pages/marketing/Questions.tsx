@@ -29,7 +29,21 @@ export default function Questions() {
     const [age, setAge] = useState<number>(24);
     const [birthYear, setBirthYear] = useState<number>(2025 - 24);
 
-    // Load saved step from localStorage
+
+    useEffect(() => {
+        console.log(gender);
+        console.log(selectedGoal);
+        console.log(selectDiet);
+        console.log(allergies);
+        console.log(selectedLevel);
+        console.log(selectedDayOption);
+        console.log(focusAreas);
+        console.log(age);
+        console.log(birthYear);
+    }, []);
+
+
+    // Load saved a step from localStorage
     useEffect(() => {
         const savedStep = parseInt(localStorage.getItem(LOCAL_STORAGE_KEY) as string, 10);
         if (!isNaN(savedStep)) {
@@ -37,7 +51,7 @@ export default function Questions() {
         }
     }, []);
 
-    // Save current step to localStorage whenever it changes
+    // Save the current step to localStorage whenever it changes
     useEffect(() => {
         return localStorage.setItem(LOCAL_STORAGE_KEY, String(currentStep));
     }, [currentStep]);
