@@ -27,20 +27,18 @@ const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue, o
     };
 
     return (
-        <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-teal-50 to-white">
+        <div className="my-8">
 
             {/* go back icon */}
             <GoBack onClick={onBack} />
 
 
             {/* Background Decorative Elements */}
-            <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-teal-400 to-teal-300 rounded-full opacity-20 -translate-y-20 translate-x-20"></div>
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-teal-300 to-teal-200 rounded-full opacity-30 translate-y-32 -translate-x-32"></div>
-
-            <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-8">
+            
+            <div className="flex items-center justify-center">
                 {/* Main Content */}
-                <div className="text-center max-w-4xl mx-auto">
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-6 leading-tight">
+                <div className="text-center max-w-4xl">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-4 leading-tight">
                         {gender == 'male' ? content.men.title : content.women.title}
                     </h1>
 
@@ -67,20 +65,6 @@ const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue, o
                     >
                         Continue
                     </button>
-                </div>
-
-                {/* Stats Indicator */}
-                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-                    <div className="flex space-x-2">
-                        {[...Array(3)].map((_, i) => (
-                            <div
-                                key={i}
-                                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                                    i === 0 ? 'bg-teal-500' : 'bg-gray-300'
-                                }`}
-                            ></div>
-                        ))}
-                    </div>
                 </div>
             </div>
         </div>
