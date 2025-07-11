@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";  // Assuming you're using lucide-react for icons
 
 interface DayOption {
@@ -44,8 +44,8 @@ const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({
   };
 
   return (
-      <div className="min-h-screen bg-gradient-to-br from-teal-100 to-teal-200 flex items-center justify-center p-4">
-        <GoBack onClick={onBack} />
+      <div className="flex items-center justify-center py-6">
+
         <div className="w-full max-w-md">
           <h1 className="text-2xl font-bold text-gray-800 text-center mb-8">
             What does your typical day look like?
@@ -56,7 +56,7 @@ const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({
                 <button
                     key={option.id}
                     onClick={() => handleOptionSelect(option.id)}
-                    className={`w-full flex items-center justify-between p-4 rounded-full transition-all duration-200 ${
+                    className={`w-full flex items-center justify-between p-4 rounded-full transition-all duration-200 pr-6 ${
                         selectedOption === option.id
                             ? 'bg-teal-400 text-white shadow-lg'
                             : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -78,16 +78,17 @@ const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({
             ))}
           </div>
 
-          <button
-              onClick={handleContinue}
-              className="w-full bg-teal-400 text-white font-semibold py-4 rounded-full hover:bg-teal-500 transition-colors duration-200 shadow-lg"
-          >
-            Continue
-          </button>
+           <div className={'flex items-center justify-center '}>
+             <GoBack onClick={onBack} />
+             <button
+                 onClick={handleContinue}
+                 className="inline-flex items-center justify-between p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
+             >
+                 Continue
+                 <ArrowRight className="w-5 h-5" />
+             </button>
+            </div>
         </div>
-
-        <div className="absolute top-0 right-0 w-32 h-32 bg-teal-300 rounded-full opacity-50 -translate-y-16 translate-x-16"></div>
-        <div className="absolute bottom-0 left-0 w-40 h-40 bg-teal-300 rounded-full opacity-50 translate-y-20 -translate-x-20"></div>
       </div>
   );
 };

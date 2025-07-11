@@ -1,6 +1,6 @@
 import React from 'react';
 import GoBack from "@/components/common/GoBack.tsx";
-import {ArrowRight} from "lucide-react";
+import { ArrowRight } from 'lucide-react';
 
 interface LifeLineFitnessProps {
     gender: string;
@@ -28,15 +28,11 @@ const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue, o
     };
 
     return (
-        <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-teal-50 to-white">
-            {/* Background Decorative Elements */}
-            <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-teal-400 to-teal-300 rounded-full opacity-20 -translate-y-20 translate-x-20"></div>
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-teal-300 to-teal-200 rounded-full opacity-30 translate-y-32 -translate-x-32"></div>
-
-            <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-8">
+        <div className="my-8">
+            <div className="flex items-center justify-center">
                 {/* Main Content */}
-                <div className="text-center max-w-4xl mx-auto">
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-6 leading-tight">
+                <div className="text-center max-w-4xl">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-4 leading-tight">
                         {gender == 'male' ? content.men.title : content.women.title}
                     </h1>
 
@@ -57,11 +53,11 @@ const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue, o
                     </div>
 
                     {/* Continue Button */}
-                    <div className={'flex items-center justify-center gap-5'}>
+                    <div className={'flex items-center justify-center '}>
                         <GoBack onClick={onBack} />
                         <button
                             onClick={handleContinue}
-                            className="inline-flex items-center justify-between gap-2 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
+                            className="inline-flex items-center justify-between p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
                         >
                             Continue
                             <ArrowRight className="w-5 h-5" />

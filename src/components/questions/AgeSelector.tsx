@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import GoBack from "@/components/common/GoBack.tsx";
+import { ArrowRight } from 'lucide-react';
 
 interface AgeSelectorProps {
     onAgeSelect?: (age: number) => void;
@@ -77,12 +78,14 @@ const AgeSelector: React.FC<AgeSelectorProps> = ({ onAgeSelect, onSelection, onC
         }
     };
 
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-teal-300 via-teal-400 to-teal-500 flex items-center justify-center p-4 relative overflow-hidden">
-            <GoBack onClick={onBack} />
-            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-teal-200/40 to-transparent rounded-full transform translate-x-48 -translate-y-48"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-teal-200/30 to-transparent rounded-full transform -translate-x-32 translate-y-32"></div>
+    function handleContinue(_event: React.MouseEvent<HTMLButtonElement>): void {
+        if (onContinue) {
+            onContinue(selectedAge, getBirthYear(selectedAge));
+        }
+    }
 
+    return (
+        <div className="flex items-center justify-center py-6 ">
             <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center relative z-10 mx-4">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
                     What's your age?
@@ -144,15 +147,16 @@ const AgeSelector: React.FC<AgeSelectorProps> = ({ onAgeSelect, onSelection, onC
                     Minimum age limit is 18 years as our data will categorized according to different age groups.
                 </p>
 
-                <button
-                    className="w-full bg-teal-400 text-white py-4 rounded-2xl text-lg font-semibold hover:bg-teal-500 transition-all duration-200 shadow-lg hover:shadow-xl"
-                    onClick={() => {
-                        console.log(`Selected age: ${selectedAge}, Birth year: ${getBirthYear(selectedAge)}`);
-                        onContinue?.(selectedAge, getBirthYear(selectedAge));
-                    }}
-                >
-                    Continue
-                </button>
+                 <div className={'flex items-center justify-center '}>
+                     <GoBack onClick={onBack} />
+                     <button
+                         onClick={handleContinue}
+                         className="inline-flex items-center justify-between p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
+                     >
+                         Continue
+                         <ArrowRight className="w-5 h-5" />
+                     </button>
+                 </div>     
             </div>
         </div>
     );

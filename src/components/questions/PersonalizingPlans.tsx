@@ -22,8 +22,8 @@ const PersonalizingPlans: React.FC<PersonalizePlansActions> = ({ onContinue, onB
     }, [progress]);
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-white px-4">
-            <GoBack onClick={onBack} />
+        <div className="flex flex-col items-center justify-center py-6">
+            
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Personalizing plans for you!</h1>
             <p className="text-sm text-gray-600 mb-6">Please wait.....</p>
 

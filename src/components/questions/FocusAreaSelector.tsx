@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import GoBack from "@/components/common/GoBack.tsx";
+import { ArrowRight } from 'lucide-react';
 
 interface FocusAreaSelectorProps {
     gender: string;
@@ -43,8 +44,7 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
     const isSelected = (area: string) => selectedAreas.includes(area);
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-            <GoBack onClick={onBack} />
+        <div className="flex items-center justify-center py-6">
             <div className="w-full max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-12">
@@ -157,13 +157,15 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                 </div>
 
                 {/* Continue Button */}
-                <div className="text-center">
-                    <button
-                        onClick={handleContinue}
-                        className="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-4 px-12 rounded-lg text-lg transition-all duration-200 shadow-lg hover:shadow-xl"
-                    >
-                        Continue
-                    </button>
+                 <div className={'flex items-center justify-center '}>   
+                     <GoBack onClick={onBack} />
+                   <button
+                       onClick={handleContinue}
+                       className="inline-flex items-center justify-between p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
+                   >
+                       Continue
+                       <ArrowRight className="w-5 h-5" />
+                   </button>
                 </div>
 
                 {/* Selected areas display (for demo) */}
@@ -182,10 +184,6 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                         </div>
                     </div>
                 )}
-
-                {/* Decorative elements */}
-                <div className="absolute top-0 left-0 w-32 h-32 bg-teal-400 rounded-full opacity-20 -translate-x-16 -translate-y-16"></div>
-                <div className="absolute bottom-0 right-0 w-40 h-40 bg-teal-300 rounded-full opacity-20 translate-x-20 translate-y-20"></div>
             </div>
         </div>
     );

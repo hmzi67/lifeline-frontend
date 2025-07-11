@@ -38,10 +38,7 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
   };
 
   return (
-      <div className="">
-
-        <GoBack onClick={onBack} />
-
+      <div className="py-2">
         <div className=" max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold text-gray-900 text-center mb-8">
             Choose your diet type
@@ -57,7 +54,7 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
                       className={`
                   relative flex items-center justify-between p-2 rounded-full transition-all duration-200 border-2 pr-6
                   ${isSelected
-                          ? 'bg-gradient-to-r from-teal-400 to-teal-400 border-teal-400 text-white shadow-lg transform scale-105'
+                          ? 'bg-primary border-teal-400 text-white shadow-lg transform scale-105'
                           : 'bg-white border-gray-200 text-gray-700 hover:border-teal-300 hover:shadow-md hover:scale-102'
                       }
                 `}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import GoBack from "@/components/common/GoBack.tsx";
+import { ArrowRight } from 'lucide-react';
 
 interface HeightSelectorProps {
   onContinue?: (height: number, unit: 'cm' | 'ft') => void;
@@ -77,13 +78,8 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue, onBack }) =
   const sliderPercentage = ((heightCm - 150) / (180 - 150)) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-400 via-teal-300 to-teal-200 flex items-center justify-center p-4 relative overflow-hidden">
-      <GoBack onClick={onBack} />
-      {/* Background decorative elements */}
-      <div className="absolute top-0 right-0 w-80 h-80 bg-teal-500/20 rounded-full -translate-y-20 translate-x-20"></div>
-      <div className="absolute bottom-0 left-0 w-60 h-60 bg-teal-500/30 rounded-full translate-y-20 -translate-x-20"></div>
-      <div className="bg-white/5 backdrop-blur-sm rounded-2xl  border border-white/10">
-      <div className="w-full max-w-md relative z-10">
+    <div className="flex items-center justify-center p-4">
+      <div className="w-full max-w-md ">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-3">
@@ -167,11 +163,6 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue, onBack }) =
                 }}
               />
             </div>
-
-            {/* Progress Indicator */}
-            <div className="flex justify-center mb-8">
-              <div className="w-4 h-4 bg-teal-500 rounded-full"></div>
-            </div>
           </div>
         ) : (
           // CM Display with Ruler
@@ -222,44 +213,18 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue, onBack }) =
         )}
 
         {/* Continue Button */}
-        <button
-          onClick={handleContinue}
-          className="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-4 px-8 rounded-2xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
-        >
-          Continue
-        </button>
+        <div className={'flex items-center justify-center '}>
+         <GoBack onClick={onBack} />
+         <button
+             onClick={handleContinue}
+             className="inline-flex items-center justify-between p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
+         >
+             Continue
+             <ArrowRight className="w-5 h-5" />
+         </button>
+        </div>
       </div>
       </div>
-
-      {/* Decorative elements */}
-
-      {/* Custom CSS for slider */}
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          input[type="range"]::-webkit-slider-thumb {
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: #14b8a6;
-            border: 4px solid white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-          }
-          
-          input[type="range"]::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: #14b8a6;
-            border: 4px solid white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            border: none;
-          }
-        `
-      }} />
-    </div>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
 
 interface AllergenOption {
@@ -54,67 +54,63 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({
   };
 
   return (
-      <div className="min-h-screen bg-gradient-to-br from-teal-400 via-teal-500 to-teal-600 flex items-center justify-center p-4">
-        <GoBack onClick={onBack} />
-        <div className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-28">
-          <div className="w-full max-w-md">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-white mb-2">
-                Do you have any allergen food?
-              </h1>
-            </div>
+  <div className="py-4">
+    <div className="max-w-md mx-auto">
+      {/* Header */}
+      <h1 className="text-3xl font-bold text-gray-900 text-center mb-8">
+        Do you have any allergen food?
+      </h1>
 
-            <div className="space-y-4 mb-8">
-              {allergenOptions.map((option) => {
-                const isSelected = selectedAllergens.includes(option.id);
+      {/* Allergen Options */}
+      <div className="space-y-4 mb-3">
+        {allergenOptions.map((option) => {
+          const isSelected = selectedAllergens.includes(option.id);
 
-                return (
-                    <button
-                        key={option.id}
-                        onClick={() => toggleAllergen(option.id)}
-                        className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all duration-200 transform hover:scale-105 ${
-                            isSelected
-                                ? 'bg-white bg-opacity-90 shadow-lg'
-                                : 'bg-white bg-opacity-20 hover:bg-opacity-30'
-                        }`}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-white bg-opacity-80 rounded-full flex items-center justify-center text-xl">
-                          {option.icon}
-                        </div>
-                        <span
-                            className={`font-medium text-lg ${
-                                isSelected ? 'text-gray-800' : 'text-white'
-                            }`}
-                        >
-                      {option.name}
-                    </span>
-                      </div>
-
-                      {isSelected && (
-                          <div className="w-8 h-8 bg-teal-500 rounded-full flex items-center justify-center">
-                            <Check className="w-5 h-5 text-white" strokeWidth={3} />
-                          </div>
-                      )}
-                    </button>
-                );
-              })}
-            </div>
-
+          return (
             <button
-                onClick={handleContinue}
-                className="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-4 px-6 rounded-2xl transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+              key={option.id}
+              onClick={() => toggleAllergen(option.id)}
+              className={`w-full flex items-center justify-between p-3 rounded-full transition-all duration-200 pr-6 ${
+                isSelected
+                  ? 'bg-teal-400 text-white shadow-lg'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
             >
-              Continue
-            </button>
-          </div>
-        </div>
+              <div className="flex items-center space-x-4">
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl ${
+                  isSelected ? 'bg-white bg-opacity-20' : 'bg-white'
+                }`}>
+                  {option.icon}
+                </div>
+                <span className={`text-lg font-medium ${
+                  isSelected ? 'text-white' : 'text-black'
+                }`}>{option.name}</span>
+              </div>
 
-        {/* Decorative Background */}
-        <div className="fixed top-0 right-0 w-32 h-32 bg-white bg-opacity-10 rounded-full -translate-y-16 translate-x-16"></div>
-        <div className="fixed bottom-0 left-0 w-24 h-24 bg-white bg-opacity-10 rounded-full translate-y-12 -translate-x-12"></div>
+              {isSelected && (
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                  <Check className="w-5 h-5 text-teal-400" />
+                </div>
+              )}
+            </button>
+          );
+        })}
       </div>
-  );
+
+      {/* Continue Button */}
+      <div className={'flex items-center justify-center gap-5'}>
+        <GoBack onClick={onBack} />
+        <button
+          onClick={handleContinue}
+          className="inline-flex items-center justify-between gap-2 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
+        >
+          Continue
+          <ArrowRight className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  </div>
+);
 };
 
 export default AllergenSelector;

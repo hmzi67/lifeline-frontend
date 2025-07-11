@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
 
 interface FitnessGoal {
@@ -37,9 +37,6 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({ handleContinu
     return (
     <div className="py-4">
 
-      <GoBack onClick={onBack} />
-
-      {/* Decorative background elements */}
       
       <div className="max-w-md mx-auto">
         {/* Header */}
@@ -80,12 +77,16 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({ handleContinu
         </div>
 
         {/* Continue Button */}
-        <button
-          onClick={handleContinue}
-          className="w-full bg-teal-400 text-white text-lg font-semibold py-4 rounded-xl hover:bg-teal-500 transition-colors duration-200 shadow-lg"
-        >
-          Continue
-        </button>
+        <div className={'flex items-center justify-center gap-5'}>
+                        <GoBack onClick={onBack} />
+                        <button
+                            onClick={handleContinue}
+                            className="inline-flex items-center justify-between gap-2 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
+                        >
+                            Continue
+                            <ArrowRight className="w-5 h-5" />
+                        </button>
+                    </div>
       </div>
     </div>
   );

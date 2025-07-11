@@ -40,13 +40,8 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-100 to-cyan-50 flex items-center justify-center p-4">
-      <GoBack onClick={onBack} />
-      {/* Decorative circles */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-teal-400 to-teal-300 rounded-full opacity-20 transform translate-x-32 -translate-y-32"></div>
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-teal-300 to-teal-200 rounded-full opacity-30 transform -translate-x-24 translate-y-24"></div>
-      
-      <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-2xl w-full mx-auto relative">
+    <div className="py-24">
+      <div className="max-w-2xl w-full mx-auto ">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-800 mb-6">
             How would you rate your fitness level?
