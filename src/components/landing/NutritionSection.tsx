@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '../ui/button';
 import { Check } from 'lucide-react';
-import nutritionImage from "@/assets/images/landing/nutrition-1.svg";
+import nutritionImage from "@/assets/images/landing/nutrition-1.webp";
 
 // Custom hook for counting animation
 const useCountUp = (end: number, duration: number = 2000) => {
