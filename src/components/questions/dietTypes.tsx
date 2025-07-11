@@ -38,20 +38,16 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
   };
 
   return (
-      <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cyan-50 relative overflow-hidden">
+      <div className="">
 
         <GoBack onClick={onBack} />
 
-        {/* Decorative background */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-teal-400 to-cyan-400 rounded-full opacity-20 transform translate-x-32 -translate-y-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-teal-400 to-cyan-400 rounded-full opacity-20 transform -translate-x-24 translate-y-24"></div>
-
-        <div className="relative z-10 max-w-4xl mx-auto px-6 py-12">
-          <h1 className="text-4xl font-bold text-gray-900 text-center mb-12">
+        <div className=" max-w-4xl mx-auto">
+          <h1 className="text-4xl font-bold text-gray-900 text-center mb-8">
             Choose your diet type
           </h1>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-7 gap-y-4 mb-12">
             {dietTypes.map((diet) => {
               const isSelected = selectedDiet === diet.id;
               return (
@@ -59,7 +55,7 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
                       key={diet.id}
                       onClick={() => handleSelectDiet(diet.id)}
                       className={`
-                  relative flex items-center justify-between p-4 rounded-2xl transition-all duration-200 border-2
+                  relative flex items-center justify-between p-2 rounded-full transition-all duration-200 border-2 pr-6
                   ${isSelected
                           ? 'bg-gradient-to-r from-teal-400 to-teal-400 border-teal-400 text-white shadow-lg transform scale-105'
                           : 'bg-white border-gray-200 text-gray-700 hover:border-teal-300 hover:shadow-md hover:scale-102'
