@@ -7,9 +7,12 @@ interface goBackProp {
 
 const GoBack: React.FC<goBackProp> = ({ onClick }) => {
     return (
-        <button onClick={onClick} className="absolute z-20 top-20 left-20 inline-flex items-center gap-2 rounded-2xl bg-gray-50 hover:bg-gray-200 text-gray-800 px-4 py-2 shadow transition-all duration-200">
-            <ArrowLeft className="w-5 h-5" />
-            <span className="font-medium text-base">Back</span>
+        <button
+            onClick={onClick}
+            className="inline-flex items-center justify-between gap-2 rounded-full bg-gray-50 hover:bg-gray-100 text-primary font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
+        >
+                <ArrowLeft className="w-5 h-5" />
+                Previous
         </button>
     )
 }
