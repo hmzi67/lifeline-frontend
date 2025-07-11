@@ -35,27 +35,25 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({ handleContinu
 
 
     return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6">
+    <div className="py-4">
 
       <GoBack onClick={onBack} />
 
       {/* Decorative background elements */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-teal-400 rounded-full opacity-20 transform translate-x-16 -translate-y-16"></div>
-      <div className="absolute bottom-0 left-0 w-40 h-40 bg-teal-300 rounded-full opacity-30 transform -translate-x-20 translate-y-20"></div>
-
-      <div className="w-full max-w-md mx-auto">
+      
+      <div className="max-w-md mx-auto">
         {/* Header */}
-        <h1 className="text-3xl font-bold text-gray-900 text-center mb-12">
+        <h1 className="text-3xl font-bold text-gray-900 text-center mb-8">
           Select your primary fitness goal
         </h1>
 
         {/* Goal Options */}
-        <div className="space-y-4 mb-12">
+        <div className="space-y-4">
           {fitnessGoals.map((goal) => (
             <button
               key={goal.id}
               onClick={() => handleGoalSelect(goal.id)}
-              className={`w-full flex items-center justify-between p-4 rounded-full transition-all duration-200 pr-6 ${
+              className={`w-full flex items-center justify-between p-3 rounded-full transition-all duration-200 pr-6 ${
                 selectedGoal === goal.id
                   ? 'bg-teal-400 text-white shadow-lg'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
