@@ -1,5 +1,5 @@
 import React from 'react';
-import phoneImage from "@/assets/images/landing/reasons-1.svg";
+import phoneImage from "@/assets/images/landing/reasons-1.webp";
 
 export const ReasonsSection: React.FC = () => {
     return (

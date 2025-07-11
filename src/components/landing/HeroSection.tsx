@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
-import hero1 from "@/assets/images/landing/hero-1.jpg";
-import hero2 from "@/assets/images/landing/hero-2.jpg";
-import hero3 from "@/assets/images/landing/hero-3.jpg";
+import hero1 from "@/assets/images/landing/hero-1.webp";
+import hero2 from "@/assets/images/landing/hero-2.webp";
+import hero3 from "@/assets/images/landing/hero-3.webp";
 
 export const HeroSection: React.FC = () => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);

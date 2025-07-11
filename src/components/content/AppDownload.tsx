@@ -1,5 +1,5 @@
 import AppImage from '../../assets/images/blogs/fitnessAppImage.svg';
-import LandingAppImage from '../../assets/images/landing/appDownloadImg.svg';
+import LandingAppImage from '../../assets/images/landing/appDownloadImg.webp';
 import AppBgImage from '../../assets/images/landing/appDownloadBgImg.svg';
 
 export const AppDownload = ({ isLandingPage = false }) => {

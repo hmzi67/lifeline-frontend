@@ -2,16 +2,17 @@ import { useState } from 'react';
 import { Clock, Star, ThumbsUp, ThumbsDown, Share2 } from 'lucide-react';
 import Phone from "../../assets/images/fitness/phone.svg"
 import Band from "../../assets/images/fitness/band.svg"
-import Band1 from "../../assets/images/fitness/band-1.svg"
-import Band2 from "../../assets/images/fitness/band-2.svg"
-import Band3 from "../../assets/images/fitness/band-3.svg"
-import Band4 from "../../assets/images/fitness/band-4.svg"
+import Band1 from "../../assets/images/fitness/band-1.webp"
+import Band2 from "../../assets/images/fitness/band-2.webp"
+import Band3 from "../../assets/images/fitness/band-3.webp"
+import Band4 from "../../assets/images/fitness/band-4.webp"
 
 interface BandVariant {
     id: string;
     name: string;
     image: string;
     thumbnail: string;
+    color: string;
 }
 
 export const FitnessBandProduct = () => {
@@ -22,38 +23,47 @@ export const FitnessBandProduct = () => {
             id: 'band1',
             name: 'Classic Band',
             image: Band,
-            thumbnail: Band
+            thumbnail: Band,
+            color: "#51D2CC"
         },
         {
             id: 'band2',
             name: 'Sport Band',
             image: Band1,
-            thumbnail: Band1
+            thumbnail: Band1,
+            color: "#51813F"
+
         },
         {
             id: 'band3',
             name: 'Premium Band',
             image: Band2,
-            thumbnail: Band2
+            thumbnail: Band2,
+            color: "#000000"
+
         },
         {
             id: 'band4',
             name: 'Elite Band',
             image: Band3,
-            thumbnail: Band3
+            thumbnail: Band3,
+            color: "#847DA8"
+
         },
         {
             id: 'band5',
             name: 'Pro Band',
             image: Band4,
-            thumbnail: Band4
+            thumbnail: Band4,
+            color: "#D7E3EE"
+
         }
     ];
 
     const currentBand = bandVariants.find(band => band.id === selectedBand) || bandVariants[0];
 
     return (
-        <div className="min-h-screen mt-24 p-4 md:p-8">
+        <div className="min-h-screen mt-24 p-4 md:p-8 ">
             <div className="max-w-7xl mx-auto">
                 <div className="grid lg:grid-cols-2 gap-12 items-center">
                     {/* Left Content Section */}
@@ -178,15 +188,25 @@ export const FitnessBandProduct = () => {
                         {/* Band Selection */}
                         <div className="flex justify-center gap-4 mt-8">
                             {bandVariants.map((band) => (
+                                // <button
+                                //     key={band.id}
+                                //     onClick={() => setSelectedBand(band.id)}
+                                //     className={`relative p-2 rounded-2xl transition-all duration-300 transform hover:scale-105 ${selectedBand === band.id
+                                //             ? `ring-4 ring-${band.color} ring-offset-2 scale-105 shadow-lg bg-teal-50`
+                                //             : 'hover:shadow-md bg-gray-50 hover:bg-gray-100'
+                                //         }`}
+                                // >
                                 <button
                                     key={band.id}
                                     onClick={() => setSelectedBand(band.id)}
                                     className={`relative p-2 rounded-2xl transition-all duration-300 transform hover:scale-105 ${selectedBand === band.id
-                                            ? 'ring-4 ring-primary ring-offset-2 scale-105 shadow-lg bg-teal-50'
-                                            : 'hover:shadow-md bg-gray-50 hover:bg-gray-100'
-                                        }`}
+                                        ? `ring-4 ring-offset-2 scale-105 shadow-lg bg-teal-50`
+                                        : 'hover:shadow-md bg-gray-50 hover:bg-gray-100'
+                                    }`}
+                                    style={selectedBand === band.id ? { borderColor: band.color, boxShadow: '0 0 0 4px ' + band.color } : {}}
                                 >
-                                    <div className="w-16 h-20 flex items-center justify-center">
+
+                                <div className="w-16 h-20 flex items-center justify-center">
                                         <img
                                             src={band.thumbnail}
                                             alt={band.name}
