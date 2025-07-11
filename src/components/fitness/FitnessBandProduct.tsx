@@ -24,14 +24,14 @@ export const FitnessBandProduct = () => {
             name: 'Classic Band',
             image: Band,
             thumbnail: Band,
-            color: "primary"
+            color: "#51D2CC"
         },
         {
             id: 'band2',
             name: 'Sport Band',
             image: Band1,
             thumbnail: Band1,
-            color: "green-900"
+            color: "#51813F"
 
         },
         {
@@ -39,7 +39,7 @@ export const FitnessBandProduct = () => {
             name: 'Premium Band',
             image: Band2,
             thumbnail: Band2,
-            color: "black"
+            color: "#000000"
 
         },
         {
@@ -47,7 +47,7 @@ export const FitnessBandProduct = () => {
             name: 'Elite Band',
             image: Band3,
             thumbnail: Band3,
-            color: "pink-500"
+            color: "#847DA8"
 
         },
         {
@@ -55,7 +55,7 @@ export const FitnessBandProduct = () => {
             name: 'Pro Band',
             image: Band4,
             thumbnail: Band4,
-            color: "gray-100"
+            color: "#D7E3EE"
 
         }
     ];
@@ -188,15 +188,25 @@ export const FitnessBandProduct = () => {
                         {/* Band Selection */}
                         <div className="flex justify-center gap-4 mt-8">
                             {bandVariants.map((band) => (
+                                // <button
+                                //     key={band.id}
+                                //     onClick={() => setSelectedBand(band.id)}
+                                //     className={`relative p-2 rounded-2xl transition-all duration-300 transform hover:scale-105 ${selectedBand === band.id
+                                //             ? `ring-4 ring-${band.color} ring-offset-2 scale-105 shadow-lg bg-teal-50`
+                                //             : 'hover:shadow-md bg-gray-50 hover:bg-gray-100'
+                                //         }`}
+                                // >
                                 <button
                                     key={band.id}
                                     onClick={() => setSelectedBand(band.id)}
                                     className={`relative p-2 rounded-2xl transition-all duration-300 transform hover:scale-105 ${selectedBand === band.id
-                                            ? `ring-4 ring-${band.color} ring-offset-2 scale-105 shadow-lg bg-teal-50`
-                                            : 'hover:shadow-md bg-gray-50 hover:bg-gray-100'
-                                        }`}
+                                        ? `ring-4 ring-offset-2 scale-105 shadow-lg bg-teal-50`
+                                        : 'hover:shadow-md bg-gray-50 hover:bg-gray-100'
+                                    }`}
+                                    style={selectedBand === band.id ? { borderColor: band.color, boxShadow: '0 0 0 4px ' + band.color } : {}}
                                 >
-                                    <div className="w-16 h-20 flex items-center justify-center">
+
+                                <div className="w-16 h-20 flex items-center justify-center">
                                         <img
                                             src={band.thumbnail}
                                             alt={band.name}
