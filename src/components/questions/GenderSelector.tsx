@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Check } from 'lucide-react';  // assuming you're using lucide-react icons
 import menimg from "@/assets/images/question/man-gender.jpg";
 import womenimg from "@/assets/images/question/women-gender.jpeg";
-import eimg from "@/assets/images/question/Ellipse 4.svg";
-
 
 interface GenderOption {
     id: 'male' | 'female';
@@ -44,18 +42,11 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
     };
 
     return (
-        <div className="min-h-screen bg-white flex items-center justify-center p-4 relative overflow-hidden">
-            {/* Background  -y for up x for right -x for down x for left */}
-              <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-100 transform translate-x-32 -translate-y-32 rotate-6 hidden md:block ">
-                <img src={eimg} alt="" />
-              </div>
-            <div className="absolute bottom-0 left-0 w-96 h-96 opacity-100 transform -translate-x-24 translate-y-44 rotate-45 hidden md:block">
-                <img src={eimg} alt="" />
-            </div>
+        <div className="flex items-center justify-center">
 
-            <div className="relative z-10 max-w-7xl w-full rounded-3xl p-8 bg-white/60 backdrop-blur-sm">
+            <div className="my-8">
                 {/* Header */}
-                <div className="text-center mb-16">
+                <div className="text-center mb-10">
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
                         How would you describe your gender?
                     </h1>
@@ -65,7 +56,7 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                 </div>
 
                 {/* Gender Cards */}
-                <div className="flex flex-col md:flex-row gap-8 md:gap-12 mb-12 items-center justify-center">
+                <div className="flex flex-col md:flex-row gap-4 md:gap-12 mb-6 items-center justify-center">
                     {genderOptions.map((option) => (
                         <div
                             key={option.id}

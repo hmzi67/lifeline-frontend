@@ -13,6 +13,7 @@ import HeightSelector from "@/components/questions/HeightSelector.tsx";
 import FitnessMotivationSelector from "@/components/questions/FitnessMotivation.tsx";
 import PersonalizingPlans from "@/components/questions/PersonalizingPlans.tsx";
 import {FitnessGraph} from "@/components/questions/fitnessgraph.tsx";
+import eimg from "@/assets/images/question/Ellipse 4.svg";
 
 
 const LOCAL_STORAGE_KEY = "currentStepIndex";
@@ -176,8 +177,19 @@ export default function Questions() {
     };
 
     return (
-        <div className="">
-            {steps[currentStep]}
+      
+            <div className="min-h-screen bg-white flex items-center justify-center relative overflow-hidden">
+            {/* Background  -y for up x for right -x for down x for left */}
+              <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-100 transform translate-x-32 -translate-y-32 rotate-6 hidden md:block ">
+                <img src={eimg} alt="" />
+              </div>
+            <div className="absolute bottom-0 left-0 w-96 h-96 opacity-100 transform -translate-x-24 translate-y-44 rotate-45 hidden md:block">
+                <img src={eimg} alt="" />
+            </div>
+
+            <div className="relative z-10 max-w-7xl w-full rounded-3xl  bg-white/60 backdrop-blur-sm">
+             {steps[currentStep]}
+            </div>
         </div>
     );
 }
