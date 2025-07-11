@@ -48,7 +48,7 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({ handleContinu
         </h1>
 
         {/* Goal Options */}
-        <div className="space-y-4">
+        <div className="space-y-4 mb-3">
           {fitnessGoals.map((goal) => (
             <button
               key={goal.id}
