@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import GoBack from "@/components/common/GoBack.tsx";
 import { ArrowRight } from 'lucide-react';
+import menimg from "@/assets/images/question/mensolo.svg";
+import womenimg from "@/assets/images/question/womensolo.svg";
 
 interface FocusAreaSelectorProps {
     gender: string;
@@ -80,26 +82,25 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                         {gender === 'female' ? (
                             <div className="relative">
                                 <img
-                                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 400' fill='none'%3E%3C!-- Female figure placeholder --%3E%3Crect x='85' y='20' width='30' height='30' rx='15' fill='%23f4a5a5'/%3E%3Crect x='75' y='55' width='50' height='40' rx='5' fill='%23e5e5e5'/%3E%3Crect x='70' y='95' width='60' height='80' rx='8' fill='%23000'/%3E%3Crect x='80' y='175' width='15' height='120' fill='%23000'/%3E%3Crect x='105' y='175' width='15' height='120' fill='%23000'/%3E%3Crect x='60' y='65' width='20' height='60' fill='%23f4a5a5'/%3E%3Crect x='120' y='65' width='20' height='60' fill='%23f4a5a5'/%3E%3C/svg%3E"
+                                    src={womenimg}
                                     alt="Female figure"
-                                    className="w-48 h-96 object-contain"
+                                    className="w-48 h-full object-contain"
                                 />
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="text-center text-gray-600 text-sm">
-                                        <div className="w-48 h-96 bg-gradient-to-b from-pink-100 to-pink-200 rounded-full opacity-30"></div>
+                                        
                                     </div>
                                 </div>
                             </div>
                         ) : (
                             <div className="relative">
                                 <img
-                                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 400' fill='none'%3E%3C!-- Male figure placeholder --%3E%3Crect x='85' y='20' width='30' height='30' rx='15' fill='%23d4a574'/%3E%3Crect x='70' y='55' width='60' height='50' rx='5' fill='%23a0a0a0'/%3E%3Crect x='65' y='105' width='70' height='80' rx='8' fill='%23000'/%3E%3Crect x='80' y='185' width='18' height='120' fill='%23000'/%3E%3Crect x='102' y='185' width='18' height='120' fill='%23000'/%3E%3Crect x='50' y='65' width='25' height='70' fill='%23d4a574'/%3E%3Crect x='125' y='65' width='25' height='70' fill='%23d4a574'/%3E%3C/svg%3E"
+                                    src={menimg}
                                     alt="Male figure"
-                                    className="w-48 h-96 object-contain"
+                                    className="w-48 h-full object-contain"
                                 />
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="text-center text-gray-600 text-sm">
-                                        <div className="w-48 h-96 bg-gradient-to-b from-blue-100 to-blue-200 rounded-full opacity-30"></div>
                                     </div>
                                 </div>
                             </div>
@@ -108,20 +109,20 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                         {/* Connection lines and dots */}
                         <div className="absolute inset-0 pointer-events-none">
                             {/* Shoulder line */}
-                            <div className="absolute top-16 left-12 w-8 h-px bg-teal-400"></div>
-                            <div className="absolute top-16 left-12 w-2 h-2 bg-teal-400 rounded-full -translate-y-1"></div>
+                            <div className="absolute top-32 w-28 h-[1px] bg-teal-400 -translate-y-4 -translate-x-20"></div>
+                            <div className="absolute top-28 left-8 w-2 h-2 bg-teal-400 rounded-full -translate-y-1"></div>
 
                             {/* Chest line */}
-                            <div className="absolute top-24 left-8 w-12 h-px bg-teal-400"></div>
-                            <div className="absolute top-24 left-8 w-2 h-2 bg-teal-400 rounded-full -translate-y-1"></div>
+                            <div className="absolute top-40 -left-1 w-36 h-px bg-teal-400 -translate-x-20 translate-y-6  -rotate-12"></div>
+                            <div className="absolute top-40 -left-2 w-2 h-2 bg-teal-400 rounded-full translate-x-16 translate-y-1"></div>
 
                             {/* Arms line */}
-                            <div className="absolute top-28 left-4 w-16 h-px bg-teal-400"></div>
-                            <div className="absolute top-28 left-4 w-2 h-2 bg-teal-400 rounded-full -translate-y-1"></div>
+                            <div className="absolute top-60 -left-1 w-36 h-px bg-teal-400 -translate-x-20 translate-y-3 -rotate-[200deg] "></div>
+                            <div className="absolute top-52 left-1 w-2 h-2 bg-teal-400 rounded-full translate-y-4 translate-x-12"></div>
 
                             {/* Thighs line */}
-                            <div className="absolute top-48 left-4 w-16 h-px bg-teal-400"></div>
-                            <div className="absolute top-48 left-4 w-2 h-2 bg-teal-400 rounded-full -translate-y-1"></div>
+                            <div className="absolute top-80 -left-1 w-32 h-px bg-teal-400 -rotate-[200deg] translate-y-7 -translate-x-20"></div>
+                            <div className="absolute top-80 left-4 w-2 h-2 bg-teal-400 rounded-full translate-y-1 translate-x-4"></div>
 
                             {/* Right side lines */}
                             {/* Belly line */}
@@ -144,7 +145,7 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                             <button
                                 key={area}
                                 onClick={() => handleAreaToggle(area)}
-                                className={`px-6 py-3 rounded-lg border-2 transition-all duration-200 text-lg font-medium min-w-32 ${
+                                className={`px-6 py-4 rounded-lg border-2 transition-all duration-200 text-lg font-medium min-w-32 ${
                                     isSelected(area)
                                         ? 'bg-teal-500 border-teal-500 text-white shadow-lg'
                                         : 'bg-white border-gray-300 text-gray-700 hover:border-teal-300 hover:bg-teal-50'
