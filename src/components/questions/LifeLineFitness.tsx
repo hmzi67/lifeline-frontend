@@ -1,7 +1,8 @@
 import React from 'react';
 import GoBack from "@/components/common/GoBack.tsx";
 import { ArrowRight } from 'lucide-react';
-
+import womenimg from "@/assets/images/question/womengroup2.svg";
+import menimg from "@/assets/images/question/mengroup.svg";
 interface LifeLineFitnessProps {
     gender: string;
     onContinue?: () => void;
@@ -14,12 +15,12 @@ const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue, o
         women: {
             title: "Over 10 Million women have use this",
             subtitle: "LifeLine will help you in this fitness journey with science based approach this",
-            image: "https://images.unsplash.com/photo-1594381898411-846e7d193883?w=600&h=400&fit=crop&crop=faces"
+            image: womenimg
         },
         men: {
             title: "Over 8 Million men have use this",
             subtitle: "LifeLine will help you in this fitness journey with science based approach this",
-            image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop&crop=faces"
+            image: menimg
         }
     };
 
@@ -31,7 +32,7 @@ const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue, o
         <div className="my-8">
             <div className="flex items-center justify-center">
                 {/* Main Content */}
-                <div className="text-center max-w-4xl">
+                <div className="text-center max-w-6xl">
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-4 leading-tight">
                         {gender == 'male' ? content.men.title : content.women.title}
                     </h1>
@@ -46,9 +47,9 @@ const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue, o
                             <img
                                 src={gender == 'male' ? content.men.image : content.women.image}
                                 alt={`${gender} fitness group`}
-                                className="w-full max-w-md mx-auto rounded-2xl shadow-2xl transition-all duration-500 transform hover:scale-105"
+                                className="w-full h-full  mx-auto "
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-teal-500/20 to-transparent rounded-2xl"></div>
+                          
                         </div>
                     </div>
 
