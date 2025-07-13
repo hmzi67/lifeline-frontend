@@ -67,10 +67,10 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
                   className="flex flex-col items-center"
                 >
                   <div
-                    className={`w-4 h-4 rounded-full mb-2 transition-all duration-300 ${
+                    className={`z-10 w-2 h-8 mb-2 tranform translate-y-[64px] duration-300 ${
                       level.value <= selectedLevel
                         ? 'bg-gradient-to-r from-teal-400 to-teal-400 shadow-md'
-                        : 'bg-gray-300'
+                        : 'bg-gray-200'
                     }`}
                   />
                   <span className="text-sm font-medium text-gray-600">
@@ -81,10 +81,10 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
             </div>
 
             {/* Progress bar background */}
-            <div className="relative h-2 bg-gray-200 rounded-full">
+            <div className="relative h-2 bg-gray-200">
               {/* Active progress bar */}
               <div
-                className="absolute top-0 left-0 h-2 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full transition-all duration-300"
+                className="absolute top-0 left-0 h-2 bg-gradient-to-r from-teal-400 to-cyan-400  transition-all duration-300"
                 style={{ width: `${((selectedLevel - 1) / 4) * 100}%` }}
               />
               
@@ -105,12 +105,12 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
               />
               
               {/* Custom thumb */}
-              <div
+              {/* <div
                 className={`absolute top-1/2 w-6 h-6 bg-white border-4 border-teal-400 rounded-full shadow-lg transform -translate-y-1/2 transition-all duration-200 ${
                   isDragging ? 'scale-110 shadow-xl' : 'hover:scale-105'
                 }`}
                 style={{ left: `calc(${((selectedLevel - 1) / 4) * 100}% - 12px)` }}
-              />
+              /> */}
             </div>
           </div>
         </div>
