@@ -1,54 +1,24 @@
 {
-  "name": "lifeline-monorepo",
+  "name": "lifeline-web",
   "version": "1.0.0",
-  "description": "Lifeline Health & Wellness Platform - Full Stack Application",
-  "private": true,
-  "workspaces": [
-    "api",
-    "client"
-  ],
+  "description": "Full stack application with Express API and React TypeScript client",
   "scripts": {
-    "dev": "concurrently \"npm run dev:api\" \"npm run dev:client\"",
-    "dev:api": "cd api && npm run dev",
-    "dev:client": "cd client && npm run dev",
-    "build": "npm run build:api && npm run build:client",
-    "build:api": "cd api && npm run build",
-    "build:client": "cd client && npm run build",
-    "install:all": "npm install && npm run install:api && npm run install:client",
-    "install:api": "cd api && npm install",
-    "install:client": "cd client && npm install",
-    "test": "npm run test:api && npm run test:client",
-    "test:api": "cd api && npm run test",
-    "test:client": "cd client && npm run test",
-    "lint": "npm run lint:api && npm run lint:client",
-    "lint:api": "cd api && npm run lint",
-    "lint:client": "cd client && npm run lint",
-    "format": "npm run format:api && npm run format:client",
-    "format:api": "cd api && npm run format",
-    "format:client": "cd client && npm run format",
-    "clean": "npm run clean:api && npm run clean:client",
-    "clean:api": "cd api && npm run clean",
-    "clean:client": "cd client && npm run clean",
-    "setup": "npm run install:all && npm run setup:db",
-    "setup:db": "cd api && npm run generate && npm run migrate"
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd api && npm run dev",
+    "client": "cd client && npm run dev",
+    "install-all": "npm install && cd api && npm install && cd ../client && npm install",
+    "build": "cd client && npm run build",
+    "start": "cd api && npm start"
   },
   "devDependencies": {
-    "concurrently": "^9.1.0"
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
+    "concurrently": "^8.2.2"
   },
   "keywords": [
-    "health",
-    "wellness",
-    "fitness",
-    "nutrition",
     "express",
     "react",
     "typescript",
-    "full-stack"
+    "fullstack"
   ],
-  "author": "Lifeline Team",
-  "license": "MIT"
+  "author": "",
+  "license": "ISC"
 }
