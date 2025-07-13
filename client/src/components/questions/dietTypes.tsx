@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check } from 'lucide-react';
+import {ArrowRight, Check} from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
 
 interface DietType {
@@ -21,7 +21,7 @@ const dietTypes: DietType[] = [
   { id: 'diabetes-type-1', name: 'Diabetes type 1', emoji: '🍎' },
   { id: 'keto', name: 'Keto', emoji: '🥑' },
   { id: 'diabetes-type-2', name: 'Diabetes type 2', emoji: '🥬' },
-  { id: 'pescatarian', name: 'Pescatarian', emoji: '🐟' },
+  { id: 'pedestrian', name: 'Pedestrian', emoji: '🐟' },
   { id: 'high-protein', name: 'High-Protein', emoji: '🍗' },
   { id: 'vegan', name: 'Vegan (Plant diet)', emoji: '🌱' },
   { id: 'calorie-cutting', name: 'Calorie-Cutting', emoji: '🍊' },
@@ -79,19 +79,16 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
             })}
           </div>
 
-          <div className="flex justify-center">
+          {/* Continue Button */}
+          <div className={'flex items-center justify-center gap-5 mt-12'}>
+            <GoBack onClick={onBack}/>
             <button
                 onClick={onContinue}
                 disabled={!selectedDiet}
-                className={`
-              px-12 py-4 rounded-2xl font-semibold text-lg transition-all duration-200
-              ${selectedDiet
-                    ? 'bg-gradient-to-r from-teal-400 to-teal-400 text-white hover:from-teal-500 hover:to-teal-500 shadow-lg hover:shadow-xl transform hover:scale-105'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }
-            `}
+                className="inline-flex items-center justify-between gap-2 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
             >
               Continue
+              <ArrowRight className="w-5 h-5"/>
             </button>
           </div>
         </div>

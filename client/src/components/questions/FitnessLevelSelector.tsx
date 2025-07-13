@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import GoBack from "@/components/common/GoBack.tsx";
+import {ArrowRight} from "lucide-react";
 
 interface FitnessLevelSelectorProps {
   onContinue?: () => void;
@@ -114,12 +115,15 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
           </div>
         </div>
 
-        <div className="text-center">
+        {/* Continue Button */}
+        <div className={'flex items-center justify-center gap-5 mt-12'}>
+          <GoBack onClick={onBack} />
           <button
-            onClick={onContinue}
-            className="bg-gradient-to-r from-teal-500 to-teal-500 hover:from-teal-600 hover:to-teal-600 text-white font-semibold py-4 px-12 rounded-2xl text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl active:scale-95"
+              onClick={onContinue}
+              className="inline-flex items-center justify-between gap-2 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
           >
             Continue
+            <ArrowRight className="w-5 h-5" />
           </button>
         </div>
       </div>

@@ -158,7 +158,7 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                 </div>
 
                 {/* Continue Button */}
-                 <div className={'flex items-center justify-center '}>   
+                 <div className={'flex items-center justify-center gap-5 mt-12'}>
                      <GoBack onClick={onBack} />
                    <button
                        onClick={handleContinue}

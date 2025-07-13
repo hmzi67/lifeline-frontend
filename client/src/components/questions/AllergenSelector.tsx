@@ -98,7 +98,7 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({
       </div>
 
       {/* Continue Button */}
-      <div className={'flex items-center justify-center gap-5'}>
+      <div className={'flex items-center justify-center gap-5 mt-12'}>
         <GoBack onClick={onBack} />
         <button
           onClick={handleContinue}

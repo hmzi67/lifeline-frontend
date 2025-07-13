@@ -54,7 +54,7 @@ const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue, o
                     </div>
 
                     {/* Continue Button */}
-                    <div className={'flex items-center justify-center '}>
+                    <div className={'flex items-center justify-center gap-5'}>
                         <GoBack onClick={onBack} />
                         <button
                             onClick={handleContinue}

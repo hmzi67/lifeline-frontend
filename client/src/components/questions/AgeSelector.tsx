@@ -147,7 +147,7 @@ const AgeSelector: React.FC<AgeSelectorProps> = ({ onAgeSelect, onSelection, onC
                     Minimum age limit is 18 years as our data will categorized according to different age groups.
                 </p>
 
-                 <div className={'flex items-center justify-center '}>
+                 <div className={'flex items-center justify-center gap-5 mt-12'}>
                      <GoBack onClick={onBack} />
                      <button
                          onClick={handleContinue}

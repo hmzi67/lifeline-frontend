@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check } from 'lucide-react';  // assuming you're using lucide-react icons
+import {ArrowRight, Check} from 'lucide-react';  // assuming you're using lucide-react icons
 import menimg from "@/assets/images/question/man-gender.jpg";
 import womenimg from "@/assets/images/question/women-gender.jpeg";
 
@@ -103,9 +103,10 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                     <div className="text-center">
                         <button
                             onClick={handleContinue}
-                            className="bg-gradient-to-r from-teal-500 to-teal-600 text-white px-16 py-5 rounded-full font-semibold text-xl hover:from-teal-600 hover:to-teal-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+                            className="inline-flex items-center justify-between p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
                         >
                             Continue
+                            <ArrowRight className="w-5 h-5" />
                         </button>
                     </div>
                 )}

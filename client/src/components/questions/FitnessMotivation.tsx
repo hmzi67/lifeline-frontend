@@ -1,91 +1,91 @@
-import React, { useState } from 'react';
-import { ArrowRight, Check } from 'lucide-react';
+import React, {useState} from 'react';
+import {ArrowRight, Check} from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
 
 interface MotivationOption {
-  id: string;
-  label: string;
-  icon: string;
+    id: string;
+    label: string;
+    icon: string;
 }
 
 interface MotivationActions {
-  onContinue?: (selectedMotivaton: string) => void;
-  onBack?: () => void;
+    onContinue?: (selectedMotivaton: string) => void;
+    onBack?: () => void;
 }
 
-const FitnessMotivationSelector: React.FC<MotivationActions> = ({ onContinue, onBack }) => {
-  const [selectedMotivation, setSelectedMotivation] = useState<string>('birthday');
+const FitnessMotivationSelector: React.FC<MotivationActions> = ({onContinue, onBack}) => {
+    const [selectedMotivation, setSelectedMotivation] = useState<string>('birthday');
 
-  const motivationOptions: MotivationOption[] = [
-    { id: 'birthday', label: 'Birthday', icon: '🎂' },
-    { id: 'wedding', label: 'Wedding', icon: '💒' },
-    { id: 'engagement', label: 'Engagement', icon: '💍' },
-    { id: 'travelling', label: 'Travelling', icon: '✈️' },
-    { id: 'other', label: 'Other', icon: '🎯' }
-  ];
+    const motivationOptions: MotivationOption[] = [
+        {id: 'birthday', label: 'Birthday', icon: '🎂'},
+        {id: 'wedding', label: 'Wedding', icon: '💒'},
+        {id: 'engagement', label: 'Engagement', icon: '💍'},
+        {id: 'travelling', label: 'Travelling', icon: '✈️'},
+        {id: 'other', label: 'Other', icon: '🎯'}
+    ];
 
-  const handleOptionSelect = (optionId: string) => {
-    setSelectedMotivation(optionId);
-  };
+    const handleOptionSelect = (optionId: string) => {
+        setSelectedMotivation(optionId);
+    };
 
-  const handleContinue = () => {
-    onContinue?.(selectedMotivation)
-  }
+    const handleContinue = () => {
+        onContinue?.(selectedMotivation)
+    }
 
-  return (
-    <div className="">
-      <div className="w-full mx-auto max-w-md">
-        <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Tell us your motivation to get fit?
-          </h1>
-        </div>
-
-        <div className="space-y-4 mb-12">
-          {motivationOptions.map((option) => (
-            <button
-              key={option.id}
-              onClick={() => handleOptionSelect(option.id)}
-              className={`w-full p-3 rounded-full border-2 transition-all duration-300 flex items-center space-x-4 pr-6 ${
-                selectedMotivation === option.id
-                  ? 'bg-gradient-to-r from-teal-400 to-teal-500 border-teal-400 text-white shadow-lg transform scale-105'
-                  : 'bg-white border-gray-200 text-gray-700 hover:border-teal-300 hover:shadow-md'
-              }`}
-            >
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl ${
-                selectedMotivation === option.id
-                  ? 'bg-white bg-opacity-20'
-                  : 'bg-gray-50'
-              }`}>
-                {option.icon}
-              </div>
-              
-              <div className="flex-1 text-left">
-                <span className="text-lg font-medium">{option.label}</span>
-              </div>
-
-              {selectedMotivation === option.id && (
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                  <Check className="w-5 h-5 text-primary-400" />
+    return (
+        <div className="">
+            <div className="w-full mx-auto max-w-md">
+                <div className="text-center mb-12">
+                    <h1 className="text-3xl font-bold text-gray-800 mb-2">
+                        Tell us your motivation to get fit?
+                    </h1>
                 </div>
-              )}
-            </button>
-          ))}
-        </div>
 
-         <div className={'flex items-center justify-center '}>
-                        <GoBack onClick={onBack} />
+                <div className="space-y-4 mb-12">
+                    {motivationOptions.map((option) => (
                         <button
-                            onClick={handleContinue}
-                            className="inline-flex items-center justify-between p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
+                            key={option.id}
+                            onClick={() => handleOptionSelect(option.id)}
+                            className={`w-full p-3 rounded-full border-2 transition-all duration-300 flex items-center space-x-4 pr-6 ${
+                                selectedMotivation === option.id
+                                    ? 'bg-gradient-to-r from-teal-400 to-teal-500 border-teal-400 text-white shadow-lg transform scale-105'
+                                    : 'bg-white border-gray-200 text-gray-700 hover:border-teal-300 hover:shadow-md'
+                            }`}
                         >
-                            Continue
-                            <ArrowRight className="w-5 h-5" />
+                            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl ${
+                                selectedMotivation === option.id
+                                    ? 'bg-white bg-opacity-20'
+                                    : 'bg-gray-50'
+                            }`}>
+                                {option.icon}
+                            </div>
+
+                            <div className="flex-1 text-left">
+                                <span className="text-lg font-medium">{option.label}</span>
+                            </div>
+
+                            {selectedMotivation === option.id && (
+                                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                                    <Check className="w-5 h-5 text-primary-400"/>
+                                </div>
+                            )}
                         </button>
-                    </div>
-      </div>
-    </div>
-  );
+                    ))}
+                </div>
+
+                <div className={'flex items-center justify-center gap-5 mt-12'}>
+                    <GoBack onClick={onBack}/>
+                    <button
+                        onClick={handleContinue}
+                        className="inline-flex items-center justify-between p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
+                    >
+                        Continue
+                        <ArrowRight className="w-5 h-5"/>
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default FitnessMotivationSelector;
