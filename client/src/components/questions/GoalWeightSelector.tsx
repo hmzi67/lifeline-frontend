@@ -148,7 +148,7 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
                 if (isMainTick) {
                     tickClassName = 'w-1 rounded-full h-12 bg-gray-400';
                 } else if (isMidTick) {
-                    tickClassName = 'w-0.5 rounded-full h-9 bg-gray-500'; // Taller than regular ticks
+                    tickClassName = 'w-1 rounded-full h-9 bg-gray-400';
                 } else {
                     tickClassName = 'w-0.5 rounded-full h-6 bg-gray-600';
                 }
