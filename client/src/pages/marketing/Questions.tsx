@@ -180,17 +180,28 @@ export default function Questions() {
     };
 
     return (
-        <div className="min-h-screen bg-white flex items-center justify-center relative overflow-hidden">
+        <div
+            className={`min-h-screen flex bg-white items-center justify-center relative overflow-hidden`}
+            style={
+                currentStep === 5 || currentStep === 9
+                    ? {
+                        backgroundImage: 'url(https://images.unsplash.com/photo-1657613738802-3ea1df973a8b)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                    }
+                    : {}
+            }
+        >
             <div
-                className={"absolute top-0 right-0 w-96 h-96 transform translate-x-32 -translate-y-32 rotate-6 hidden md:block"}>
+                className={`absolute top-0 right-0 w-96 h-96 transform translate-x-32 -translate-y-32 rotate-6 hidden md:block  ${(currentStep === 5 || currentStep === 9) ? 'md:hidden' : ''}`}>
                 <img src={ellipseImage} alt=""/>
             </div>
             <div
-                className={"absolute bottom-0 left-0 w-96 h-96 transform -translate-x-24 translate-y-44 rotate-45 hidden md:block"}>
+                className={`absolute bottom-0 left-0 w-96 h-96 transform -translate-x-24 translate-y-44 rotate-45 hidden md:block ${(currentStep === 5 || currentStep === 9) ? 'md:hidden' : ''}`}>
                 <img src={ellipseImage} alt=""/>
             </div>
 
-            <div className="relative z-10 max-w-7xl w-full rounded-3xl  bg-white/60 backdrop-blur-sm">
+            <div className={`relative z-10 max-w-7xl w-full rounded-3xl  ${(currentStep === 5 || currentStep === 9) ? 'bg-white/0' : 'bg-white/60 backdrop-blur-sm '}`}>
                 {steps[currentStep]}
             </div>
         </div>
