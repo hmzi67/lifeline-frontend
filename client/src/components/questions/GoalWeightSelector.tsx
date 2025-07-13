@@ -133,7 +133,6 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
         };
     }, [isDraggingRail, railPosition, visibleRange, currentRange, lastTouchX]);
 
-    // Generate tick marks for the visible range
     const generateTicks = () => {
         const ticks = [];
         const startValue = Math.floor(railPosition);
@@ -142,12 +141,22 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
         for (let i = startValue; i <= endValue; i++) {
             if (i >= currentRange.min && i <= currentRange.max) {
                 const position = ((i - railPosition) / visibleRange) * 100;
-                const isMainTick = i % 5 === 0;
+                const isMainTick = i % 10 === 0;
+                const isMidTick = i % 5 === 0 && !isMainTick; // 5th tick between main ticks
+
+                let tickClassName;
+                if (isMainTick) {
+                    tickClassName = 'w-1 rounded-full h-12 bg-gray-400';
+                } else if (isMidTick) {
+                    tickClassName = 'w-0.5 rounded-full h-9 bg-gray-500'; // Taller than regular ticks
+                } else {
+                    tickClassName = 'w-0.5 rounded-full h-6 bg-gray-600';
+                }
 
                 ticks.push(
                     <div
                         key={i}
-                        className={`absolute ${isMainTick ? 'w-1 rounded-full h-12 bg-gray-400' : 'rounded-full h-6 bg-gray-600'} w-0.5 -translate-x-0.5`}
+                        className={`absolute ${tickClassName} -translate-x-0.5`}
                         style={{ left: `${position}%` }}
                     />
                 );
