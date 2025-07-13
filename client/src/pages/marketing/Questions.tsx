@@ -14,6 +14,7 @@ import FitnessMotivationSelector from "@/components/questions/FitnessMotivation.
 import PersonalizingPlans from "@/components/questions/PersonalizingPlans.tsx";
 import {FitnessGraph} from "@/components/questions/fitnessgraph.tsx";
 import ellipseImage from "@/assets/images/question/Ellipse 4.svg";
+import GoalWeightSelector from "@/components/questions/GoalWeightSelector.tsx";
 
 
 const LOCAL_STORAGE_KEY = "currentStepIndex";
@@ -144,6 +145,8 @@ export default function Questions() {
             }}
             onBack={() => goToPrevious()}
         />,
+
+        <GoalWeightSelector key={"GoalWeightSelector"} />,
 
         <FitnessMotivationSelector
             key="FitnessMotivationSelector"
