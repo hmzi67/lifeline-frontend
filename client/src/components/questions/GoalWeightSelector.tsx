@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import GoBack from "@/components/common/GoBack.tsx";
 import {ArrowRight} from "lucide-react";
 
@@ -12,11 +12,11 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
     const [weight, setWeight] = useState(48);
     const [railPosition, setRailPosition] = useState(38);
     const [isDraggingRail, setIsDraggingRail] = useState(false);
+    const [lastTouchX, setLastTouchX] = useState(0);
 
     const sliderRef = useRef<HTMLDivElement>(null);
-    const railRef = useRef<HTMLDivElement>(null);
-
-    // Weight ranges for different units
+    useRef<HTMLDivElement>(null);
+// Weight ranges for different units
     const ranges = {
         kg: { min: 25, max: 160, step: 1 },
         lbs: { min: 66, max: 330, step: 1 }
@@ -49,10 +49,18 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
     const currentBMI = calculateBMI(weight, unit);
     const bmiCategory = getBMICategory(currentBMI);
 
-    // Handle rail dragging
+    // Handle rail dragging - mouse events
     const handleRailMouseDown = () => {
         if (!sliderRef.current) return;
         setIsDraggingRail(true);
+    };
+
+    // Handle rail dragging - touch events
+    const handleRailTouchStart = (e: React.TouchEvent) => {
+        if (!sliderRef.current) return;
+        setIsDraggingRail(true);
+        setLastTouchX(e.touches[0].clientX);
+        e.preventDefault(); // Prevent scrolling
     };
 
     useEffect(() => {
@@ -74,20 +82,56 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
             setRailPosition(Math.max(minPosition, Math.min(maxPosition, newRailPosition)));
         };
 
+        const handleTouchMove = (e: TouchEvent) => {
+            if (!sliderRef.current || !isDraggingRail) return;
+
+            const rect = sliderRef.current.getBoundingClientRect();
+            const sliderWidth = rect.width;
+
+            // Calculate movement based on touch delta
+            const currentTouchX = e.touches[0].clientX;
+            const deltaX = currentTouchX - lastTouchX;
+            const deltaWeight = (deltaX / sliderWidth) * visibleRange;
+
+            // Move rail in the opposite direction to touch movement (natural scrolling feel)
+            const newRailPosition = railPosition - deltaWeight;
+            const maxPosition = currentRange.max - visibleRange;
+            const minPosition = currentRange.min;
+
+            setRailPosition(Math.max(minPosition, Math.min(maxPosition, newRailPosition)));
+            setLastTouchX(currentTouchX);
+
+            e.preventDefault(); // Prevent scrolling
+        };
+
         const handleMouseUp = () => {
             setIsDraggingRail(false);
         };
 
+        const handleTouchEnd = () => {
+            setIsDraggingRail(false);
+        };
+
         if (isDraggingRail) {
+            // Mouse events
             document.addEventListener('mousemove', handleMouseMove);
             document.addEventListener('mouseup', handleMouseUp);
+
+            // Touch events
+            document.addEventListener('touchmove', handleTouchMove, { passive: false });
+            document.addEventListener('touchend', handleTouchEnd);
         }
 
         return () => {
+            // Clean up mouse events
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseUp);
+
+            // Clean up touch events
+            document.removeEventListener('touchmove', handleTouchMove);
+            document.removeEventListener('touchend', handleTouchEnd);
         };
-    }, [isDraggingRail, railPosition, visibleRange, currentRange]);
+    }, [isDraggingRail, railPosition, visibleRange, currentRange, lastTouchX]);
 
     // Generate tick marks for the visible range
     const generateTicks = () => {
@@ -143,9 +187,6 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
         setRailPosition(Math.max(minPosition, Math.min(maxPosition, newRailPosition)));
     };
 
-    // Handle is always in the center (50%)
-   
-
     return (
         <div className="flex items-center justify-center p-4">
             <div className="w-full max-w-md p-8 relative overflow-hidden">
@@ -196,12 +237,10 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
                     <div className="mb-8">
                         <div
                             ref={sliderRef}
-                            className="relative h-16 cursor-pointer select-none"
+                            className="relative h-16 cursor-pointer select-none touch-none"
                             onMouseDown={handleRailMouseDown}
+                            onTouchStart={handleRailTouchStart}
                         >
-                           
-                            
-
                             {/* Tick marks */}
                             <div className="absolute top-1/2 w-full" style={{ transform: 'translateY(-50%)' }}>
                                 {generateTicks()}
