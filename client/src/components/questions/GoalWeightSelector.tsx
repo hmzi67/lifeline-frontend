@@ -147,7 +147,7 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
                 ticks.push(
                     <div
                         key={i}
-                        className={`absolute ${isMainTick ? 'h-12 bg-gray-400' : 'h-5 bg-gray-300'} w-0.5 -translate-x-0.5`}
+                        className={`absolute ${isMainTick ? 'h-16 bg-gray-600' : 'h-8 bg-gray-300'} w-0.5 -translate-x-0.5`}
                         style={{ left: `${position}%` }}
                     />
                 );
@@ -237,7 +237,7 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
                     <div className="mb-8">
                         <div
                             ref={sliderRef}
-                            className="relative h-16 cursor-pointer select-none touch-none"
+                            className="relative h-20 cursor-pointer select-none touch-none"
                             onMouseDown={handleRailMouseDown}
                             onTouchStart={handleRailTouchStart}
                         >
