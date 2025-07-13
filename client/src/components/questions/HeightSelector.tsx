@@ -140,11 +140,8 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue, onBack }) =
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-96 h-96 bg-teal-400 rounded-full transform translate-x-48 -translate-y-48 opacity-100"></div>
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-teal-300 rounded-full transform -translate-x-40 translate-y-40 opacity-100"></div>
-
-      <div className="w-full max-w-md relative z-10">
+    <div className="flex items-center justify-center p-4">
+      <div className="w-full max-w-md ">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-3">
             What is your height?

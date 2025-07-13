@@ -244,12 +244,9 @@ const AgeDateSelector: React.FC<AgeDateSelectorProps> = ({ onAgeSelect, onSelect
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cyan-100 flex items-center justify-center p-4 relative overflow-hidden">
-            {/* Background decorative elements */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-teal-400 rounded-full opacity-20 transform translate-x-32 -translate-y-32"></div>
-            <div className="absolute bottom-0 left-0 w-80 h-80 bg-cyan-300 rounded-full opacity-30 transform -translate-x-20 translate-y-20"></div>
+        <div className="flex items-center justify-center p-4">
             
-            <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center relative z-10">
+            <div className="p-8 max-w-md w-full text-center ">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
                     What's your age?
                 </h1>
