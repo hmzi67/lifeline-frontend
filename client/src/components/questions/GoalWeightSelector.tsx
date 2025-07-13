@@ -147,7 +147,7 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
                 ticks.push(
                     <div
                         key={i}
-                        className={`absolute ${isMainTick ? 'h-16 bg-gray-600' : 'h-8 bg-gray-300'} w-0.5 -translate-x-0.5`}
+                        className={`absolute ${isMainTick ? 'w-1 rounded-full h-12 bg-gray-400' : 'rounded-full h-6 bg-gray-600'} w-0.5 -translate-x-0.5`}
                         style={{ left: `${position}%` }}
                     />
                 );
@@ -156,7 +156,7 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
                     ticks.push(
                         <div
                             key={`label-${i}`}
-                            className="absolute text-xs text-gray-500 -translate-x-1/2 mt-6"
+                            className="absolute text-xs text-gray-500 -translate-x-1/2 mt-24"
                             style={{ left: `${position}%` }}
                         >
                             {i}
@@ -242,11 +242,11 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
                             onTouchStart={handleRailTouchStart}
                         >
                             {/* Tick marks */}
-                            <div className="absolute top-1/2 w-full" style={{ transform: 'translateY(-50%)' }}>
+                            <div className="absolute flex items-center justify-center top-1/2 w-full">
                                 {generateTicks()}
                             </div>
                             {/* Center line indicator */}
-                            <div className="absolute top-1/2 left-1/2 w-1 h-16 bg-teal-500 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+                            <div className="absolute top-1/2 left-1/2 w-1 rounded-full h-24 bg-teal-500 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
                         </div>
                     </div>
 
