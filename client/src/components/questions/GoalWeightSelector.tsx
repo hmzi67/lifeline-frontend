@@ -18,7 +18,7 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
 
     // Weight ranges for different units
     const ranges = {
-        kg: { min: 30, max: 150, step: 1 },
+        kg: { min: 25, max: 160, step: 1 },
         lbs: { min: 66, max: 330, step: 1 }
     };
 
@@ -103,7 +103,7 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
                 ticks.push(
                     <div
                         key={i}
-                        className={`absolute ${isMainTick ? 'h-4 bg-gray-400' : 'h-2 bg-gray-300'} w-0.5 -translate-x-0.5`}
+                        className={`absolute ${isMainTick ? 'h-12 bg-gray-400' : 'h-5 bg-gray-300'} w-0.5 -translate-x-0.5`}
                         style={{ left: `${position}%` }}
                     />
                 );
@@ -144,11 +144,11 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
     };
 
     // Handle is always in the center (50%)
-    const handlePosition = 50;
+   
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cyan-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 relative overflow-hidden">
+        <div className="flex items-center justify-center p-4">
+            <div className="w-full max-w-md p-8 relative overflow-hidden">
                 <div className="relative z-10">
                     {/* Header */}
                     <div className="text-center mb-8">
@@ -199,40 +199,15 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
                             className="relative h-16 cursor-pointer select-none"
                             onMouseDown={handleRailMouseDown}
                         >
-                            {/* Rail with tick marks */}
-                            <div
-                                ref={railRef}
-                                className={`absolute top-1/2 w-full h-1 bg-gray-200 rounded-full transition-all duration-200 ${
-                                    isDraggingRail ? 'cursor-grabbing' : 'cursor-grab'
-                                }`}
-                                style={{ transform: 'translateY(-50%)' }}
-                            >
-                                {/* Grip indicators */}
-                                <div className="absolute -left-2 top-1/2 w-4 h-4 -translate-y-1/2 opacity-50">
-                                    <div className="w-1 h-1 bg-gray-400 rounded-full mb-1"></div>
-                                    <div className="w-1 h-1 bg-gray-400 rounded-full mb-1"></div>
-                                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                                </div>
-                                <div className="absolute -right-2 top-1/2 w-4 h-4 -translate-y-1/2 opacity-50">
-                                    <div className="w-1 h-1 bg-gray-400 rounded-full mb-1"></div>
-                                    <div className="w-1 h-1 bg-gray-400 rounded-full mb-1"></div>
-                                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                                </div>
-                            </div>
+                           
+                            
 
                             {/* Tick marks */}
                             <div className="absolute top-1/2 w-full" style={{ transform: 'translateY(-50%)' }}>
                                 {generateTicks()}
                             </div>
-
-                            {/* Handle - Fixed in center */}
-                            <div
-                                className="absolute top-1/2 w-6 h-6 bg-teal-500 rounded-full shadow-lg transition-all duration-200 -translate-y-1/2 -translate-x-1/2 border-2 border-white pointer-events-none"
-                                style={{ left: `${handlePosition}%` }}
-                            />
-
                             {/* Center line indicator */}
-                            <div className="absolute top-1/2 left-1/2 w-0.5 h-8 bg-teal-500 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+                            <div className="absolute top-1/2 left-1/2 w-1 h-16 bg-teal-500 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
                         </div>
                     </div>
 
