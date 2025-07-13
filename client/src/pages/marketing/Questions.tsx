@@ -30,6 +30,8 @@ export default function Questions() {
     const [focusAreas, setFocusAreas] = useState<string[]>([])
     const [age, setAge] = useState<number>(24);
     const [birthYear, setBirthYear] = useState<number>(2025 - 24);
+    const [height, setHeight] = useState<number>(0);
+    const [heightUnit, setHeightUnit] = useState<string>("cm");
 
 
     useEffect(() => {
@@ -42,6 +44,8 @@ export default function Questions() {
         console.log(focusAreas);
         console.log(age);
         console.log(birthYear);
+        console.log(height);
+        console.log(heightUnit);
     }, [age, birthYear, focusAreas, gender, selectedDayOption, selectedGoal, selectDiet, selectedLevel, allergies]);
 
 
@@ -146,7 +150,15 @@ export default function Questions() {
             onBack={() => goToPrevious()}
         />,
 
-        <GoalWeightSelector key={"GoalWeightSelector"} />,
+        <GoalWeightSelector
+            key={"GoalWeightSelector"}
+            onContinue={(weight, unit ) => {
+                setHeight(weight);
+                setHeightUnit(unit);
+                goToNext(gender)
+            }}
+            onBack={() => goToPrevious()}
+        />,
 
         <FitnessMotivationSelector
             key="FitnessMotivationSelector"
