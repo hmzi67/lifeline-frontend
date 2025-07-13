@@ -1,195 +1,260 @@
-import React, { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import GoBack from "@/components/common/GoBack.tsx";
+import {ArrowRight} from "lucide-react";
 
-interface GoalWeightProps {
+interface WeightSelectorProps {
     onContinue?: (weight: number, unit: 'kg' | 'lbs') => void;
-    currentHeight?: number; // in cm for BMI calculation
+    onBack?: () => void;
 }
 
-const GoalWeightComponent: React.FC<GoalWeightProps> = ({
-                                                            onContinue,
-                                                            currentHeight = 170 // default height for BMI calculation
-                                                        }) => {
-    const [selectedUnit, setSelectedUnit] = useState<'kg' | 'lbs'>('kg');
-    const [weight, setWeight] = useState<number>(48);
+export default function WeightSelector({ onContinue, onBack }: WeightSelectorProps) {
+    const [unit, setUnit] = useState<'kg' | 'lbs'>('kg');
+    const [weight, setWeight] = useState(48);
+    const [railPosition, setRailPosition] = useState(38);
+    const [isDraggingRail, setIsDraggingRail] = useState(false);
 
-    // BMI calculation
-    const calculateBMI = (weightValue: number, unit: 'kg' | 'lbs'): number => {
-        const weightInKg = unit === 'lbs' ? weightValue * 0.453592 : weightValue;
-        const heightInM = currentHeight / 100;
+    const sliderRef = useRef<HTMLDivElement>(null);
+    const railRef = useRef<HTMLDivElement>(null);
+
+    // Weight ranges for different units
+    const ranges = {
+        kg: { min: 30, max: 150, step: 1 },
+        lbs: { min: 66, max: 330, step: 1 }
+    };
+
+    const currentRange = ranges[unit];
+    const visibleRange = 20; // Show 20 units at a time
+
+    // Calculate weight based on rail position (center of slider = selected weight)
+    useEffect(() => {
+        const centerWeight = railPosition + visibleRange / 2;
+        const clampedWeight = Math.max(currentRange.min, Math.min(currentRange.max, Math.round(centerWeight)));
+        setWeight(clampedWeight);
+    }, [railPosition, currentRange, visibleRange]);
+
+    // Calculate BMI (assuming height of 170 cm for demo)
+    const calculateBMI = (weight: number, unit: 'kg' | 'lbs') => {
+        const heightInM = 1.7; // 170cm
+        const weightInKg = unit === 'lbs' ? weight * 0.453592 : weight;
         return weightInKg / (heightInM * heightInM);
     };
 
-    const getBMICategory = (bmi: number): string => {
+    const getBMICategory = (bmi: number) => {
         if (bmi < 18.5) return 'Underweight';
         if (bmi < 25) return 'Normal weight';
         if (bmi < 30) return 'Overweight';
         return 'Obese';
     };
 
-    const currentBMI = calculateBMI(weight, selectedUnit);
+    const currentBMI = calculateBMI(weight, unit);
     const bmiCategory = getBMICategory(currentBMI);
 
-    const handleWeightChange = (newWeight: number) => {
-        setWeight(newWeight);
+    // Handle rail dragging
+    const handleRailMouseDown = () => {
+        if (!sliderRef.current) return;
+        setIsDraggingRail(true);
     };
 
-    const handleContinue = () => {
-        onContinue?.(weight, selectedUnit);
-    };
+    useEffect(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            if (!sliderRef.current || !isDraggingRail) return;
 
-    // Get min/max values based on unit
-    const getMinMax = () => {
-        if (selectedUnit === 'kg') {
-            return { min: 30, max: 150 };
-        } else {
-            return { min: 66, max: 330 }; // lbs equivalent
-        }
-    };
+            const rect = sliderRef.current.getBoundingClientRect();
+            const sliderWidth = rect.width;
 
-    // Generate scale marks
-    const generateScaleMarks = () => {
-        const marks = [];
-        const { min, max } = getMinMax();
-        const range = max - min;
-        const step = selectedUnit === 'kg' ? 5 : 10;
+            // Calculate movement based on mouse delta
+            const deltaX = e.movementX;
+            const deltaWeight = (deltaX / sliderWidth) * visibleRange;
 
-        for (let i = min; i <= max; i += step) {
-            const position = ((i - min) / range) * 100;
+            // Move rail in the opposite direction to mouse movement (natural scrolling feel)
+            const newRailPosition = railPosition - deltaWeight;
+            const maxPosition = currentRange.max - visibleRange;
+            const minPosition = currentRange.min;
 
-            marks.push(
-                <div
-                    key={i}
-                    className="absolute top-0 bg-gray-300 h-6 w-0.5"
-                    style={{ left: `${position}%` }}
-                />
-            );
+            setRailPosition(Math.max(minPosition, Math.min(maxPosition, newRailPosition)));
+        };
+
+        const handleMouseUp = () => {
+            setIsDraggingRail(false);
+        };
+
+        if (isDraggingRail) {
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
         }
 
-        return marks;
-    };
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [isDraggingRail, railPosition, visibleRange, currentRange]);
 
-    const getSliderPosition = () => {
-        const { min, max } = getMinMax();
-        return ((weight - min) / (max - min)) * 100;
-    };
+    // Generate tick marks for the visible range
+    const generateTicks = () => {
+        const ticks = [];
+        const startValue = Math.floor(railPosition);
+        const endValue = Math.ceil(railPosition + visibleRange);
 
-    // Handle unit change and convert weight
-    const handleUnitChange = (newUnit: 'kg' | 'lbs') => {
-        if (newUnit !== selectedUnit) {
-            if (newUnit === 'lbs') {
-                setWeight(Math.round(weight * 2.20462));
-            } else {
-                setWeight(Math.round(weight / 2.20462));
+        for (let i = startValue; i <= endValue; i++) {
+            if (i >= currentRange.min && i <= currentRange.max) {
+                const position = ((i - railPosition) / visibleRange) * 100;
+                const isMainTick = i % 5 === 0;
+
+                ticks.push(
+                    <div
+                        key={i}
+                        className={`absolute ${isMainTick ? 'h-4 bg-gray-400' : 'h-2 bg-gray-300'} w-0.5 -translate-x-0.5`}
+                        style={{ left: `${position}%` }}
+                    />
+                );
+
+                if (isMainTick) {
+                    ticks.push(
+                        <div
+                            key={`label-${i}`}
+                            className="absolute text-xs text-gray-500 -translate-x-1/2 mt-6"
+                            style={{ left: `${position}%` }}
+                        >
+                            {i}
+                        </div>
+                    );
+                }
             }
-            setSelectedUnit(newUnit);
         }
+
+        return ticks;
     };
+
+    const handleUnitChange = (newUnit: 'kg' | 'lbs') => {
+        if (newUnit === unit) return;
+
+        // Convert weight to a new unit
+        const convertedWeight = newUnit === 'lbs'
+            ? Math.round(weight * 2.20462)
+            : Math.round(weight / 2.20462);
+
+        setUnit(newUnit);
+        // Update rail position to center the converted weight
+        const newRailPosition = convertedWeight - visibleRange / 2;
+        const newRange = ranges[newUnit];
+        const maxPosition = newRange.max - visibleRange;
+        const minPosition = newRange.min;
+
+        setRailPosition(Math.max(minPosition, Math.min(maxPosition, newRailPosition)));
+    };
+
+    // Handle is always in the center (50%)
+    const handlePosition = 50;
 
     return (
-        <div className="min-h-screen bg-white relative overflow-hidden">
-            {/* Background decorative elements */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-teal-400 rounded-full opacity-30 -translate-y-32 translate-x-32"></div>
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-200 rounded-full opacity-40 translate-y-48 -translate-x-48"></div>
-
-            <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6">
-                {/* Title */}
-                <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">
-                    What is your Goal weight?
-                </h1>
-
-                {/* Subtitle */}
-                <p className="text-gray-600 mb-12 text-center">
-                    We need this to calculate your BMI
-                </p>
-
-                {/* Unit Toggle */}
-                <div className="flex mb-16 bg-gray-100 rounded-lg p-1">
-                    <button
-                        onClick={() => handleUnitChange('kg')}
-                        className={`px-8 py-3 rounded-lg font-medium transition-colors ${
-                            selectedUnit === 'kg'
-                                ? 'bg-teal-400 text-white'
-                                : 'text-gray-600 hover:text-gray-800'
-                        }`}
-                    >
-                        Kg
-                    </button>
-                    <button
-                        onClick={() => handleUnitChange('lbs')}
-                        className={`px-8 py-3 rounded-lg font-medium transition-colors ${
-                            selectedUnit === 'lbs'
-                                ? 'bg-teal-400 text-white'
-                                : 'text-gray-600 hover:text-gray-800'
-                        }`}
-                    >
-                        lbs
-                    </button>
-                </div>
-
-                {/* Weight Display */}
-                <div className="text-center mb-16">
-                    <div className="text-8xl font-light text-teal-400 mb-2">
-                        {weight}
-                        <span className="text-4xl text-gray-600 ml-2">{selectedUnit}</span>
+        <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cyan-50 flex items-center justify-center p-4">
+            <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 relative overflow-hidden">
+                <div className="relative z-10">
+                    {/* Header */}
+                    <div className="text-center mb-8">
+                        <h1 className="text-2xl font-bold text-gray-800 mb-2">
+                            What is your current weight?
+                        </h1>
+                        <p className="text-gray-600">We need this to calculate your BMI</p>
                     </div>
-                </div>
 
-                {/* Weight Slider */}
-                <div className="w-full max-w-md mb-16 relative">
-                    <div className="relative h-16 mb-8">
-                        {/* Scale marks */}
-                        {generateScaleMarks()}
+                    {/* Unit Toggle */}
+                    <div className="flex justify-center mb-8">
+                        <div className="bg-gray-100 rounded-lg p-1 flex">
+                            <button
+                                onClick={() => handleUnitChange('kg')}
+                                className={`px-6 py-2 rounded-md font-medium transition-all duration-200 ${
+                                    unit === 'kg'
+                                        ? 'bg-teal-500 text-white shadow-md'
+                                        : 'text-gray-600 hover:text-gray-800'
+                                }`}
+                            >
+                                Kg
+                            </button>
+                            <button
+                                onClick={() => handleUnitChange('lbs')}
+                                className={`px-6 py-2 rounded-md font-medium transition-all duration-200 ${
+                                    unit === 'lbs'
+                                        ? 'bg-teal-500 text-white shadow-md'
+                                        : 'text-gray-600 hover:text-gray-800'
+                                }`}
+                            >
+                                lbs
+                            </button>
+                        </div>
+                    </div>
 
-                        {/* Slider track */}
-                        <div className="absolute top-6 w-full h-1 bg-gray-200 rounded"></div>
+                    {/* Weight Display */}
+                    <div className="text-center mb-8">
+                        <div className="text-6xl font-bold text-teal-500 mb-2">
+                            {weight}
+                            <span className="text-2xl text-gray-600 ml-2">{unit}</span>
+                        </div>
+                    </div>
 
-                        {/* Slider thumb */}
+                    {/* Slider */}
+                    <div className="mb-8">
                         <div
-                            className="absolute top-3 w-3 h-12 bg-teal-400 rounded-full transform -translate-x-1.5 transition-all duration-150 shadow-lg"
-                            style={{ left: `${getSliderPosition()}%` }}
-                        ></div>
+                            ref={sliderRef}
+                            className="relative h-16 cursor-pointer select-none"
+                            onMouseDown={handleRailMouseDown}
+                        >
+                            {/* Rail with tick marks */}
+                            <div
+                                ref={railRef}
+                                className={`absolute top-1/2 w-full h-1 bg-gray-200 rounded-full transition-all duration-200 ${
+                                    isDraggingRail ? 'cursor-grabbing' : 'cursor-grab'
+                                }`}
+                                style={{ transform: 'translateY(-50%)' }}
+                            >
+                                {/* Grip indicators */}
+                                <div className="absolute -left-2 top-1/2 w-4 h-4 -translate-y-1/2 opacity-50">
+                                    <div className="w-1 h-1 bg-gray-400 rounded-full mb-1"></div>
+                                    <div className="w-1 h-1 bg-gray-400 rounded-full mb-1"></div>
+                                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                                </div>
+                                <div className="absolute -right-2 top-1/2 w-4 h-4 -translate-y-1/2 opacity-50">
+                                    <div className="w-1 h-1 bg-gray-400 rounded-full mb-1"></div>
+                                    <div className="w-1 h-1 bg-gray-400 rounded-full mb-1"></div>
+                                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                                </div>
+                            </div>
+
+                            {/* Tick marks */}
+                            <div className="absolute top-1/2 w-full" style={{ transform: 'translateY(-50%)' }}>
+                                {generateTicks()}
+                            </div>
+
+                            {/* Handle - Fixed in center */}
+                            <div
+                                className="absolute top-1/2 w-6 h-6 bg-teal-500 rounded-full shadow-lg transition-all duration-200 -translate-y-1/2 -translate-x-1/2 border-2 border-white pointer-events-none"
+                                style={{ left: `${handlePosition}%` }}
+                            />
+
+                            {/* Center line indicator */}
+                            <div className="absolute top-1/2 left-1/2 w-0.5 h-8 bg-teal-500 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+                        </div>
                     </div>
 
-                    {/* Interactive range input */}
-                    <input
-                        type="range"
-                        min={getMinMax().min}
-                        max={getMinMax().max}
-                        value={weight}
-                        onChange={(e) => handleWeightChange(parseInt(e.target.value))}
-                        className="w-full h-16 opacity-0 cursor-pointer absolute top-0 z-10"
-                        style={{
-                            background: 'transparent',
-                            appearance: 'none',
-                            WebkitAppearance: 'none'
-                        }}
-                    />
+                    {/* BMI Status */}
+                    <div className="text-center mb-8">
+                        <p className="text-teal-600 text-lg">
+                            Your current BMI is {currentBMI.toFixed(1)} which is {bmiCategory}.
+                        </p>
+                    </div>
 
-                    {/* Scale labels */}
-                    <div className="flex justify-between text-sm text-gray-500 mt-2">
-                        <span>{getMinMax().min}</span>
-                        <span className="text-teal-400 font-semibold">{weight} {selectedUnit}</span>
-                        <span>{getMinMax().max}</span>
+                    <div className={'flex items-center justify-center gap-5 mt-12'}>
+                        <GoBack onClick={onBack} />
+                        <button
+                            onClick={() => onContinue?.(weight, unit)}
+                            className="inline-flex items-center justify-between gap-2 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
+                        >
+                            Continue
+                            <ArrowRight className="w-5 h-5" />
+                        </button>
                     </div>
                 </div>
-
-                {/* BMI Info */}
-                <div className="text-center mb-12">
-                    <p className="text-teal-400 font-medium">
-                        Your current BMI is {currentBMI.toFixed(1)} which is {bmiCategory}.
-                    </p>
-                </div>
-
-                {/* Continue Button */}
-                <button
-                    onClick={handleContinue}
-                    className="w-full max-w-md bg-teal-400 text-white py-4 rounded-lg font-medium text-lg hover:bg-teal-500 transition-colors"
-                >
-                    Continue
-                </button>
             </div>
         </div>
     );
-};
-
-export default GoalWeightComponent;
+}
