@@ -1,165 +1,324 @@
-import React, { useEffect, useRef, useState } from 'react';
-import GoBack from "@/components/common/GoBack.tsx";
-import { ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 
-interface AgeSelectorProps {
+interface AgeDateSelectorProps {
     onAgeSelect?: (age: number) => void;
     onSelection?: (age: number, birthYear: number) => void;
-    onContinue?: (age: number, birthYear: number) => void;
+    onContinue?: (age: number, birthYear: number, birthMonth: string, birthDay: number) => void;
     onBack?: () => void;
 }
 
-const AgeSelector: React.FC<AgeSelectorProps> = ({ onAgeSelect, onSelection, onContinue, onBack }) => {
-    const [selectedAge, setSelectedAge] = useState<number>(24);
-    const scrollRef = useRef<HTMLDivElement>(null);
-    const isDragging = useRef(false);
-    const startX = useRef(0);
-    const scrollLeft = useRef(0);
+const AgeDateSelector: React.FC<AgeDateSelectorProps> = ({ onAgeSelect, onSelection, onContinue, onBack }) => {
+    const [selectedDate, setSelectedDate] = useState({
+        month: 'January',
+        day: 1,
+        year: 2007
+    });
+    const [age, setAge] = useState(18);
 
-    const ages = Array.from({ length: 33 }, (_, i) => 18 + i);
-    const itemWidth = 80;
+    const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
 
-    const getBirthYear = (age: number) => 2025 - age;
+    const days = Array.from({ length: 31 }, (_, i) => i + 1);
+    const currentYear = new Date().getFullYear();
+    const years = Array.from({ length: 58 }, (_, i) => currentYear - 18 - i); // 18 to 75 years old
 
-    const updateSelectedAge = () => {
-        if (!scrollRef.current) return;
-
-        const scrollPosition = scrollRef.current.scrollLeft;
-        const centerPosition = scrollPosition + scrollRef.current.offsetWidth / 2;
-        const index = Math.round((centerPosition - itemWidth / 2) / itemWidth);
-        const clampedIndex = Math.max(0, Math.min(ages.length - 1, index));
-        const newAge = ages[clampedIndex];
-
-        if (newAge !== selectedAge) {
-            setSelectedAge(newAge);
-            onAgeSelect?.(newAge);
-            onSelection?.(newAge, getBirthYear(newAge));
+    const calculateAge = (birthMonth: string, birthDay: number, birthYear: number) => {
+        const today = new Date();
+        const birth = new Date(birthYear, months.indexOf(birthMonth), birthDay);
+        
+        let calculatedAge = today.getFullYear() - birth.getFullYear();
+        const monthDiff = today.getMonth() - birth.getMonth();
+        
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+            calculatedAge--;
         }
-    };
-
-    const scrollToAge = (age: number) => {
-        if (!scrollRef.current) return;
-
-        const index = ages.indexOf(age);
-        const scrollPosition = index * itemWidth - scrollRef.current.offsetWidth / 2 + itemWidth / 2;
-
-        scrollRef.current.scrollTo({
-            left: scrollPosition,
-            behavior: 'smooth'
-        });
+        
+        return calculatedAge;
     };
 
     useEffect(() => {
-        setTimeout(() => scrollToAge(24), 100);
-    }, []);
+        const newAge = calculateAge(selectedDate.month, selectedDate.day, selectedDate.year);
+        setAge(newAge);
+        if (onAgeSelect) onAgeSelect(newAge);
+        if (onSelection) onSelection(newAge, selectedDate.year);
+    }, [selectedDate, onAgeSelect, onSelection]);
 
-    const handleMouseDown = (e: React.MouseEvent) => {
-        isDragging.current = true;
-        startX.current = e.pageX - (scrollRef.current?.offsetLeft || 0);
-        scrollLeft.current = scrollRef.current?.scrollLeft || 0;
-    };
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        if (!isDragging.current || !scrollRef.current) return;
-        e.preventDefault();
-        const x = e.pageX - (scrollRef.current.offsetLeft || 0);
-        const walk = (x - startX.current) * 2;
-        scrollRef.current.scrollLeft = scrollLeft.current - walk;
-    };
-
-    const handleMouseUp = () => {
-        isDragging.current = false;
-        updateSelectedAge();
-    };
-
-    const handleScroll = () => {
-        if (!isDragging.current) {
-            updateSelectedAge();
-        }
-    };
-
-    function handleContinue(_event: React.MouseEvent<HTMLButtonElement>): void {
+    const handleContinue = () => {
         if (onContinue) {
-            onContinue(selectedAge, getBirthYear(selectedAge));
+            onContinue(age, selectedDate.year, selectedDate.month, selectedDate.day);
         }
-    }
+    };
+
+    const handleBack = () => {
+        if (onBack) {
+            onBack();
+        }
+    };
+
+    const DateColumn = ({ 
+        label, 
+        items, 
+        selectedValue, 
+        onSelect 
+    }: { 
+        label: string;
+        items: (string | number)[];
+        selectedValue: string | number;
+        onSelect: (value: string | number) => void;
+    }) => {
+        const [isDragging, setIsDragging] = useState(false);
+        const [dragStart, setDragStart] = useState({ y: 0, index: 0 });
+        const [scrollOffset, setScrollOffset] = useState(0);
+        const [isAnimating, setIsAnimating] = useState(false);
+        const containerRef = React.useRef<HTMLDivElement>(null);
+        const wheelTimeoutRef = React.useRef<number>(0);
+        const scrollAccumulatorRef = React.useRef(0);
+
+        const handleStart = (clientY: number) => {
+            setIsDragging(true);
+            setDragStart({
+                y: clientY,
+                index: items.indexOf(selectedValue)
+            });
+        };
+
+        const handleMove = (clientY: number) => {
+            if (!isDragging) return;
+            
+            const deltaY = clientY - dragStart.y;
+            const itemHeight = 50;
+            const indexChange = Math.round(-deltaY / itemHeight);
+            const currentIndex = items.indexOf(selectedValue);
+            const isLooping = label === 'Month' || label === 'Day';
+            
+            let newIndex;
+            if (isLooping) {
+                newIndex = ((currentIndex + indexChange) % items.length + items.length) % items.length;
+            } else {
+                newIndex = Math.max(0, Math.min(items.length - 1, dragStart.index + indexChange));
+            }
+            
+            if (newIndex !== currentIndex) {
+                onSelect(items[newIndex]);
+            }
+        };
+
+        const handleEnd = () => {
+            setIsDragging(false);
+        };
+
+        const animateScroll = (direction: number) => {
+            if (isAnimating) return;
+            
+            setIsAnimating(true);
+            setScrollOffset(direction * 10);
+            
+            setTimeout(() => {
+                setScrollOffset(0);
+                setIsAnimating(false);
+            }, 200);
+        };
+
+        const handleWheel = (e: React.WheelEvent) => {
+            e.preventDefault();
+            
+            scrollAccumulatorRef.current += e.deltaY;
+            
+            if (wheelTimeoutRef.current) {
+                clearTimeout(wheelTimeoutRef.current);
+            }
+            
+            wheelTimeoutRef.current = window.setTimeout(() => {
+                const threshold = 50;
+                const scrollSteps = Math.floor(Math.abs(scrollAccumulatorRef.current) / threshold);
+                
+                if (scrollSteps > 0) {
+                    const direction = scrollAccumulatorRef.current > 0 ? 1 : -1;
+                    const currentIndex = items.indexOf(selectedValue);
+                    const isLooping = label === 'Month' || label === 'Day';
+                    
+                    let newIndex;
+                    if (isLooping) {
+                        newIndex = ((currentIndex + direction) % items.length + items.length) % items.length;
+                    } else {
+                        newIndex = Math.max(0, Math.min(items.length - 1, currentIndex + direction));
+                    }
+                    
+                    if (newIndex !== currentIndex) {
+                        onSelect(items[newIndex]);
+                        animateScroll(direction);
+                    }
+                }
+                
+                scrollAccumulatorRef.current = 0;
+            }, 50);
+        };
+
+        const handleMouseDown = (e: React.MouseEvent) => {
+            e.preventDefault();
+            handleStart(e.clientY);
+        };
+
+        const handleMouseMove = (e: React.MouseEvent) => {
+            e.preventDefault();
+            handleMove(e.clientY);
+        };
+
+        const handleTouchStart = (e: React.TouchEvent) => {
+            e.preventDefault();
+            handleStart(e.touches[0].clientY);
+        };
+
+        const handleTouchMove = (e: React.TouchEvent) => {
+            e.preventDefault();
+            handleMove(e.touches[0].clientY);
+        };
+
+        // Get display items
+        const currentIndex = items.indexOf(selectedValue);
+        const isLooping = label === 'Month' || label === 'Day';
+        
+        let previousItem, nextItem;
+        
+        if (isLooping) {
+            // For months and days, wrap around
+            const prevIndex = ((currentIndex - 1) % items.length + items.length) % items.length;
+            const nextIndex = (currentIndex + 1) % items.length;
+            previousItem = items[prevIndex];
+            nextItem = items[nextIndex];
+        } else {
+            // For years, show actual values but handle bounds
+            if (currentIndex > 0) {
+                previousItem = items[currentIndex - 1];
+            } else {
+                previousItem = (items[0] as number) + 1; // Show year above first selectable
+            }
+            
+            if (currentIndex < items.length - 1) {
+                nextItem = items[currentIndex + 1];
+            } else {
+                nextItem = (items[items.length - 1] as number) - 1; // Show year below last selectable
+            }
+        }
+
+        return (
+            <div className="flex flex-col items-center">
+                <label className="text-sm font-medium text-gray-700 mb-3">{label}</label>
+                <div 
+                    ref={containerRef}
+                    className={`flex flex-col items-center space-y-2 select-none cursor-grab touch-none transition-transform duration-200 ${
+                        isDragging ? 'cursor-grabbing' : ''
+                    }`}
+                    style={{
+                        transform: `translateY(${scrollOffset}px)`
+                    }}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleEnd}
+                    onMouseLeave={handleEnd}
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleEnd}
+                    onWheel={handleWheel}
+                >
+                    {/* Previous item */}
+                    <div className="px-4 py-2 text-lg font-medium transition-all duration-300 text-gray-400 scale-100">
+                        {previousItem}
+                    </div>
+                    
+                    {/* Current item */}
+                    <div className="px-4 py-2 text-lg font-medium transition-all duration-300 text-teal-500 bg-teal-50 rounded-lg scale-110">
+                        {selectedValue}
+                    </div>
+                    
+                    {/* Next item */}
+                    <div className="px-4 py-2 text-lg font-medium transition-all duration-300 text-gray-400 scale-100">
+                        {nextItem}
+                    </div>
+                </div>
+            </div>
+        );
+    };
 
     return (
-        <div className="flex items-center justify-center py-6 ">
-            <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center relative z-10 mx-4">
+        <div className="min-h-screen bg-gradient-to-br from-teal-50 to-cyan-100 flex items-center justify-center p-4 relative overflow-hidden">
+            {/* Background decorative elements */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-teal-400 rounded-full opacity-20 transform translate-x-32 -translate-y-32"></div>
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-cyan-300 rounded-full opacity-30 transform -translate-x-20 translate-y-20"></div>
+            
+            <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center relative z-10">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
                     What's your age?
                 </h1>
 
                 <p className="text-gray-500 text-base mb-8">
-                    It will help us personalized your plans
+                    Age help us to understand your metabolism
                 </p>
 
-                <div className="relative mb-6">
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-px -translate-y-1/2 w-0.5 h-16 bg-teal-400 z-10 pointer-events-none"></div>
-
-                    <div
-                        ref={scrollRef}
-                        className="flex overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing select-none py-4"
-                        style={{
-                            scrollbarWidth: 'none',
-                            msOverflowStyle: 'none',
-                            scrollSnapType: 'x mandatory'
-                        }}
-                        onMouseDown={handleMouseDown}
-                        onMouseMove={handleMouseMove}
-                        onMouseUp={handleMouseUp}
-                        onMouseLeave={handleMouseUp}
-                        onScroll={handleScroll}
-                    >
-                        <div className="flex-shrink-0 w-32"></div>
-
-                        {ages.map((age) => (
-                            <div
-                                key={age}
-                                className="flex-shrink-0 flex items-center justify-center"
-                                style={{
-                                    width: `${itemWidth}px`,
-                                    scrollSnapAlign: 'center'
-                                }}
-                            >
-                                <span
-                                    className={`text-4xl font-bold transition-all duration-300 ${
-                                        selectedAge === age
-                                            ? 'text-white bg-teal-400 w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg'
-                                            : 'text-gray-300'
-                                    }`}
-                                >
-                                    {age}
-                                </span>
-                            </div>
-                        ))}
-
-                        <div className="flex-shrink-0 w-32"></div>
+                {/* Age Display Circle */}
+                <div className="mb-8">
+                    <div className="w-32 h-32 bg-teal-400 rounded-full flex items-center justify-center mx-auto shadow-lg transition-all duration-300">
+                        <span className="text-6xl font-bold text-white">
+                            {age}
+                        </span>
                     </div>
                 </div>
 
-                <p className="text-teal-400 text-lg font-medium mb-6">
-                    Your birth year is {getBirthYear(selectedAge)}
+                {/* Date Selection */}
+                <div className="grid grid-cols-3 gap-8 mb-8">
+                    <DateColumn 
+                        label="Month"
+                        items={months}
+                        selectedValue={selectedDate.month}
+                        onSelect={(value) => setSelectedDate(prev => ({ ...prev, month: value as string }))}
+                    />
+                    <DateColumn 
+                        label="Day"
+                        items={days}
+                        selectedValue={selectedDate.day}
+                        onSelect={(value) => setSelectedDate(prev => ({ ...prev, day: value as number }))}
+                    />
+                    <DateColumn 
+                        label="Year"
+                        items={years}
+                        selectedValue={selectedDate.year}
+                        onSelect={(value) => setSelectedDate(prev => ({ ...prev, year: value as number }))}
+                    />
+                </div>
+
+                <p className="text-red-500 text-sm mb-8">
+                    *At this time our application allows age between 18 to 75 years
                 </p>
 
-                <p className="text-gray-500 text-sm mb-8 leading-relaxed">
-                    Minimum age limit is 18 years as our data will categorized according to different age groups.
-                </p>
-
-                 <div className={'flex items-center justify-center gap-5 mt-12'}>
-                     <GoBack onClick={onBack} />
-                     <button
-                         onClick={handleContinue}
-                         className="inline-flex items-center justify-between p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
-                     >
-                         Continue
-                         <ArrowRight className="w-5 h-5" />
-                     </button>
-                 </div>     
+                {/* Buttons */}
+                <div className="flex flex-col gap-4">
+                    <button
+                        onClick={age >= 18 ? handleContinue : undefined}
+                        disabled={age < 18}
+                        className={`w-full font-medium py-4 px-8 rounded-2xl transition-all duration-200 shadow-lg flex items-center justify-center gap-2 ${
+                            age >= 18 
+                                ? 'bg-teal-400 hover:bg-teal-500 text-white hover:shadow-xl cursor-pointer' 
+                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        }`}
+                    >
+                        Continue
+                        <ArrowRight className="w-5 h-5" />
+                    </button>
+                    
+                    <button
+                        onClick={handleBack}
+                        className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-4 px-8 rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                    >
+                        <ArrowLeft className="w-5 h-5" />
+                        Back
+                    </button>
+                </div>
             </div>
         </div>
     );
 };
 
-export default AgeSelector;
+export default AgeDateSelector;
