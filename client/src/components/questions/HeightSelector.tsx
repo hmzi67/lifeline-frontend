@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import GoBack from "@/components/common/GoBack.tsx";
 
 interface HeightSelectorProps {
   onContinue?: (height: number, unit: 'cm' | 'ft') => void;
@@ -240,17 +241,12 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ onContinue, onBack }) =
           </div>
         )}
 
-        <div className="flex items-center justify-center gap-5 mt-12">
+        {/* Continue Button */}
+        <div className={'flex items-center justify-center gap-5'}>
+          <GoBack onClick={onBack} />
           <button
-            onClick={onBack}
-            className="inline-flex items-center justify-between gap-2 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Back
-          </button>
-          <button
-            onClick={handleContinue}
-            className="inline-flex items-center justify-between gap-2 rounded-full bg-teal-500 hover:bg-teal-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
+              onClick={handleContinue}
+              className="inline-flex items-center justify-between p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
           >
             Continue
             <ArrowRight className="w-5 h-5" />

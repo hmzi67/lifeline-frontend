@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import GoBack from "@/components/common/GoBack.tsx";
 
 interface AgeDateSelectorProps {
     onAgeSelect?: (age: number) => void;
@@ -49,12 +50,6 @@ const AgeDateSelector: React.FC<AgeDateSelectorProps> = ({ onAgeSelect, onSelect
     const handleContinue = () => {
         if (onContinue) {
             onContinue(age, selectedDate.year, selectedDate.month, selectedDate.day);
-        }
-    };
-
-    const handleBack = () => {
-        if (onBack) {
-            onBack();
         }
     };
 
@@ -290,27 +285,17 @@ const AgeDateSelector: React.FC<AgeDateSelectorProps> = ({ onAgeSelect, onSelect
                     *At this time our application allows age between 18 to 75 years
                 </p>
 
-                {/* Buttons */}
-                <div className="flex flex-col gap-4">
+
+                {/* Continue Button */}
+                <div className={'flex items-center justify-center gap-5'}>
+                    <GoBack onClick={onBack} />
                     <button
                         onClick={age >= 18 ? handleContinue : undefined}
                         disabled={age < 18}
-                        className={`w-full font-medium py-4 px-8 rounded-2xl transition-all duration-200 shadow-lg flex items-center justify-center gap-2 ${
-                            age >= 18 
-                                ? 'bg-teal-400 hover:bg-teal-500 text-white hover:shadow-xl cursor-pointer' 
-                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        }`}
+                        className="inline-flex items-center justify-between p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
                     >
                         Continue
                         <ArrowRight className="w-5 h-5" />
-                    </button>
-                    
-                    <button
-                        onClick={handleBack}
-                        className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-4 px-8 rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-                    >
-                        <ArrowLeft className="w-5 h-5" />
-                        Back
                     </button>
                 </div>
             </div>
