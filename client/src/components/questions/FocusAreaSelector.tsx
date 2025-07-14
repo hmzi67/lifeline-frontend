@@ -61,12 +61,12 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                 {/* Main Content */}
                 <div className="relative flex items-center justify-center mb-12">
                     {/* Left side buttons */}
-                    <div className="flex flex-col space-y-6 mr-8">
+                    <div className="flex flex-col space-y-6 mr-6">
                         {['Shoulders', 'Chest', 'Arms', 'Thighs', 'Full Body'].map((area) => (
                             <button
                                 key={area}
                                 onClick={() => handleAreaToggle(area)}
-                                className={`px-6 py-3 rounded-lg border-2 transition-all duration-200 text-lg font-medium min-w-32 ${
+                                className={`px-5 py-2 rounded-lg border-2 transition-all duration-200 text-lg font-medium min-w-32 ${
                                     isSelected(area)
                                         ? 'bg-teal-500 border-teal-500 text-white shadow-lg'
                                         : 'bg-white border-gray-300 text-gray-700 hover:border-teal-300 hover:bg-teal-50'
@@ -78,13 +78,13 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                     </div>
 
                     {/* Center figure */}
-                    <div className="relative mx-12">
+                    <div className="sm:mx-[-20px]">
                         {gender === 'female' ? (
                             <div className="relative">
                                 <img
                                     src={womenimg}
                                     alt="Female figure"
-                                    className="w-48 h-full object-contain"
+                                    className="w-64 h-full object-contain"
                                 />
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="text-center text-gray-600 text-sm">
@@ -97,7 +97,7 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                                 <img
                                     src={menimg}
                                     alt="Male figure"
-                                    className="w-48 h-full object-contain"
+                                    className="w-64 h-full object-contain"
                                 />
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="text-center text-gray-600 text-sm">
@@ -106,46 +106,16 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                             </div>
                         )}
 
-                        {/* Connection lines and dots */}
-                        <div className="absolute inset-0 pointer-events-none">
-                            {/* Shoulder line */}
-                            <div className="absolute top-32 w-28 h-[1px] bg-teal-400 -translate-y-4 -translate-x-20"></div>
-                            <div className="absolute top-28 left-8 w-2 h-2 bg-teal-400 rounded-full -translate-y-1"></div>
-
-                            {/* Chest line */}
-                            <div className="absolute top-40 -left-1 w-36 h-px bg-teal-400 -translate-x-20 translate-y-6  -rotate-12"></div>
-                            <div className="absolute top-40 -left-2 w-2 h-2 bg-teal-400 rounded-full translate-x-16 translate-y-1"></div>
-
-                            {/* Arms line */}
-                            <div className="absolute top-60 -left-1 w-36 h-px bg-teal-400 -translate-x-20 translate-y-3 -rotate-[200deg] "></div>
-                            <div className="absolute top-52 left-1 w-2 h-2 bg-teal-400 rounded-full translate-y-4 translate-x-12"></div>
-
-                            {/* Thighs line */}
-                            <div className="absolute top-80 -left-1 w-32 h-px bg-teal-400 -rotate-[200deg] translate-y-7 -translate-x-20"></div>
-                            <div className="absolute top-80 left-4 w-2 h-2 bg-teal-400 rounded-full translate-y-1 translate-x-4"></div>
-
-                            {/* Right side lines */}
-                            {/* Belly line */}
-                            <div className="absolute top-32 right-8 w-12 h-px bg-teal-400"></div>
-                            <div className="absolute top-32 right-10 w-2 h-2 bg-teal-400 rounded-full -translate-y-1"></div>
-
-                            {/* Back line */}
-                            <div className="absolute top-36 right-4 w-16 h-px bg-teal-400"></div>
-                            <div className="absolute top-36 right-6 w-2 h-2 bg-teal-400 rounded-full -translate-y-1"></div>
-
-                            {/* Legs line */}
-                            <div className="absolute top-64 right-4 w-16 h-px bg-teal-400"></div>
-                            <div className="absolute top-64 right-6 w-2 h-2 bg-teal-400 rounded-full -translate-y-1"></div>
-                        </div>
+                        
                     </div>
 
                     {/* Right side buttons */}
-                    <div className="flex flex-col space-y-6 ml-8">
+                    <div className="flex flex-col space-y-6 ml-6 mb-6">
                         {['Belly', 'Back', 'Legs'].map((area) => (
                             <button
                                 key={area}
                                 onClick={() => handleAreaToggle(area)}
-                                className={`px-6 py-4 rounded-lg border-2 transition-all duration-200 text-lg font-medium min-w-32 ${
+                                className={`px-5 py-2 rounded-lg border-2 transition-all duration-200 text-lg font-medium min-w-32 ${
                                     isSelected(area)
                                         ? 'bg-teal-500 border-teal-500 text-white shadow-lg'
                                         : 'bg-white border-gray-300 text-gray-700 hover:border-teal-300 hover:bg-teal-50'
