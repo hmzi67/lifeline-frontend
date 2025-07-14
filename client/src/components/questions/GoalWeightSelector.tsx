@@ -133,6 +133,7 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
         };
     }, [isDraggingRail, railPosition, visibleRange, currentRange, lastTouchX]);
 
+    // Generate tick marks for the visible range
     const generateTicks = () => {
         const ticks = [];
         const startValue = Math.floor(railPosition);
@@ -141,22 +142,12 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
         for (let i = startValue; i <= endValue; i++) {
             if (i >= currentRange.min && i <= currentRange.max) {
                 const position = ((i - railPosition) / visibleRange) * 100;
-                const isMainTick = i % 10 === 0;
-                const isMidTick = i % 5 === 0 && !isMainTick; // 5th tick between main ticks
-
-                let tickClassName;
-                if (isMainTick) {
-                    tickClassName = 'w-1 rounded-full h-12 bg-gray-400';
-                } else if (isMidTick) {
-                    tickClassName = 'w-0.5 rounded-full h-9 bg-gray-500'; // Taller than regular ticks
-                } else {
-                    tickClassName = 'w-0.5 rounded-full h-6 bg-gray-600';
-                }
+                const isMainTick = i % 5 === 0;
 
                 ticks.push(
                     <div
                         key={i}
-                        className={`absolute ${tickClassName} -translate-x-0.5`}
+                        className={`absolute ${isMainTick ? 'w-1 rounded-full h-16 bg-gray-400' : 'rounded-full h-8 bg-gray-900'} w-0.5 -translate-x-0.5`}
                         style={{ left: `${position}%` }}
                     />
                 );
@@ -165,7 +156,7 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
                     ticks.push(
                         <div
                             key={`label-${i}`}
-                            className="absolute text-xs text-gray-500 -translate-x-1/2 mt-24"
+                            className="absolute text-xs text-gray-500 -translate-x-1/2 mt-28"
                             style={{ left: `${position}%` }}
                         >
                             {i}
@@ -255,7 +246,7 @@ export default function WeightSelector({ onContinue, onBack }: WeightSelectorPro
                                 {generateTicks()}
                             </div>
                             {/* Center line indicator */}
-                            <div className="absolute top-1/2 left-1/2 w-1 rounded-full h-24 bg-teal-500 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+                            <div className="absolute top-1/2 left-1/2 w-[6px] rounded-full h-32 bg-teal-500 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
                         </div>
                     </div>
 
