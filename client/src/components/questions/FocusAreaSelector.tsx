@@ -46,27 +46,27 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
     const isSelected = (area: string) => selectedAreas.includes(area);
 
     return (
-        <div className="flex items-center justify-center py-6">
+        <div className="flex items-center justify-center py-6 px-4">
             <div className="w-full max-w-4xl mx-auto">
                 {/* Header */}
-                <div className="text-center mb-12">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                <div className="text-center mb-8 sm:mb-12">
+                    <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-2 sm:mb-4">
                         Choose Your Focus Area
                     </h1>
-                    <p className="text-lg text-gray-600">
+                    <p className="text-base sm:text-lg text-gray-600 px-4 sm:px-0">
                         Tell us which part of your body you'd like to focus on during your workouts
                     </p>
                 </div>
 
                 {/* Main Content */}
-                <div className="relative flex items-center justify-center mb-12">
+                <div className="relative flex items-center justify-center mb-8 sm:mb-12">
                     {/* Left side buttons */}
-                    <div className="flex flex-col space-y-6 mr-6">
+                    <div className="flex flex-col space-y-3 sm:space-y-6 mr-2 sm:mr-6">
                         {['Shoulders', 'Chest', 'Arms', 'Thighs', 'Full Body'].map((area) => (
                             <button
                                 key={area}
                                 onClick={() => handleAreaToggle(area)}
-                                className={`px-5 py-2 rounded-lg border-2 transition-all duration-200 text-lg font-medium min-w-32 ${
+                                className={`px-2 sm:px-5 py-2 rounded-lg border-2 transition-all duration-200 text-sm sm:text-lg font-medium min-w-20 sm:min-w-32 ${
                                     isSelected(area)
                                         ? 'bg-teal-500 border-teal-500 text-white shadow-lg'
                                         : 'bg-white border-gray-300 text-gray-700 hover:border-teal-300 hover:bg-teal-50'
@@ -78,13 +78,13 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                     </div>
 
                     {/* Center figure */}
-                    <div className="sm:mx-[-20px]">
+                    <div className="mx-2 sm:mx-[-20px] flex-shrink-0">
                         {gender === 'female' ? (
                             <div className="relative">
                                 <img
                                     src={womenimg}
                                     alt="Female figure"
-                                    className="w-64 h-full object-contain"
+                                    className="w-40 sm:w-64 h-full object-contain"
                                 />
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="text-center text-gray-600 text-sm">
@@ -97,7 +97,7 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                                 <img
                                     src={menimg}
                                     alt="Male figure"
-                                    className="w-64 h-full object-contain"
+                                    className="w-40 sm:w-64 h-full object-contain"
                                 />
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="text-center text-gray-600 text-sm">
@@ -105,17 +105,15 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                                 </div>
                             </div>
                         )}
-
-                        
                     </div>
 
                     {/* Right side buttons */}
-                    <div className="flex flex-col space-y-6 ml-6 mb-6">
+                    <div className="flex flex-col space-y-3 sm:space-y-6 ml-2 sm:ml-6 mb-3 sm:mb-6">
                         {['Belly', 'Back', 'Legs'].map((area) => (
                             <button
                                 key={area}
                                 onClick={() => handleAreaToggle(area)}
-                                className={`px-5 py-2 rounded-lg border-2 transition-all duration-200 text-lg font-medium min-w-32 ${
+                                className={`px-2 sm:px-5 py-2 rounded-lg border-2 transition-all duration-200 text-sm sm:text-lg font-medium min-w-20 sm:min-w-32 ${
                                     isSelected(area)
                                         ? 'bg-teal-500 border-teal-500 text-white shadow-lg'
                                         : 'bg-white border-gray-300 text-gray-700 hover:border-teal-300 hover:bg-teal-50'
@@ -128,29 +126,29 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                 </div>
 
                 {/* Continue Button */}
-                 <div className={'flex items-center justify-center gap-5 mt-12'}>
-                     <GoBack onClick={onBack} />
-                   <button
-                       onClick={handleContinue}
-                       className="inline-flex items-center justify-between p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
-                   >
-                       Continue
-                       <ArrowRight className="w-5 h-5" />
-                   </button>
+                <div className={'flex items-center justify-center gap-3 sm:gap-5 mt-8 sm:mt-12'}>
+                    <GoBack onClick={onBack} />
+                    <button
+                        onClick={handleContinue}
+                        className="inline-flex items-center justify-between p-3 sm:p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-6 sm:px-8 py-3 sm:py-4 transition-all duration-200 text-sm sm:text-base"
+                    >
+                        Continue
+                        <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
+                    </button>
                 </div>
 
                 {/* Selected areas display (for demo) */}
                 {selectedAreas.length > 0 && (
-                    <div className="mt-8 text-center">
-                        <p className="text-gray-600 mb-2">Selected areas:</p>
+                    <div className="mt-6 sm:mt-8 text-center px-4">
+                        <p className="text-gray-600 mb-2 text-sm sm:text-base">Selected areas:</p>
                         <div className="flex flex-wrap justify-center gap-2">
                             {selectedAreas.map((area) => (
                                 <span
                                     key={area}
-                                    className="bg-teal-100 text-primary-800 px-3 py-1 rounded-full text-sm font-medium"
+                                    className="bg-teal-100 text-primary-800 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
                                 >
-                  {area}
-                </span>
+                                    {area}
+                                </span>
                             ))}
                         </div>
                     </div>
