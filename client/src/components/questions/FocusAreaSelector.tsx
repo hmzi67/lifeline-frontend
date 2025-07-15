@@ -79,32 +79,18 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
 
                     {/* Center figure */}
                     <div className="mx-2 sm:mx-[-20px] flex-shrink-0">
-                        {gender === 'female' ? (
-                            <div className="relative">
-                                <img
-                                    src={womenimg}
-                                    alt="Female figure"
-                                    className="w-40 sm:w-64 h-full object-contain"
-                                />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="text-center text-gray-600 text-sm">
-                                        
-                                    </div>
+                        <div className="relative">
+                            <img
+                                src={gender === 'female' ? womenimg : menimg}
+                                alt={`${gender === 'female' ? 'Female' : 'Male'} figure`}
+                                className="w-40 sm:w-64 h-full object-contain"
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="text-center text-gray-600 text-sm">
+                                    
                                 </div>
                             </div>
-                        ) : (
-                            <div className="relative">
-                                <img
-                                    src={menimg}
-                                    alt="Male figure"
-                                    className="w-40 sm:w-64 h-full object-contain"
-                                />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="text-center text-gray-600 text-sm">
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+                        </div>
                     </div>
 
                     {/* Right side buttons */}
@@ -130,7 +116,12 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                     <GoBack onClick={onBack} />
                     <button
                         onClick={handleContinue}
-                        className="inline-flex items-center justify-between p-3 sm:p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-6 sm:px-8 py-3 sm:py-4 transition-all duration-200 text-sm sm:text-base"
+                        disabled={selectedAreas.length === 0}
+                        className={`inline-flex items-center justify-between rounded-full font-medium border w-auto h-auto px-6 sm:px-8 py-4 transition-all duration-200 text-sm sm:text-base ${
+                            selectedAreas.length === 0 
+                                ? 'bg-gray-300 cursor-not-allowed text-gray-500 border-gray-300' 
+                                : 'bg-primary hover:bg-primary-600 text-white'
+                        }`}
                     >
                         Continue
                         <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
