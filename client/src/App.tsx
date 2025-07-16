@@ -19,12 +19,14 @@ import PrivacyPolicy from './pages/legal/PrivacyPolicy'
 import TermsAndConditions from './pages/legal/TermsAndConditions'
 import CommingSoon from './pages/utility/CommingSoon'
 import Questions from "@/pages/marketing/Questions.tsx";
+import ScrollToTop from './components/common/ScrollToTop'
 
 function App() {
 
   return (
 
     <Router>
+      <ScrollToTop />
       <Layout>
         <Routes>
           <Route path="/" element={<Landing />} />

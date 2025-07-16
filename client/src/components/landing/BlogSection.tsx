@@ -32,7 +32,7 @@ export const BlogSection: React.FC = () => {
                 {/* Header Section */}
                 <div className="text-center mb-12 sm:mb-16 lg:mb-20">
                     <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
-                        Recent <span className="text-teal-400">Blogs</span> and Articles
+                        Recent <span className="text-primary">Blogs</span> and Articles
                     </h2>
                     <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed px-4">
                         Explore our blogs and articles for expert workout tips, fitness advice, and effective exercise routines.
@@ -57,7 +57,7 @@ export const BlogSection: React.FC = () => {
                                     <div className="p-6">
                                         <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
                                             <div className="flex items-center gap-2">
-                                                <Circle size={8} className='fill-teal-400 text-teal-400' />
+                                                <Circle size={8} className='fill-primary-400 text-primary-400' />
                                                 <span>{post.date}</span>
                                             </div>
                                             <div className="flex items-center gap-2">
@@ -66,7 +66,7 @@ export const BlogSection: React.FC = () => {
                                             </div>
                                         </div>
 
-                                        <h3 className="text-xl xl:text-2xl font-semibold text-gray-900 leading-tight group-hover:text-teal-400 transition-colors duration-200">
+                                        <h3 className="text-xl xl:text-2xl font-semibold text-gray-900 leading-tight group-hover:text-primary transition-colors duration-200">
                                             {post.title}
                                         </h3>
                                     </div>
@@ -97,7 +97,7 @@ export const BlogSection: React.FC = () => {
                                             <span className="text-sm text-gray-500">{post.date}</span>
                                         </div>
 
-                                        <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 leading-tight group-hover:text-teal-400 transition-colors duration-200">
+                                        <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 leading-tight group-hover:text-primary transition-colors duration-200">
                                             {post.title}
                                         </h3>
                                     </div>
@@ -112,7 +112,7 @@ export const BlogSection: React.FC = () => {
                     <Button
                         size="lg"
                         variant="outline"
-                        className="border-2 border-teal-400 text-teal-400 hover:bg-teal-400 hover:text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-full transition-all duration-300 flex items-center gap-2"
+                        className="border-2 border-primary text-primary hover:bg-teal-400 hover:text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-full transition-all duration-300 flex items-center gap-2"
                     >
                         Read More
                         <ArrowRightIcon className="w-4 h-4 sm:w-5 sm:h-5" />
