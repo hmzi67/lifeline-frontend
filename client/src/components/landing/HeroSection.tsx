@@ -8,7 +8,6 @@ export const HeroSection: React.FC = () => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [nextImageIndex, setNextImageIndex] = useState(1);
     const [isTransitioning, setIsTransitioning] = useState(false);
-
     const images = [hero1, hero2, hero3];
 
     useEffect(() => {
@@ -20,7 +19,6 @@ export const HeroSection: React.FC = () => {
                 setIsTransitioning(false);
             }, 1000);
         }, 5000);
-
         return () => clearInterval(interval);
     }, [nextImageIndex, images.length]);
 
@@ -44,14 +42,14 @@ export const HeroSection: React.FC = () => {
                 <div className="absolute inset-0 bg-black bg-opacity-40"></div>
             </div>
 
-            <div className="absolute top-5 left-2 text-white opacity-30 text-xl font-light md:text-3xl md:top-20 md:left-10">+</div>
-            <div className="absolute top-1/2 right-5 text-white opacity-20 text-2xl font-light md:text-4xl md:right-20">+</div>
-            <div className="absolute bottom-20 right-1/4 text-white opacity-25 text-xl font-light md:text-3xl md:bottom-40 md:right-1/3">+</div>
+            <div className="absolute top-2 left-2 text-white opacity-30 text-lg font-light md:text-3xl md:top-10 md:left-10">+</div>
+            <div className="absolute top-1/2 right-2 text-white opacity-20 text-xl font-light md:text-4xl md:right-20">+</div>
+            <div className="absolute bottom-10 right-4 text-white opacity-25 text-lg font-light md:text-3xl md:bottom-20 md:right-1/3">+</div>
 
             <div className="relative z-10 min-h-screen flex items-center">
                 <div className="container mx-auto px-4 md:px-6 lg:px-12">
                     <div className="max-w-2xl">
-                        <h1 className="text-3xl md:text-5xl lg:text-7xl font-bold leading-tight text-white mb-4 md:mb-8">
+                        <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-bold leading-tight text-white mb-4 md:mb-8">
                             YOUR FITNESS{' '}
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-600">
                                 PARTNER!
