@@ -1,3 +1,4 @@
+//Done
 import { BlogCard } from '@/components/content/BlogCard';
 import {TestimonialsSection} from "@/components/landing";
 import { SearchBar } from '@/components/content/SearchBar';
@@ -66,7 +67,9 @@ export const Blog = () => {
                         Our latest blogs & articles
                     </h1>
                 </div>
-                <SearchBar />
+                <div className='mt-8 w-full flex justify-center '>
+                    <SearchBar />
+                </div>
             </div>
 
             {/* Main Content */}
