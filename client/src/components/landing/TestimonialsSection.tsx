@@ -69,7 +69,7 @@ export const TestimonialsSection: React.FC = () => {
                 >
                     {testimonials.map((testimonial, index) => (
                         <SwiperSlide key={index}>
-                            <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
+                            <div className="bg-white rounded-2xl p-4 sm:p-6 border shadow-sm hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
                                 <div className="flex flex-col sm:flex-row items-center gap-4 mb-4">
                                     <img
                                         src={testimonial.avatar}

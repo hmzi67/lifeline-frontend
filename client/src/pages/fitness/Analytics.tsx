@@ -7,11 +7,7 @@ export default function Analytics() {
     <>
       <FitnessBandProduct />
       <FitnessBandFeatures />
-      {/* Testimonials */}
-      {/*  text-cyan-400 */}
-      <div className={''}>
-          <TestimonialsSection />
-      </div>
+      <TestimonialsSection />
     </>
   )
 }
