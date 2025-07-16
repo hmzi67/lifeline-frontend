@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { ChevronDown, Minus } from 'lucide-react';
+import { Plus, Minus } from 'lucide-react';
+
+// Done For responsive design and better user experience
 
 interface FAQItem {
   id: number;
@@ -43,59 +45,69 @@ export const FAQSection: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-white py-32">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Left Section */}
-        <div className="space-y-6">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">
-              <span className="text-primary">FAQs</span>
-              <span className="text-gray-800"> - Frequently Asked </span>
-              <span className="text-primary">Questions</span>
-            </h1>
-          </div>
-          
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-700">
-              Got Questions? We're Here to Help!
-            </h2>
-            <p className="text-gray-600 leading-relaxed">
-              Explore our FAQs and quickly get the information you need.
-            </p>
-          </div>
-        </div>
-
-        {/* Right Section - FAQ Items */}
-        <div className="space-y-4">
-          {faqItems.map((item) => (
-            <div key={item.id} className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-              <button
-                onClick={() => toggleExpansion(item.id)}
-                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
-              >
-                <span className="text-gray-800 font-medium text-sm lg:text-base pr-4">
-                  {item.question}
-                </span>
-                <div className="flex-shrink-0">
-                  {expandedItem === item.id ? (
-                    <Minus className="w-5 h-5 text-gray-600" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-gray-600" />
-                  )}
-                </div>
-              </button>
-              
-              {expandedItem === item.id && (
-                <div className="px-6 pb-4">
-                  <div className="border-t border-teal-100 pt-4">
-                    <p className="text-gray-700 text-sm lg:text-base leading-relaxed">
-                      {item.answer}
-                    </p>
-                  </div>
-                </div>
-              )}
+    <div className="w-full bg-white py-12 sm:py-16 lg:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 xl:gap-24">
+          {/* Left Section */}
+          <div className="space-y-6 lg:space-y-8 flex flex-col justify-center">
+            <div>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
+                <span className="text-teal-400">FAQs</span>
+                <span className="text-gray-800"> - Frequently</span>
+                <br />
+                <span className="text-gray-800">Asked </span>
+                <span className="text-teal-400">Questions</span>
+              </h1>
             </div>
-          ))}
+
+            <div className="space-y-4 lg:space-y-6">
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-700">
+                Got Questions? We're Here to Help!
+              </h2>
+              <p className="text-gray-600 text-base sm:text-lg lg:text-xl leading-relaxed max-w-md lg:max-w-lg">
+                Explore our FAQs and quickly get the information you need.
+              </p>
+            </div>
+          </div>
+
+          {/* Right Section - FAQ Items */}
+          <div className="space-y-3 lg:space-y-4">
+            {faqItems.map((item) => (
+              <div
+                key={item.id}
+                className={`bg-white rounded-2xl overflow-hidden transition-all duration-300 shadow-md ${expandedItem === item.id
+                    ? 'border-2 border-teal-300'
+                    : 'border border-transparent hover:border-gray-200'
+                  }`}
+              >
+                <button
+                  onClick={() => toggleExpansion(item.id)}
+                  className="w-full px-5 sm:px-6 lg:px-7 py-4 sm:py-5 lg:py-6 text-left flex items-center justify-between transition-colors duration-200"
+                >
+                  <span className="text-gray-700 font-medium text-sm sm:text-base lg:text-lg pr-4 leading-relaxed">
+                    {item.question}
+                  </span>
+                  <div className="flex-shrink-0">
+                    {expandedItem === item.id ? (
+                      <Minus className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
+                    ) : (
+                      <Plus className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
+                    )}
+                  </div>
+                </button>
+
+                {expandedItem === item.id && (
+                  <div className="px-5 sm:px-6 lg:px-7 pb-4 sm:pb-5 lg:pb-6">
+                    <div className="pt-2">
+                      <p className="text-gray-600 text-sm sm:text-base lg:text-lg leading-relaxed">
+                        {item.answer}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
