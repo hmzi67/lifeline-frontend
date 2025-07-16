@@ -2,6 +2,8 @@ import React from 'react';
 import { Button } from '../ui/button';
 import { ArrowRightIcon, Circle } from 'lucide-react';
 
+// Done For responsive design and better user experience
+
 export const BlogSection: React.FC = () => {
     const blogPosts = [
         {
