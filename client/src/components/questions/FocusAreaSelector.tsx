@@ -61,7 +61,7 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                 {/* Main Content */}
                 <div className="relative flex items-center justify-center mb-8 sm:mb-12">
                     {/* Left side buttons */}
-                    <div className="flex flex-col space-y-3 sm:space-y-6 mr-2 sm:mr-6">
+                    <div className="flex flex-col space-y-3 sm:space-y-6 sm:mr-6">
                         {['Shoulders', 'Chest', 'Arms', 'Thighs', 'Full Body'].map((area) => (
                             <button
                                 key={area}
@@ -85,16 +85,11 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                                 alt={`${gender === 'female' ? 'Female' : 'Male'} figure`}
                                 className="w-40 sm:w-64 h-full object-contain"
                             />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="text-center text-gray-600 text-sm">
-                                    
-                                </div>
-                            </div>
                         </div>
                     </div>
 
                     {/* Right side buttons */}
-                    <div className="flex flex-col space-y-3 sm:space-y-6 ml-2 sm:ml-6 mb-3 sm:mb-6">
+                    <div className="flex flex-col space-y-3 sm:space-y-6 sm:ml-6 mb-3 sm:mb-6">
                         {['Belly', 'Back', 'Legs'].map((area) => (
                             <button
                                 key={area}
