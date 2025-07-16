@@ -2,85 +2,119 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-// Note: SQLite doesn't support enums, so we use String fields with validation in the application
+// Enums (now supported with PostgreSQL)
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum ActivityLevel {
+  SEDENTARY
+  LIGHTLY_ACTIVE
+  MODERATELY_ACTIVE
+  VERY_ACTIVE
+  EXTREMELY_ACTIVE
+}
+
+enum Role {
+  USER
+  ADMIN
+  COACH
+}
+
+enum Units {
+  METRIC
+  IMPERIAL
+}
+
+enum Privacy {
+  PUBLIC
+  FRIENDS
+  PRIVATE
+}
 
 model User {
-    id              String    @id @default(cuid())
-    email           String    @unique
-    password        String
-    firstName       String
-    lastName        String
-    dateOfBirth     DateTime?
-    gender          String? // "MALE", "FEMALE", "OTHER"
-    height          Float? // in cm
-    weight          Float? // in kg
-    activityLevel   String    @default("SEDENTARY") // "SEDENTARY", "LIGHTLY_ACTIVE", etc.
-    role            String    @default("USER") // "USER", "ADMIN", "COACH"
-    isEmailVerified Boolean   @default(false)
-    profileImage    String?
+  id              String        @id @default(cuid())
+  email           String        @unique
+  password        String
+  firstName       String
+  lastName        String
+  dateOfBirth     DateTime?
+  gender          Gender?
+  height          Float? // in cm
+  weight          Float? // in kg
+  activityLevel   ActivityLevel @default(SEDENTARY)
+  role            Role          @default(USER)
+  isEmailVerified Boolean       @default(false)
+  profileImage    String?
 
-    // Relations
-    preferences UserPreferences?
+  // Relations
+  preferences   UserPreferences?
+  refreshTokens RefreshToken[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    @@map("users")
+  @@map("users")
 }
 
 model UserPreferences {
-    id                   String  @id @default(cuid())
-    userId               String  @unique
-    dietaryRestrictions  String  @default("[]") // JSON string array
-    allergies            String  @default("[]") // JSON string array
-    fitnessGoals         String  @default("[]") // JSON string array
-    notificationsEnabled Boolean @default(true)
-    units                String  @default("METRIC") // "METRIC", "IMPERIAL"
-    privacy              String  @default("PRIVATE") // "PUBLIC", "FRIENDS", "PRIVATE"
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  dietaryRestrictions  String[] @default([]) // PostgreSQL array
+  allergies            String[] @default([]) // PostgreSQL array
+  fitnessGoals         String[] @default([]) // PostgreSQL array
+  notificationsEnabled Boolean  @default(true)
+  units                Units    @default(METRIC)
+  privacy              Privacy  @default(PRIVATE)
 
-    // Relations
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    @@map("user_preferences")
+  @@map("user_preferences")
 }
 
 model RefreshToken {
-    id        String   @id @default(cuid())
-    token     String   @unique
-    userId    String
-    expiresAt DateTime
-    createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 
-    @@map("refresh_tokens")
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
 }
 
 model EmailVerification {
-    id        String   @id @default(cuid())
-    email     String
-    token     String   @unique
-    expiresAt DateTime
-    createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 
-    @@map("email_verifications")
+  @@map("email_verifications")
 }
 
 model PasswordReset {
-    id        String   @id @default(cuid())
-    email     String
-    token     String   @unique
-    expiresAt DateTime
-    createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 
-    @@map("password_resets")
+  @@map("password_resets")
 }
