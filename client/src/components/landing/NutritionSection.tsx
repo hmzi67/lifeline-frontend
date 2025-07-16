@@ -1,3 +1,4 @@
+// done
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '../ui/button';
 import { Check } from 'lucide-react';
@@ -50,7 +51,7 @@ export const NutritionSection: React.FC = () => {
     return (
         <section className="py-10 md:py-20">
             <div className="container mx-auto px-4 md:px-6">
-                <div className="grid grid-cols-1 md:grid-cols-[240px_400px_1fr] gap-8 items-center md:ms-20">
+                <div className="grid grid-cols-1 md:grid-cols-[240px_400px_1fr] gap-8 items-center md:ms-0">
                     {/* Left Content - Quote Card and Stats */}
                     <div className="space-y-6 md:space-y-8">
                         {/* Quote Card - No background, only shadow */}
@@ -105,7 +106,6 @@ export const NutritionSection: React.FC = () => {
                                 always stay out of reach
                             </p>
                         </div>
-
                         {/* Feature List */}
                         <div className="space-y-3">
                             <div className="flex items-center space-x-3">
@@ -127,7 +127,6 @@ export const NutritionSection: React.FC = () => {
                                 <span className="text-sm md:text-base text-gray-700">Non Vegetarian Diet Plan</span>
                             </div>
                         </div>
-
                         {/* Buttons */}
                         <div className="flex gap-3">
                             <Button
