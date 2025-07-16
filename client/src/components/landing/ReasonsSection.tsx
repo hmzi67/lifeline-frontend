@@ -30,7 +30,6 @@ export const ReasonsSection: React.FC = () => {
                                         <h3 className="text-xl font-bold text-primary tracking-wide whitespace-nowrap md:text-2xl lg:text-3xl">
                                             BE HEALTHY
                                         </h3>
-                                        {/* Horizontal line extending to the right, hidden on mobile */}
                                         <div className="hidden md:flex flex-1 h-0.5 bg-primary"></div>
                                     </div>
                                     <p className="text-gray-500 text-base leading-relaxed max-w-xs md:text-lg md:max-w-sm">
@@ -51,7 +50,6 @@ export const ReasonsSection: React.FC = () => {
                                         <h3 className="text-xl font-bold text-primary tracking-wide whitespace-nowrap md:text-2xl lg:text-3xl">
                                             FEEL FREE
                                         </h3>
-                                        {/* Horizontal line extending to the right, hidden on mobile */}
                                         <div className="hidden md:flex flex-1 h-0.5 bg-primary"></div>
                                     </div>
                                     <p className="text-gray-500 text-base leading-relaxed max-w-xs md:text-lg md:max-w-sm">
@@ -68,7 +66,7 @@ export const ReasonsSection: React.FC = () => {
                             <img
                                 src={phoneImage}
                                 alt="Fitness app interface"
-                                className="w-64 h-auto max-w-full drop-shadow-xl md:w-80"
+                                className="w-64 h-auto max-w-full drop-shadow-xl md:w-80 lg:w-96"
                             />
                         </div>
                     </div>
@@ -78,12 +76,11 @@ export const ReasonsSection: React.FC = () => {
                         {/* BE ONE OF US - Right Aligned */}
                         <div className="text-right relative">
                             <div className="relative">
-                                <div className="absolute -top-4 -right-6 text-6xl font-bold text-primary-200 opacity-50 z-0 md:-top-8 md:-right-12 md:text-8xl lg:text-9xl">
+                                <div className="absolute -top-4 sm:-right-6 text-6xl font-bold text-primary-200 opacity-50 z-0 md:-top-8 md:-right-12 md:text-8xl lg:text-9xl">
                                     03
                                 </div>
                                 <div className="relative z-10">
                                     <div className="flex items-center gap-2 mb-3 md:gap-4 md:mb-6">
-                                        {/* Horizontal line extending to the left, hidden on mobile */}
                                         <div className="hidden md:flex flex-1 h-0.5 bg-primary"></div>
                                         <h3 className="text-xl font-bold text-primary tracking-wide whitespace-nowrap md:text-2xl lg:text-3xl">
                                             BE ONE OF US
@@ -99,12 +96,11 @@ export const ReasonsSection: React.FC = () => {
                         {/* BE STRONG - Right Aligned */}
                         <div className="text-right relative">
                             <div className="relative">
-                                <div className="absolute -top-4 -right-6 text-6xl font-bold text-primary-200 opacity-50 z-0 md:-top-8 md:-right-12 md:text-8xl lg:text-9xl">
+                                <div className="absolute -top-4 sm:-right-6 text-6xl font-bold text-primary-200 opacity-50 z-0 md:-top-8 md:-right-12 md:text-8xl lg:text-9xl">
                                     04
                                 </div>
                                 <div className="relative z-10">
                                     <div className="flex items-center gap-2 mb-3 md:gap-4 md:mb-6">
-                                        {/* Horizontal line extending to the left, hidden on mobile */}
                                         <div className="hidden md:flex flex-1 h-0.5 bg-primary"></div>
                                         <h3 className="text-xl font-bold text-primary tracking-wide whitespace-nowrap md:text-2xl lg:text-3xl">
                                             BE STRONG
