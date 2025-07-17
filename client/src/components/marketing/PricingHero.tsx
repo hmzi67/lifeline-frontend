@@ -1,5 +1,5 @@
 import React from 'react';
-import PricingHeroBgImage from "../../assets/images/pricing/pricingHeroBg.svg";
+import PricingHeroBgImage from "../../assets/images/pricing/pricingHeroBg.png";
 
 const PricingHero: React.FC = () => {
     return (
@@ -9,7 +9,7 @@ const PricingHero: React.FC = () => {
         <img
             src={PricingHeroBgImage}
             alt="Running group stretching outdoors"
-            className="object-contain w-full"
+            className="object-cover object-top w-full h-full"
         />
     </div>
 

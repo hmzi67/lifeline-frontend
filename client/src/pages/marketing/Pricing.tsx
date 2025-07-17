@@ -1,11 +1,10 @@
-
 import { PricingCard } from '@/components/marketing/PricingCard';
-import React from 'react';
+import React, { useState } from 'react';
 import PricingHero from "@/components/marketing/PricingHero.tsx";
 
-
-
 const Pricing: React.FC = () => {
+  const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(1); // Default to middle card selected
+
   const features = [
     "Steps Counter track by hand",
     "Heart Rate by our premium fitness band",
@@ -25,53 +24,68 @@ const Pricing: React.FC = () => {
     "Calorie Counter on daily basis"
   ];
 
+  const cardData = [
+    {
+      title: "12 Months Plan",
+      price: "19.99",
+      originalPrice: "$39.99/m",
+      features: features,
+      hasCoupon: true
+    },
+    {
+      title: "12 Months Plan",
+      price: "19.99",
+      originalPrice: "$39.99/m",
+      features: highlightedFeatures,
+      hasCoupon: true
+    },
+    {
+      title: "12 Months Plan",
+      price: "19.99",
+      originalPrice: "$39.99/m",
+      features: features,
+      hasCoupon: true
+    }
+  ];
+
   return (
-      <>
-        <PricingHero />
-        <div className="py-24 px-4 mt-20">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <h1 className="text-3xl font-bold text-gray-800 mb-4">
-                Choose the Payment Plan
-              </h1>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                LifeLine will help you in this fitness journey with science based approach this
-              </p>
-            </div>
+    <>
+      <PricingHero />
+      <div className="py-0 px-4 sm:mt-20 mt-0 ">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="text-3xl font-bold text-gray-800 mb-4">
+              Choose the Payment Plan
+            </h1>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              LifeLine will help you in this fitness journey with science based approach this
+            </p>
+          </div>
 
-            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {cardData.map((card, index) => (
               <PricingCard
-                  title="12 Months Plan"
-                  price="19.99"
-                  originalPrice="$39.99/m"
-                  features={features}
+                key={index}
+                title={card.title}
+                price={card.price}
+                originalPrice={card.originalPrice}
+                features={card.features}
+                hasCoupon={card.hasCoupon}
+                isSelected={selectedCardIndex === index}
+                onSelect={() => setSelectedCardIndex(index)}
               />
+            ))}
+          </div>
 
-              <PricingCard
-                  title="12 Months Plan"
-                  price="19.99"
-                  originalPrice="$39.99/m"
-                  features={highlightedFeatures}
-                  isHighlighted={true}
-              />
-
-              <PricingCard
-                  title="12 Months Plan"
-                  price="19.99"
-                  originalPrice="$39.99/m"
-                  features={features}
-              />
-            </div>
-
-            <div className="text-center mt-12">
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Unlock our library of meditations, sleep sounds, and more. We'll send you a reminder that your trial is
-                ending soon. You'll be charged on March 28, cancel anytime before.
-              </p>
-            </div>
+          <div className="text-center mt-12">
+            <p className="text-gray-600 max-w-2xl mx-auto mb-6">
+              Unlock our library of meditations, sleep sounds, and more. We'll send you a reminder that your trial is
+              ending soon. You'll be charged on March 28, cancel anytime before.
+            </p>
           </div>
         </div>
-      </>
+      </div>
+    </>
   );
 };
 
