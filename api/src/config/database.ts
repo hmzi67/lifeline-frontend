@@ -1,30 +1,17 @@
 import { PrismaClient } from '@prisma/client';
-import { config } from './index.js';
 import { logger } from '@utils/logger.js';
+import {NextFunction, Request, Response} from "express";
 
-declare global {
-  // eslint-disable-next-line no-var
-  var __prisma: PrismaClient | undefined;
-}
 
-// Create Prisma client instance
-export const prisma =
-  globalThis.__prisma ??
-  new PrismaClient({
-    log: config.isDevelopment ? ['query', 'info', 'warn', 'error'] : ['error'],
-  });
-
-if (config.isDevelopment) {
-  globalThis.__prisma = prisma;
-}
+export const prisma = new PrismaClient()
 
 // Database connection function
 export const connectDatabase = async (): Promise<void> => {
   try {
     await prisma.$connect();
-    logger.info('✅ Database connected successfully');
+    logger.info('Database connected successfully');
   } catch (error) {
-    logger.error('❌ Database connection failed:', error);
+    logger.error('Database connection failed:', error);
     throw error;
   }
 };
@@ -33,20 +20,40 @@ export const connectDatabase = async (): Promise<void> => {
 export const disconnectDatabase = async (): Promise<void> => {
   try {
     await prisma.$disconnect();
-    logger.info('📴 Database disconnected successfully');
+    logger.info('Database disconnected successfully');
   } catch (error) {
-    logger.error('❌ Database disconnection failed:', error);
+    logger.error('Database disconnection failed:', error);
     throw error;
   }
 };
 
-// Health check function
-export const checkDatabaseHealth = async (): Promise<boolean> => {
+export const healthCheck = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // Check database connection
     await prisma.$queryRaw`SELECT 1`;
-    return true;
+
+    const healthStatus = {
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      services: {
+        database: 'connected',
+        server: 'running'
+      },
+      version: process.env.APP_VERSION || '1.0.0'
+    };
+
+    res.status(200).json(healthStatus);
   } catch (error) {
-    logger.error('❌ Database health check failed:', error);
-    return false;
+    const healthStatus = {
+      status: 'unhealthy',
+      timestamp: new Date().toISOString(),
+      services: {
+        database: 'disconnected',
+        server: 'running'
+      },
+      version: process.env.APP_VERSION || '1.0.0'
+    };
+
+    res.status(503).json(healthStatus);
   }
 };

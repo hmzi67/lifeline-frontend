@@ -1,83 +1,124 @@
 import { Request, Response, NextFunction } from 'express';
-import { logger } from '@utils/logger.js';
-import { config } from '@config/index.js';
+import { CustomError } from '@/types/middlewareTypes';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
-export interface ApiError extends Error {
-  statusCode?: number;
-  isOperational?: boolean;
-}
+class AppError extends Error implements CustomError {
+    statusCode: number;
+    isOperational: boolean;
+    code?: string;
+    details?: any;
 
-export class AppError extends Error implements ApiError {
-  public readonly statusCode: number;
-  public readonly isOperational: boolean;
+    constructor(message: string, statusCode: number, code?: string, details?: any) {
+        super(message);
+        this.statusCode = statusCode;
+        this.isOperational = true;
+        this.code = code;
+        this.details = details;
 
-  constructor(message: string, statusCode: number = 500, isOperational: boolean = true) {
-    super(message);
-    this.statusCode = statusCode;
-    this.isOperational = isOperational;
-
-    Error.captureStackTrace(this, this.constructor);
-  }
-}
-
-export const errorHandler = (
-  error: ApiError,
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  let { statusCode = 500, message } = error;
-
-  // Log error
-  logger.error('Error occurred:', {
-    error: error.message,
-    stack: error.stack,
-    url: req.url,
-    method: req.method,
-    ip: req.ip,
-    userAgent: req.get('User-Agent'),
-  });
-
-  // Don't leak error details in production
-  if (config.isProduction && statusCode === 500) {
-    message = 'Internal Server Error';
-  }
-
-  // Prisma errors
-  if (error.name === 'PrismaClientKnownRequestError') {
-    statusCode = 400;
-    message = 'Database operation failed';
-  }
-
-  // Validation errors
-  if (error.name === 'ValidationError') {
-    statusCode = 400;
-  }
-
-  // JWT errors
-  if (error.name === 'JsonWebTokenError') {
-    statusCode = 401;
-    message = 'Invalid token';
-  }
-
-  if (error.name === 'TokenExpiredError') {
-    statusCode = 401;
-    message = 'Token expired';
-  }
-
-  // Multer errors
-  if (error.name === 'MulterError') {
-    statusCode = 400;
-    if (error.message.includes('File too large')) {
-      message = 'File size too large';
+        Error.captureStackTrace(this, this.constructor);
     }
-  }
+}
 
-  res.status(statusCode).json({
-    success: false,
-    error: {
-      message,
-      ...(config.isDevelopment && { stack: error.stack }),
-    },
-  });
+const handlePrismaError = (error: PrismaClientKnownRequestError): AppError => {
+    switch (error.code) {
+        case 'P2002':
+            return new AppError(
+                'Duplicate entry. Resource already exists.',
+                409,
+                'DUPLICATE_ENTRY',
+                { field: error.meta?.target }
+            );
+        case 'P2025':
+            return new AppError(
+                'Resource not found.',
+                404,
+                'NOT_FOUND',
+                { operation: error.meta?.cause }
+            );
+        case 'P2003':
+            return new AppError(
+                'Foreign key constraint failed.',
+                400,
+                'FOREIGN_KEY_CONSTRAINT',
+                { field: error.meta?.field_name }
+            );
+        default:
+            return new AppError('Database operation failed.', 500, 'DATABASE_ERROR');
+    }
 };
+
+const sendErrorDev = (err: CustomError, res: Response) => {
+    res.status(err.statusCode || 500).json({
+        success: false,
+        error: {
+            message: err.message,
+            code: err.code,
+            details: err.details,
+            stack: err.stack
+        }
+    });
+};
+
+const sendErrorProd = (err: CustomError, res: Response) => {
+    if (err.isOperational) {
+        res.status(err.statusCode || 500).json({
+            success: false,
+            error: {
+                message: err.message,
+                code: err.code,
+                details: err.details
+            }
+        });
+    } else {
+        console.error('ERROR 💥', err);
+        res.status(500).json({
+            success: false,
+            error: {
+                message: 'Something went wrong!',
+                code: 'INTERNAL_SERVER_ERROR'
+            }
+        });
+    }
+};
+
+const errorHandler = (
+    err: Error | CustomError,
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    let error = { ...err } as CustomError;
+    error.message = err.message;
+
+    // Handle Prisma errors
+    if (err instanceof PrismaClientKnownRequestError) {
+        error = handlePrismaError(err);
+    }
+
+    // Handle validation errors
+    if (err.name === 'ValidationError') {
+        error = new AppError(err.message, 400, 'VALIDATION_ERROR');
+    }
+
+    // Handle JWT errors
+    if (err.name === 'JsonWebTokenError') {
+        error = new AppError('Invalid token', 401, 'INVALID_TOKEN');
+    }
+
+    if (err.name === 'TokenExpiredError') {
+        error = new AppError('Token expired', 401, 'TOKEN_EXPIRED');
+    }
+
+    // Set default values
+    error.statusCode = error.statusCode || 500;
+    error.isOperational = error.isOperational || false;
+
+    if (process.env.NODE_ENV === 'development') {
+        sendErrorDev(error, res);
+    } else {
+        sendErrorProd(error, res);
+    }
+};
+
+export default errorHandler;
+export { AppError };
