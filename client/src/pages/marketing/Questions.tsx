@@ -23,7 +23,7 @@ export default function Questions() {
   const [currentStep, setCurrentStep] = useState(0);
   const [gender, setGender] = useState("men");
   const [selectedGoal, setSelectedGoal] = useState<string>("");
-  const [selectDiet, setSelectedDiet] = useState<string>("");
+  const [selectDiet, setSelectedDiet] = useState<string[]>([]);
   const [allergies, setAllergies] = useState<string[]>([]);
   const [selectedLevel, setSelectedLevel] = useState<number>(0);
   const [selectedDayOption, setSelectedDayOption] = useState<string>("");

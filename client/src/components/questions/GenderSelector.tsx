@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import {ArrowRight, Check} from 'lucide-react';  // assuming you're using lucide-react icons
+import { ArrowRight } from 'lucide-react';
 import menimg from "@/assets/images/question/man-gender.jpg";
 import womenimg from "@/assets/images/question/women-gender.jpeg";
+import GoNext from '../common/GoNext';
 
 interface GenderOption {
     id: 'male' | 'female';
@@ -26,7 +27,7 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
         {
             id: 'female',
             label: 'Female',
-            image: womenimg 
+            image: womenimg
         }
     ];
 
@@ -42,21 +43,20 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
     };
 
     return (
-        <div className="flex items-center justify-center">
-
-            <div className="my-8">
+        <div className="flex items-center justify-center p-4">
+            <div className="w-full max-w-4xl">
                 {/* Header */}
-                <div className="text-center mb-10">
-                    <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+                <div className="text-center mb-6">
+                    <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
                         How would you describe your gender?
                     </h1>
-                    <p className="text-xl text-gray-600 font-medium">
+                    <p className="text-base md:text-xl text-gray-600 font-medium">
                         Lose weight, tone up and gain strength at home
                     </p>
                 </div>
 
                 {/* Gender Cards */}
-                <div className="flex flex-col md:flex-row gap-4 md:gap-12 mb-6 items-center justify-center">
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center mb-6">
                     {genderOptions.map((option) => (
                         <div
                             key={option.id}
@@ -65,11 +65,12 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                             `}
                         >
                             <div className="flex justify-center mb-8">
-                                {selectedGender === option.id && (
-                                    <div className="absolute top-6 right-6 w-10 h-10 bg-teal-400 rounded-full flex items-center justify-center shadow-lg">
+                                {/* {selectedGender === option.id && (
+                                    // <div className="absolute top-6 right-16 w-10 h-10 bg-teal-400 rounded-full flex items-center justify-center shadow-lg">
+                                    <div className="w-full flex border items-center justify-center">
                                         <Check className="w-6 h-6 text-white" />
                                     </div>
-                                )}
+                                )} */}
                                 <div className={`w-64 h-64 rounded-2xl overflow-hidden shadow-lg ${selectedGender === option.id ? 'ring-4 ring-teal-400 shadow-2xl' : 'shadow-lg hover:shadow-xl'}`}>
                                     <img
                                         src={option.image}
@@ -89,7 +90,7 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                 </div>
 
                 {/* Footer */}
-                <div className="text-center text-base text-gray-500 space-y-3 mb-8">
+                <div className="text-center text-xs sm:text-base text-gray-500 space-y-2 mb-6">
                     <p>
                         By selecting your gender and continuing you agree to our{' '}
                         <a href="#" className="text-teal-500 hover:text-teal-600 underline">Terms of Service</a> |{' '}
@@ -101,14 +102,8 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                 {/* Continue Button */}
                 {selectedGender && (
                     <div className="text-center">
-                        <button
-                            onClick={handleContinue}
-                            className="inline-flex items-center justify-between p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
-                        >
-                            Continue
-                            <ArrowRight className="w-5 h-5" />
-                        </button>
-                    </div>
+                        <GoNext onClick={handleContinue}/>
+                        </div>
                 )}
             </div>
         </div>

@@ -1,8 +1,9 @@
 import React from 'react';
 import GoBack from "@/components/common/GoBack.tsx";
-import { ArrowRight } from 'lucide-react';
+import GoNext from '../common/GoNext';
 import womenimg from "@/assets/images/question/womengroup2.svg";
 import menimg from "@/assets/images/question/mengroup.svg";
+
 interface LifeLineFitnessProps {
     gender: string;
     onContinue?: () => void;
@@ -10,16 +11,15 @@ interface LifeLineFitnessProps {
 }
 
 const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue, onBack }) => {
-
     const content = {
         women: {
-            title: "Over 10 Million women have use this",
-            subtitle: "LifeLine will help you in this fitness journey with science based approach this",
+            title: "Over 10 Million women have used this",
+            subtitle: "LifeLine will help you in this fitness journey with a science-based approach.",
             image: womenimg
         },
         men: {
-            title: "Over 8 Million men have use this",
-            subtitle: "LifeLine will help you in this fitness journey with science based approach this",
+            title: "Over 8 Million men have used this",
+            subtitle: "LifeLine will help you in this fitness journey with a science-based approach.",
             image: menimg
         }
     };
@@ -29,42 +29,29 @@ const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue, o
     };
 
     return (
-        <div className="my-8">
-            <div className="flex items-center justify-center">
-                {/* Main Content */}
-                <div className="text-center max-w-6xl">
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-4 leading-tight">
-                        {gender == 'male' ? content.men.title : content.women.title}
+        <div className="flex flex-col h-screen w-full p-2 box-border">
+            <div className="flex flex-col items-center justify-center flex-1 w-full">
+                <div className="text-center max-w-4xl px-2 w-full">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-2 sm:mb-4 leading-tight">
+                        {gender === 'male' ? content.men.title : content.women.title}
                     </h1>
-
-                    <p className="text-lg md:text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
-                        {gender == 'male' ? content.men.subtitle : content.women.subtitle}
+                    <p className="text-sm sm:text-base md:text-lg text-gray-600 mb-4 sm:mb-6 max-w-md sm:max-w-xl mx-auto leading-relaxed">
+                        {gender === 'male' ? content.men.subtitle : content.women.subtitle}
                     </p>
-
-                    {/* Image Section */}
-                    <div className="mb-12 relative">
-                        <div className="relative inline-block">
+                    <div className="mb-2 sm:mb-4 w-full">
+                        <div className="relative w-full flex items-center justify-center">
                             <img
-                                src={gender == 'male' ? content.men.image : content.women.image}
+                                src={gender === 'male' ? content.men.image : content.women.image}
                                 alt={`${gender} fitness group`}
-                                className="w-full h-full  mx-auto "
+                                className="w-full h-auto object-contain max-h-48 sm:max-h-80"
                             />
-                          
                         </div>
                     </div>
-
-                    {/* Continue Button */}
-                    <div className={'flex items-center justify-center gap-5'}>
-                        <GoBack onClick={onBack} />
-                        <button
-                            onClick={handleContinue}
-                            className="inline-flex items-center justify-between p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
-                        >
-                            Continue
-                            <ArrowRight className="w-5 h-5" />
-                        </button>
-                    </div>
                 </div>
+                            <div className="flex items-center justify-center gap-2 sm:gap-3 mt-2 mb-6">
+                <GoBack onClick={onBack} />
+               <GoNext onClick={handleContinue}/>
+            </div>
             </div>
         </div>
     );
