@@ -3,8 +3,9 @@ import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { Star } from 'lucide-react';
-import 'swiper/css';
-import 'swiper/css/pagination';
+
+// Import Swiper styles
+import 'swiper/swiper-bundle.css';
 
 interface Testimonial {
     name: string;

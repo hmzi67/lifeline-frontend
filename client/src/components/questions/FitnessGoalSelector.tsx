@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { ArrowRight, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import GoBack from "@/components/common/GoBack.tsx";
 import GoNext from "../common/GoNext";
 
@@ -50,26 +50,23 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
             <button
               key={goal.id}
               onClick={() => handleGoalSelect(goal.id)}
-              className={`w-full flex items-center justify-between p-2 sm:p-3 rounded-full transition-all duration-200 ${
-                selectedGoal === goal.id
-                      ? 'bg-primary border-teal-400 text-white shadow-lg transform scale-102'
-                      : 'bg-gray-100 text-gray-700 hover:border-teal-300 hover:shadow-md hover:scale-101'
-              }`}
+              className={`w-full flex items-center justify-between p-2 sm:p-3 rounded-full transition-all duration-200 ${selectedGoal === goal.id
+                  ? 'bg-primary border-teal-400 text-white shadow-lg transform scale-102'
+                  : 'bg-gray-100 text-gray-700 hover:border-teal-300 hover:shadow-md hover:scale-101'
+                }`}
             >
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <div
-                  className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-base sm:text-lg ${
-                    selectedGoal === goal.id
+                  className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-base sm:text-lg ${selectedGoal === goal.id
                       ? "bg-white bg-opacity-20"
                       : "bg-white"
-                  }`}
+                    }`}
                 >
                   {goal.icon}
                 </div>
                 <span
-                  className={`text-xs sm:text-sm font-medium ${
-                    selectedGoal === goal.id ? "text-white" : "text-gray-900"
-                  }`}
+                  className={`text-xs sm:text-sm font-medium ${selectedGoal === goal.id ? "text-white" : "text-gray-900"
+                    }`}
                 >
                   {goal.label}
                 </span>
@@ -83,13 +80,13 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
           ))}
         </div>
 
-<div className="pt-12 flex items-center justify-center gap-3 sm:gap-5">
-        <GoBack onClick={onBack} />
-       <GoNext onClick={handleContinue}/>
-      </div>
+        <div className="pt-12 flex items-center justify-center gap-3 sm:gap-5">
+          <GoBack onClick={onBack} />
+          <GoNext onClick={handleContinue} />
+        </div>
 
       </div>
-      
+
     </div>
   );
 };

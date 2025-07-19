@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
 import menimg from "@/assets/images/question/man-gender.jpg";
 import womenimg from "@/assets/images/question/women-gender.jpeg";
 import GoNext from '../common/GoNext';
@@ -102,8 +101,8 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                 {/* Continue Button */}
                 {selectedGender && (
                     <div className="text-center">
-                        <GoNext onClick={handleContinue}/>
-                        </div>
+                        <GoNext onClick={handleContinue} />
+                    </div>
                 )}
             </div>
         </div>
