@@ -1,21 +1,35 @@
-import {Router} from "express";
+import { Router } from 'express';
 import {
-    login,
-    signup,
-    googleAuth,
-    googleAuthCallback,
-    appleAuth,
-    appleAuthCallback
-} from "@controllers/authController";
+  login,
+  signup,
+  logout,
+  refreshToken,
+  getCurrentUser,
+  requestPasswordReset,
+  resetPassword,
+  googleAuth,
+  googleAuthCallback,
+  appleAuth,
+  appleAuthCallback,
+} from '../controllers/authController.js';
 
-const authRoute = Router()
+const authRoute = Router();
 
-authRoute.get('/login', login)
-authRoute.post('/signup', signup)
-authRoute.get('/google', googleAuth)
-authRoute.get('/google/callback', googleAuthCallback)
-authRoute.get('/apple', appleAuth)
-authRoute.post('/apple/callback', appleAuthCallback)
+// Authentication routes
+authRoute.post('/login', login);
+authRoute.post('/signup', signup);
+authRoute.post('/logout', logout);
+authRoute.post('/refresh-token', refreshToken);
+authRoute.get('/me', getCurrentUser);
 
+// Password reset routes
+authRoute.post('/request-password-reset', requestPasswordReset);
+authRoute.post('/reset-password', resetPassword);
 
-export default authRoute
+// OAuth routes
+authRoute.get('/google', googleAuth);
+authRoute.get('/google/callback', googleAuthCallback);
+authRoute.get('/apple', appleAuth);
+authRoute.post('/apple/callback', appleAuthCallback);
+
+export default authRoute;

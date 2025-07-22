@@ -1,34 +1,95 @@
 import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { AuthenticatedRequest } from '@/types/middlewareTypes';
-import { AppError } from './errorHandler';
+import { PrismaClient } from '@prisma/client';
+import { AuthenticatedRequest } from '../types/middlewareTypes.js';
 
-const authenticate = async (
-    req: AuthenticatedRequest,
-    res: Response,
-    next: NextFunction
-) => {
-    try {
-        const token = req.headers.authorization?.replace('Bearer ', '');
+const prisma = new PrismaClient();
 
-        if (!token) {
-            return next(new AppError('Authentication required', 401, 'AUTHENTICATION_REQUIRED'));
-        }
+interface JWTPayload {
+  userId: string;
+  email: string;
+  role: string;
+  iat: number;
+  exp: number;
+}
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+const authenticate = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  try {
+    const authHeader = req.headers.authorization;
 
-        // You can add user lookup from database here
-        req.user = {
-            id: decoded.id,
-            email: decoded.email,
-            role: decoded.role,
-            permissions: decoded.permissions || []
-        };
-
-        next();
-    } catch (error) {
-        next(new AppError('Invalid or expired token', 401, 'INVALID_TOKEN'));
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication required',
+        code: 'AUTHENTICATION_REQUIRED',
+      });
     }
+
+    const token = authHeader.substring(7);
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication token not provided',
+        code: 'TOKEN_MISSING',
+      });
+    }
+
+    // Verify the JWT token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as JWTPayload;
+
+    // Optional: Verify user still exists in database
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        isEmailVerified: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'User not found',
+        code: 'USER_NOT_FOUND',
+      });
+    }
+
+    // Attach user information to request object
+    req.user = {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      isEmailVerified: user.isEmailVerified,
+    };
+
+    next();
+  } catch (error) {
+    if (error instanceof jwt.JsonWebTokenError) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid authentication token',
+        code: 'INVALID_TOKEN',
+      });
+    }
+
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication token has expired',
+        code: 'TOKEN_EXPIRED',
+      });
+    }
+
+    console.error('Authentication error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error during authentication',
+      code: 'AUTHENTICATION_ERROR',
+    });
+  }
 };
 
 export default authenticate;
