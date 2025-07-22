@@ -1,140 +1,143 @@
-import React from 'react';
-import { Play, Check, Download } from 'lucide-react';
+import React, { useState } from 'react';
+import { Check, Download, X, Play } from 'lucide-react';
+import sleepimg from '@/assets/images/landing/sleepimg.svg'; // Adjust the path as necessary
 
 export const SleepSection: React.FC = () => {
+    const [isVideoOpen, setIsVideoOpen] = useState(false);
+    
+    // Replace this with your actual YouTube video ID
+    const youtubeVideoId = "dQw4w9WgXcQ"; // Example: Rick Roll video ID
+    
+    const openVideoDialog = () => {
+        setIsVideoOpen(true);
+    };
+    
+    const closeVideoDialog = () => {
+        setIsVideoOpen(false);
+    };
+
     return (
         <div className="min-h-screen overflow-hidden">
-            <div className="py-8 lg:py-16">
-                <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+            <div className="py-4 sm:py-8">
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-8 lg:gap-16 items-center">
                     {/* Left Side - Hero Video/Image */}
-                    <div className="relative">
-                        <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-                            {/* Background Image */}
-                            <div className="aspect-video relative">
-                                {/* Moonlit Ocean Scene */}
-                                <div className="absolute inset-0 bg-gradient-to-b from-blue-900/80 to-slate-900/90"></div>
-                                {/* Play Button */}
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <button className="w-20 h-20 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-105">
-                                        <Play className="w-8 h-8 text-slate-700 ml-1" fill="currentColor" />
-                                    </button>
-                                </div>
-                            </div>
+                    <div className="lg:col-span-3 relative">
+                        <div 
+                            className="relative cursor-pointer group"
+                            onClick={openVideoDialog}
+                        >
+                            <img
+                                src={sleepimg}
+                                className="w-full h-auto"
+                                alt="sleeping img with mobile mockup"
+                            />
+                            {/* Play button overlay */}
+                          <div className="absolute right-64 inset-0 flex items-center justify-center">
+                               <div className="relative">
+                                 {/* Animated border */}
+                                 <div className="absolute inset-0 w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-white/20 animate-ping"></div>
+                                 
+                                 {/* Main button */}
+                                 <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/90 rounded-full flex items-center justify-center">
+                                   <Play className="w-6 h-6 sm:w-8 sm:h-8 text-primary ml-1" fill="currentColor" />
+                                 </div>
+                               </div>
+                           </div>
                         </div>
                     </div>
-
-                    {/* Right Side - App Info */}
-                    <div className="flex items-center justify-start gap-5 space-y-8">
-                        {/* Phone Mockup */}
-                        <div className="relative mx-auto lg:mx-0 w-64">
-                            <div className="relative">
-                                {/* Phone Frame */}
-                                <div className="w-64 h-[520px] bg-slate-800 rounded-[3rem] p-2 shadow-2xl">
-                                    <div className="w-full h-full bg-slate-700 rounded-[2.5rem] overflow-hidden relative">
-                                        {/* Notch */}
-                                        <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-24 h-6 bg-slate-800 rounded-full"></div>
-
-                                        {/* Screen Content */}
-                                        <div className="pt-8 px-4 h-full bg-gradient-to-br bg-primary">
-                                            {/* Header */}
-                                            <div className="flex items-center justify-between mb-6">
-                                                <button className="text-white/80">
-                                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                                    </svg>
-                                                </button>
-                                                <h3 className="text-white font-semibold text-lg">Better Sleep</h3>
-                                                <div className="w-6"></div>
-                                            </div>
-
-                                            {/* Content Grid */}
-                                            <div className="grid grid-cols-2 gap-3">
-                                                {[...Array(8)].map((_, i) => (
-                                                    <div key={i} className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 h-20 flex flex-col justify-between">
-                                                        <div className="flex items-center justify-between">
-                                                            <span className="text-white/80 text-xs">Lorem Ipsum</span>
-                                                            <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
-                                                                <Play className="w-3 h-3 text-white" fill="currentColor" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="text-white/60 text-xs">Lorem Ipsum</div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
+                    
+                    {/* Text Content */}
+                    <div className="lg:col-span-2 text-left px-4 sm:px-0">
+                        <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold mb-4 sm:mb-6 lg:mb-12 tracking-wider">
+                            Get <span className="text-primary">Better</span> Sleep<br />
+                            Now With <span className="text-primary">Us!</span>
+                        </h1>
+                        {/* Stats */}
+                        <div className="space-y-3 sm:space-y-4 lg:space-y-6 mb-3 sm:mb-4">
+                            <div className="flex flex-col sm:flex-row items-center gap-y-3 sm:gap-y-0 sm:gap-x-4 lg:gap-x-16">
+                                <div className="text-center sm:text-left mb-2 sm:mb-0">
+                                    <div className="text-sm sm:text-base font-bold">Sounds</div>
+                                    <div className="text-xl sm:text-2xl lg:text-4xl font-bold">99+</div>
                                 </div>
+                                <div className="text-center">
+                                    <div className="text-primary text-sm sm:text-base">Need of about 100 people</div>
+                                    <div className="font-bold text-lg sm:text-xl lg:text-3xl">Calm & Mindful Sleep</div>
+                                </div>
+                            </div>
+                            <hr className="my-1 sm:my-2" />
+                            <div className="flex flex-col sm:flex-row items-center gap-y-3 sm:gap-y-0 sm:gap-x-4 lg:gap-x-16">
+                                <div className="text-center sm:text-left mb-2 sm:mb-0">
+                                    <div className="text-sm sm:text-base font-bold">Stories</div>
+                                    <div className="text-xl sm:text-2xl lg:text-4xl font-bold">99+</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-primary text-sm sm:text-base">Need of about 100 people</div>
+                                    <div className="font-bold text-lg sm:text-xl lg:text-3xl">Calm & Mindful Sleep</div>
+                                </div>
+                            </div>
+                            <hr className="my-1 sm:my-2" />
+                        </div>
+                        {/* Features */}
+                        <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6 lg:mb-8">
+                            <div className="flex items-center gap-2 sm:gap-3">
+                                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary-400 rounded-full flex items-center justify-center">
+                                    <Check className="w-2 h-2 sm:w-3 sm:h-3" />
+                                </div>
+                                <span className="text-sm sm:text-base lg:text-lg">Increase Muscle and Strength</span>
+                            </div>
+                            <div className="flex items-center gap-2 sm:gap-3">
+                                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary-400 rounded-full flex items-center justify-center">
+                                    <Check className="w-2 h-2 sm:w-3 sm:h-3" />
+                                </div>
+                                <span className="text-sm sm:text-base lg:text-lg">Be Healthier than before</span>
+                            </div>
+                            <div className="flex items-center gap-2 sm:gap-3">
+                                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary-400 rounded-full flex items-center justify-center">
+                                    <Check className="w-2 h-2 sm:w-3 sm:h-3" />
+                                </div>
+                                <span className="text-sm sm:text-base lg:text-lg">Increase Stamina</span>
                             </div>
                         </div>
-
-                        {/* Text Content */}
-                        <div className="text-center lg:text-left">
-                            <h1 className="text-4xl lg:text-5xl font-bold  mb-6">
-                                Get <span className="text-primary">Better</span> Sleep<br />
-                                Now With <span className="text-primary">Us!</span>
-                            </h1>
-
-                            {/* Stats */}
-                            <div className="space-y-6 mb-8">
-                                <div className="flex items-center justify-center lg:justify-start gap-4">
-                                    <div>
-                                        <div className="text-sm">Sounds</div>
-                                        <div className="text-2xl font-bold">99+</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-primary text-sm">Next of sleep 10 sounds</div>
-                                        <div className="font-semibold">Calm & Mindful Sleep</div>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center justify-center lg:justify-start gap-4">
-                                    <div>
-                                        <div className="text-sm">Stories</div>
-                                        <div className="text-2xl font-bold">99+</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-primary text-sm">Next of sleep 10 sounds</div>
-                                        <div className="font-semibold">Calm & Mindful Sleep</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Features */}
-                            <div className="space-y-3 mb-8">
-                                <div className="flex items-center justify-center lg:justify-start gap-3">
-                                    <div className="w-5 h-5 bg-primary-400 rounded-full flex items-center justify-center">
-                                        <Check className="w-3 h-3" />
-                                    </div>
-                                    <span className="">Decrease Muscle and Strength</span>
-                                </div>
-                                <div className="flex items-center justify-center lg:justify-start gap-3">
-                                    <div className="w-5 h-5 bg-primary-400 rounded-full flex items-center justify-center">
-                                        <Check className="w-3 h-3" />
-                                    </div>
-                                    <span className="">Be Healthier than before</span>
-                                </div>
-                                <div className="flex items-center justify-center lg:justify-start gap-3">
-                                    <div className="w-5 h-5 bg-primary-400 rounded-full flex items-center justify-center">
-                                        <Check className="w-3 h-3" />
-                                    </div>
-                                    <span className="">Increase Stamina</span>
-                                </div>
-                            </div>
-
-                            {/* Buttons */}
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                                <button className="px-8 py-3 bg-primary hover:bg-primary-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 shadow-lg">
-                                    Try Now
-                                </button>
-                                <button className="px-8 py-3 bg-white/10 hover:bg-white/20 font-semibold rounded-full transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-white/20 flex items-center justify-center gap-2">
-                                    <Download className="w-4 h-4" />
-                                    Download Now
-                                </button>
-                            </div>
+                        {/* Buttons */}
+                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                            <button className="px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-3 bg-primary hover:bg-primary-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base lg:text-lg">
+                                Try Now
+                            </button>
+                            <button className="px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-3 bg-white/10 hover:bg-white/20 font-semibold rounded-full transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-white/20 flex items-center justify-center gap-1 sm:gap-2 text-sm sm:text-base lg:text-lg">
+                                <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+                                Contact us
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {/* YouTube Video Dialog */}
+            {isVideoOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+                    <div className="relative w-full max-w-4xl mx-4 bg-black rounded-lg overflow-hidden shadow-2xl">
+                        {/* Close button */}
+                        <button
+                            onClick={closeVideoDialog}
+                            className="absolute top-4 right-4 z-10 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all duration-200 backdrop-blur-sm"
+                        >
+                            <X className="w-5 h-5 text-white" />
+                        </button>
+                        
+                        {/* YouTube Video */}
+                        <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                            <iframe
+                                className="absolute inset-0 w-full h-full"
+                                src={`https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1&rel=0`}
+                                title="YouTube video player"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
