@@ -17,11 +17,11 @@ export const SleepSection: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen overflow-hidden">
+        <div className="sm:min-h-screen h-auto overflow-hidden">
             <div className="py-4 sm:py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-8 lg:gap-16 items-center">
-                    {/* Left Side - Hero Video/Image */}
-                    <div className="lg:col-span-3 relative">
+                    {/* Left Side - Hero Video/Image - Hidden on mobile, shown on lg+ */}
+                    <div className="lg:col-span-3 relative hidden lg:block">
                         <div 
                             className="relative cursor-pointer group"
                             onClick={openVideoDialog}
@@ -32,7 +32,7 @@ export const SleepSection: React.FC = () => {
                                 alt="sleeping img with mobile mockup"
                             />
                             {/* Play button overlay */}
-                          <div className="absolute right-64 inset-0 flex items-center justify-center">
+                          <div className="absolute sm:right-64 right-[150px] inset-0 flex items-center justify-center">
                                <div className="relative">
                                  {/* Animated border */}
                                  <div className="absolute inset-0 w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-white/20 animate-ping"></div>
@@ -48,15 +48,42 @@ export const SleepSection: React.FC = () => {
                     
                     {/* Text Content */}
                     <div className="lg:col-span-2 text-left px-4 sm:px-0">
-                        <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold mb-4 sm:mb-6 lg:mb-12 tracking-wider">
-                            Get <span className="text-primary">Better</span> Sleep<br />
+                        <h1 className="text-2xl sm:text-5xl lg:text-5xl font-bold mb-4 sm:mb-6 lg:mb-12 tracking-wider">
+                            Get <span className="text-primary">Better</span> Sleep <br className='hidden sm:block'/>
                             Now With <span className="text-primary">Us!</span>
                         </h1>
-                        {/* Stats */}
-                        <div className="space-y-3 sm:space-y-4 lg:space-y-6 mb-3 sm:mb-4">
-                            <div className="flex flex-col sm:flex-row items-center gap-y-3 sm:gap-y-0 sm:gap-x-4 lg:gap-x-16">
-                                <div className="text-center sm:text-left mb-2 sm:mb-0">
-                                    <div className="text-sm sm:text-base font-bold">Sounds</div>
+
+                        {/* Mobile Image - Only shown on mobile screens, placed after h1 */}
+                        <div className="lg:hidden mb-4 sm:mb-6 -translate-x-4 w-full">
+                            <div 
+                                className="relative cursor-pointer group"
+                                onClick={openVideoDialog}
+                            >
+                                <img
+                                    src={sleepimg}
+                                    className="w-full h-auto"
+                                    alt="sleeping img with mobile mockup"
+                                />
+                                {/* Play button overlay */}
+                              <div className="absolute sm:right-64 right-[150px] inset-0 flex items-center justify-center">
+                                   <div className="relative">
+                                     {/* Animated border */}
+                                     <div className="absolute inset-0 w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-white/20 animate-ping"></div>
+                                     
+                                     {/* Main button */}
+                                     <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/90 rounded-full flex items-center justify-center">
+                                       <Play className="w-6 h-6 sm:w-8 sm:h-8 text-primary ml-1" fill="currentColor" />
+                                     </div>
+                                   </div>
+                               </div>
+                            </div>
+                        </div>
+
+                        {/* Stats - Hidden on mobile, shown on lg+ */}
+                        <div className="hidden lg:block space-y-3 sm:space-y-4 lg:space-y-6 mb-3 sm:mb-4">
+                            <div className="flex items-center gap-y-3 lg:gap-x-16">
+                                <div className="">
+                                    <div className="text-sm sm:text-2xl font-bold sm:font-bold">Sounds</div>
                                     <div className="text-xl sm:text-2xl lg:text-4xl font-bold">99+</div>
                                 </div>
                                 <div className="text-center">
@@ -64,10 +91,10 @@ export const SleepSection: React.FC = () => {
                                     <div className="font-bold text-lg sm:text-xl lg:text-3xl">Calm & Mindful Sleep</div>
                                 </div>
                             </div>
-                            <hr className="my-1 sm:my-2" />
-                            <div className="flex flex-col sm:flex-row items-center gap-y-3 sm:gap-y-0 sm:gap-x-4 lg:gap-x-16">
-                                <div className="text-center sm:text-left mb-2 sm:mb-0">
-                                    <div className="text-sm sm:text-base font-bold">Stories</div>
+                            <hr className="my-1 sm:my-2"/>
+                            <div className="flex items-center gap-y-3 lg:gap-x-16">
+                                <div className="">
+                                    <div className="text-sm sm:text-2xl font-bold sm:font-bold ">Stories</div>
                                     <div className="text-xl sm:text-2xl lg:text-4xl font-bold">99+</div>
                                 </div>
                                 <div className="text-center">
@@ -99,14 +126,40 @@ export const SleepSection: React.FC = () => {
                             </div>
                         </div>
                         {/* Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-                            <button className="px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-3 bg-primary hover:bg-primary-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base lg:text-lg">
+                        <div className="flex gap-2 sm:gap-4 mb-4 sm:mb-6 lg:mb-0">
+                            <button className="px-5 py-1 sm:px-7 sm:py-2 lg:px-8 lg:py-3 bg-primary hover:bg-primary-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base lg:text-lg">
                                 Try Now
                             </button>
-                            <button className="px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-3 bg-white/10 hover:bg-white/20 font-semibold rounded-full transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-white/20 flex items-center justify-center gap-1 sm:gap-2 text-sm sm:text-base lg:text-lg">
+                            <button className="px-5 py-1 sm:px-7 sm:py-2 lg:px-8 lg:py-3 bg-white/10 hover:bg-white/20 font-semibold rounded-full transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-white/20 flex items-center justify-center gap-1 sm:gap-2 text-sm sm:text-base lg:text-lg">
                                 <Download className="w-3 h-3 sm:w-4 sm:h-4" />
                                 Contact us
                             </button>
+                        </div>
+
+                        {/* Mobile Stats - Only shown on mobile screens, placed after buttons */}
+                        <div className="lg:hidden space-y-3 sm:space-y-4 lg:space-y-6">
+                            <div className="flex items-center gap-y-3 lg:gap-x-16">
+                                <div className="">
+                                    <div className="text-sm sm:text-2xl font-bold sm:font-bold">Sounds</div>
+                                    <div className="text-xl sm:text-2xl lg:text-4xl font-bold">99+</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-primary text-sm sm:text-base">Need of about 100 people</div>
+                                    <div className="font-bold text-lg sm:text-xl lg:text-3xl">Calm & Mindful Sleep</div>
+                                </div>
+                            </div>
+                            <hr className="my-1 sm:my-2"/>
+                            <div className="flex items-center gap-y-3 lg:gap-x-16">
+                                <div className="">
+                                    <div className="text-sm sm:text-2xl font-bold sm:font-bold ">Stories</div>
+                                    <div className="text-xl sm:text-2xl lg:text-4xl font-bold">99+</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-primary text-sm sm:text-base">Need of about 100 people</div>
+                                    <div className="font-bold text-lg sm:text-xl lg:text-3xl">Calm & Mindful Sleep</div>
+                                </div>
+                            </div>
+                            <hr className="my-1 sm:my-2" />
                         </div>
                     </div>
                 </div>
