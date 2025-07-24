@@ -1,6 +1,7 @@
 import { PricingCard } from '@/components/marketing/PricingCard';
 import React, { useState } from 'react';
 import PricingHero from "@/components/marketing/PricingHero.tsx";
+import ProductShowcase from "@/components/Affiliate/ProductShowcase.tsx";
 
 const Pricing: React.FC = () => {
   const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(1); // Default to middle card selected
@@ -85,6 +86,8 @@ const Pricing: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <ProductShowcase />
     </>
   );
 };
