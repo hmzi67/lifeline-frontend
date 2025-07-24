@@ -1,4 +1,3 @@
-  
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import uniqueFeaturesImage from '../../assets/images/business/UF-1.svg'
@@ -24,7 +23,7 @@ const UniqueFeatures: React.FC = () => {
         {/* Timeline Line */}
         <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gray-300 h-full hidden lg:block">
           {/* Timeline dots */}
-          <div className="absolute top-0 w-4 h-4 bg-gray-300 rounded-full -translate-x-1"></div>
+          <div className="absolute top-0 w-[20px] h-[20px] bg-gray-300 rounded-full -translate-x-2"></div>
           <div className="absolute left-0 top-32 -translate-y-1/2">
             <div className="w-20 h-1 bg-gray-300"></div>
            </div>
@@ -38,82 +37,95 @@ const UniqueFeatures: React.FC = () => {
            </div>
 
           
-          <div className="absolute bottom-0 w-4 h-4 bg-gray-400 rounded-full -translate-x-1/2"></div>
+          <div className="absolute bottom-0 w-[20px] h-[20px] bg-gray-300 rounded-full -translate-x-2"></div>
         </div>
 
         {/* Feature 1 - Work out at home */}
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12 mb-24">
-          {/* Text Content */}
-          <div className="flex-1 space-y-6 lg:pr-8">
+          {/* Mobile Order: H3 first */}
+          <div className="flex-1 space-y-6 lg:pr-8 order-1 lg:order-1">
             <h3 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
               Work out at home for free.
             </h3>
+            {/* Mobile Order: Image second, hidden on mobile in this position */}
+            <div className="lg:hidden">
+              <img src={uniqueFeaturesImage} alt="" />
+            </div>
+            {/* Mobile Order: Paragraph third */}
             <p className="text-lg text-gray-600 leading-relaxed max-w-md">
               We believe fitness should be accessible to everyone, everywhere, regardless of income 
               or access to a gym. With hundreds of professional workouts, healthy recipes and 
               informative articles, as well as one of the most positive communities on the web, you'll 
               have everything you need to reach your personal fitness goals – for free!
             </p>
+            {/* Mobile Order: Button fourth */}
             <button className="text-primary hover:text-primary font-semibold text-base flex items-center gap-2 transition-colors">
               See More <ArrowRight className="h-4 w-4" />
             </button>
           </div>
 
-          {/* Phone Mockup with Background */}
-          <div className="flex-1 relative">
-           
-              <img src={uniqueFeaturesImage}  alt="" />
-              
+          {/* Desktop Image - hidden on mobile */}
+          <div className="flex-1 relative hidden lg:block order-2">
+            <img src={uniqueFeaturesImage} alt="" />
           </div>
         </div>
 
         {/* Feature 2 - Get more with low-cost */}
         <div className="flex flex-col lg:flex-row-reverse items-center gap-8 lg:gap-12 mb-24">
-          {/* Text Content */}
-          <div className="flex-1 space-y-6 lg:pl-8">
+          {/* Mobile Order: H3 first */}
+          <div className="flex-1 space-y-6 lg:pl-8 order-1 lg:order-1">
             <h3 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
               Get more with low-cost challenge and advanced features.
             </h3>
+            {/* Mobile Order: Image second, hidden on desktop in this position */}
+            <div className="lg:hidden">
+              <img src={uniqueFeaturesImage2} alt="" />
+            </div>
+            {/* Mobile Order: Paragraph third */}
             <p className="text-lg text-gray-600 leading-relaxed max-w-md">
               We believe fitness should be accessible to everyone, everywhere, regardless of income 
               or access to a gym. With hundreds of professional workouts, healthy recipes and informative articles, 
               as well as one of the most positive communities on the web, you'll have everything you need to 
               reach your personal fitness goals – for free!
             </p>
+            {/* Mobile Order: Button fourth */}
             <button className="text-primary hover:text-primary-600 font-semibold text-base flex items-center gap-2 transition-colors">
               See More <ArrowRight className="h-4 w-4" />
             </button>
           </div>
 
-          {/* Phone Mockup with Background */}
-          <div className="flex-1 relative">
-           
-              {/* Background people working out */}
-              <img src={uniqueFeaturesImage2}  alt="" />
-            
+          {/* Desktop Image - hidden on mobile */}
+          <div className="flex-1 relative hidden lg:block order-2">
+            <img src={uniqueFeaturesImage2} alt="" />
           </div>
         </div>
 
         {/* Feature 3 - Training that matches */}
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
-          {/* Text Content */}
-          <div className="flex-1 space-y-6 lg:pr-8">
+          {/* Mobile Order: H3 first */}
+          <div className="flex-1 space-y-6 lg:pr-8 order-1 lg:order-1">
             <h3 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
               Training that matches your pace.
             </h3>
+            {/* Mobile Order: Image second, hidden on desktop in this position */}
+            <div className="lg:hidden">
+              <img src={uniqueFeaturesImage3} alt="" />
+            </div>
+            {/* Mobile Order: Paragraph third */}
             <p className="text-lg text-gray-600 leading-relaxed max-w-md">
               With flexible Training Plans, Guided Workouts and advanced Insights, we'll help you reach 
               your goals on your schedule. You let us know where you're at and we'll provide the 
               coaching to take you the rest of the way.
             </p>
+            {/* Mobile Order: Button fourth */}
             <button className="text-primary hover:text-primary-600 font-semibold text-base flex items-center gap-2 transition-colors">
               See More <ArrowRight className="h-4 w-4" />
             </button>
           </div>
 
-          {/* Phone Mockup with Background */}
-          <div className="flex-1 relative">
-            <img src={uniqueFeaturesImage3}  alt="" />
+          {/* Desktop Image - hidden on mobile */}
+          <div className="flex-1 relative hidden lg:block order-2">
+            <img src={uniqueFeaturesImage3} alt="" />
           </div>
         </div>
       </div>

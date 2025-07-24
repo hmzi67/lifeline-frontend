@@ -1,9 +1,9 @@
 import React from 'react';
-import { CheckCircle } from "lucide-react";
+import { Check } from "lucide-react";
 import progressTrackerImage from "../../assets/images/landing/trackerSectionBoth.svg"
 import { Button } from '../ui/button';
 
-// Done For responsive design and better user experience
+// Fixed mobile layout to match the design image
 
 export const ProgressSection: React.FC = () => {
     const desktopFeatures = [
@@ -37,7 +37,9 @@ export const ProgressSection: React.FC = () => {
                             <ul className="mt-8 space-y-4">
                                 {desktopFeatures.map((item) => (
                                     <li key={item} className="flex items-center text-lg xl:text-xl">
-                                        <CheckCircle className="text-teal-400 w-6 h-6 mr-3 flex-shrink-0" />
+                                        <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary-400 rounded-full flex items-center justify-center">
+                                          <Check className="w-2 h-2 sm:w-3 sm:h-3" />
+                                        </div>
                                         <span className="text-gray-700">{item}</span>
                                     </li>
                                 ))}
@@ -65,18 +67,18 @@ export const ProgressSection: React.FC = () => {
                 </div>
             </div>
 
-            {/* Mobile/Tablet Layout */}
+            {/* Mobile/Tablet Layout - Fixed to match design */}
             <div className="block lg:hidden">
                 <div className="px-4 sm:px-6">
-                    {/* Header at Top */}
-                    <div className="text-center mb-8 sm:mb-12">
-                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
+                    {/* Header at Top - Centered */}
+                    <div className="text-center mb-8 sm:mb-10">
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight">
                             <span className="text-teal-400">Track</span> Your Fitness, <span className="text-teal-400">See</span> Your Progress
                         </h1>
                     </div>
 
-                    {/* Image in Center - Extends to right edge */}
-                    <div className="flex justify-center mb-12 sm:mb-16 -mr-4 sm:-mr-6 overflow-hidden">
+                    {/* Image - Centered */}
+                    <div className="flex justify-center mb-8 sm:mb-10 translate-x-6">
                         <img
                             className="w-full max-w-sm sm:max-w-md md:max-w-lg h-auto"
                             src={progressTrackerImage}
@@ -84,38 +86,26 @@ export const ProgressSection: React.FC = () => {
                         />
                     </div>
 
-                    {/* Features List Below Image - Centered with lighter styling */}
-                    <div className="mb-12 sm:mb-16">
-                        <ul className="space-y-8 sm:space-y-10">
+                    {/* Features List Below Image - Positioned to the right */}
+                   <div className="mb-8 sm:mb-12 flex justify-end">
+                        <ul className="space-y-3 sm:space-y-4">
                             {mobileFeatures.map((item) => (
-                                <li key={item} className="flex items-center justify-center text-lg sm:text-xl md:text-2xl">
-                                    <div className="w-6 h-6 sm:w-7 sm:h-7 bg-teal-400 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                                        <svg
-                                            className="w-3 h-3 sm:w-4 sm:h-4 text-white"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={3}
-                                                d="M5 13l4 4L19 7"
-                                            />
-                                        </svg>
+                                <li key={item} className="flex items-center text-base sm:text-lg md:text-xl">
+                                    <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary-400 rounded-full flex items-center justify-center">
+                                      <Check className="w-2 h-2 sm:w-3 sm:h-3" />
                                     </div>
-                                    <span className="text-gray-500 font-normal text-center">{item}</span>
+                                    <span className="text-gray-500 font-normal">{item}</span>
                                 </li>
                             ))}
                         </ul>
                     </div>
 
-                    {/* Buttons at Bottom - In one row for mobile */}
-                    <div className="flex items-center justify-center gap-6 sm:gap-8">
-                        <Button className="bg-teal-400 hover:bg-teal-500 text-white px-6 sm:px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition-all duration-300">
+                    {/* Buttons at Bottom - Centered */}
+                    <div className="flex items-center justify-end gap-4 sm:gap-6 -translate-x-10">
+                        <Button className="bg-teal-400 hover:bg-teal-500 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-sm sm:text-base font-semibold shadow-lg transition-all duration-300">
                             Try Now
                         </Button>
-                        <button className="text-lg font-semibold text-gray-700 hover:text-teal-400 transition-colors duration-300">
+                        <button className="text-sm sm:text-base font-semibold text-gray-700 hover:text-teal-400 transition-colors duration-300">
                             Contact us
                         </button>
                     </div>
