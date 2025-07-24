@@ -69,91 +69,109 @@ export default function Header() {
   };
 
   return (
-      <header className={getHeaderClasses()}>
-        <nav className="container mx-auto px-4 sm:px-6 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3">
-              <img src={"/logo.svg"} alt="Lifeline Logo" className="w-16 h-16 sm:w-20 sm:h-20"/>
-            </Link>
+    <header className={getHeaderClasses()}>
+      <nav className="container mx-auto px-4 sm:px-6 py-4">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-3">
+            <img src={"/logo.svg"} alt="Lifeline Logo" className="w-16 h-16 sm:w-20 sm:h-20"/>
+          </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-6 xl:space-x-8 ms-auto me-8">
-              {navigation.map((item) => (
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center space-x-6 xl:space-x-8 ms-auto me-8">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                className={getNavLinkClasses(item.href)}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
+
+          {/* CTA Button for Desktop */}
+          <div className="hidden lg:flex items-center">
+            <Link to="/signup">
+              <Button
+                className="bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white font-semibold px-4 py-2 sm:px-6 sm:py-2.5 rounded-full transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg text-sm sm:text-base"
+              >
+                Try for Free
+              </Button>
+            </Link>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className={getMobileButtonClasses()}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <Menu className="w-6 h-6" />
+            {/*{isMenuOpen ? (*/}
+            {/*  <X className="w-6 h-6" />*/}
+            {/*) : (*/}
+            {/*  <Menu className="w-6 h-6" />*/}
+            {/*)}*/}
+          </button>
+        </div>
+
+        {/* Mobile Menu Overlay */}
+        <div className={`lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 ${
+          isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`} onClick={() => setIsMenuOpen(false)} />
+
+        {/* Mobile Menu */}
+        <div className={`lg:hidden fixed inset-y-0 left-0 w-full bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
+          isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}>
+          <div className="flex flex-col h-full">
+            {/* Header */}
+            <div className="flex justify-between items-center p-4 border-b border-gray-100">
+              <Link to="/" className="flex items-center space-x-3" onClick={() => setIsMenuOpen(false)}>
+                <img src={"/logo.svg"} alt="Lifeline Logo" className="w-12 h-12"/>
+              </Link>
+              <button
+                className="text-gray-600 p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Navigation Links */}
+            <div className="flex flex-col flex-grow overflow-y-auto">
+              <div className="px-4 py-2">
+                {navigation.map((item, index) => (
                   <Link
-                      key={item.name}
-                      to={item.href}
-                      className={getNavLinkClasses(item.href)}
+                    key={item.name}
+                    to={item.href}
+                    className={`block text-gray-700 hover:text-teal-500 hover:bg-teal-50 transition-all duration-200 font-medium py-4 px-4 rounded-lg my-1 transform transition-transform duration-300 ${
+                      isMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+                    }`}
+                    style={{ transitionDelay: `${index * 50}ms` }}
+                    onClick={() => setIsMenuOpen(false)}
                   >
                     {item.name}
                   </Link>
-              ))}
+                ))}
+              </div>
             </div>
 
-            {/* CTA Button for Desktop */}
-            <div className="hidden lg:flex items-center">
-              <Link to="/signup">
+            {/* CTA Button */}
+            <div className={`p-4 border-t border-gray-100 transform transition-all duration-300 ${
+              isMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+            }`} style={{ transitionDelay: `${navigation.length * 50}ms` }}>
+              <Link to="/signup" className="w-full block" onClick={() => setIsMenuOpen(false)}>
                 <Button
-                    className="bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white font-semibold px-4 py-2 sm:px-6 sm:py-2.5 rounded-full transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg text-sm sm:text-base"
+                  className="w-full bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white font-semibold rounded-full py-3 text-base transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
                 >
                   Try for Free
                 </Button>
               </Link>
             </div>
-
-            {/* Mobile Menu Button */}
-            <button
-                className={getMobileButtonClasses()}
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? (
-                  <X className="w-6 h-6" />
-              ) : (
-                  <Menu className="w-6 h-6" />
-              )}
-            </button>
           </div>
-
-          {/* Mobile Menu */}
-          {isMenuOpen && (
-              <div className="lg:hidden fixed inset-0 bg-white shadow-lg z-50">
-                <div className="container mx-auto px-4 sm:px-6 py-4 flex flex-col h-full">
-                  <div className="flex justify-between items-center mb-4">
-                    <Link to="/" className="flex items-center space-x-3">
-                      <img src={"/logo.svg"} alt="Lifeline Logo" className="w-16 h-16"/>
-                    </Link>
-                    <button
-                        className="text-gray-600 p-2"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                      <X className="w-6 h-6" />
-                    </button>
-                  </div>
-                  <div className="flex flex-col space-y-3 flex-grow items-start">
-                    {navigation.map((item) => (
-                        <Link
-                            key={item.name}
-                            to={item.href}
-                            className="text-gray-600 hover:text-teal-500 transition-colors duration-200 font-medium py-2 text-lg"
-                            onClick={() => setIsMenuOpen(false)}
-                        >
-                          {item.name}
-                        </Link>
-                    ))}
-                  </div>
-                  <div className="w-full pt-3">
-                    <Link to="/signup" className="w-full" onClick={() => setIsMenuOpen(false)}>
-                      <Button
-                          className="w-full bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white font-semibold rounded-full py-3 text-base"
-                      >
-                        Try for Free
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-          )}
-        </nav>
-      </header>
+        </div>
+      </nav>
+    </header>
   );
 }
