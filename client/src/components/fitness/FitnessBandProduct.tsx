@@ -283,10 +283,19 @@ export const FitnessBandProduct = () => {
   return (
     <div className="min-h-screen sm:mt-24 mt-8 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
+        <div className="space-y-4 sm:hidden mb-4">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+            Track It, <span className="text-primary">Hack It</span><br />
+            Transform Your <span className="text-primary">Body</span>
+          </h1>
+          <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-md">
+            Lorem Ipsum is simply dummy text of the printing Lorem Ipsum is simply dummy.
+          </p>
+        </div>
         <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Left Content */}
-          <div className="space-y-6 md:space-y-8">
-            <div className="space-y-4">
+          <div className="space-y-6 md:space-y-8 order-2 lg:order-1">
+            <div className="space-y-4 hidden sm:block">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
                 Track It, <span className="text-primary">Hack It</span><br />
                 Transform Your <span className="text-primary">Body</span>
@@ -370,7 +379,7 @@ export const FitnessBandProduct = () => {
           </div>
 
           {/* Right Image Section */}
-          <div className="relative">
+          <div className="relative order-1 lg:order-2">
             <div className="relative z-10 flex justify-center items-center">
               <img src={Phone} alt="Phone" className="w-full max-w-xs md:max-w-sm lg:max-w-md" loading="lazy" />
 
