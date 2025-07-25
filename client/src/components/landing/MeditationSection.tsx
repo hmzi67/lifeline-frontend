@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { PlayIcon } from 'lucide-react';
 import meditationImage1 from "@/assets/images/landing/meditation-1.webp";
-import meditationImage2 from "@/assets/images/landing/meditation-2.svg";
-import meditationImage3 from "@/assets/images/landing/meditation-3.svg";
+import meditationImage2 from "@/assets/images/landing/meditation-2.webp";
+import meditationImage3 from "@/assets/images/landing/meditation-3.webp";
 
 export const MeditationSection: React.FC = () => {
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
