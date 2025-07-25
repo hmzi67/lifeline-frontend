@@ -29,20 +29,25 @@ export const HeroSection: React.FC = () => {
           {/* Current image */}
           <img
             src={images[currentImageIndex]}
-            alt="Fitness background"
-            className="absolute inset-0 w-full h-full object-cover"
+            alt="Current background"
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
+              isTransitioning ? 'opacity-0' : 'opacity-100'
+            }`}
           />
 
-          {/* Transition image */}
+          {/* Next image */}
           <img
             src={images[nextImageIndex]}
             alt="Next background"
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${isTransitioning ? 'opacity-100' : 'opacity-0'}`}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
+              isTransitioning ? 'opacity-100' : 'opacity-0'
+            }`}
           />
 
           {/* Overlay */}
           <div className="absolute inset-0 bg-black bg-opacity-40" />
         </div>
+
       </div>
 
       {/* Decorative + signs */}
