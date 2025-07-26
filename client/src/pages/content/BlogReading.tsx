@@ -125,3 +125,5 @@ export const BlogReading = () => {
       </div>
   );
 };
+
+export default BlogReading;

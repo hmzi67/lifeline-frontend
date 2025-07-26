@@ -2,40 +2,46 @@ import React from 'react';
 import PricingHeroBgImage from "../../assets/images/pricing/pricingHeroBg.png";
 
 const PricingHero: React.FC = () => {
-    return (
-      <div className="min-h-screen overflow-hidden">
-    {/* Background Image */}
-    <div className="absolute inset-0 ">
-        <img
-            src={PricingHeroBgImage}
-            alt="Running group stretching outdoors"
-            className="object-cover object-top w-full h-full"
-        />
-    </div>
+  return (
+    <div className={''}>
+      <section className="min-h-[50vh] sm:min-h-screen overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 w-full min-h-[50vh] sm:min-h-screen">
+          <div className="aspect-[1/1] lg:aspect-[16/9] w-full min-h-[50vh] sm:min-h-screen relative">
+            <img
+              src={PricingHeroBgImage}
+              alt="Running group stretching outdoors"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            {/* Dark overlay */}
+            <div className="absolute inset-0 bg-black/30"></div>
+          </div>
+        </div>
 
-    {/* Dark overlay */}
-    <div className="absolute inset-0 bg-black/30"></div>
-
-    {/* Content */}
-    <div className="relative z-10 flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
-        <div className="text-center mx-auto">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+        {/* Content */}
+        <div className="relative z-10 min-h-[50vh] lg:min-h-screen flex items-center">
+          <div className={'container mx-auto px-4 md:px-6 lg:px-12'}>
+            <div className="text-center mx-auto">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
                 The 15 Secrets That You Should Know
                 <br />
                 About Running Club
-            </h1>
+              </h1>
 
-            <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed">
                 Cultivate a healthy, thriving, and unstoppable workforce with BetterMe's
                 health transformation ecosystem
-            </p>
-        </div>
-    </div>
+              </p>
+            </div>
 
-    {/* Decorative elements */}
-    <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-black/20 to-transparent"></div>
-</div>
-    );
+          </div>
+        </div>
+
+        {/* Decorative Gradient */}
+        <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-black/20 to-transparent"></div>
+      </section>
+    </div>
+  );
 };
 
 export default PricingHero;
