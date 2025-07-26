@@ -65,8 +65,8 @@ const FeatureList: React.FC = () => {
     <>
       {features.map((feature) => (
         <div className="flex items-center space-x-3" key={feature}>
-          <div className="bg-primary rounded-full p-1.5">
-            <Check className="w-3 h-3 text-white" />
+          <div className="bg-primary rounded-full p-1.5 ">
+            <Check className="w-4 h-4 text-white" />
           </div>
           <span className="text-sm md:text-base text-gray-700">{feature}</span>
         </div>
@@ -99,10 +99,10 @@ export const NutritionSection: React.FC = () => {
               loading="lazy"
               src={nutritionImage}
               alt="Healthy salad bowl with fresh vegetables"
-              className="w-full h-auto rounded-2xl"
+              className="w-full h-auto"
             />
 
-            <div className="absolute left-4 top-6 bg-white/90 backdrop-blur-sm rounded-2xl p-4 max-w-[200px] shadow-lg">
+            <div className="absolute left-5 top-[90%] bg-white/90 backdrop-blur-sm rounded p-4 max-w-[200px] shadow-lg">
               <h3 className="text-xs font-semibold text-black leading-tight mb-3">
                 "That's The Thing About<br />
                 Weight Loss:<br />
@@ -115,12 +115,12 @@ export const NutritionSection: React.FC = () => {
               </p>
             </div>
 
-            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-              <div ref={mobileRef} className="bg-primary text-white rounded-2xl p-4 text-center min-w-[100px]">
-                <div className="text-xl font-bold mb-1">
-                  + {mobileCount.toLocaleString()}
+            <div className="absolute right-7 top-full transform -translate-y-1/2">
+              <div ref={mobileRef} className="bg-primary px-2 text-white rounded-md text-center min-w-[100px]">
+                <div className="text-3xl font-bold">
+                  +{mobileCount.toLocaleString()}
                 </div>
-                <p className="text-xs font-medium">
+                <p className="text-sm font-medium text-center">
                   Active Users
                 </p>
               </div>
@@ -128,7 +128,7 @@ export const NutritionSection: React.FC = () => {
           </div>
 
           <div className="mb-6">
-            <p className="text-sm text-gray-600 leading-relaxed text-center">
+            <p className="text-sm mt-24 text-gray-600 leading-relaxed text-left">
               You can follow every routine, take all the right supplements, and eat on time — but if your diet habits are inconsistent, unbalanced, or filled with processed junk, your goals will always stay out of reach.
             </p>
           </div>
@@ -137,10 +137,10 @@ export const NutritionSection: React.FC = () => {
             <FeatureList />
           </div>
 
-          <div className="flex gap-3 justify-center">
+          <div className="flex gap-3 justify-start">
             <Button
               size="sm"
-              className="bg-primary hover:bg-primary-600 text-white font-semibold px-6 py-2 text-sm transition-all duration-300 transform hover:scale-105"
+              className="bg-primary hover:bg-primary-600 text-white font-semibold rounded-full px-6 py-2 text-sm transition-all duration-300 transform hover:scale-105"
             >
               Try Now
             </Button>
@@ -172,7 +172,7 @@ export const NutritionSection: React.FC = () => {
             <div className="bg-primary rounded-2xl">
               <div ref={desktopRef} className="text-white rounded-2xl p-4 text-center">
                 <div className="text-5xl font-bold mb-1">
-                  + {desktopCount.toLocaleString()}
+                  +{desktopCount.toLocaleString()}
                 </div>
                 <p className="text-2xl font-medium">
                   Active Users

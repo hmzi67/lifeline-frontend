@@ -38,7 +38,7 @@ const PricingHero: React.FC = () => {
         </div>
 
         {/* Decorative Gradient */}
-        <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-black/20 to-transparent"></div>
+       
       </section>
     </div>
   );

@@ -33,7 +33,7 @@ export const AppDownload = ({ isLandingPage = false }) => {
                         </div>
 
                         {/* App Store Buttons */}
-                        <div className="flex gap-3 md:gap-4">
+                        <div className="flex justify-center gap-3 md:gap-4">
 
                             {/* Google Play Button */}
                             <a

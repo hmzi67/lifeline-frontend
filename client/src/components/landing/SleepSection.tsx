@@ -105,28 +105,28 @@ export const SleepSection: React.FC = () => {
                             <hr className="my-1 sm:my-2" />
                         </div>
                         {/* Features */}
-                        <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6 lg:mb-8">
+                        <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-6 lg:mb-8">
                             <div className="flex items-center gap-2 sm:gap-3">
-                                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary-400 rounded-full flex items-center justify-center">
+                                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary-400 text-white rounded-full flex items-center justify-center">
                                     <Check className="w-2 h-2 sm:w-3 sm:h-3" />
                                 </div>
                                 <span className="text-sm sm:text-base lg:text-lg">Increase Muscle and Strength</span>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3">
-                                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary-400 rounded-full flex items-center justify-center">
+                                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary-400 text-white rounded-full flex items-center justify-center">
                                     <Check className="w-2 h-2 sm:w-3 sm:h-3" />
                                 </div>
                                 <span className="text-sm sm:text-base lg:text-lg">Be Healthier than before</span>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3">
-                                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary-400 rounded-full flex items-center justify-center">
+                                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary-400 text-white rounded-full flex items-center justify-center">
                                     <Check className="w-2 h-2 sm:w-3 sm:h-3" />
                                 </div>
                                 <span className="text-sm sm:text-base lg:text-lg">Increase Stamina</span>
                             </div>
                         </div>
                         {/* Buttons */}
-                        <div className="flex gap-2 sm:gap-4 mb-4 sm:mb-6 lg:mb-0">
+                        <div className="flex gap-2 sm:gap-4 mb-6 sm:mb-6 lg:mb-0">
                             <button className="px-5 py-1 sm:px-7 sm:py-2 lg:px-8 lg:py-3 bg-primary hover:bg-primary-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base lg:text-lg">
                                 Try Now
                             </button>
@@ -139,18 +139,18 @@ export const SleepSection: React.FC = () => {
                         {/* Mobile Stats - Only shown on mobile screens, placed after buttons */}
                         <div className="lg:hidden space-y-3 sm:space-y-4 lg:space-y-6">
                             <div className="flex items-center gap-y-3 lg:gap-x-16">
-                                <div className="">
+                                <div className="me-4">
                                     <div className="text-sm sm:text-2xl font-bold sm:font-bold">Sounds</div>
                                     <div className="text-xl sm:text-2xl lg:text-4xl font-bold">99+</div>
                                 </div>
-                                <div className="text-center">
+                                <div className="text-center ">
                                     <div className="text-primary text-sm sm:text-base">Need of about 100 people</div>
                                     <div className="font-bold text-lg sm:text-xl lg:text-3xl">Calm & Mindful Sleep</div>
                                 </div>
                             </div>
-                            <hr className="my-1 sm:my-2"/>
+                            <hr className="my-1 sm:my-2 w-64"/>
                             <div className="flex items-center gap-y-3 lg:gap-x-16">
-                                <div className="">
+                                <div className="me-4">
                                     <div className="text-sm sm:text-2xl font-bold sm:font-bold ">Stories</div>
                                     <div className="text-xl sm:text-2xl lg:text-4xl font-bold">99+</div>
                                 </div>
@@ -159,7 +159,7 @@ export const SleepSection: React.FC = () => {
                                     <div className="font-bold text-lg sm:text-xl lg:text-3xl">Calm & Mindful Sleep</div>
                                 </div>
                             </div>
-                            <hr className="my-1 sm:my-2" />
+                            <hr className="my-1 sm:my-2 w-64" />
                         </div>
                     </div>
                 </div>

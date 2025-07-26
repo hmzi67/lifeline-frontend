@@ -37,8 +37,8 @@ export const ProgressSection: React.FC = () => {
                             <ul className="mt-8 space-y-4">
                                 {desktopFeatures.map((item) => (
                                     <li key={item} className="flex items-center text-lg xl:text-xl">
-                                        <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary-400 rounded-full flex items-center justify-center">
-                                          <Check className="w-2 h-2 sm:w-3 sm:h-3" />
+                                        <div className="w-4 h-4 sm:w-5 sm:h-5 me-2 bg-primary-400 text-white rounded-full flex items-center justify-center">
+                                          <Check className="w-4 h-4 " />
                                         </div>
                                         <span className="text-gray-700">{item}</span>
                                     </li>
@@ -78,21 +78,21 @@ export const ProgressSection: React.FC = () => {
                     </div>
 
                     {/* Image - Centered */}
-                    <div className="flex justify-center mb-8 sm:mb-10 translate-x-6">
+                    <div className="flex justify-center mb-4 sm:mb-4 translate-x-6">
                         <img
-                            className="w-full max-w-sm sm:max-w-md md:max-w-lg h-auto"
+                            className="w-full max-w-sm sm:max-w-md md:max-w-lg h-full"
                             src={progressTrackerImage}
                             alt="Fitness Progress Tracker"
                         />
                     </div>
 
                     {/* Features List Below Image - Positioned to the right */}
-                   <div className="mb-8 sm:mb-12 flex justify-end">
+                   <div className="mb-4 sm:mb-8 flex justify-end">
                         <ul className="space-y-3 sm:space-y-4">
                             {mobileFeatures.map((item) => (
                                 <li key={item} className="flex items-center text-base sm:text-lg md:text-xl">
-                                    <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary-400 rounded-full flex items-center justify-center">
-                                      <Check className="w-2 h-2 sm:w-3 sm:h-3" />
+                                    <div className="w-4 h-4 sm:w-5 sm:h-5 me-1 bg-primary-400 rounded-full text-white flex items-center justify-center">
+                                      <Check className="w-3 h-3"/>
                                     </div>
                                     <span className="text-gray-500 font-normal">{item}</span>
                                 </li>

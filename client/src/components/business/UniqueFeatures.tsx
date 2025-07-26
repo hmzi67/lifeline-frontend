@@ -48,7 +48,7 @@ const UniqueFeatures: React.FC = () => {
               Work out at home for free.
             </h3>
             {/* Mobile Order: Image second, hidden on mobile in this position */}
-            <div className="lg:hidden">
+            <div className="lg:hidden translate-x-5">
               <img src={uniqueFeaturesImage} alt="" />
             </div>
             {/* Mobile Order: Paragraph third */}
@@ -59,9 +59,9 @@ const UniqueFeatures: React.FC = () => {
               have everything you need to reach your personal fitness goals – for free!
             </p>
             {/* Mobile Order: Button fourth */}
-            <button className="text-primary hover:text-primary font-semibold text-base flex items-center gap-2 transition-colors">
-              See More <ArrowRight className="h-4 w-4" />
-            </button>
+           <button className="text-primary hover:text-primary-600 font-semibold text-base flex items-center gap-2 transition-colors ml-auto sm:ml-0">
+            See More <ArrowRight className="h-4 w-4"/>
+           </button>
           </div>
 
           {/* Desktop Image - hidden on mobile */}
@@ -78,7 +78,7 @@ const UniqueFeatures: React.FC = () => {
               Get more with low-cost challenge and advanced features.
             </h3>
             {/* Mobile Order: Image second, hidden on desktop in this position */}
-            <div className="lg:hidden">
+            <div className="lg:hidden -translate-x-5">
               <img src={uniqueFeaturesImage2} alt="" />
             </div>
             {/* Mobile Order: Paragraph third */}
@@ -89,9 +89,9 @@ const UniqueFeatures: React.FC = () => {
               reach your personal fitness goals – for free!
             </p>
             {/* Mobile Order: Button fourth */}
-            <button className="text-primary hover:text-primary-600 font-semibold text-base flex items-center gap-2 transition-colors">
-              See More <ArrowRight className="h-4 w-4" />
-            </button>
+           <button className="text-primary hover:text-primary-600 font-semibold text-base flex items-center gap-2 transition-colors ml-auto sm:ml-0">
+              See More <ArrowRight className="h-4 w-4"/>
+           </button>
           </div>
 
           {/* Desktop Image - hidden on mobile */}
@@ -108,7 +108,7 @@ const UniqueFeatures: React.FC = () => {
               Training that matches your pace.
             </h3>
             {/* Mobile Order: Image second, hidden on desktop in this position */}
-            <div className="lg:hidden">
+            <div className="lg:hidden translate-x-5">
               <img src={uniqueFeaturesImage3} alt="" />
             </div>
             {/* Mobile Order: Paragraph third */}
@@ -118,9 +118,9 @@ const UniqueFeatures: React.FC = () => {
               coaching to take you the rest of the way.
             </p>
             {/* Mobile Order: Button fourth */}
-            <button className="text-primary hover:text-primary-600 font-semibold text-base flex items-center gap-2 transition-colors">
-              See More <ArrowRight className="h-4 w-4" />
-            </button>
+           <button className="text-primary hover:text-primary-600 font-semibold text-base flex items-center gap-2 transition-colors ml-auto sm:ml-0">
+              See More <ArrowRight className="h-4 w-4"/>
+           </button>
           </div>
 
           {/* Desktop Image - hidden on mobile */}
