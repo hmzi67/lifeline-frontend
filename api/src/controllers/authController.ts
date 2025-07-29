@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import crypto from 'crypto';
+import { sendEmailVerificationEmail, sendPasswordResetEmail } from '@services/emailService';
 
 const prisma = new PrismaClient();
 
@@ -43,7 +44,7 @@ export const signup = async (req: Request, res: Response) => {
     const validatedData = signupSchema.parse(req.body);
     const { name, email, password } = validatedData;
 
-    // Check if user already exists
+    // Check if a user already exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
@@ -59,7 +60,7 @@ export const signup = async (req: Request, res: Response) => {
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Split name into firstName and lastName (assuming single space)
+    // Split the name into firstName and lastName (assuming single space)
     const nameParts = name.trim().split(' ');
     const firstName = nameParts[0];
     const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
@@ -67,7 +68,7 @@ export const signup = async (req: Request, res: Response) => {
     // Generate a unique username from email (take part before @)
     const baseUsername = email.split('@')[0].toLowerCase();
 
-    // Check if username already exists and create a unique one
+    // Check if a username already exists and create a unique one
     let username = baseUsername;
     let counter = 1;
     while (await prisma.user.findUnique({ where: { username } })) {
@@ -112,13 +113,48 @@ export const signup = async (req: Request, res: Response) => {
       },
     });
 
-    // Set refresh token as httpOnly cookie
+    // Set the refresh token as httpOnly cookie
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    // Save reset token to database
+    await prisma.emailVerification.create({
+      data: {
+        email: user.email,
+        token: resetToken,
+        expiresAt: resetTokenExpiry,
+      },
+    });
+
+    // Send email with a reset link
+    try {
+      const resetUrl = `${process.env.FRONTEND_URL}/verify?token=${resetToken}`;
+      await sendEmailVerificationEmail(user.email, user.firstName, resetUrl)
+
+      console.log(`Verification email sent successfully to ${user.email}`);
+    } catch (emailError) {
+      console.error('Failed to send verififaction email:', emailError);
+
+      // Clean up the token since email failed
+      await prisma.emailVerification.delete({
+        where: {
+          token: resetToken,
+        },
+      });
+
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to send verification email. Please try again later.',
+      });
+    }
 
     res.status(201).json({
       success: true,
@@ -189,7 +225,7 @@ export const login = async (req: Request, res: Response) => {
     // Generate tokens
     const { accessToken, refreshToken } = generateTokens(user.id, user.email, user.role);
 
-    // Clean up old refresh tokens for this user (optional - keep only latest 5)
+    // Clean up old refresh tokens for this user (optional - keep only the latest 5)
     const existingTokens = await prisma.refreshToken.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: 'desc' },
@@ -206,7 +242,7 @@ export const login = async (req: Request, res: Response) => {
       });
     }
 
-    // Save new refresh token to database
+    // Save a new refresh token to a database
     await prisma.refreshToken.create({
       data: {
         token: refreshToken,
@@ -215,7 +251,7 @@ export const login = async (req: Request, res: Response) => {
       },
     });
 
-    // Set refresh token as httpOnly cookie
+    // Set the refresh token as httpOnly cookie
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -300,7 +336,7 @@ export const refreshToken = async (req: Request, res: Response) => {
       process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret'
     ) as { userId: string };
 
-    // Check if refresh token exists in database and is not expired
+    // Check if refresh token exists in a database and is not expired
     const storedToken = await prisma.refreshToken.findFirst({
       where: {
         token: refreshToken,
@@ -327,7 +363,7 @@ export const refreshToken = async (req: Request, res: Response) => {
       });
     }
 
-    // Generate new access token
+    // Generate a new access token
     const { accessToken } = generateTokens(
       storedToken.user.id,
       storedToken.user.email,
@@ -408,7 +444,6 @@ export const getCurrentUser = async (req: Request, res: Response) => {
   }
 };
 
-// Request password reset
 export const requestPasswordReset = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
@@ -420,14 +455,50 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
       });
     }
 
-    // Check if user exists
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a valid email address',
+      });
+    }
+
+    // Check if a user exists
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { email: email.toLowerCase() },
       select: { id: true, email: true, firstName: true },
     });
 
     // Always return success to prevent email enumeration attacks
     if (!user) {
+      return res.status(200).json({
+        success: true,
+        message: 'No User Found',//'If an account with this email exists, a password reset link has been sent.',
+      });
+    }
+
+    // Check for existing reset tokens and clean up expired ones
+    await prisma.passwordReset.deleteMany({
+      where: {
+        email: user.email,
+        expiresAt: {
+          lt: new Date(),
+        },
+      },
+    });
+
+    // Check if there's a recent reset request (prevent spam)
+    const recentReset = await prisma.passwordReset.findFirst({
+      where: {
+        email: user.email,
+        createdAt: {
+          gt: new Date(Date.now() - 5 * 60 * 1000), // 5 minutes ago
+        },
+      },
+    });
+
+    if (recentReset) {
       return res.status(200).json({
         success: true,
         message: 'If an account with this email exists, a password reset link has been sent.',
@@ -447,9 +518,27 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
       },
     });
 
-    // TODO: Send email with reset link
-    // const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
-    // await sendPasswordResetEmail(user.email, user.firstName, resetUrl);
+    // Send email with a reset link
+    try {
+      const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+      await sendPasswordResetEmail(user.email, user.firstName, resetUrl);
+
+      console.log(`Password reset email sent successfully to ${user.email}`);
+    } catch (emailError) {
+      console.error('Failed to send password reset email:', emailError);
+
+      // Clean up the token since email failed
+      await prisma.passwordReset.delete({
+        where: {
+          token: resetToken,
+        },
+      });
+
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to send password reset email. Please try again later.',
+      });
+    }
 
     res.status(200).json({
       success: true,
