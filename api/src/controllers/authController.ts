@@ -184,6 +184,57 @@ export const signup = async (req: Request, res: Response) => {
   }
 };
 
+// Email Verification
+export const verify = async (req: Request, res: Response)=> {
+  try {
+    const { token } = req.body;
+
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        message: 'Token is required',
+      });
+    }
+
+    const validVerifyToken = await prisma.emailVerification.findUnique({
+      where: {
+        token,
+        expiresAt: {
+          gt: new Date(),
+        },
+      },
+    });
+
+    if (!validVerifyToken) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid or expired token',
+      });
+    }
+
+    await prisma.user.update({
+      where: { email: validVerifyToken.email },
+      data: { isEmailVerified: true },
+    })
+
+    await prisma.emailVerification.delete({
+      where: { token },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Email verified successfully',
+    });
+
+  } catch (error) {
+    console.error('Email verification error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    });
+  }
+}
+
 // Login function
 export const login = async (req: Request, res: Response) => {
   try {

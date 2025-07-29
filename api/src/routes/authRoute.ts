@@ -10,7 +10,7 @@ import {
   googleAuth,
   googleAuthCallback,
   appleAuth,
-  appleAuthCallback,
+  appleAuthCallback, verify,
 } from '../controllers/authController.js';
 
 const authRoute = Router();
@@ -25,6 +25,9 @@ authRoute.get('/me', getCurrentUser);
 // Password reset routes
 authRoute.post('/request-password-reset', requestPasswordReset);
 authRoute.post('/reset-password', resetPassword);
+
+// Verification route
+authRoute.post('/verify', verify)
 
 // OAuth routes
 authRoute.get('/google', googleAuth);
