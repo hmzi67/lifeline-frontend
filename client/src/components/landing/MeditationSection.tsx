@@ -14,7 +14,7 @@ export const MeditationSection: React.FC = () => {
         {
             image: meditationImage2,
             title: "Experience the future of meditation",
-            description: "Lorem ipsum dolor sit amet, labore consectetur adipiscing incididunt ut labore et dolore"
+            description: "Lorem ipsum dolor sit amet, labore consectetur adipiscing incididunt ut labore"
         },
         {
             image: meditationImage3,
@@ -88,18 +88,18 @@ export const MeditationSection: React.FC = () => {
                 >
                     {/* Render cards twice for a seamless circular effect */}
                     {[...cards, ...cards].map((card, index) => (
-                        <div key={index} className="relative bg-white/15 backdrop-blur-lg rounded-3xl p-4 shadow-2xl w-[90%] md:w-[380px] h-[120px] md:h-[140px] border border-white/20 flex-shrink-0 mr-4">
-                            <div className="flex gap-4 h-full">
+                        <div key={index} className="relative bg-white/15 backdrop-blur-lg rounded-3xl p-4 shadow-2xl w-[90%] md:w-[380px] h-[100px] md:h-[120px] border border-white/20 flex-shrink-0 mr-4">
+                            <div className="flex gap-x-2 ">
                                 {/* Image with Play Button */}
                                 <div className="relative flex-shrink-0">
                                     <img
                                         src={card.image}
                                         alt="Meditation scene"
-                                        className="w-16 h-full md:w-20 object-cover rounded-xl "
+                                        className=" sm:w-16 sm:h-20 h-16 w-16 mb-2 sm:mb-0 object-cover rounded-xl "
                                     />
                                     {/* Play Button Overlay */}
                                     <button className="absolute inset-0 flex items-center justify-center group">
-                                        <div className="w-6 h-6 md:w-7 md:h-7 bg-white/90 rounded-full flex items-center justify-center group-hover:bg-white transition-all duration-300 group-hover:scale-110 shadow-lg">
+                                        <div className="w-6 h-6 md:w-7 md:min-h-7  bg-white/90 rounded-full flex items-center justify-center group-hover:bg-white transition-all duration-300 group-hover:scale-110 shadow-lg">
                                             <PlayIcon className="w-2 h-2 md:w-2.5 md:h-2.5 text-gray-700 ml-0.5" fill="currentColor" />
                                         </div>
                                     </button>

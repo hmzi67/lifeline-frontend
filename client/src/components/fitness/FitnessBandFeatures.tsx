@@ -1,4 +1,3 @@
-// done
 import FeaturesImage from "../../assets/images/fitness/features.svg";
 
 export const FitnessBandFeatures = () => {
@@ -23,28 +22,29 @@ export const FitnessBandFeatures = () => {
     return (
         <div className="min-h-screen flex items-center justify-center p-4 sm:p-8">
             <div className="max-w-7xl w-full">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+                {/* Desktop Layout */}
+                <div className="hidden lg:grid grid-cols-2 gap-16 items-center">
                     {/* Left Content */}
-                    <div className="space-y-6 sm:space-y-12">
+                    <div className="space-y-12">
                         <div>
-                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 leading-tight">
+                            <h1 className="text-5xl font-bold text-gray-800 leading-tight">
                                 One App{' '}
                                 <span className="text-primary">Thousands</span>
                                 <br />
                                 Of Features
                             </h1>
                         </div>
-                        <div className="space-y-4 sm:space-y-8">
+                        <div className="space-y-8">
                             {features.map((feature, index) => (
                                 <div key={index} className="flex items-start space-x-4">
-                                    <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+                                    <div className="flex-shrink-0 w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm">
                                         {feature.icon}
                                     </div>
                                     <div className="flex-1">
-                                        <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-1 sm:mb-2">
+                                        <h3 className="text-xl font-semibold text-gray-800 mb-2">
                                             {feature.title}
                                         </h3>
-                                        <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                                        <p className="text-gray-600 text-base leading-relaxed">
                                             {feature.description}
                                         </p>
                                     </div>
@@ -54,7 +54,44 @@ export const FitnessBandFeatures = () => {
                     </div>
                     {/* Right Content - Fitness Trackers */}
                     <div className="relative flex justify-center items-center">
-                        <img src={FeaturesImage} alt={'Feature'} className={'w-64 sm:w-96'} />
+                        <img src={FeaturesImage} alt={'Feature'} className={'w-96'} />
+                    </div>
+                </div>
+
+                {/* Mobile Layout - H1 → Image → Features */}
+                <div className="lg:hidden space-y-8">
+                    {/* H1 Heading */}
+                    <div className="text-center">
+                        <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 leading-tight">
+                            One App{' '}
+                            <span className="text-primary">Thousands</span>
+                            <br />
+                            Of Features
+                        </h1>
+                    </div>
+                    
+                    {/* Image */}
+                    <div className="relative flex justify-center items-center">
+                        <img src={FeaturesImage} alt={'Feature'} className={'w-64 sm:w-80'} />
+                    </div>
+                    
+                    {/* Features */}
+                    <div className="space-y-6">
+                        {features.map((feature, index) => (
+                            <div key={index} className="flex items-start space-x-4">
+                                <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+                                    {feature.icon}
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-1 sm:mb-2">
+                                        {feature.title}
+                                    </h3>
+                                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                                        {feature.description}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
