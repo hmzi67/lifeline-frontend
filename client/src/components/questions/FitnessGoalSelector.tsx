@@ -57,7 +57,7 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
             >
               <div className="flex items-center space-x-2 sm:space-x-3 translate-y-1">
                 <div
-                  className={`w-9 sm:w-16 flex items-center justify-center overflow-hidden ${selectedGoal === goal.id
+                  className={`w-full sm:w-full flex items-center justify-center overflow-hidden ${selectedGoal === goal.id
                       
                     }`}
                 >
@@ -65,7 +65,7 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
                     <img 
                       src={goal.image} 
                       alt={goal.label}
-                      className=" object-cover w-full h-full"
+                      className=" object-contain h-16 w-16"
                     />
                   ) : null}
                 </div>
