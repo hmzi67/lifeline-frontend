@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { Check } from "lucide-react";
 import GoBack from "@/components/common/GoBack.tsx";
 import GoNext from "../common/GoNext";
-import image from "@/assets/images/Q-goals/Ellipse 10.png";
+import image from "@/assets/images/Q-goals/Ellipse10.3.png";
+import image1 from "@/assets/images/Q-goals/excited lady.avif";
+import image2 from "@/assets/images/Q-goals/buildmuscles.webp";
+import image3 from "@/assets/images/Q-goals/food image.jpg";
+import image4 from "@/assets/images/Q-goals/high stress.jpg";
+import image5 from "@/assets/images/Q-goals/alarm-clock.jpg";
 
 interface FitnessGoal {
   id: string;
@@ -25,11 +30,11 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
 
   const fitnessGoals: FitnessGoal[] = [
     { id: "lose-weight", label: "Lose weight", image: image },
-    { id: "gain-weight", label: "Gain Weight", image: "../assets/images/Q-goals/gain-weight.png" },
-    { id: "build-muscle", label: "Build Muscle", image: "../assets/images/Q-goals/build-muscle.png" },
-    { id: "modify-diet", label: "Modify your Diet", image: "../assets/images/Q-goals/modify-diet.png" },
-    { id: "manage-stress", label: "Manage Stress", image: "../assets/images/Q-goals/manage-stress.png" },
-    { id: "intermittent-fasting", label: "Intermittent Fasting", image: "../assets/images/Q-goals/intermittent-fasting.png" },
+    { id: "gain-weight", label: "Gain Weight", image: image1 },
+    { id: "build-muscle", label: "Build Muscle", image: image2 },
+    { id: "modify-diet", label: "Modify your Diet", image: image3 },
+    { id: "manage-stress", label: "Manage Stress", image: image4 },
+    { id: "intermittent-fasting", label: "Intermittent Fasting", image: image5 },
   ];
 
   const handleGoalSelect = (goalId: string) => {
@@ -40,7 +45,7 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-screen w-full p-6 box-border">
+    <div className="flex flex-col w-full p-6 box-border">
       <div className="flex flex-col items-center justify-center w-full h-full">
         <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 text-center mb-4 sm:mb-6">
           Select your primary fitness goal
@@ -65,7 +70,7 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
                     <img 
                       src={goal.image} 
                       alt={goal.label}
-                      className=" object-contain h-16 w-16"
+                      className=" object-cover h-16 w-16 rounded-full"
                     />
                   ) : null}
                 </div>
@@ -86,7 +91,7 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
           ))}
         </div>
 
-        <div className="pt-12 flex items-center justify-center gap-3 sm:gap-5">
+        <div className=" pt-10 flex items-center justify-center gap-3 sm:gap-5">
           <GoBack onClick={onBack} />
           <GoNext onClick={handleContinue} />
         </div>
