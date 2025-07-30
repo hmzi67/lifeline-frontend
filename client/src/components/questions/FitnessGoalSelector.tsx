@@ -1,13 +1,13 @@
-
 import React, { useState } from "react";
 import { Check } from "lucide-react";
 import GoBack from "@/components/common/GoBack.tsx";
 import GoNext from "../common/GoNext";
+import image from "@/assets/images/Q-goals/Ellipse 10.png";
 
 interface FitnessGoal {
   id: string;
   label: string;
-  icon: string;
+  image?: string;
 }
 
 interface FitnessGoalSelectorProps {
@@ -24,12 +24,12 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
   const [selectedGoal, setSelectedGoal] = useState<string>("lose-weight");
 
   const fitnessGoals: FitnessGoal[] = [
-    { id: "lose-weight", label: "Lose weight", icon: "🧘‍♀️" },
-    { id: "gain-weight", label: "Gain Weight", icon: "🏃‍♀️" },
-    { id: "build-muscle", label: "Build Muscle", icon: "💪" },
-    { id: "modify-diet", label: "Modify your Diet", icon: "🥗" },
-    { id: "manage-stress", label: "Manage Stress", icon: "🧘‍♀️" },
-    { id: "intermittent-fasting", label: "Intermittent Fasting", icon: "⏰" },
+    { id: "lose-weight", label: "Lose weight", image: image },
+    { id: "gain-weight", label: "Gain Weight", image: "../assets/images/Q-goals/gain-weight.png" },
+    { id: "build-muscle", label: "Build Muscle", image: "../assets/images/Q-goals/build-muscle.png" },
+    { id: "modify-diet", label: "Modify your Diet", image: "../assets/images/Q-goals/modify-diet.png" },
+    { id: "manage-stress", label: "Manage Stress", image: "../assets/images/Q-goals/manage-stress.png" },
+    { id: "intermittent-fasting", label: "Intermittent Fasting", image: "../assets/images/Q-goals/intermittent-fasting.png" },
   ];
 
   const handleGoalSelect = (goalId: string) => {
@@ -45,25 +45,31 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
         <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 text-center mb-4 sm:mb-6">
           Select your primary fitness goal
         </h1>
-        <div className="space-y-2 sm:space-y-3 w-full max-w-xs sm:max-w-sm">
+        <div className="space-y-2 sm:space-y-3 w-full h-full max-w-xs sm:max-w-sm">
           {fitnessGoals.map((goal) => (
             <button
               key={goal.id}
               onClick={() => handleGoalSelect(goal.id)}
-              className={`w-full flex items-center justify-between p-2 sm:p-3 rounded-full transition-all duration-200 ${selectedGoal === goal.id
+              className={`w-full flex items-center justify-between px-3 rounded-full transition-all duration-200 ${selectedGoal === goal.id
                   ? 'bg-primary border-teal-400 text-white shadow-lg transform scale-102'
                   : 'bg-gray-100 text-gray-700 hover:border-teal-300 hover:shadow-md hover:scale-101'
                 }`}
             >
-              <div className="flex items-center space-x-2 sm:space-x-3">
+              <div className="flex items-center space-x-2 sm:space-x-3 translate-y-1">
                 <div
-                  className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-base sm:text-lg ${selectedGoal === goal.id
-                      ? "bg-white bg-opacity-20"
-                      : "bg-white"
+                  className={`w-9 sm:w-16 flex items-center justify-center overflow-hidden ${selectedGoal === goal.id
+                      
                     }`}
                 >
-                  {goal.icon}
+                  {goal.image ? (
+                    <img 
+                      src={goal.image} 
+                      alt={goal.label}
+                      className=" object-cover w-full h-full"
+                    />
+                  ) : null}
                 </div>
+          
                 <span
                   className={`text-xs sm:text-sm font-medium ${selectedGoal === goal.id ? "text-white" : "text-gray-900"
                     }`}
@@ -73,7 +79,7 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
               </div>
               {selectedGoal === goal.id && (
                 <div className="w-4 h-4 sm:w-5 sm:h-5 bg-white rounded-full flex items-center justify-center">
-                  <Check className="w-2 h-2 sm:w-3 sm:h-3 text-teal-400" />
+                  <Check className="w-2 h-2 sm:w-4 sm:h-4 text-teal-400" />
                 </div>
               )}
             </button>
