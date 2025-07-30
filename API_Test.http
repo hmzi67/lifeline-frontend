@@ -1,0 +1,71 @@
+### Signup (Register new user)
+POST http://localhost:3000/api/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Muhammad Naveed",
+  "email": "muhammadnaveedcis@gmail.com",
+  "password": "Password123"
+}
+
+###
+
+### Login (Authenticate user)
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "johndoe@example.com",
+  "password": "Password123"
+}
+
+###
+
+### Verify Email
+POST http://localhost:3000/api/auth/verify
+Content-Type: application/json
+
+{
+  "token": "88e419666fec2180c70ca4cfe29b250b4e9e955957b6c0c5a972898cb0a0f5f3"
+}
+
+###
+
+### Get current user (with access token from login)
+GET http://localhost:3000/api/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWRvaTRubGkwMDA1cXByejlqN3oxaTA3IiwiZW1haWwiOiJtdWhhbW1hZG5hdmVlZGNpc0BnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc1Mzc5MTQyMCwiZXhwIjoxNzUzNzkyMzIwfQ.2M3KtXZ4AeV7uWRe15wgzXdniLPBf8X1jf9OcQmrHHo
+
+###
+
+### Request Password Reset
+POST http://localhost:3000/api/auth/request-password-reset
+Content-Type: application/json
+
+{
+  "email": "muhammadnaveedcis@gmail.com"
+}
+
+###
+
+### Reset Password
+POST http://localhost:3000/api/auth/reset-password
+Content-Type: application/json
+
+{
+  "token": "PASTE_RESET_TOKEN_HERE",
+  "newPassword": "NewPassword123"
+}
+
+###
+
+### Refresh Token (cookie must be set automatically)
+POST http://localhost:3000/api/auth/refresh-token
+Content-Type: application/json
+Cookie: refreshToken=PASTE_REFRESH_TOKEN_HERE
+
+###
+
+### Logout
+POST http://localhost:3000/api/auth/logout
+
+###
