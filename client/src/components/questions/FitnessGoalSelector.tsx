@@ -60,9 +60,9 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
                   : 'bg-gray-100 text-gray-700 hover:border-teal-300 hover:shadow-md hover:scale-101'
                 }`}
             >
-              <div className="flex items-center space-x-2 sm:space-x-3 translate-y-1">
+              <div className="flex items-center space-x-2 sm:space-x-3">
                 <div
-                  className={`w-full sm:w-full flex items-center justify-center overflow-hidden ${selectedGoal === goal.id
+                  className={`h-16 flex items-center justify-center overflow-hidden ${selectedGoal === goal.id
                       
                     }`}
                 >
@@ -70,13 +70,13 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
                     <img 
                       src={goal.image} 
                       alt={goal.label}
-                      className=" object-cover h-16 w-16 rounded-full"
+                      className=" object-cover h-12 w-12 rounded-full"
                     />
                   ) : null}
                 </div>
           
                 <span
-                  className={`text-xs sm:text-sm font-medium ${selectedGoal === goal.id ? "text-white" : "text-gray-900"
+                  className={`text-xs sm:text-xl font-medium ${selectedGoal === goal.id ? "text-white" : "text-gray-900"
                     }`}
                 >
                   {goal.label}
@@ -84,7 +84,7 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
               </div>
               {selectedGoal === goal.id && (
                 <div className="w-4 h-4 sm:w-5 sm:h-5 bg-white rounded-full flex items-center justify-center">
-                  <Check className="w-2 h-2 sm:w-4 sm:h-4 text-teal-400" />
+                  <Check className="w-4 h-4 sm:w-4 sm:h-4 text-teal-400 " />
                 </div>
               )}
             </button>
