@@ -8,7 +8,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
     const isLandingPage = location.pathname === '/';
 
     // Define auth pages where header and footer should be hidden
-    const authPages = ['/login', '/signup', '/questions'];
+    const authPages = ['/login', '/signup', '/questions', '/verify', '/reset-password'];
     const isAuthPage = authPages.includes(location.pathname);
 
     return (
