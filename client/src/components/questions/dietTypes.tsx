@@ -71,10 +71,10 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
       </div>
 
       {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden ">
         <div className="h-full overflow-y-auto px-4 sm:px-6">
           <div className="max-w-4xl mx-auto w-full pb-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 ">
               {dietTypes.map((diet) => {
                 const isSelected = selectedDiets.includes(diet.id);
                 return (
