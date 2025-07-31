@@ -657,7 +657,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
     if (recentReset) {
       return res.status(200).json({
         success: true,
-        message: 'If an account with this email exists, a password reset link has been sent.',
+        message: 'To Prevent Spam Wait 5 Minutes Before Resting Password',
       });
     }
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
+import {Link} from "react-router-dom";
 
 export interface AuthFormProps {
   mode: 'login' | 'signup';
@@ -129,12 +130,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit, loading, errors = {
             />
             <span className="ml-2 text-sm text-gray-600">Remember me</span>
           </label>
-          <button
-            type="button"
-            className="text-sm text-gray-600 hover:text-primary-600"
-          >
-            Forgot password?
-          </button>
+          <Link to={"/reset-password"}>
+            <button
+                type="button"
+                className="text-sm text-gray-600 hover:text-primary-600"
+            >
+              Forgot password?
+            </button>
+          </Link>
         </div>
       )}
 
