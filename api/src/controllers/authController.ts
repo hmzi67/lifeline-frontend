@@ -201,58 +201,65 @@ export const resendVerificationEmail = async (req: Request, res: Response) => {
     });
 
     if (user) {
-      // Generate tokens
-      const { accessToken, refreshToken } = generateTokens(user.id, user.email, user.role);
+      if (user.isEmailVerified) {
+        // Generate tokens
+        const { refreshToken } = generateTokens(user.id, user.email, user.role);
 
-      // Save refresh token to database
-      await prisma.refreshToken.create({
-        data: {
-          token: refreshToken,
-          userId: user.id,
-          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-        },
-      });
-
-      // Set the refresh token as httpOnly cookie
-      res.cookie('refreshToken', refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      });
-
-      // Generate reset token
-      const verificationToken = crypto.randomBytes(32).toString('hex');
-      const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-
-      // Save reset token to database
-      await prisma.emailVerification.create({
-        data: {
-          email: user.email,
-          token: verificationToken,
-          expiresAt: resetTokenExpiry,
-        },
-      });
-
-      // Send email with a reset link
-      try {
-        const resetUrl = `${process.env.FRONTEND_URL}/verify?token=${verificationToken}`;
-        await sendEmailVerificationEmail(user.email, user.firstName, resetUrl);
-
-        console.log(`Verification email sent successfully to ${user.email}`);
-      } catch (emailError) {
-        console.error('Failed to send verification email:', emailError);
-
-        // Clean up the token since email failed
-        await prisma.emailVerification.delete({
-          where: {
-            token: verificationToken,
+        // Save refresh token to database
+        await prisma.refreshToken.create({
+          data: {
+            token: refreshToken,
+            userId: user.id,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
           },
         });
-        return res.status(500).json({
-          success: false,
-          message: 'Failed to send verification email. Please try again later.',
+
+        // Set the refresh token as httpOnly cookie
+        res.cookie('refreshToken', refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
+
+        // Generate reset token
+        const verificationToken = crypto.randomBytes(32).toString('hex');
+        const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+        // Save reset token to database
+        await prisma.emailVerification.create({
+          data: {
+            email: user.email,
+            token: verificationToken,
+            expiresAt: resetTokenExpiry,
+          },
+        });
+
+        // Send email with a reset link
+        try {
+          const resetUrl = `${process.env.FRONTEND_URL}/verify?token=${verificationToken}`;
+          await sendEmailVerificationEmail(user.email, user.firstName, resetUrl);
+
+          console.log(`Verification email sent successfully to ${user.email}`);
+        } catch (emailError) {
+          console.error('Failed to send verification email:', emailError);
+
+          // Clean up the token since email failed
+          await prisma.emailVerification.delete({
+            where: {
+              token: verificationToken,
+            },
+          });
+          return res.status(500).json({
+            success: false,
+            message: 'Failed to send verification email. Please try again later.',
+          });
+        }
+      } else {
+        return res.status(201).json({
+          success: true,
+          message: 'User is already verified',
+        })
       }
     } else {
       return res.status(401).json({
