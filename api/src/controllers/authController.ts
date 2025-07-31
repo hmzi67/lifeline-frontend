@@ -122,21 +122,21 @@ export const signup = async (req: Request, res: Response) => {
     });
 
     // Generate reset token
-    const resetToken = crypto.randomBytes(32).toString('hex');
+    const verificationToken = crypto.randomBytes(32).toString('hex');
     const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
     // Save reset token to database
     await prisma.emailVerification.create({
       data: {
         email: user.email,
-        token: resetToken,
+        token: verificationToken,
         expiresAt: resetTokenExpiry,
       },
     });
 
     // Send email with a reset link
     try {
-      const resetUrl = `${process.env.FRONTEND_URL}/verify?token=${resetToken}`;
+      const resetUrl = `${process.env.FRONTEND_URL}/verify?token=${verificationToken}`;
       await sendEmailVerificationEmail(user.email, user.firstName, resetUrl)
 
       console.log(`Verification email sent successfully to ${user.email}`);
@@ -146,7 +146,7 @@ export const signup = async (req: Request, res: Response) => {
       // Clean up the token since email failed
       await prisma.emailVerification.delete({
         where: {
-          token: resetToken,
+          token: verificationToken,
         },
       });
 
@@ -178,6 +178,111 @@ export const signup = async (req: Request, res: Response) => {
 
     console.error('Signup error:', error);
     res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    });
+  }
+};
+
+// Email Resend Verification
+export const resendVerificationEmail = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please enter a valid email',
+      });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (user) {
+      if (user.isEmailVerified) {
+        // Generate tokens
+        const { refreshToken } = generateTokens(user.id, user.email, user.role);
+
+        // Save refresh token to database
+        await prisma.refreshToken.create({
+          data: {
+            token: refreshToken,
+            userId: user.id,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+          },
+        });
+
+        // Set the refresh token as httpOnly cookie
+        res.cookie('refreshToken', refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+
+        // Generate reset token
+        const verificationToken = crypto.randomBytes(32).toString('hex');
+        const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+        // Save reset token to database
+        await prisma.emailVerification.create({
+          data: {
+            email: user.email,
+            token: verificationToken,
+            expiresAt: resetTokenExpiry,
+          },
+        });
+
+        // Send email with a reset link
+        try {
+          const resetUrl = `${process.env.FRONTEND_URL}/verify?token=${verificationToken}`;
+          await sendEmailVerificationEmail(user.email, user.firstName, resetUrl);
+
+          console.log(`Verification email sent successfully to ${user.email}`);
+        } catch (emailError) {
+          console.error('Failed to send verification email:', emailError);
+
+          // Clean up the token since email failed
+          await prisma.emailVerification.delete({
+            where: {
+              token: verificationToken,
+            },
+          });
+          return res.status(500).json({
+            success: false,
+            message: 'Failed to send verification email. Please try again later.',
+          });
+        }
+      } else {
+        return res.status(201).json({
+          success: true,
+          message: 'User is already verified',
+        })
+      }
+    } else {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password',
+      });
+    }
+
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation error',
+        errors: error.errors.map(err => ({
+          field: err.path.join('.'),
+          message: err.message,
+        })),
+      });
+    }
+
+    // Handle other errors
+    console.error('Error in resendVerificationEmail:', error);
+    return res.status(500).json({
       success: false,
       message: 'Internal server error',
     });

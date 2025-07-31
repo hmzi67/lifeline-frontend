@@ -4,6 +4,8 @@ import './App.css';
 import Layout from './components/common/Layout';
 import ScrollToTop from './components/common/ScrollToTop';
 import Loading from "@/components/common/Loading.tsx";
+import Verify from "@/pages/auth/Verify.tsx";
+import ResetPassword from "@/pages/auth/ResetPassword.tsx";
 
 // Lazy-loaded page components
 const Landing = lazy(() => import('./pages/marketing/Landing'));
@@ -38,6 +40,8 @@ function App() {
             <Route path="/blog/:id" element={<BlogReading />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/verify" element={<Verify />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/questions" element={<Questions />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/goals" element={<Goals />} />
