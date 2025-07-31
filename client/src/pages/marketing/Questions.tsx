@@ -227,18 +227,18 @@ export default function Questions() {
 
 
   <div
-        className={`absolute top-0 right-0 w-96 h-96 transform translate-x-32 -translate-y-32 rotate-6 hidden md:block  ${currentStep === 5 || currentStep === 9 ? "md:hidden" : ""}`}
+        className={`absolute top-0 right-0 w-96 h-96 transform translate-x-32 -translate-y-32 rotate-6  ${currentStep === 5 || currentStep === 9 ? "md:hidden" : ""}`}
       >
         <img src={ellipseImage} alt="" />
       </div>
       <div
-        className={`absolute bottom-0 left-0 w-96 h-96 transform -translate-x-24 translate-y-44 rotate-45 hidden md:block ${currentStep === 5 || currentStep === 9 ? "md:hidden" : ""}`}
+        className={`absolute bottom-0 left-0 w-96 h-96 transform -translate-x-24 translate-y-44 rotate-45  ${currentStep === 5 || currentStep === 9 ? "md:hidden" : ""}`}
       >
         <img src={ellipseImage} alt="" />
       </div>
 
       <div
-          className={`relative z-10 max-w-7xl w-full rounded-3xl  ${currentStep === 5 || currentStep === 9 ? "bg-white/60 backdrop-blur py-20" : "bg-white/60 backdrop-blur-sm "}`}
+          className={`relative z-10 max-w-7xl w-full rounded-3xl  ${currentStep === 5 || currentStep === 9 ? "bg-white/60 backdrop-blur py-20 px-1" : "bg-white/60 backdrop-blur-sm mx-4 sm:mx-0 "}`}
         // className={`relative z-10 max-w-7xl w-full rounded-3xl  ${currentStep === 5 || currentStep === 9 ? "bg-white/0" : "bg-white/60 backdrop-blur-sm "}`}
       >
         {steps[currentStep]}

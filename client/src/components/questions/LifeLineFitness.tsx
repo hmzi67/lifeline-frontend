@@ -29,7 +29,7 @@ const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue, o
     };
 
     return (
-        <div className="flex flex-col h-screen w-full p-2 box-border">
+        <div className="flex flex-col  w-full py-8 box-border">
             <div className="flex flex-col items-center justify-center flex-1 w-full">
                 <div className="text-center max-w-4xl px-2 w-full">
                     <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-2 sm:mb-4 leading-tight">

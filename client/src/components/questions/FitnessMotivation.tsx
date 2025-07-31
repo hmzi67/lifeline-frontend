@@ -41,12 +41,12 @@ const FitnessMotivationSelector: React.FC<MotivationActions> = ({onContinue, onB
         <div className="">
             <div className="w-full mx-auto max-w-md">
                 <div className="text-center mb-12">
-                    <h1 className="text-3xl font-bold text-gray-800 mb-2">
+                    <h1 className="text-3xl font-bold text-gray-800 mb-2 px-4 sm:px-0 py-4">
                         Tell us your motivation to get fit?
                     </h1>
                 </div>
 
-                <div className="space-y-4 mb-12">
+                <div className="space-y-4 mb-12 px-4 sm:px-0">
                     {motivationOptions.map((option) => (
                         <button
                             key={option.id}
@@ -84,7 +84,7 @@ const FitnessMotivationSelector: React.FC<MotivationActions> = ({onContinue, onB
                     ))}
                 </div>
 
-                <div className={'flex items-center justify-center gap-5 mt-12'}>
+                <div className={'flex items-center justify-center gap-5 my-5'}>
                     <GoBack onClick={onBack}/>
                     <button
                         onClick={handleContinue}

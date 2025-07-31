@@ -48,11 +48,11 @@ const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({ onContinue, onS
       <div className="flex items-center justify-center py-6">
 
         <div className="w-full max-w-md">
-          <h1 className="text-2xl font-bold text-gray-800 text-center mb-8">
+          <h1 className="text-2xl font-bold text-gray-800 text-center mb-8 px-12 sm:px-0 py-2">
             What does your typical day look like?
           </h1>
 
-          <div className="space-y-4 mb-8">
+          <div className="space-y-4 mb-8 px-4">
             {dayOptions.map((option) => (
                 <button
                     key={option.id}

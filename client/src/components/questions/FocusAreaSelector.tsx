@@ -11,12 +11,7 @@ interface FocusAreaSelectorProps {
     onBack?: () => void;
 }
 
-export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
-                                                                 gender,
-                                                                 onSelectionChange,
-                                                                 onContinue,
-                                                                 onBack
-                                                             }) => {
+export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({ gender, onSelectionChange, onContinue,onBack }) => {
     const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
     const handleAreaToggle = (area: string) => {
         let newSelection: string[];
@@ -46,7 +41,7 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
     const isSelected = (area: string) => selectedAreas.includes(area);
 
     return (
-        <div className="flex items-center justify-center py-6 px-4">
+        <div className="flex items-center justify-center py-10 px-4">
             <div className="w-full max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-8 sm:mb-12">

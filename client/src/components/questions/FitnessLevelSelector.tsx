@@ -41,10 +41,10 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
   };
 
   return (
-    <div className="py-24">
+    <div className="py-20">
       <div className="max-w-2xl w-full mx-auto ">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-800 mb-6">
+          <h1 className="text-4xl font-bold text-gray-800 mb-6 p-1 sm:p-0">
             How would you rate your fitness level?
           </h1>
           <p className="text-gray-500 text-lg">Drag to adjust</p>
@@ -52,15 +52,15 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
 
         <div className="mb-12">
           {/* Current level display */}
-          <div className="flex justify-center mb-8">
+          <div className="flex justify-center mb-8 ">
             <div className="bg-gradient-to-r from-primary-400 to-primary-400 text-white px-8 py-4 rounded-full text-xl font-semibold shadow-lg">
               {levels[selectedLevel - 1].label}
             </div>
           </div>
 
           {/* Custom slider */}
-          <div className="relative mb-8">
-            <div className="flex justify-between items-center mb-4">
+          <div className="relative mb-8 px-5">
+            <div className="flex justify-between items-center mb-4 ">
               {levels.map((level) => (
                 <div
                   key={level.value}

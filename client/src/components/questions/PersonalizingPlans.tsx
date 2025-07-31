@@ -23,7 +23,7 @@ const PersonalizingPlans: React.FC<PersonalizePlansActions> = ({ onContinue, onB
     }, [progress]);
 
     return (
-        <div className="flex flex-col items-center justify-center py-6">
+        <div className="flex flex-col items-center justify-center py-10">
             
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Personalizing plans for you!</h1>
             <p className="text-sm text-gray-600 mb-6">Please wait.....</p>
@@ -41,7 +41,7 @@ const PersonalizingPlans: React.FC<PersonalizePlansActions> = ({ onContinue, onB
                 />
             </div>
 
-            <p className="text-sm text-gray-600 mb-6">
+            <p className="text-sm text-gray-600 mb-6 text-center ">
                 This will just take a moment. Get ready to transform your fitness journey!
             </p>
 

@@ -50,7 +50,7 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
         <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 text-center mb-4 sm:mb-6">
           Select your primary fitness goal
         </h1>
-        <div className="space-y-2 sm:space-y-3 w-full h-full max-w-xs sm:max-w-sm">
+        <div className="space-y-2 sm:space-y-3 w-full h-full sm:max-w-sm">
           {fitnessGoals.map((goal) => (
             <button
               key={goal.id}

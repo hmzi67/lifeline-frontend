@@ -64,7 +64,7 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAller
       </h1>
 
       {/* Allergen Options */}
-      <div className="space-y-4 mb-3">
+      <div className="space-y-4 mb-3 p-3 sm:p-0">
         {allergenOptions.map((option) => {
           const isSelected = selectedAllergens.includes(option.id);
 

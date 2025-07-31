@@ -156,7 +156,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8">
+    <div className="flex items-center justify-center py-24 sm:p-6 ">
       <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
@@ -241,9 +241,9 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
             </div>
           </div>
         ) : (
-          <div className="mb-12 sm:mb-16">
+          <div className="mb-12 sm:mb-16 ">
             {/* CM Display */}
-            <div className="text-center mb-8 sm:mb-12">
+            <div className="text-center mb-8 sm:mb-12 ">
               <div className="text-4xl sm:text-6xl lg:text-7xl font-bold text-primary-500 leading-none">
                 {heightCm}
                 <span className="text-2xl sm:text-3xl lg:text-4xl text-gray-500 ml-2">
@@ -253,7 +253,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
             </div>
 
             {/* Custom Slider */}
-            <div className="mb-8 px-2 sm:px-4">
+            <div className="mb-8 px-5 sm:px-24">
               <div
                 ref={sliderRef}
                 className="relative h-16 sm:h-20 cursor-pointer select-none touch-none"

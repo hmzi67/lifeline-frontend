@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Check } from 'lucide-react';
 import menimg from "@/assets/images/question/man-gender.jpg";
 import womenimg from "@/assets/images/question/women-gender.jpeg";
 import GoNext from '../common/GoNext';
@@ -42,10 +43,10 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
     };
 
     return (
-        <div className="flex items-center justify-center p-4">
+        <div className="flex items-center justify-center py-12 px-4">
             <div className="w-full max-w-4xl">
                 {/* Header */}
-                <div className="text-center mb-6">
+                <div className="text-center mb-8">
                     <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
                         How would you describe your gender?
                     </h1>
@@ -60,27 +61,26 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                         <div
                             key={option.id}
                             onClick={() => handleGenderSelect(option.id)}
-                            className={`relative bg-white rounded-3xl cursor-pointer transition-all duration-300 transform hover:scale-105 
-                            `}
+                            className={`relative rounded-3xl cursor-pointer transition-all duration-300 transform hover:scale-105`}
                         >
                             <div className="flex justify-center mb-8">
-                                {/* {selectedGender === option.id && (
-                                    // <div className="absolute top-6 right-16 w-10 h-10 bg-teal-400 rounded-full flex items-center justify-center shadow-lg">
-                                    <div className="w-full flex border items-center justify-center">
-                                        <Check className="w-6 h-6 text-white" />
-                                    </div>
-                                )} */}
-                                <div className={`w-64 h-64 rounded-2xl overflow-hidden shadow-lg ${selectedGender === option.id ? 'ring-4 ring-primary-400 shadow-2xl' : 'shadow-lg hover:shadow-xl'}`}>
+                                <div className={`relative sm:w-64 sm:h-64 w-36 h-36 rounded-2xl overflow-hidden shadow-lg ${selectedGender === option.id ? 'ring-4 ring-primary-400 shadow-2xl' : 'shadow-xl ring-4 ring-white hover:shadow-xl'}`}>
                                     <img
                                         src={option.image}
                                         alt={`${option.label} representative`}
                                         className="w-full h-full object-cover"
                                     />
+                                    {/* Checkmark for selected option */}
+                                    {selectedGender === option.id && (
+                                        <div className="absolute top-2 right-2 w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center shadow-lg z-10">
+                                            <Check className="w-5 h-5 text-white" />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
                             <div className="text-center">
-                                <h3 className="text-3xl font-semibold text-gray-800">
+                                <h3 className="text-3xl font-semibold text-gray-800 sm:block hidden">
                                     {option.label}
                                 </h3>
                             </div>
