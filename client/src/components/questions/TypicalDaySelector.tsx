@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { ArrowRight, Check } from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";  // Assuming you're using lucide-react for icons
+import image from "@/assets/images/Q-typicalday/office.jpeg";
+import image1 from "@/assets/images/Q-typicalday/walking.jpeg";
+import image2 from "@/assets/images/Q-typicalday/working.jpeg";
+import image3 from "@/assets/images/Q-typicalday/At home.jpeg";
+import image4 from "@/assets/images/Q-typicalday/park.jpg";
 
 interface DayOption {
   id: string;
   label: string;
-  icon: string;
+  image: string;
 }
 
 interface TypicalDaySelectorProps {
@@ -14,19 +19,15 @@ interface TypicalDaySelectorProps {
   onBack?: () => void;
 }
 
-const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({
-                                                                 onContinue,
-                                                                 onSelection,
-                                                                 onBack
-                                                               }) => {
+const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({ onContinue, onSelection, onBack }) => {
   const [selectedOption, setSelectedOption] = useState<string>('at-office');
 
   const dayOptions: DayOption[] = [
-    { id: 'at-office', label: 'At Office', icon: '🏢' },
-    { id: 'walking-daily', label: 'Walking Daily', icon: '🚶' },
-    { id: 'working-physically', label: 'Working Physically', icon: '💪' },
-    { id: 'mostly-at-home', label: 'Mostly at Home', icon: '🏠' },
-    { id: 'at-park', label: 'At Park', icon: '🌳' }
+    { id: 'at-office', label: 'At Office', image: image },
+    { id: 'walking-daily', label: 'Walking Daily', image: image1 },
+    { id: 'working-physically', label: 'Working Physically', image: image2 },
+    { id: 'mostly-at-home', label: 'Mostly at Home', image: image3 },
+    { id: 'at-park', label: 'At Park', image: image4 }
   ];
 
   const handleOptionSelect = (optionId: string) => {
@@ -64,7 +65,13 @@ const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({
                 >
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-lg">
-                      {option.icon}
+                     {option.image ? (
+                    <img 
+                      src={option.image} 
+                      alt={option.label}
+                      className=" object-cover h-12 w-12 rounded-full"
+                    />
+                  ) : null}
                     </div>
                     <span className="font-medium">{option.label}</span>
                   </div>

@@ -1,11 +1,23 @@
 import React, { useState } from 'react';
 import { ArrowRight, Check } from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
+import image from "@/assets/images/Q-diet/traditional.jpg";
+import image1 from "@/assets/images/Q-diet/Mediterranean.jpeg";
+import image2 from "@/assets/images/Q-diet/vegetarian.jpg";
+import image3 from "@/assets/images/Q-diet/diabeties type1.jpg";
+import image4 from "@/assets/images/Q-diet/keto.jpg";
+import image5 from "@/assets/images/Q-diet/diabeties type 2.jpg";
+import image6 from "@/assets/images/Q-diet/Pescatarian.jpg";
+import image7 from "@/assets/images/Q-diet/high protine.jpg";
+import image8 from "@/assets/images/Q-diet/vegan.jpg";
+import image9 from "@/assets/images/Q-diet/calories cutting.jpg";
+import image10 from "@/assets/images/Q-diet/paleo.jpg";
+import image11 from "@/assets/images/Q-diet/high calories.jpg";
 
 interface DietType {
   id: string;
   name: string;
-  emoji: string;
+  image: string;
 }
 
 interface DietTypeProp {
@@ -15,18 +27,18 @@ interface DietTypeProp {
 }
 
 const dietTypes: DietType[] = [
-  { id: 'traditional', name: 'Traditional', emoji: '🍖' },
-  { id: 'mediterranean', name: 'Mediterranean', emoji: '🥗' },
-  { id: 'vegetarian', name: 'Vegetarian', emoji: '🥕' },
-  { id: 'diabetes-type-1', name: 'Diabetes type 1', emoji: '🍎' },
-  { id: 'keto', name: 'Keto', emoji: '🥑' },
-  { id: 'diabetes-type-2', name: 'Diabetes type 2', emoji: '🥬' },
-  { id: 'pedestrian', name: 'Pedestrian', emoji: '🐟' },
-  { id: 'high-protein', name: 'High-Protein', emoji: '🍗' },
-  { id: 'vegan', name: 'Vegan (Plant diet)', emoji: '🌱' },
-  { id: 'calorie-cutting', name: 'Calorie-Cutting', emoji: '🍊' },
-  { id: 'paleo', name: 'Paleo', emoji: '🥩' },
-  { id: 'high-calories', name: 'High Calories', emoji: '🍰' }
+  { id: 'traditional', name: 'Traditional', image: image },
+  { id: 'mediterranean', name: 'Mediterranean', image: image1 },
+  { id: 'vegetarian', name: 'Vegetarian', image: image2 },
+  { id: 'diabetes-type-1', name: 'Diabetes type 1', image: image3 },
+  { id: 'keto', name: 'Keto', image: image4 },
+  { id: 'diabetes-type-2', name: 'Diabetes type 2', image: image5 },
+  { id: 'pedestrian', name: 'Pedestrian', image: image6 },
+  { id: 'high-protein', name: 'High-Protein', image: image7 },
+  { id: 'vegan', name: 'Vegan (Plant diet)', image: image8 },
+  { id: 'calorie-cutting', name: 'Calorie-Cutting', image: image9 },
+  { id: 'paleo', name: 'Paleo', image: image10 },
+  { id: 'high-calories', name: 'High Calories', image: image11 }
 ];
 
 const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, onBack }) => {
@@ -69,7 +81,12 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
                     <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-lg sm:text-xl ${
                       isSelected ? 'bg-white/20' : 'bg-gray-200'
                     }`}>
-                      {diet.emoji}
+                  {diet.image ? (
+                    <img 
+                      src={diet.image} 
+                      className=" object-cover h-12 w-12 rounded-full"
+                    />
+                  ) : null}
                     </div>
                     <span className="font-medium text-sm sm:text-base">{diet.name}</span>
                   </div>

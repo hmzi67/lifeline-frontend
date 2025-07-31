@@ -1,11 +1,16 @@
 import React, {useState} from 'react';
 import {ArrowRight, Check} from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
+import image from "@/assets/images/Q-motivation/cake.jpg";
+import image1 from "@/assets/images/Q-motivation/wedding.jpg";
+import image2 from "@/assets/images/Q-motivation/ring.jpg";
+import image3 from "@/assets/images/Q-motivation/travel.jpeg";
+import image4 from "@/assets/images/Q-motivation/fitness.jpeg";
 
 interface MotivationOption {
     id: string;
     label: string;
-    icon: string;
+    image: string;
 }
 
 interface MotivationActions {
@@ -17,11 +22,11 @@ const FitnessMotivationSelector: React.FC<MotivationActions> = ({onContinue, onB
     const [selectedMotivation, setSelectedMotivation] = useState<string>('birthday');
 
     const motivationOptions: MotivationOption[] = [
-        {id: 'birthday', label: 'Birthday', icon: '🎂'},
-        {id: 'wedding', label: 'Wedding', icon: '💒'},
-        {id: 'engagement', label: 'Engagement', icon: '💍'},
-        {id: 'travelling', label: 'Travelling', icon: '✈️'},
-        {id: 'other', label: 'Other', icon: '🎯'}
+        {id: 'birthday', label: 'Birthday', image: image},
+        {id: 'wedding', label: 'Wedding', image: image1},
+        {id: 'engagement', label: 'Engagement', image: image2},
+        {id: 'travelling', label: 'Travelling', image: image3},
+        {id: 'other', label: 'Other', image: image4}
     ];
 
     const handleOptionSelect = (optionId: string) => {
@@ -57,7 +62,13 @@ const FitnessMotivationSelector: React.FC<MotivationActions> = ({onContinue, onB
                                     ? 'bg-white bg-opacity-20'
                                     : 'bg-gray-50'
                             }`}>
-                                {option.icon}
+                               {option.image ? (
+                    <img 
+                      src={option.image} 
+                      alt={option.label}
+                      className=" object-cover h-12 w-12 rounded-full"
+                    />
+                  ) : null}
                             </div>
 
                             <div className="flex-1 text-left">

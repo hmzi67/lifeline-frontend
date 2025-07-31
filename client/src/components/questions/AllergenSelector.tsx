@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import { ArrowRight, Check } from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
+import image from "@/assets/images/Q-foodallergy/dairy.jpeg";
+import image1 from "@/assets/images/Q-foodallergy/glutten.jpg";
+import image2 from "@/assets/images/Q-foodallergy/eggs.jpg";
+import image3 from "@/assets/images/Q-foodallergy/fish.jpg";
+import image4 from "@/assets/images/Q-foodallergy/Everything.jpg";
+
 
 interface AllergenOption {
   id: string;
   name: string;
-  icon: string;
+  image: string;
 }
 
 interface AllergenSelectorProps {
@@ -14,19 +20,15 @@ interface AllergenSelectorProps {
   onBack?: () => void;
 }
 
-const AllergenSelector: React.FC<AllergenSelectorProps> = ({
-                                                             onContinue,
-                                                             onAllergiesChange,
-                                                             onBack
-                                                           }) => {
+const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAllergiesChange,onBack}) => {
   const [selectedAllergens, setSelectedAllergens] = useState<string[]>(['dairy']);
 
   const allergenOptions: AllergenOption[] = [
-    { id: 'dairy', name: 'Dairy', icon: '🥛' },
-    { id: 'gluten', name: 'Gluten', icon: '🌾' },
-    { id: 'eggs', name: 'Eggs', icon: '🥚' },
-    { id: 'fish', name: 'Fish', icon: '🐟' },
-    { id: 'everything', name: 'I eat everything', icon: '🍽️' },
+    { id: 'dairy', name: 'Dairy', image: image },
+    { id: 'gluten', name: 'Gluten', image: image1 },
+    { id: 'eggs', name: 'Eggs', image: image2 },
+    { id: 'fish', name: 'Fish', image: image3},
+    { id: 'everything', name: 'I eat everything', image: image4 },
   ];
 
   const toggleAllergen = (allergenId: string) => {
@@ -80,7 +82,12 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({
                 <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl ${
                   isSelected ? 'bg-white bg-opacity-20' : 'bg-white'
                 }`}>
-                  {option.icon}
+                  {option.image ? (
+                   <img 
+                     src={option.image} 
+                     className=" object-cover h-12 w-12 rounded-full"
+                   />
+                 ) : null}
                 </div>
                 <span className={`text-lg font-medium ${
                   isSelected ? 'text-white' : 'text-black'
