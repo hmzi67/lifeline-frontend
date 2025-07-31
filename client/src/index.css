@@ -81,7 +81,7 @@
   }
   
   .gradient-text {
-    @apply bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary-500 to-primary-500 bg-clip-text text-transparent;
   }
 }
 

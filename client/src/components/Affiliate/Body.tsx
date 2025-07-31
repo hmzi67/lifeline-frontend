@@ -33,13 +33,13 @@ const Body: React.FC<BodyProps> = ({ onContinue }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-100 to-teal-200 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-100 to-teal-200 flex items-center justify-center p-4">
       {/* Background decorative elements */}
       <div className="absolute top-0 right-0 w-32 h-32 text-primary rounded-full opacity-60 transform translate-x-16 -translate-y-16"></div>
       <div className="absolute bottom-0 left-0 w-24 h-24 text-primary rounded-full opacity-40 transform -translate-x-12 translate-y-12"></div>
       <div className="absolute bottom-4 left-4 w-16 h-16 text-primary rounded-full opacity-60"></div>
       
-      <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full border-2 border-blue-400">
+      <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full border-2 border-primary-400">
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-2">Choose Your Focus Area</h1>
           <p className="text-gray-600 text-sm">Tell us which part of your body you'd like to focus on during your workouts</p>
@@ -100,11 +100,11 @@ const Body: React.FC<BodyProps> = ({ onContinue }) => {
 
         {/* Selected areas display */}
         {selectedAreas.length > 0 && (
-          <div className="mb-6 p-3 bg-teal-50 rounded-lg">
-            <p className="text-sm text-teal-700 font-medium mb-2">Selected focus areas:</p>
+          <div className="mb-6 p-3 bg-primary-50 rounded-lg">
+            <p className="text-sm text-primary-700 font-medium mb-2">Selected focus areas:</p>
             <div className="flex flex-wrap gap-2">
               {selectedAreas.map(areaId => (
-                <span key={areaId} className="px-2 py-1 bg-teal-200 text-teal-800 rounded-full text-xs">
+                <span key={areaId} className="px-2 py-1 bg-primary-200 text-primary-800 rounded-full text-xs">
                   {focusAreas.find(area => area.id === areaId)?.label}
                 </span>
               ))}
@@ -114,7 +114,7 @@ const Body: React.FC<BodyProps> = ({ onContinue }) => {
 
         <button
           onClick={handleContinue}
-          className="w-full bg-teal-500 text-white py-3 rounded-lg font-medium text-lg hover:bg-teal-600 transition-colors duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+          className="w-full bg-primary-500 text-white py-3 rounded-lg font-medium text-lg hover:bg-primary-600 transition-colors duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
         >
           Continue
         </button>

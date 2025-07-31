@@ -68,8 +68,8 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                                 onClick={() => handleAreaToggle(area)}
                                 className={`px-2 sm:px-5 py-2 rounded-lg border-2 transition-all duration-200 text-sm sm:text-lg font-medium min-w-20 sm:min-w-32 ${
                                     isSelected(area)
-                                        ? 'bg-teal-500 border-teal-500 text-white shadow-lg'
-                                        : 'bg-white border-gray-300 text-gray-700 hover:border-teal-300 hover:bg-teal-50'
+                                        ? 'bg-primary-500 border-primary-500 text-white shadow-lg'
+                                        : 'bg-white border-gray-300 text-gray-700 hover:border-primary-300 hover:bg-teal-50'
                                 }`}
                             >
                                 {area}
@@ -96,8 +96,8 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({
                                 onClick={() => handleAreaToggle(area)}
                                 className={`px-2 sm:px-5 py-2 rounded-lg border-2 transition-all duration-200 text-sm sm:text-lg font-medium min-w-20 sm:min-w-32 ${
                                     isSelected(area)
-                                        ? 'bg-teal-500 border-teal-500 text-white shadow-lg'
-                                        : 'bg-white border-gray-300 text-gray-700 hover:border-teal-300 hover:bg-teal-50'
+                                        ? 'bg-primary-500 border-primary-500 text-white shadow-lg'
+                                        : 'bg-white border-gray-300 text-gray-700 hover:border-primary-300 hover:bg-primary-50'
                                 }`}
                             >
                                 {area}

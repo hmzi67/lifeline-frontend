@@ -86,7 +86,7 @@ const Checkout: React.FC = () => {
         if (imageType === 'fitness-band') {
             return (
                 <div className="w-12 h-8 bg-gray-800 rounded-lg relative">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full absolute top-1 left-1"></div>
+                    <div className="w-2 h-2 bg-primary-400 rounded-full absolute top-1 left-1"></div>
                 </div>
             );
         } else {
@@ -109,7 +109,7 @@ const Checkout: React.FC = () => {
                                 <h2 className="text-2xl font-semibold text-gray-900">Create Order</h2>
                                 <p className="text-gray-600 mt-1">Selected product and services</p>
                             </div>
-                            <div className="text-3xl font-bold text-teal-500">
+                            <div className="text-3xl font-bold text-primary-500">
                                 ${calculations.payableAmount.toFixed(1)}
                             </div>
                         </div>
@@ -122,7 +122,7 @@ const Checkout: React.FC = () => {
                                         <button
                                             onClick={() => handleProductToggle(product.id)}
                                             className={`w-6 h-6 rounded flex items-center justify-center ${
-                                                product.selected ? 'bg-teal-500' : 'border-2 border-gray-300'
+                                                product.selected ? 'bg-primary-500' : 'border-2 border-gray-300'
                                             }`}
                                         >
                                             {product.selected && <Check className="w-4 h-4 text-white" />}
@@ -181,7 +181,7 @@ const Checkout: React.FC = () => {
                                 quantity: 1,
                                 selected: true
                             })}
-                            className="w-full border-2 border-dashed border-gray-300 rounded-lg p-4 text-gray-500 hover:border-teal-500 hover:text-teal-500 mb-6"
+                            className="w-full border-2 border-dashed border-gray-300 rounded-lg p-4 text-gray-500 hover:border-primary-500 hover:text-primary-500 mb-6"
                         >
                             + Add Product
                         </button>
@@ -206,7 +206,7 @@ const Checkout: React.FC = () => {
                                         className="text-sm border rounded px-2 py-1 text-gray-600 w-32"
                                     />
                                     {couponCode && (
-                                        <span className="text-sm bg-teal-100 text-teal-600 px-2 py-1 rounded">
+                                        <span className="text-sm bg-primary-100 text-primary-600 px-2 py-1 rounded">
                       {couponCode}
                     </span>
                                     )}
@@ -238,7 +238,7 @@ const Checkout: React.FC = () => {
                         </div>
 
                         {calculations.discountAmount > 0 && (
-                            <div className="mt-6 text-teal-500 font-medium">
+                            <div className="mt-6 text-primary-500 font-medium">
                                 Congratulations! you've got free delivery
                             </div>
                         )}
@@ -251,7 +251,7 @@ const Checkout: React.FC = () => {
                                 <h2 className="text-2xl font-semibold text-gray-900">Confirm Your Order</h2>
                                 <p className="text-gray-600 mt-1">Selected product and services</p>
                             </div>
-                            <div className="text-3xl font-bold text-teal-500">
+                            <div className="text-3xl font-bold text-primary-500">
                                 ${calculations.payableAmount.toFixed(1)}
                             </div>
                         </div>
@@ -276,7 +276,7 @@ const Checkout: React.FC = () => {
                                         className="text-sm border rounded px-2 py-1 text-gray-600 w-32"
                                     />
                                     {couponCode && (
-                                        <span className="text-sm bg-teal-100 text-teal-600 px-2 py-1 rounded">
+                                        <span className="text-sm bg-teal-100 text-primary-600 px-2 py-1 rounded">
                       {couponCode}
                     </span>
                                     )}
@@ -314,13 +314,13 @@ const Checkout: React.FC = () => {
                             <div className="grid grid-cols-2 gap-4">
                                 <div
                                     className={`border rounded-lg p-4 cursor-pointer ${
-                                        paymentMethod === 'gpay' ? 'border-teal-500 bg-teal-50' : 'border-gray-200'
+                                        paymentMethod === 'gpay' ? 'border-primary-500 bg-primary-50' : 'border-gray-200'
                                     }`}
                                     onClick={() => setPaymentMethod('gpay')}
                                 >
                                     <div className="flex items-center space-x-2 mb-2">
                                         <div className={`w-4 h-4 rounded-full border-2 ${
-                                            paymentMethod === 'gpay' ? 'border-teal-500 bg-teal-500' : 'border-gray-300'
+                                            paymentMethod === 'gpay' ? 'border-primary-500 bg-primary-500' : 'border-gray-300'
                                         }`}>
                                             {paymentMethod === 'gpay' && <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>}
                                         </div>
@@ -332,13 +332,13 @@ const Checkout: React.FC = () => {
 
                                 <div
                                     className={`border rounded-lg p-4 cursor-pointer ${
-                                        paymentMethod === 'others' ? 'border-teal-500 bg-teal-50' : 'border-gray-200'
+                                        paymentMethod === 'others' ? 'border-primary-500 bg-primary-50' : 'border-gray-200'
                                     }`}
                                     onClick={() => setPaymentMethod('others')}
                                 >
                                     <div className="flex items-center space-x-2 mb-2">
                                         <div className={`w-4 h-4 rounded-full border-2 ${
-                                            paymentMethod === 'others' ? 'border-teal-500 bg-teal-500' : 'border-gray-300'
+                                            paymentMethod === 'others' ? 'border-primary-500 bg-primary-500' : 'border-gray-300'
                                         }`}>
                                             {paymentMethod === 'others' && <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>}
                                         </div>
@@ -357,7 +357,7 @@ const Checkout: React.FC = () => {
                                     type="checkbox"
                                     checked={agreeToTerms}
                                     onChange={(e) => setAgreeToTerms(e.target.checked)}
-                                    className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500 mt-1"
+                                    className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 mt-1"
                                 />
                                 <span className="text-sm text-gray-600">
                   I agree to terms and conditions lorem dolor amenity ipsum is a dummy data simply used for type
@@ -370,7 +370,7 @@ const Checkout: React.FC = () => {
                         <button
                             className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-colors ${
                                 agreeToTerms
-                                    ? 'bg-teal-500 hover:bg-teal-600'
+                                    ? 'bg-primary-500 hover:bg-primary-600'
                                     : 'bg-gray-300 cursor-not-allowed'
                             }`}
                             disabled={!agreeToTerms}

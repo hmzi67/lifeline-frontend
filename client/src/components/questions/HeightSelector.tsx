@@ -175,7 +175,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
               onClick={() => handleUnitChange("cm")}
               className={`flex-1 py-2 px-2 sm:px-4 rounded-xl font-semibold transition-all duration-200 text-sm sm:text-base ${
                 unit === "cm"
-                  ? "bg-teal-500 text-white shadow-lg"
+                  ? "bg-primary-500 text-white shadow-lg"
                   : "text-gray-600 hover:bg-gray-200"
               }`}
             >
@@ -185,7 +185,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
               onClick={() => handleUnitChange("ft")}
               className={`flex-1 py-2 px-2 sm:px-4 rounded-xl font-semibold transition-all duration-200 text-sm sm:text-base ${
                 unit === "ft"
-                  ? "bg-teal-500 text-white shadow-lg"
+                  ? "bg-primary-500 text-white shadow-lg"
                   : "text-gray-600 hover:bg-gray-200"
               }`}
             >
@@ -201,19 +201,19 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
             <div className="bg-white rounded-3xl p-6 sm:p-8 lg:p-12 shadow-xl mb-8 sm:mb-12 mx-2 sm:mx-4 lg:mx-8">
               <div className="flex justify-center items-center">
                 <div className="text-center">
-                  <span className="text-4xl sm:text-6xl lg:text-8xl font-bold text-teal-500">
+                  <span className="text-4xl sm:text-6xl lg:text-8xl font-bold text-primary-500">
                     {feet}
                   </span>
-                  <span className="text-lg sm:text-2xl lg:text-3xl font-medium text-teal-500 ml-1">
+                  <span className="text-lg sm:text-2xl lg:text-3xl font-medium text-primary-500 ml-1">
                     ft
                   </span>
                 </div>
                 <div className="mx-4 sm:mx-6 lg:mx-8 w-0.5 h-12 sm:h-16 lg:h-20 bg-gray-300"></div>
                 <div className="text-center">
-                  <span className="text-3xl sm:text-4xl lg:text-6xl font-bold text-teal-500">
+                  <span className="text-3xl sm:text-4xl lg:text-6xl font-bold text-primary-500">
                     {inches}
                   </span>
-                  <span className="text-lg sm:text-2xl lg:text-3xl font-medium text-teal-500 ml-1">
+                  <span className="text-lg sm:text-2xl lg:text-3xl font-medium text-primary-500 ml-1">
                     in
                   </span>
                 </div>
@@ -244,7 +244,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
           <div className="mb-12 sm:mb-16">
             {/* CM Display */}
             <div className="text-center mb-8 sm:mb-12">
-              <div className="text-4xl sm:text-6xl lg:text-7xl font-bold text-teal-500 leading-none">
+              <div className="text-4xl sm:text-6xl lg:text-7xl font-bold text-primary-500 leading-none">
                 {heightCm}
                 <span className="text-2xl sm:text-3xl lg:text-4xl text-gray-500 ml-2">
                   cm
@@ -263,7 +263,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
                 <div className="absolute flex items-center justify-center top-1/2 w-full">
                   {generateTicks()}
                 </div>
-                <div className="absolute top-1/2 left-1/2 w-1 rounded-full h-16 sm:h-20 lg:h-24 bg-teal-500 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 w-1 rounded-full h-16 sm:h-20 lg:h-24 bg-primary-500 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
             </div>
           </div>
@@ -274,7 +274,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
           <GoBack onClick={onBack} />
           <button
             onClick={handleContinue}
-            className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-teal-500 hover:bg-teal-600 text-white font-medium transition-all duration-200 text-sm sm:text-base"
+            className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-primary-500 hover:bg-primary-600 text-white font-medium transition-all duration-200 text-sm sm:text-base"
           >
             Continue
             <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />

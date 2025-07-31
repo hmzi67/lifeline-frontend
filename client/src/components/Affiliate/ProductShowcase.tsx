@@ -20,7 +20,7 @@ const ProductShowcase = () => {
         <div className="grid md:grid-cols-3 ">
           {/* Phone 1 - Heart Rate Monitor */}
           <div className="flex flex-col items-center ">
-          <div className="h-96 px-14 bg-teal-50 gap-y-6 rounded-2xl ">
+          <div className="h-96 px-14 bg-primary-50 gap-y-6 rounded-2xl ">
              <img className="h-80 mt-16" src={ps1img} alt=""/> 
           </div>
             <div className="mt-4 text-center">
@@ -33,7 +33,7 @@ const ProductShowcase = () => {
 
           {/* Phone 2 - Sleep Tracking */}
           <div className="flex flex-col items-center ">
-          <div className="h-96 px-14 bg-teal-50 gap-y-6 rounded-2xl  ">
+          <div className="h-96 px-14 bg-primary-50 gap-y-6 rounded-2xl  ">
              <img className="h-80 mt-16" src={ps2img} alt=""/> 
           </div>
             <div className="mt-4 text-center">

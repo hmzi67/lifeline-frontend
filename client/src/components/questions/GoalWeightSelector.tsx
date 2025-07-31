@@ -256,7 +256,7 @@ export default function WeightSelector({
 
           {/* Weight Display */}
           <div className="text-center mb-8">
-            <div className="text-6xl font-bold text-teal-500 mb-2">
+            <div className="text-6xl font-bold text-primary-500 mb-2">
               {weight}
               <span className="text-2xl text-gray-600 ml-2">{unit}</span>
             </div>
@@ -275,13 +275,13 @@ export default function WeightSelector({
                 {generateTicks()}
               </div>
               {/* Center line indicator */}
-              <div className="absolute top-1/2 left-1/2 w-[6px] rounded-full h-32 bg-teal-500 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 w-[6px] rounded-full h-32 bg-primary-500 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
 
           {/* BMI Status */}
           <div className="text-center mb-8">
-            <p className="text-teal-600 text-lg">
+            <p className="text-primary-600 text-lg">
               Your current BMI is {currentBMI.toFixed(1)} which is {bmiCategory}
               .
             </p>
@@ -291,7 +291,7 @@ export default function WeightSelector({
             <GoBack onClick={onBack} />
             <button
               onClick={() => onContinue?.(weight, unit)}
-              className="inline-flex items-center justify-between gap-2 rounded-full bg-teal-500 hover:bg-teal-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
+              className="inline-flex items-center justify-between gap-2 rounded-full bg-primary-500 hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
             >
               Continue
               <ArrowRight className="w-5 h-5" />

@@ -26,7 +26,7 @@ export const SearchBar = () => {
                     <Search 
                         className={`
                             w-5 h-5 transition-colors duration-200
-                            ${isFocused ? 'text-teal-500' : 'text-gray-400'}
+                            ${isFocused ? 'text-primary-500' : 'text-gray-400'}
                         `} 
                     />
                 </div>
@@ -58,7 +58,7 @@ export const SearchBar = () => {
                             text-gray-400 hover:text-gray-600 
                             hover:bg-gray-100 
                             transition-all duration-200
-                            focus:outline-none focus:ring-2 focus:ring-teal-500/30
+                            focus:outline-none focus:ring-2 focus:ring-primary-500/30
                         "
                     >
                         <X className="w-4 h-4" />
@@ -68,7 +68,7 @@ export const SearchBar = () => {
                 {/* Animated Border */}
                 <div className={`
                     absolute inset-0 rounded-xl 
-                    bg-gradient-to-r from-teal-500 via-blue-500 to-purple-500
+                    bg-gradient-to-r from-primary-500 via-blue-500 to-purple-500
                     opacity-0 -z-10
                     transition-opacity duration-300
                     ${isFocused ? 'opacity-100' : 'opacity-0'}

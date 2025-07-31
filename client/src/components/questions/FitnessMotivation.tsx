@@ -53,8 +53,8 @@ const FitnessMotivationSelector: React.FC<MotivationActions> = ({onContinue, onB
                             onClick={() => handleOptionSelect(option.id)}
                             className={`w-full p-3 rounded-full border-2 transition-all duration-300 flex items-center space-x-4 pr-6 ${
                                 selectedMotivation === option.id
-                                    ? 'bg-gradient-to-r from-teal-400 to-teal-500 border-teal-400 text-white shadow-lg transform scale-105'
-                                    : 'bg-white border-gray-200 text-gray-700 hover:border-teal-300 hover:shadow-md'
+                                     ? 'bg-primary border-primary-400 text-white shadow-lg transform scale-102'
+                                     : 'bg-gray-100 text-gray-700 hover:border-primary-300 hover:shadow-md hover:scale-101'
                             }`}
                         >
                             <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl ${
@@ -66,7 +66,7 @@ const FitnessMotivationSelector: React.FC<MotivationActions> = ({onContinue, onB
                     <img 
                       src={option.image} 
                       alt={option.label}
-                      className=" object-cover h-12 w-12 rounded-full"
+                      className=" object-cover h-12 w-12 rounded-full  border-2 border-white"
                     />
                   ) : null}
                             </div>

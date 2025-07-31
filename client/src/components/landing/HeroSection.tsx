@@ -61,7 +61,7 @@ export const HeroSection: React.FC = () => {
           <div className="max-w-2xl">
             <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-bold leading-tight text-white mb-4 md:mb-8">
               YOUR FITNESS{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-600">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600">
                                 PARTNER!
                             </span>
             </h1>

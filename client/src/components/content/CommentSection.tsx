@@ -16,7 +16,7 @@ export const CommentSection = () => {
                     <textarea
                         id="message"
                         rows={6}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         placeholder="Write a message..."
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
@@ -27,7 +27,7 @@ export const CommentSection = () => {
                         console.log('Comment submitted:', comment);
                         setComment('');
                     }}
-                    className="text-primary-500  px-6 py-2 rounded-md hover:bg-teal-600 transition-colors duration-200"
+                    className="text-primary-500  px-6 py-2 rounded-md hover:bg-primary-600 transition-colors duration-200"
                 >
                     Post Comment
                 </button>

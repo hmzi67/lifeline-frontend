@@ -94,7 +94,7 @@ export default function Header() {
           <div className="hidden lg:flex items-center">
             <Link to="/signup">
               <Button
-                className="bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white font-semibold px-4 py-2 sm:px-6 sm:py-2.5 rounded-full transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg text-sm sm:text-base"
+                className="bg-gradient-to-r from-primary-400 to-primary-500 hover:from-primary-500 hover:to-primary-600 text-white font-semibold px-4 py-2 sm:px-6 sm:py-2.5 rounded-full transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg text-sm sm:text-base"
               >
                 Try for Free
               </Button>
@@ -145,7 +145,7 @@ export default function Header() {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className={`block text-gray-700 hover:text-teal-500 hover:bg-teal-50 transition-all duration-200 font-medium py-4 px-4 rounded-lg my-1 transform transition-transform duration-300 ${
+                    className={`block text-gray-700 hover:text-teal-500 hover:bg-teal-50 font-medium py-4 px-4 rounded-lg my-1 transform transition-transform ${
                       isMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
                     }`}
                     style={{ transitionDelay: `${index * 50}ms` }}
@@ -163,7 +163,7 @@ export default function Header() {
             }`} style={{ transitionDelay: `${navigation.length * 50}ms` }}>
               <Link to="/signup" className="w-full block" onClick={() => setIsMenuOpen(false)}>
                 <Button
-                  className="w-full bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white font-semibold rounded-full py-3 text-base transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
+                  className="w-full bg-gradient-to-r from-primary-400 to-primary-500 hover:from-primary-500 hover:to-primary-600 text-white font-semibold rounded-full py-3 text-base transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
                 >
                   Try for Free
                 </Button>

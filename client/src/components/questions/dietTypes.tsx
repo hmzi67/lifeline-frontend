@@ -58,7 +58,7 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
   };
 
   return (
-    <div className="flex flex-col min-h-screen w-full p-2 box-border">
+    <div className="flex flex-col w-full p-2 box-border">
       <div className="flex flex-col items-center flex-1 w-full">
         <div className="max-w-4xl mx-auto w-full px-2">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-4 sm:mb-6">
@@ -73,8 +73,8 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
                   onClick={() => handleSelectDiet(diet.id)}
                   className={`relative flex items-center justify-between p-2 sm:p-3 rounded-full transition-all duration-200 border-2 pr-4 sm:pr-6 ${
                     isSelected
-                      ? 'bg-primary border-teal-400 text-white shadow-lg transform scale-102'
-                      : 'bg-gray-100 text-gray-700 hover:border-teal-300 hover:shadow-md hover:scale-101'
+                      ? 'bg-primary border-primary text-white shadow-lg transform scale-102'
+                      : 'bg-gray-100 text-gray-700 hover:border-primary hover:shadow-md hover:scale-101'
                   }`}
                 >
                   <div className="flex items-center space-x-2 sm:space-x-4">
@@ -84,7 +84,7 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
                   {diet.image ? (
                     <img 
                       src={diet.image} 
-                      className=" object-cover h-12 w-12 rounded-full"
+                      className=" object-cover h-10 w-12 rounded-full border-2 border-white"
                     />
                   ) : null}
                     </div>
@@ -101,7 +101,7 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-center gap-2 sm:gap-5 mt-2 mb-6">
+      <div className="flex items-center justify-center gap-2 sm:gap-2 mt-2 mb-6">
         <GoBack onClick={onBack} />
         <button
           onClick={onContinue}
