@@ -53,7 +53,7 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
         <div className="mb-12">
           {/* Current level display */}
           <div className="flex justify-center mb-8">
-            <div className="bg-gradient-to-r from-teal-400 to-teal-400 text-white px-8 py-4 rounded-full text-xl font-semibold shadow-lg">
+            <div className="bg-gradient-to-r from-primary-400 to-primary-400 text-white px-8 py-4 rounded-full text-xl font-semibold shadow-lg">
               {levels[selectedLevel - 1].label}
             </div>
           </div>
@@ -69,7 +69,7 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
                   <div
                     className={`z-10 w-2 h-8 mb-2 tranform translate-y-[64px] duration-300 ${
                       level.value <= selectedLevel
-                        ? 'bg-gradient-to-r from-teal-400 to-teal-400 shadow-md'
+                        ? 'bg-gradient-to-r from-primary-400 to-primary-400 shadow-md'
                         : 'bg-gray-200'
                     }`}
                   />
@@ -84,7 +84,7 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
             <div className="relative h-2 bg-gray-200">
               {/* Active progress bar */}
               <div
-                className="absolute top-0 left-0 h-2 bg-gradient-to-r from-teal-400 to-cyan-400  transition-all duration-300"
+                className="absolute top-0 left-0 h-2 bg-gradient-to-r from-primary-400 to-primary-400  transition-all duration-300"
                 style={{ width: `${((selectedLevel - 1) / 4) * 100}%` }}
               />
               

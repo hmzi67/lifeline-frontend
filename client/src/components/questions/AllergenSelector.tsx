@@ -74,8 +74,8 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAller
               onClick={() => toggleAllergen(option.id)}
               className={`w-full flex items-center justify-between p-3 rounded-full transition-all duration-200 pr-6 ${
                 isSelected
-                  ? 'bg-teal-400 text-white shadow-lg'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                   ? 'bg-primary border-primary-400 text-white shadow-lg transform scale-102'
+                   : 'bg-gray-100 text-gray-700 hover:border-primary-300 hover:shadow-md hover:scale-101'
               }`}
             >
               <div className="flex items-center space-x-4">
@@ -85,7 +85,7 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAller
                   {option.image ? (
                    <img 
                      src={option.image} 
-                     className=" object-cover h-12 w-12 rounded-full"
+                     className=" object-cover h-12 w-12 rounded-full border-2 border-white"
                    />
                  ) : null}
                 </div>
@@ -96,7 +96,7 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAller
 
               {isSelected && (
                 <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                  <Check className="w-5 h-5 text-teal-400" />
+                  <Check className="w-5 h-5 text-primary-400" />
                 </div>
               )}
             </button>

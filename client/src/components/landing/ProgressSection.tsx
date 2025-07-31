@@ -46,10 +46,10 @@ export const ProgressSection: React.FC = () => {
                             </ul>
 
                             <div className="mt-10 flex items-center gap-6">
-                                <Button className="bg-teal-400 hover:bg-teal-500 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition-all duration-300">
+                                <Button className="bg-teal-400 hover:bg-primary-500 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition-all duration-300">
                                     Buy Now
                                 </Button>
-                                <button className="text-lg font-semibold text-gray-700 hover:text-teal-400 transition-colors duration-300">
+                                <button className="text-lg font-semibold text-gray-700 hover:text-primary-400 transition-colors duration-300">
                                     Download App
                                 </button>
                             </div>
@@ -73,7 +73,7 @@ export const ProgressSection: React.FC = () => {
                     {/* Header at Top - Centered */}
                     <div className="text-center mb-8 sm:mb-10">
                         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight">
-                            <span className="text-teal-400">Track</span> Your Fitness, <span className="text-teal-400">See</span> Your Progress
+                            <span className="text-primary-400">Track</span> Your Fitness, <span className="text-primary-400">See</span> Your Progress
                         </h1>
                     </div>
 
@@ -102,10 +102,10 @@ export const ProgressSection: React.FC = () => {
 
                     {/* Buttons at Bottom - Centered */}
                     <div className="flex items-center justify-end gap-4 sm:gap-6 -translate-x-10">
-                        <Button className="bg-teal-400 hover:bg-teal-500 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-sm sm:text-base font-semibold shadow-lg transition-all duration-300">
+                        <Button className="bg-primary-400 hover:bg-primary-500 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-sm sm:text-base font-semibold shadow-lg transition-all duration-300">
                             Try Now
                         </Button>
-                        <button className="text-sm sm:text-base font-semibold text-gray-700 hover:text-teal-400 transition-colors duration-300">
+                        <button className="text-sm sm:text-base font-semibold text-gray-700 hover:text-primary-400 transition-colors duration-300">
                             Contact us
                         </button>
                     </div>

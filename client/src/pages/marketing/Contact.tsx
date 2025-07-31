@@ -47,10 +47,10 @@ const Contact: React.FC = () => {
             <div className="bg-white p-8 lg:p-12">
               <div className="mb-8">
                 <h2 className="text-2xl mb-2">
-                  <span className="text-teal-400">Have Questions?</span>
+                  <span className="text-primary-400">Have Questions?</span>
                 </h2>
                 <h3 className="text-3xl font-bold text-gray-900">
-                  Lets <span className="text-cyan-500">Get In</span> Touch
+                  Lets <span className="text-primary-500">Get In</span> Touch
                 </h3>
               </div>
 
@@ -63,7 +63,7 @@ const Contact: React.FC = () => {
               <div className="space-y-8">
                 <div className="flex items-start space-x-4">
                   <div className="bg-cyan-100 p-3 rounded-full">
-                    <Mail className="w-6 h-6 text-cyan-600" />
+                    <Mail className="w-6 h-6 text-primary-600" />
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-1">Email Address</h4>
@@ -73,7 +73,7 @@ const Contact: React.FC = () => {
 
                 <div className="flex items-start space-x-4">
                   <div className="bg-cyan-100 p-3 rounded-full">
-                    <Phone className="w-6 h-6 text-cyan-600" />
+                    <Phone className="w-6 h-6 text-primary-600" />
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-1">Contact Info</h4>
@@ -83,7 +83,7 @@ const Contact: React.FC = () => {
 
                 <div className="flex items-start space-x-4">
                   <div className="bg-cyan-100 p-3 rounded-full">
-                    <MapPin className="w-6 h-6 text-cyan-600" />
+                    <MapPin className="w-6 h-6 text-primary-600" />
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-1">Location</h4>
@@ -107,7 +107,7 @@ const Contact: React.FC = () => {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
                     />
                   </div>
                   <div>
@@ -120,7 +120,7 @@ const Contact: React.FC = () => {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
                     />
                   </div>
                 </div>
@@ -136,7 +136,7 @@ const Contact: React.FC = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
                     />
                   </div>
                   <div>
@@ -149,7 +149,7 @@ const Contact: React.FC = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
                     />
                   </div>
                 </div>
@@ -164,14 +164,14 @@ const Contact: React.FC = () => {
                     rows={6}
                     value={formData.comments}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-colors resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors resize-none"
                   />
                 </div>
 
                 <div className="flex justify-end">
                   <button
                     onClick={handleSubmit}
-                    className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium px-8 py-3 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
+                    className="bg-primary-500 hover:bg-primary-600 text-white font-medium px-8 py-3 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
                   >
                     Send
                   </button>

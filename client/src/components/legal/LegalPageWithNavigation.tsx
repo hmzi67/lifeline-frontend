@@ -66,7 +66,7 @@ const LegalPageWithNavigation: React.FC<LegalPageWithNavigationProps> = ({ data 
                         <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-8 lg:p-12">
                             {/* Last Updated */}
                             <div className="mb-8">
-                                <p className="text-cyan-500 text-sm font-medium">
+                                <p className="text-primary-500 text-sm font-medium">
                                     Last Updated: {data.lastUpdated}
                                 </p>
                             </div>
@@ -82,7 +82,7 @@ const LegalPageWithNavigation: React.FC<LegalPageWithNavigationProps> = ({ data 
                             <div className="space-y-10">
                                 {data.sections.map((section) => (
                                     <section key={section.id} className="scroll-mt-20" id={section.id}>
-                                        <h2 className="text-xl font-semibold text-cyan-500 mb-4">
+                                        <h2 className="text-xl font-semibold text-primary-500 mb-4">
                                             {section.title}
                                         </h2>
                                         <div className="prose prose-gray max-w-none">
@@ -104,7 +104,7 @@ const LegalPageWithNavigation: React.FC<LegalPageWithNavigationProps> = ({ data 
                                         If you have any questions about this {data.title.toLowerCase()}, please contact us at{' '}
                                         <a
                                             href="mailto:legal@fitapp.com"
-                                            className="text-cyan-500 hover:text-cyan-600 font-medium"
+                                            className="text-primary-500 hover:text-primary-600 font-medium"
                                         >
                                             legal@fitapp.com
                                         </a>{' '}

@@ -59,8 +59,8 @@ const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({ onContinue, onS
                     onClick={() => handleOptionSelect(option.id)}
                     className={`w-full flex items-center justify-between p-4 rounded-full transition-all duration-200 pr-6 ${
                         selectedOption === option.id
-                            ? 'bg-teal-400 text-white shadow-lg'
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                              ? 'bg-primary border-primary-400 text-white shadow-lg transform scale-102'
+                              : 'bg-gray-100 text-gray-700 hover:border-primary-300 hover:shadow-md hover:scale-101'
                     }`}
                 >
                   <div className="flex items-center space-x-3">
@@ -69,7 +69,7 @@ const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({ onContinue, onS
                     <img 
                       src={option.image} 
                       alt={option.label}
-                      className=" object-cover h-12 w-12 rounded-full"
+                      className=" object-cover h-[43px] w-16 rounded-full  border-2 border-white"
                     />
                   ) : null}
                     </div>
@@ -85,7 +85,7 @@ const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({ onContinue, onS
             ))}
           </div>
 
-           <div className={'flex items-center justify-center gap-5 mt-12'}>
+           <div className={'flex items-center justify-center gap-5 mt-10'}>
              <GoBack onClick={onBack} />
              <button
                  onClick={handleContinue}

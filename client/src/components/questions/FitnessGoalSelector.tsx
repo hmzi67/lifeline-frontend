@@ -56,8 +56,8 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
               key={goal.id}
               onClick={() => handleGoalSelect(goal.id)}
               className={`w-full flex items-center justify-between px-3 rounded-full transition-all duration-200 ${selectedGoal === goal.id
-                  ? 'bg-primary border-teal-400 text-white shadow-lg transform scale-102'
-                  : 'bg-gray-100 text-gray-700 hover:border-teal-300 hover:shadow-md hover:scale-101'
+                  ? 'bg-primary border-primary-400 text-white shadow-lg transform scale-102'
+                  : 'bg-gray-100 text-gray-700 hover:border-primary-300 hover:shadow-md hover:scale-101'
                 }`}
             >
               <div className="flex items-center space-x-2 sm:space-x-3">
@@ -70,13 +70,13 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
                     <img 
                       src={goal.image} 
                       alt={goal.label}
-                      className=" object-cover h-12 w-12 rounded-full"
+                      className=" object-cover h-12 w-12 rounded-full border-2 border-white"
                     />
                   ) : null}
                 </div>
           
                 <span
-                  className={`text-xs sm:text-xl font-medium ${selectedGoal === goal.id ? "text-white" : "text-gray-900"
+                  className={`text-xs sm:text-lg font-medium ${selectedGoal === goal.id ? "text-white" : "text-gray-900"
                     }`}
                 >
                   {goal.label}
@@ -84,7 +84,7 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
               </div>
               {selectedGoal === goal.id && (
                 <div className="w-4 h-4 sm:w-5 sm:h-5 bg-white rounded-full flex items-center justify-center">
-                  <Check className="w-4 h-4 sm:w-4 sm:h-4 text-teal-400 " />
+                  <Check className="w-4 h-4 sm:w-4 sm:h-4 text-primary-400 " />
                 </div>
               )}
             </button>

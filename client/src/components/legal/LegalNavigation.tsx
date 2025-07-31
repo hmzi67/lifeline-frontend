@@ -25,7 +25,7 @@ const LegalNavigation: React.FC<LegalNavigationProps> = ({
                             key={section.id}
                             onClick={() => onSectionClick(section.id)}
                             className={`block w-full text-left px-4 py-3 rounded-lg text-sm transition-colors ${activeSection === section.id
-                                    ? 'bg-cyan-50 text-cyan-600 font-medium border-l-4 border-cyan-500'
+                                    ? 'bg-cyan-50 text-primary-600 font-medium border-l-4 border-primary-500'
                                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                                 }`}
                         >

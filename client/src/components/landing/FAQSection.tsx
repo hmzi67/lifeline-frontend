@@ -52,11 +52,11 @@ export const FAQSection: React.FC = () => {
           <div className="space-y-6 lg:space-y-8 flex flex-col justify-center">
             <div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
-                <span className="text-teal-400">FAQs</span>
+                <span className="text-primary-400">FAQs</span>
                 <span className="text-gray-800"> - Frequently</span>
                 <br />
                 <span className="text-gray-800">Asked </span>
-                <span className="text-teal-400">Questions</span>
+                <span className="text-primary-400">Questions</span>
               </h1>
             </div>
 
@@ -76,7 +76,7 @@ export const FAQSection: React.FC = () => {
               <div
                 key={item.id}
                 className={`bg-white rounded-2xl overflow-hidden transition-all duration-300 shadow-md ${expandedItem === item.id
-                    ? 'border-2 border-teal-300'
+                    ? 'border-2 border-primary-300'
                     : 'border border-transparent hover:border-gray-200'
                   }`}
               >

@@ -52,7 +52,7 @@ const ThankYouCard: React.FC<PlanPreparationProps> = ({
                 </h1>
             </div>
             <div className="mb-8 animate-slide-up w-full">
-                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-teal-400 mb-4 sm:mb-6 drop-shadow-md">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-primary-400 mb-4 sm:mb-6 drop-shadow-md">
                     Getting Ready Your Plan
                 </h2>
                 <div className="max-w-xs sm:max-w-sm md:max-w-md lg:max-w-2xl mx-auto">

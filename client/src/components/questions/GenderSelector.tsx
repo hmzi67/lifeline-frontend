@@ -70,7 +70,7 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                                         <Check className="w-6 h-6 text-white" />
                                     </div>
                                 )} */}
-                                <div className={`w-64 h-64 rounded-2xl overflow-hidden shadow-lg ${selectedGender === option.id ? 'ring-4 ring-teal-400 shadow-2xl' : 'shadow-lg hover:shadow-xl'}`}>
+                                <div className={`w-64 h-64 rounded-2xl overflow-hidden shadow-lg ${selectedGender === option.id ? 'ring-4 ring-primary-400 shadow-2xl' : 'shadow-lg hover:shadow-xl'}`}>
                                     <img
                                         src={option.image}
                                         alt={`${option.label} representative`}
@@ -92,8 +92,8 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                 <div className="text-center text-xs sm:text-base text-gray-500 space-y-2 mb-6">
                     <p>
                         By selecting your gender and continuing you agree to our{' '}
-                        <a href="#" className="text-teal-500 hover:text-teal-600 underline">Terms of Service</a> |{' '}
-                        <a href="#" className="text-teal-500 hover:text-teal-600 underline">Privacy Policy</a>
+                        <a href="#" className="text-primary-500 hover:text-primary-600 underline">Terms of Service</a> |{' '}
+                        <a href="#" className="text-primary-500 hover:text-primary-600 underline">Privacy Policy</a>
                     </p>
                     <p>Please review before continuing</p>
                 </div>

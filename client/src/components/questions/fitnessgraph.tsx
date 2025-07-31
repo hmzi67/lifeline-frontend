@@ -78,7 +78,7 @@ export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
       <div className="flex items-center justify-between">
         {/* Graph Section */}
         <div className="flex-1 mr-8">
-          <h2 className="text-2xl font-semibold text-cyan-400 mb-6">
+          <h2 className="text-2xl font-semibold text-primary-400 mb-6">
             Active goal graph
           </h2>
           

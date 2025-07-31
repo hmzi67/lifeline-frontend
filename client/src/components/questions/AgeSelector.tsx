@@ -225,7 +225,7 @@ const AgeDateSelector: React.FC<AgeDateSelectorProps> = ({ onAgeSelect, onSelect
                     </div>
                     
                     {/* Current item */}
-                    <div className="px-4 py-2 text-lg font-medium transition-all duration-300 text-teal-500 bg-teal-50 rounded-lg scale-110">
+                    <div className="px-4 py-2 text-lg font-medium transition-all duration-300 text-primary-500 bg-teal-50 rounded-lg scale-110">
                         {selectedValue}
                     </div>
                     
