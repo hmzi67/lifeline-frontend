@@ -6,6 +6,7 @@ import ScrollToTop from './components/common/ScrollToTop';
 import Loading from "@/components/common/Loading.tsx";
 import Verify from "@/pages/auth/Verify.tsx";
 import ResetPassword from "@/pages/auth/ResetPassword.tsx";
+import OAuthCallback from "@/pages/auth/OAuthCallback.tsx";
 
 // Lazy-loaded page components
 const Landing = lazy(() => import('./pages/marketing/Landing'));
@@ -42,6 +43,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/verify" element={<Verify />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/auth/callback" element={<OAuthCallback />} />
             <Route path="/questions" element={<Questions />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/goals" element={<Goals />} />

@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import crypto from 'crypto';
+import passport from 'passport';
 import { sendEmailVerificationEmail, sendPasswordResetEmail } from '@services/emailService';
 
 const prisma = new PrismaClient();
@@ -137,7 +138,7 @@ export const signup = async (req: Request, res: Response) => {
     // Send email with a reset link
     try {
       const resetUrl = `${process.env.FRONTEND_URL}/verify?token=${verificationToken}`;
-      await sendEmailVerificationEmail(user.email, user.firstName, resetUrl)
+      await sendEmailVerificationEmail(user.email, user.firstName, resetUrl);
 
       console.log(`Verification email sent successfully to ${user.email}`);
     } catch (emailError) {
@@ -259,7 +260,7 @@ export const resendVerificationEmail = async (req: Request, res: Response) => {
         return res.status(201).json({
           success: true,
           message: 'User is already verified',
-        })
+        });
       }
     } else {
       return res.status(401).json({
@@ -267,7 +268,6 @@ export const resendVerificationEmail = async (req: Request, res: Response) => {
         message: 'Invalid email or password',
       });
     }
-
   } catch (error) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({
@@ -290,7 +290,7 @@ export const resendVerificationEmail = async (req: Request, res: Response) => {
 };
 
 // Email Verification
-export const verify = async (req: Request, res: Response)=> {
+export const verify = async (req: Request, res: Response) => {
   try {
     const { token } = req.body;
 
@@ -320,7 +320,7 @@ export const verify = async (req: Request, res: Response)=> {
     await prisma.user.update({
       where: { email: validVerifyToken.email },
       data: { isEmailVerified: true },
-    })
+    });
 
     await prisma.emailVerification.delete({
       where: { token },
@@ -330,7 +330,6 @@ export const verify = async (req: Request, res: Response)=> {
       success: true,
       message: 'Email verified successfully',
     });
-
   } catch (error) {
     console.error('Email verification error:', error);
     res.status(500).json({
@@ -338,7 +337,7 @@ export const verify = async (req: Request, res: Response)=> {
       message: 'Internal server error',
     });
   }
-}
+};
 
 // Login function
 export const login = async (req: Request, res: Response) => {
@@ -365,6 +364,14 @@ export const login = async (req: Request, res: Response) => {
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password',
+      });
+    }
+
+    // Check if user has a password (not OAuth user)
+    if (!user.password) {
+      return res.status(401).json({
+        success: false,
+        message: 'Please use Google sign in for this account',
       });
     }
 
@@ -630,7 +637,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(200).json({
         success: true,
-        message: 'No User Found',//'If an account with this email exists, a password reset link has been sent.',
+        message: 'No User Found', //'If an account with this email exists, a password reset link has been sent.',
       });
     }
 
@@ -789,8 +796,59 @@ export const resetPassword = async (req: Request, res: Response) => {
   }
 };
 
-// Google and Apple auth functions
-export const googleAuth = () => {};
-export const googleAuthCallback = () => {};
+// Google OAuth functions
+export const googleAuth = (req: Request, res: Response) => {
+  passport.authenticate('google', {
+    scope: ['profile', 'email'],
+  })(req, res);
+};
+
+export const googleAuthCallback = (req: Request, res: Response) => {
+  passport.authenticate(
+    'google',
+    {
+      failureRedirect: `${process.env.FRONTEND_URL}/auth/login?error=oauth_failed`,
+    },
+    async (err: any, user: any) => {
+      if (err) {
+        console.error('Google OAuth callback error:', err);
+        return res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=oauth_error`);
+      }
+
+      if (!user) {
+        return res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=oauth_denied`);
+      }
+
+      try {
+        // Generate JWT tokens
+        const { accessToken, refreshToken } = generateTokens(user.id, user.email, user.role);
+
+        // Save refresh token to database
+        await prisma.refreshToken.create({
+          data: {
+            token: refreshToken,
+            userId: user.id,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+          },
+        });
+
+        // Set the refresh token as httpOnly cookie
+        res.cookie('refreshToken', refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+
+        // Redirect to frontend with access token
+        const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?token=${accessToken}`;
+        res.redirect(redirectUrl);
+      } catch (error) {
+        console.error('Error generating tokens for Google OAuth:', error);
+        res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=token_generation_failed`);
+      }
+    }
+  )(req, res);
+};
 export const appleAuth = () => {};
 export const appleAuthCallback = () => {};
