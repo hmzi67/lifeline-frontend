@@ -83,8 +83,8 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
                 </span>
               </div>
               {selectedGoal === goal.id && (
-                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-white rounded-full flex items-center justify-center">
-                  <Check className="w-4 h-4 sm:w-4 sm:h-4 text-primary-400 " />
+                <div className="w-4 h-4 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center me-2">
+                  <Check className="w-4 h-4 sm:w-5 sm:h-5 text-primary-400 " />
                 </div>
               )}
             </button>

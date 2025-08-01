@@ -182,7 +182,7 @@ export default function WeightSelector({
           ticks.push(
             <div
               key={`label-${i}`}
-              className="absolute text-xs text-gray-500 -translate-x-1/2 mt-28"
+              className="absolute text-xs text-gray-500 -translate-x-1/2 mt-32"
               style={{ left: `${position}%` }}
             >
               {i}

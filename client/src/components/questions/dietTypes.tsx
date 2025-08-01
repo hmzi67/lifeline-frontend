@@ -99,11 +99,11 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
                           />
                         ) : null}
                       </div>
-                      <span className="font-medium text-sm sm:text-base text-left">{diet.name}</span>
+                      <span className=" text-xs sm:text-lg font-medium text-gray-700 text-left">{diet.name}</span>
                     </div>
                     {isSelected && (
-                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0">
-                        <Check className="w-3 h-3 sm:w-4 sm:h-4 text-primary-500" />
+                      <div className="w-4 h-4 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0">
+                        <Check className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />
                       </div>
                     )}
                   </button>

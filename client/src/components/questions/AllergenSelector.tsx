@@ -89,14 +89,14 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAller
                    />
                  ) : null}
                 </div>
-                <span className={`text-lg font-medium ${
-                  isSelected ? 'text-white' : 'text-black'
+                <span className={`text-xs sm:text-lg font-medium ${
+                  isSelected ? 'text-white' : 'text-gray-700'
                 }`}>{option.name}</span>
               </div>
 
               {isSelected && (
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                  <Check className="w-5 h-5 text-primary-400" />
+                <div className="w-4 h-4 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center">
+                  <Check className="w-4 h-4 sm:w-5 sm:h-5 text-primary-400" />
                 </div>
               )}
             </button>

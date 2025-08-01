@@ -114,7 +114,7 @@ export default function Questions() {
       onBack={() => goToPrevious()}
     />,
 
-    <FitnessLevelSelector
+    <FitnessLevelSelector                                       
       key="FitnessLevelSelector"
       onContinue={() => goToNext(gender)}
       onLevelChange={(level) => setSelectedLevel(level)}

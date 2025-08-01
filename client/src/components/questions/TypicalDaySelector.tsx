@@ -73,12 +73,12 @@ const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({ onContinue, onS
                     />
                   ) : null}
                     </div>
-                    <span className="font-medium">{option.label}</span>
+                    <span className="text-xs sm:text-lg font-medium text-gray-700">{option.label}</span>
                   </div>
 
                   {selectedOption === option.id && (
-                      <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                        <Check className="w-4 h-4 text-primary-400" />
+                      <div className="w-4 h-4 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center">
+                        <Check className="w-4 h-4 sm:w-5 sm:h-5 text-primary-400" />
                       </div>
                   )}
                 </button>

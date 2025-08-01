@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Check, Download, X, Play } from 'lucide-react';
-import sleepimg from '@/assets/images/landing/sleepimg.webp';
+import sleepimg from '@/assets/images/landing/sleeping img.jpeg';
 
 export const SleepSection: React.FC = () => {
     const [isVideoOpen, setIsVideoOpen] = useState(false);
@@ -23,7 +23,7 @@ export const SleepSection: React.FC = () => {
                     {/* Left Side - Hero Video/Image - Hidden on mobile, shown on lg+ */}
                     <div className="lg:col-span-3 relative hidden lg:block">
                         <div 
-                            className="relative cursor-pointer group"
+                            className="relative cursor-pointer group -translate-x-4"
                             onClick={openVideoDialog}
                         >
                             <img
@@ -54,7 +54,7 @@ export const SleepSection: React.FC = () => {
                         </h1>
 
                         {/* Mobile Image - Only shown on mobile screens, placed after h1 */}
-                        <div className="lg:hidden mb-4 sm:mb-6 -translate-x-4 w-full">
+                        <div className="lg:hidden mb-4 sm:mb-6 -translate-x-7 w-full">
                             <div 
                                 className="relative cursor-pointer group"
                                 onClick={openVideoDialog}

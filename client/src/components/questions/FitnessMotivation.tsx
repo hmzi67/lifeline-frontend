@@ -72,12 +72,12 @@ const FitnessMotivationSelector: React.FC<MotivationActions> = ({onContinue, onB
                             </div>
 
                             <div className="flex-1 text-left">
-                                <span className="text-lg font-medium">{option.label}</span>
+                                <span className="text-xs sm:text-lg font-medium text-gray-700">{option.label}</span>
                             </div>
 
                             {selectedMotivation === option.id && (
-                                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                                    <Check className="w-5 h-5 text-primary-400"/>
+                                <div className="w-4 h-4 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center">
+                                    <Check className="w-4 h-4 sm:w-5 sm:h-5 text-primary-400"/>
                                 </div>
                             )}
                         </button>

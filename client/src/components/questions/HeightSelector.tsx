@@ -120,7 +120,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
         ticks.push(
           <div
             key={i}
-            className={`absolute ${isMainTick ? "w-1 rounded-full h-8 sm:h-12 bg-gray-400" : "rounded-full h-4 sm:h-6 bg-gray-600"} w-0.5 -translate-x-0.5`}
+            className={`absolute ${isMainTick ? "w-1 rounded-full h-8 sm:h-12 bg-gray-400" : "rounded-full h-4 sm:h-6 bg-black"} w-0.5 -translate-x-0.5`}
             style={{ left: `${position}%` }}
           />
         );
@@ -128,7 +128,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
           ticks.push(
             <div
               key={`label-${i}`}
-              className="absolute text-xs text-gray-500 -translate-x-1/2 mt-16 sm:mt-24"
+              className="absolute text-xs text-gray-500 -translate-x-1/2 mt-16 sm:mt-28"
               style={{ left: `${position}%` }}
             >
               {i}
