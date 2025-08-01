@@ -1,17 +1,19 @@
 import express from 'express';
 import 'express-async-errors';
+import session from 'express-session';
+import passport from './config/passport.js';
 import {
-    errorHandler,
-    requestLogger,
-    rateLimiter,
-    cors,
-    helmet,
-    compression,
-    notFound,
-    timeout,
+  errorHandler,
+  requestLogger,
+  rateLimiter,
+  cors,
+  helmet,
+  compression,
+  notFound,
+  timeout,
 } from '@/middleware';
-import authRoute from "@routes/authRoute";
-import {healthCheck} from "@config/database";
+import authRoute from '@routes/authRoute';
+import { healthCheck } from '@config/database';
 
 const app = express();
 
@@ -23,6 +25,23 @@ app.use(cors);
 app.use(compression);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Session middleware for Passport
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'fallback-session-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+  })
+);
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Logging middleware
 app.use(requestLogger);
@@ -37,7 +56,7 @@ app.use(timeout(30000)); // 30-second timeout
 app.get('/health', healthCheck);
 
 // route for authentication
-app.use('/api/auth/', authRoute)
+app.use('/api/auth/', authRoute);
 
 // Example protected route
 // app.get('/api/protected', authenticate, (req, res) => {

@@ -46,7 +46,7 @@ model User {
   id              String        @id @default(cuid())
   username        String        @unique
   email           String        @unique
-  password        String
+  password        String? // Make password optional for OAuth users
   firstName       String
   lastName        String
   dateOfBirth     DateTime?
@@ -57,6 +57,7 @@ model User {
   role            Role          @default(USER)
   isEmailVerified Boolean       @default(false)
   profileImage    String?
+  googleId        String?       @unique // Add Google ID for OAuth
 
   // Relations
   preferences   UserPreferences?
