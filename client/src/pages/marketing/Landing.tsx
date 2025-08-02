@@ -24,10 +24,9 @@ export default function Landing() {
       </div>
       <SleepSection />
       <TestimonialsSection />
-        <ProgressSection />
+      <ProgressSection />
       <BlogSection />
       <FAQSection />
-      
     </div>
   );
 }
