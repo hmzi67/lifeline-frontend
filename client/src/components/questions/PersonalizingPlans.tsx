@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import GoBack from "@/components/common/GoBack.tsx";
-import {ArrowRight} from "lucide-react";
+import GoNext from "@/components/common/GoNext.tsx";
 
 
 interface PersonalizePlansActions {
@@ -48,14 +48,7 @@ const PersonalizingPlans: React.FC<PersonalizePlansActions> = ({ onContinue, onB
             {/* Continue Button */}
             <div className={'flex items-center justify-center gap-5 mt-12'}>
                 <GoBack onClick={onBack} />
-                <button
-                    onClick={onContinue}
-                    disabled={progress < 100}
-                    className="inline-flex items-center justify-between gap-2 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
-                >
-                    Continue
-                    <ArrowRight className="w-5 h-5" />
-                </button>
+                <GoNext onClick={onContinue} />
             </div>
         </div>
     );

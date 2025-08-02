@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { ArrowRight, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
 import image from "@/assets/images/Q-foodallergy/dairy.jpeg";
 import image1 from "@/assets/images/Q-foodallergy/glutten.jpg";
 import image2 from "@/assets/images/Q-foodallergy/eggs.jpg";
 import image3 from "@/assets/images/Q-foodallergy/fish.jpg";
 import image4 from "@/assets/images/Q-foodallergy/Everything.jpg";
+import GoNext from "@/components/common/GoNext.tsx";
 
 
 interface AllergenOption {
@@ -107,13 +108,7 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAller
       {/* Continue Button */}
       <div className={'flex items-center justify-center gap-5 mt-12'}>
         <GoBack onClick={onBack} />
-        <button
-          onClick={handleContinue}
-          className="inline-flex items-center justify-between gap-2 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
-        >
-          Continue
-          <ArrowRight className="w-5 h-5" />
-        </button>
+        <GoNext onClick={handleContinue} />
       </div>
     </div>
   </div>

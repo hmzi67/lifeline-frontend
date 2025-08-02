@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import GoBack from "@/components/common/GoBack.tsx";
-import { ArrowRight } from 'lucide-react';
 import menimg from "@/assets/images/question/mensolo.svg";
 import womenimg from "@/assets/images/question/womensolo.svg";
+import GoNext from "@/components/common/GoNext.tsx";
 
 interface FocusAreaSelectorProps {
     gender: string;
@@ -104,18 +104,7 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({ gender, on
                 {/* Continue Button */}
                 <div className={'flex items-center justify-center gap-3 sm:gap-5 mt-8 sm:mt-12'}>
                     <GoBack onClick={onBack} />
-                    <button
-                        onClick={handleContinue}
-                        disabled={selectedAreas.length === 0}
-                        className={`inline-flex items-center justify-between rounded-full font-medium border w-auto h-auto px-6 sm:px-8 py-4 transition-all duration-200 text-sm sm:text-base ${
-                            selectedAreas.length === 0 
-                                ? 'bg-gray-300 cursor-not-allowed text-gray-500 border-gray-300' 
-                                : 'bg-primary hover:bg-primary-600 text-white'
-                        }`}
-                    >
-                        Continue
-                        <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
-                    </button>
+                    <GoNext onClick={handleContinue} />
                 </div>
 
                 {/* Selected areas display (for demo) */}

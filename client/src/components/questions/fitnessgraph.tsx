@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import GoBack from "@/components/common/GoBack.tsx";
-import {ArrowRight} from "lucide-react";
 
 interface FitnessGoalCardProps {
   gender: string;
@@ -184,13 +183,6 @@ export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
       {/* Continue Button */}
       <div className={'flex items-center justify-center gap-5 mt-12'}>
         <GoBack onClick={onBack} />
-        <button
-            onClick={() => console.log('Continue')}
-            className="inline-flex items-center justify-between gap-2 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
-        >
-          Continue
-          <ArrowRight className="w-5 h-5" />
-        </button>
       </div>
     </div>
   );
