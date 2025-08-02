@@ -91,10 +91,10 @@ export const ProgressSection: React.FC = () => {
                         <ul className="space-y-3 sm:space-y-4">
                             {mobileFeatures.map((item) => (
                                 <li key={item} className="flex items-center text-base sm:text-lg md:text-xl">
-                                    <div className="w-4 h-4 sm:w-5 sm:h-5 me-1 bg-primary-400 rounded-full text-white flex items-center justify-center">
+                                    <div className="w-5 h-5 sm:w-7 sm:h-7 me-1 bg-primary-400 rounded-full text-white flex items-center justify-center">
                                       <Check className="w-3 h-3"/>
                                     </div>
-                                    <span className="text-gray-500 font-normal">{item}</span>
+                                    <span className="text-black font-normal">{item}</span>
                                 </li>
                             ))}
                         </ul>

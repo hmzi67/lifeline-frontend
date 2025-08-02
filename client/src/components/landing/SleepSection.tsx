@@ -17,7 +17,7 @@ export const SleepSection: React.FC = () => {
     };
 
     return (
-        <div className="sm:min-h-screen h-auto overflow-hidden">
+        <div className="h-full overflow-hidden">
             <div className="py-4 sm:py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-8 lg:gap-16 items-center">
                     {/* Left Side - Hero Video/Image - Hidden on mobile, shown on lg+ */}
@@ -107,22 +107,22 @@ export const SleepSection: React.FC = () => {
                         {/* Features */}
                         <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-6 lg:mb-8">
                             <div className="flex items-center gap-2 sm:gap-3">
-                                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary-400 text-white rounded-full flex items-center justify-center">
-                                    <Check className="w-2 h-2 sm:w-3 sm:h-3" />
+                                <div className="w-5 h-5 sm:w-7 sm:h-7 bg-primary-400 text-white rounded-full flex items-center justify-center">
+                                    <Check className="w-3 h-3 sm:w-4 sm:h-4 " />
                                 </div>
-                                <span className="text-sm sm:text-base lg:text-lg">Increase Muscle and Strength</span>
+                                <span className="text-sm sm:text-lg lg:text-xl">Increase Muscle and Strength</span>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3">
-                                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary-400 text-white rounded-full flex items-center justify-center">
-                                    <Check className="w-2 h-2 sm:w-3 sm:h-3" />
+                                <div className="w-5 h-5 sm:w-7 sm:h-7 bg-primary-400 text-white rounded-full flex items-center justify-center">
+                                    <Check className="w-3 h-3 sm:w-4 sm:h-4 " />
                                 </div>
-                                <span className="text-sm sm:text-base lg:text-lg">Be Healthier than before</span>
+                                <span className="text-sm sm:text-lg lg:text-xl">Be Healthier than before</span>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3">
-                                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary-400 text-white rounded-full flex items-center justify-center">
-                                    <Check className="w-2 h-2 sm:w-3 sm:h-3" />
+                                <div className="w-5 h-5 sm:w-7 sm:h-7 bg-primary-400 text-white rounded-full flex items-center justify-center">
+                                    <Check className="w-3 h-3 sm:w-4 sm:h-4" />
                                 </div>
-                                <span className="text-sm sm:text-base lg:text-lg">Increase Stamina</span>
+                                <span className="text-sm sm:text-lg lg:text-xl">Increase Stamina</span>
                             </div>
                         </div>
                         {/* Buttons */}
