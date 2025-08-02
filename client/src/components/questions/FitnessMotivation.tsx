@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {ArrowRight, Check} from 'lucide-react';
+import {Check} from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
 import image from "@/assets/images/Q-motivation/cake.jpg";
 import image1 from "@/assets/images/Q-motivation/wedding.jpg";
 import image2 from "@/assets/images/Q-motivation/ring.jpg";
 import image3 from "@/assets/images/Q-motivation/travel.jpeg";
 import image4 from "@/assets/images/Q-motivation/fitness.jpeg";
+import GoNext from "@/components/common/GoNext.tsx";
 
 interface MotivationOption {
     id: string;
@@ -86,13 +87,7 @@ const FitnessMotivationSelector: React.FC<MotivationActions> = ({onContinue, onB
 
                 <div className={'flex items-center justify-center gap-5 my-5'}>
                     <GoBack onClick={onBack}/>
-                    <button
-                        onClick={handleContinue}
-                        className="inline-flex items-center justify-between p-4 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border w-auto h-auto px-8 py-4 transition-all duration-200"
-                    >
-                        Continue
-                        <ArrowRight className="w-5 h-5"/>
-                    </button>
+                    <GoNext onClick={handleContinue} />
                 </div>
             </div>
         </div>

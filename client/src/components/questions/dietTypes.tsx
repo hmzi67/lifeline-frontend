@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
 import image from "@/assets/images/Q-diet/traditional.jpg";
 import image1 from "@/assets/images/Q-diet/Mediterranean.jpeg";
@@ -13,6 +13,7 @@ import image8 from "@/assets/images/Q-diet/vegan.jpg";
 import image9 from "@/assets/images/Q-diet/calories cutting.jpg";
 import image10 from "@/assets/images/Q-diet/paleo.jpg";
 import image11 from "@/assets/images/Q-diet/high calories.jpg";
+import GoNext from "@/components/common/GoNext.tsx";
 
 interface DietType {
   id: string;
@@ -118,14 +119,7 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
       <div className="flex-shrink-0 p-4 sm:p-6 ">
         <div className="flex items-center justify-center gap-3 sm:gap-4 max-w-4xl mx-auto">
           <GoBack onClick={onBack} />
-          <button
-            onClick={onContinue}
-            disabled={selectedDiets.length === 0}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-primary hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium border w-auto h-auto px-6 sm:px-8 py-3 sm:py-4 transition-all duration-200"
-          >
-            Continue
-            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-          </button>
+          <GoNext onClick={onContinue} />
         </div>
       </div>
     </div>

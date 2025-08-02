@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ArrowRight } from "lucide-react";
 import GoBack from "../common/GoBack";
+import GoNext from "../common/GoNext";
 
-// Mock GoBack component since it's not available
 
 interface HeightSelectorProps {
   onContinue?: (height: number, unit: "cm" | "ft") => void;
@@ -272,13 +271,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
         {/* Continue Button */}
         <div className="flex items-center justify-center gap-3 sm:gap-5">
           <GoBack onClick={onBack} />
-          <button
-            onClick={handleContinue}
-            className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-primary-500 hover:bg-primary-600 text-white font-medium transition-all duration-200 text-sm sm:text-base"
-          >
-            Continue
-            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-          </button>
+          <GoNext onClick={handleContinue} />
         </div>
       </div>
     </div>

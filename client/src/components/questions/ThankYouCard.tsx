@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import GoBack from "@/components/common/GoBack.tsx";
-import { ArrowRight } from "lucide-react";
+import GoNext from "@/components/common/GoNext.tsx";
 
 interface PlanPreparationProps {
     planType?: 'diet' | 'exercise';
@@ -84,13 +84,7 @@ const ThankYouCard: React.FC<PlanPreparationProps> = ({
             ) : (
                 <div className="flex items-center justify-center gap-3 sm:gap-5 mt-8 sm:mt-12">
                     <GoBack onClick={onBack} />
-                    <button
-                        onClick={onComplete}
-                        className="inline-flex items-center justify-between gap-2 rounded-full bg-primary hover:bg-primary-600 text-white font-medium border px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-base transition-all duration-200"
-                    >
-                        Continue
-                        <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </button>
+                    <GoNext onClick={onComplete} />
                 </div>
             )}
         </div>
