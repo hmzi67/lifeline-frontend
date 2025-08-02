@@ -79,7 +79,7 @@ export const TestimonialsSection: React.FC = () => {
                                     />
                                     <h4 className="font-semibold text-gray-900 text-lg sm:text-xl">{testimonial.name}</h4>
                                 </div>
-                                <div className="flex items-center gap-1 mb-4">
+                                <div className="flex w-full justify-center sm:justify-start items-center gap-1 mb-4">
                                     {[...Array(testimonial.rating)].map((_, i) => (
                                         <Star key={i} className="w-3 h-3 sm:w-4 sm:h-4 text-primary fill-primary" />
                                     ))}
