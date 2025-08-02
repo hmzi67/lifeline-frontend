@@ -6,48 +6,35 @@ import hero3 from "@/assets/images/landing/hero-3.webp";
 
 export const HeroSection: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [nextImageIndex, setNextImageIndex] = useState(1);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const images = [hero1, hero2, hero3];
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentImageIndex(nextImageIndex);
-        setNextImageIndex((nextImageIndex + 1) % images.length);
-        setIsTransitioning(false);
-      }, 1000);
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, 5000);
+
     return () => clearInterval(interval);
-  }, [nextImageIndex, images.length]);
+  }, [images.length]);
 
   return (
     <section className="relative min-h-[50vh] lg:min-h-screen overflow-hidden">
       <div className="absolute inset-0 w-full h-full">
         <div className="w-full h-full aspect-[1/1] lg:aspect-[16/9] relative">
-          {/* Current image */}
-          <img
-            src={images[currentImageIndex]}
-            alt="Current background"
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
-              isTransitioning ? 'opacity-0' : 'opacity-100'
-            }`}
-          />
-
-          {/* Next image */}
-          <img
-            src={images[nextImageIndex]}
-            alt="Next background"
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
-              isTransitioning ? 'opacity-100' : 'opacity-0'
-            }`}
-          />
+          {/* Render all images without transitions */}
+          {images.map((image, index) => (
+            <img
+              key={index}
+              src={image}
+              alt={`Background ${index + 1}`}
+              className={`absolute inset-0 w-full h-full object-cover ${
+                index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+          ))}
 
           {/* Overlay */}
           <div className="absolute inset-0 bg-black bg-opacity-40" />
         </div>
-
       </div>
 
       {/* Decorative + signs */}
@@ -62,8 +49,8 @@ export const HeroSection: React.FC = () => {
             <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-bold leading-tight text-white mb-4 md:mb-8">
               YOUR FITNESS{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600">
-                                PARTNER!
-                            </span>
+                PARTNER!
+              </span>
             </h1>
             <p className="text-sm md:text-lg lg:text-xl text-white leading-relaxed mb-6 md:mb-12 max-w-xl opacity-90">
               Their guidelines recommend 150 minutes of moderate-intensity
