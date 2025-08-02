@@ -15,9 +15,9 @@ const EmployeeWellbeingLanding: React.FC = () => {
         </div>
 
         {/* Main Content */}
-        <div className="relative z-10 flex-col lg:flex-row items-center justify-between px-8 py-10 max-w-7xl mx-auto hidden md:flex ">
+        <div className="relative z-10 flex-col lg:flex-row items-center justify-between px-8 sm:py-10 py-0 max-w-7xl mx-auto hidden md:flex ">
           {/* Left Content */}
-          <div className="lg:w-1/2 text-white mb-12 lg:mb-0">
+          <div className="lg:w-1/2 text-white sm:mb-12 mb-0 lg:mb-0">
             <h1 className="text-5xl lg:text-5xl font-semibold leading-tight mt-10">
               RETHINK{' '}
               <span className="text-primary">EMPLOYEE</span>
@@ -37,18 +37,18 @@ const EmployeeWellbeingLanding: React.FC = () => {
         </div>
       </div>
 
-      <div className="relative z-10 flex-col lg:flex-row items-center justify-between px-8 py-10 max-w-7xl mx-auto flex md:hidden ">
+      <div className="relative z-10 flex-col lg:flex-row items-center justify-between px-8 max-w-7xl mx-auto flex md:hidden ">
         {/* Left Content */}
-        <div className="lg:w-1/2 mb-12 lg:mb-0">
+        <div className="lg:w-1/2 sm:mb-12 mb-0  lg:mb-0 sm:-translate-y-0 -translate-y-16">
           <h1 className="text-5xl lg:text-5xl font-semibold leading-tight mt-10">
-            RETHINK{' '}
-            <span className="text-primary">EMPLOYEE</span>
+            YOUR{' '}
+            <span className="text-primary">FITNESS</span>
             <br/>
           </h1>
           <h1 className="text-5xl lg:text-9xl leading-tight text mb-6">
-            WELLBEING
+            PARTNER
           </h1>
-          <p className="text-xl  mb-8 max-w-lg leading-relaxed">
+          <p className="text-base sm:text-xl  mb-8 max-w-lg leading-relaxed">
             Cultivate a healthy, thriving, and unstoppable workforce with BetterMe's health transformation ecosystem
           </p>
           <button className="bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-600 transition-all duration-300 transform hover:scale-105">
