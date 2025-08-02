@@ -65,7 +65,7 @@ export const FitnessBandProduct = () => {
     <div className="h-full p-4 md:p-4 lg:p-2">
       <div className="max-w-7xl mx-auto">
         <div className="space-y-4 sm:hidden mb-4">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight pt-5">
             Track It, <span className="text-primary">Hack It</span><br />
             Transform Your <span className="text-primary">Body</span>
           </h1>

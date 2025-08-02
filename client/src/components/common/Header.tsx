@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '../ui/button';
-import { Menu, X } from 'lucide-react';
+import { X } from 'lucide-react';
+import menu from "../../assets/images/comming-soon/menu.png";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -106,12 +107,8 @@ export default function Header() {
             className={getMobileButtonClasses()}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            <Menu className="w-6 h-6" />
-            {/*{isMenuOpen ? (*/}
-            {/*  <X className="w-6 h-6" />*/}
-            {/*) : (*/}
-            {/*  <Menu className="w-6 h-6" />*/}
-            {/*)}*/}
+           <img src={menu} alt="menu icon" 
+           className='w-9 h-9'/>
           </button>
         </div>
 
