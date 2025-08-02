@@ -62,7 +62,7 @@ export const FitnessBandProduct = () => {
   );
 
   return (
-    <div className="min-h-screen sm:mt-24 mt-8 p-4 md:p-8">
+    <div className="h-full p-4 md:p-4 lg:p-2">
       <div className="max-w-7xl mx-auto">
         <div className="space-y-4 sm:hidden mb-4">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
@@ -73,22 +73,22 @@ export const FitnessBandProduct = () => {
             Lorem Ipsum is simply dummy text of the printing Lorem Ipsum is simply dummy.
           </p>
         </div>
-        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-6 items-center">
           {/* Left Content */}
-          <div className="space-y-6 md:space-y-8 order-2 lg:order-1">
-            <div className="space-y-4 hidden sm:block">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+          <div className="space-y-6 md:space-y-8 lg:space-y-4 order-2 lg:order-1">
+            <div className="space-y-4 lg:space-y-3 hidden sm:block">
+              <h1 className="text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 leading-tight pt-12">
                 Track It, <span className="text-primary">Hack It</span><br />
                 Transform Your <span className="text-primary">Body</span>
               </h1>
-              <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-md">
+              <p className="text-gray-600 text-base md:text-lg lg:text-base leading-relaxed max-w-md">
                 Lorem Ipsum is simply dummy text of the printing Lorem Ipsum is simply dummy.
               </p>
             </div>
 
             {/* Discount Badge */}
             <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-r bg-primary text-white px-3 py-1 md:px-4 md:py-2 rounded-full font-semibold text-sm md:text-base">
+              <div className="bg-gradient-to-r bg-primary text-white px-3 py-1 md:px-4 md:py-2 lg:px-3 lg:py-1 rounded-full font-semibold text-sm md:text-base lg:text-sm">
                 Up to 92% off
               </div>
               <span className="text-gray-500 text-xs md:text-sm flex items-center gap-1">
@@ -96,7 +96,7 @@ export const FitnessBandProduct = () => {
                 19 Hours ago
               </span>
               <div className="w-5">
-                <svg width="24" height="24" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 md:w-6 md:h-6">
+                <svg width="24" height="24" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 md:w-6 md:h-6 lg:w-5 lg:h-5">
                   <path d="M15.8255..." fill="#3EC6C9" />
                 </svg>
               </div>
@@ -106,30 +106,30 @@ export const FitnessBandProduct = () => {
             <div className="flex items-center gap-2">
               <div className="flex text-yellow-400">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="w-4 h-4 md:w-5 md:h-5 fill-current" />
+                  <Star key={i} className="w-4 h-4 md:w-5 md:h-5 lg:w-4 lg:h-4 fill-current" />
                 ))}
               </div>
-              <span className="text-gray-600 font-medium text-sm md:text-base">(142)</span>
+              <span className="text-gray-600 font-medium text-sm md:text-base lg:text-sm">(142)</span>
             </div>
 
             {/* Product Titles */}
             <div>
-              <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
+              <h2 className="text-xl md:text-2xl lg:text-xl font-bold text-gray-900 mb-2 lg:mb-1">
                 LifeLine's Customized Fitness
               </h2>
-              <h3 className="text-lg md:text-xl lg:text-2xl font-semibold text-gray-700">
+              <h3 className="text-lg md:text-xl lg:text-lg font-semibold text-gray-700">
                 Band to Track your Progress
               </h3>
             </div>
 
             {/* Price */}
             <div className="flex items-baseline gap-2 md:gap-3">
-              <span className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary">$99.0</span>
-              <span className="text-base md:text-lg lg:text-xl text-red-400 line-through">$149.99</span>
+              <span className="text-2xl md:text-3xl lg:text-2xl font-bold text-primary">$99.0</span>
+              <span className="text-base md:text-lg lg:text-base text-red-400 line-through">$149.99</span>
             </div>
 
             {/* Product Details */}
-            <div className="grid grid-cols-2 gap-2 md:gap-4 py-4 md:py-6 text-sm md:text-base">
+            <div className="grid grid-cols-2 w-96 gap-2 md:gap-4 lg:gap-2 py-4 md:py-2 lg:py-3 text-sm md:text-base lg:text-sm">
               <span className="text-gray-600 font-medium">Brand</span>
               <p className="text-gray-900 font-semibold">NexSUS Tech Company</p>
               <span className="text-gray-600 font-medium">Size</span>
@@ -141,53 +141,53 @@ export const FitnessBandProduct = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-4 md:gap-6">
+            <div className="flex items-center gap-4 md:gap-6 lg:gap-4">
               {[
-                { icon: <ThumbsUp className="w-4 h-4 md:w-5 md:h-5" />, label: "1.8k Like" },
-                { icon: <ThumbsDown className="w-4 h-4 md:w-5 md:h-5" />, label: "Dislike" },
-                { icon: <Share2 className="w-4 h-4 md:w-5 md:h-5" />, label: "Share" }
+                { icon: <ThumbsUp className="w-4 h-4 md:w-5 md:h-5 lg:w-4 lg:h-4" />, label: "1.8k Like" },
+                { icon: <ThumbsDown className="w-4 h-4 md:w-5 md:h-5 lg:w-4 lg:h-4" />, label: "Dislike" },
+                { icon: <Share2 className="w-4 h-4 md:w-5 md:h-5 lg:w-4 lg:h-4" />, label: "Share" }
               ].map(({ icon, label }, i) => (
-                <button key={i} className="flex items-center gap-2 text-gray-600 hover:text-primary text-sm md:text-base transition-colors">
+                <button key={i} className="flex items-center gap-2 text-gray-600 hover:text-primary text-sm md:text-base lg:text-sm transition-colors">
                   {icon}<span className="font-medium">{label}</span>
                 </button>
               ))}
             </div>
 
             {/* Buy Now */}
-            <button className="w-full md:w-8/12 bg-gradient-to-r bg-primary hover:bg-primary-600 text-white font-semibold py-3 md:py-4 px-8 md:px-12 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm md:text-base">
+            <button className="w-72 justify-start sm:justify-center bg-gradient-to-r bg-primary hover:bg-primary-600 text-white font-semibold py-3 md:py-4 lg:py-3 px-8 md:px-12 lg:px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm md:text-base lg:text-sm">
               Buy Now
             </button>
           </div>
 
           {/* Right Image Section */}
           <div className="relative order-1 lg:order-2">
-            <div className="relative z-10 flex justify-center items-center">
-              <img src={Phone} alt="Phone" className="w-full max-w-xs md:max-w-sm lg:max-w-md" loading="lazy" />
+            <div className="relative z-10 flex justify-center items-center pt-10">
+              <img src={Phone} alt="Phone" className="w-full max-w-56 md:max-w-xs lg:max-w-60" loading="lazy" />
 
               {/* Fitness Band */}
-              <div className="absolute -right-4 md:-right-8 top-1/2 transform -translate-y-1/2 z-20">
+              <div className="absolute -right-4 md:-right-8 lg:-right-6 top-1/2 transform -translate-y-1/2 z-20">
                 <img
                   src={currentBand.image}
                   alt={currentBand.name}
-                  className="w-48 h-48 md:w-64 md:h-64 lg:w-96 lg:h-96 mt-48 md:mt-64 lg:mt-96 object-contain transition-all duration-300"
+                  className="w-48 h-48 md:w-56 md:h-56 lg:w-72 lg:h-64 mt-48 md:mt-64 lg:mt-80 object-contain transition-all duration-300"
                   loading="lazy"
                 />
               </div>
             </div>
 
             {/* Band Selector */}
-            <div className="flex justify-center gap-2 md:gap-4 mt-6 md:mt-8">
+            <div className="flex justify-center gap-2 md:gap-4 lg:gap-3 mt-6 md:mt-8 lg:mt-6">
               {bandVariants.map((band) => {
                 const isSelected = selectedBand === band.id;
                 return (
                   <button
                     key={band.id}
                     onClick={() => setSelectedBand(band.id)}
-                    className={`relative p-1 md:p-2 rounded-xl md:rounded-2xl transition-all transform hover:scale-105
-                      ${isSelected ? "ring-2 md:ring-4 ring-offset-1 md:ring-offset-2 shadow-lg bg-teal-50" : "hover:shadow-md bg-gray-50 hover:bg-gray-100"}`}
+                    className={`relative p-1 md:p-2 lg:p-1.5 rounded-xl md:rounded-2xl lg:rounded-xl transition-all transform hover:scale-105
+                      ${isSelected ? "ring-2 md:ring-4 lg:ring-2 ring-offset-1 md:ring-offset-2 lg:ring-offset-1 shadow-lg bg-teal-50" : "hover:shadow-md bg-gray-50 hover:bg-gray-100"}`}
                     style={isSelected ? { borderColor: band.color, boxShadow: `0 0 0 2px ${band.color}` } : {}}
                   >
-                    <div className="w-12 h-14 md:w-16 md:h-20 flex items-center justify-center">
+                    <div className="w-12 h-14 md:w-16 md:h-20 lg:w-14 lg:h-16 flex items-center justify-center">
                       <img
                         src={band.thumbnail}
                         alt={band.name}
@@ -196,8 +196,8 @@ export const FitnessBandProduct = () => {
                       />
                     </div>
                     {isSelected && (
-                      <div className="absolute -top-1 -right-1 md:-top-2 md:-right-2 w-4 h-4 md:w-6 md:h-6 bg-primary rounded-full flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-white rounded-full" />
+                      <div className="absolute -top-1 -right-1 md:-top-2 md:-right-2 lg:-top-1 lg:-right-1 w-4 h-4 md:w-6 md:h-6 lg:w-5 lg:h-5 bg-primary rounded-full flex items-center justify-center">
+                        <div className="w-1.5 h-1.5 md:w-2 md:h-2 lg:w-1.5 lg:h-1.5 bg-white rounded-full" />
                       </div>
                     )}
                   </button>
