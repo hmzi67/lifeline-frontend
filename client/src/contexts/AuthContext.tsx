@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import type { AuthUser } from '../types/auth.types';
 import { api } from '../services/api';
@@ -26,7 +26,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [token, setTokenState] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    const isAuthenticated = !!user && !!token;
+    // Memoize isAuthenticated to prevent unnecessary re-renders
+    const isAuthenticated = useMemo(() => !!user && !!token, [user, token]);
 
     // Initialize auth state from localStorage
     useEffect(() => {
@@ -38,24 +39,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 if (storedToken && storedUser) {
                     setTokenState(storedToken);
                     setUser(JSON.parse(storedUser));
-
-                    // Skip token verification for now since API may not be available
-                    // In production, you would verify the token with the backend
-                    /*
-                    try {
-                        const response = await api.get('/auth/verify');
-                        if (response.data.success) {
-                            // Token is valid, keep user logged in
-                            setUser(response.data.user);
-                        } else {
-                            // Token is invalid, clear auth state
-                            clearAuthState();
-                        }
-                    } catch (error) {
-                        // Token is invalid or API error, clear auth state
-                        clearAuthState();
-                    }
-                    */
                 }
             } catch (error) {
                 console.error('Error initializing auth:', error);
@@ -174,7 +157,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         window.location.href = '/';
     };
 
-    const value: AuthContextType = {
+    // Memoize context value to prevent unnecessary re-renders
+    const value = useMemo(() => ({
         user,
         token,
         isLoading,
@@ -184,7 +168,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         logout,
         setUser: updateUser,
         setToken,
-    };
+    }), [user, token, isLoading, isAuthenticated]);
 
     return (
         <AuthContext.Provider value={value}>
