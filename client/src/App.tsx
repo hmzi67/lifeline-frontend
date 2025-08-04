@@ -8,8 +8,7 @@ import Verify from "@/pages/auth/Verify.tsx";
 import ResetPassword from "@/pages/auth/ResetPassword.tsx";
 import OAuthCallback from "@/pages/auth/OAuthCallback.tsx";
 import { AuthProvider } from './contexts/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
-import PublicRoute from './components/PublicRoute';
+
 
 // Lazy-loaded page components
 const Landing = lazy(() => import('./pages/marketing/Landing'));
@@ -48,9 +47,9 @@ function App() {
               <Route path="/affiliate" element={<Affiliate />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/questions" element={
-                <ProtectedRoute>
+
                   <Questions />
-                </ProtectedRoute>
+
               } />
               <Route path="/error" element={<Error type="error4" />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
@@ -59,14 +58,14 @@ function App() {
 
               {/* Authentication routes - only accessible when not logged in */}
               <Route path="/login" element={
-                <PublicRoute>
+
                   <Login />
-                </PublicRoute>
+
               } />
               <Route path="/signup" element={
-                <PublicRoute>
+
                   <Signup />
-                </PublicRoute>
+
               } />
               <Route path="/verify" element={<Verify />} />
               <Route path="/reset-password" element={<ResetPassword />} />
@@ -74,9 +73,9 @@ function App() {
 
               {/* Protected routes - only accessible when logged in */}
               <Route path="/dashboard" element={
-                <ProtectedRoute>
+
                   <Dashboard />
-                </ProtectedRoute>
+
               } />
               <Route path="/goals" element={
                 
@@ -89,9 +88,9 @@ function App() {
                 
               } />
               <Route path="/checkout" element={
-                <ProtectedRoute>
+
                   <Checkout />
-                </ProtectedRoute>
+
               } />
 
               {/* 404 route */}
