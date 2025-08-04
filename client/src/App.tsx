@@ -7,6 +7,9 @@ import Loading from "@/components/common/Loading.tsx";
 import Verify from "@/pages/auth/Verify.tsx";
 import ResetPassword from "@/pages/auth/ResetPassword.tsx";
 import OAuthCallback from "@/pages/auth/OAuthCallback.tsx";
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import PublicRoute from './components/PublicRoute';
 
 // Lazy-loaded page components
 const Landing = lazy(() => import('./pages/marketing/Landing'));
@@ -30,37 +33,70 @@ const CommingSoon = lazy(() => import('./pages/utility/CommingSoon'));
 
 function App() {
   return (
-    <Router>
-      <ScrollToTop />
-      <Layout>
-        <Suspense fallback={<Loading />}>
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/business" element={<Business />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:id" element={<BlogReading />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/verify" element={<Verify />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/auth/callback" element={<OAuthCallback />} />
-            <Route path="/questions" element={<Questions />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/goals" element={<Goals />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/affiliate" element={<Affiliate />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/error" element={<Error type="error4" />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-            <Route path="/coming-soon" element={<CommingSoon />} />
-            <Route path="*" element={<Error type="error2" />} />
-          </Routes>
-        </Suspense>
-      </Layout>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <ScrollToTop />
+        <Layout>
+          <Suspense fallback={<Loading />}>
+            <Routes>
+              {/* Public routes - accessible to everyone */}
+              <Route path="/" element={<Landing />} />
+              <Route path="/business" element={<Business />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:id" element={<BlogReading />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/affiliate" element={<Affiliate />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/questions" element={<Questions />} />
+              <Route path="/error" element={<Error type="error4" />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+              <Route path="/coming-soon" element={<CommingSoon />} />
+
+              {/* Authentication routes - only accessible when not logged in */}
+              <Route path="/login" element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              } />
+              <Route path="/signup" element={
+                <PublicRoute>
+                  <Signup />
+                </PublicRoute>
+              } />
+              <Route path="/verify" element={<Verify />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/auth/callback" element={<OAuthCallback />} />
+
+              {/* Protected routes - only accessible when logged in */}
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/goals" element={
+                
+                  <Goals />
+                
+              } />
+              <Route path="/analytics" element={
+                
+                  <Analytics />
+                
+              } />
+              <Route path="/checkout" element={
+                <ProtectedRoute>
+                  <Checkout />
+                </ProtectedRoute>
+              } />
+
+              {/* 404 route */}
+              <Route path="*" element={<Error type="error2" />} />
+            </Routes>
+          </Suspense>
+        </Layout>
+      </Router>
+    </AuthProvider>
   );
 }
 
