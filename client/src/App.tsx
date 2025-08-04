@@ -47,7 +47,11 @@ function App() {
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/affiliate" element={<Affiliate />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/questions" element={<Questions />} />
+              <Route path="/questions" element={
+                <ProtectedRoute>
+                  <Questions />
+                </ProtectedRoute>
+              } />
               <Route path="/error" element={<Error type="error4" />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />

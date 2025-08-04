@@ -59,26 +59,26 @@ const Login: React.FC = () => {
   };
 
   return (
-    <AuthLayout
-      title="Sign in to your account"
-      subtitle="Welcome back! select method to login"
-      bottomText={
-        <p className="text-gray-600">
-          Don't have an account?{' '}
-          <Link className="text-primary-600 hover:text-primary-700 font-medium" to={'/signup'}>
-            Sign up
-          </Link>
-        </p>
-      }
-      social={<SocialAuthButtons />}
-    >
-      <AuthForm
-        mode="login"
-        onSubmit={handleLogin}
-        loading={loading}
-        errors={fieldErrors}
-      />
-    </AuthLayout>
+      <AuthLayout
+          title="Sign in to your account"
+          subtitle="Welcome back! select method to login"
+          bottomText={
+            <p className="text-gray-600">
+              Don't have an account?{' '}
+              <Link className="text-primary-600 hover:text-primary-700 font-medium" to={'/signup'}>
+                Sign up
+              </Link>
+            </p>
+          }
+          social={<SocialAuthButtons />}
+      >
+        <AuthForm
+            mode="login"
+            onSubmit={handleLogin}
+            loading={loading}
+            errors={fieldErrors}
+        />
+      </AuthLayout>
   );
 };
 
