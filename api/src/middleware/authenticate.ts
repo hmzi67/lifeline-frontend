@@ -1,4 +1,4 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import { AuthenticatedRequest } from '../types/middlewareTypes.js';
@@ -13,7 +13,7 @@ interface JWTPayload {
   exp: number;
 }
 
-const authenticate = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -58,7 +58,7 @@ const authenticate = async (req: AuthenticatedRequest, res: Response, next: Next
     }
 
     // Attach user information to request object
-    req.user = {
+    (req as AuthenticatedRequest).user = {
       id: user.id,
       email: user.email,
       role: user.role,

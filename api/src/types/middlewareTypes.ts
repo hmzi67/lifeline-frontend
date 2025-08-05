@@ -32,3 +32,10 @@ export type Middleware = (
   res: Response,
   next: NextFunction
 ) => void;
+
+// Type for authenticated route handlers
+export type AuthenticatedHandler = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => Promise<any> | any;

@@ -1,27 +1,27 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from '@/types/middlewareTypes';
 import { AppError } from './errorHandler';
 
 const authorize = (requiredRoles: string[] = [], requiredPermissions: string[] = []) => {
-    return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-        if (!req.user) {
-            return next(new AppError('Authentication required', 401, 'AUTHENTICATION_REQUIRED'));
-        }
+  return (req: Request, res: Response, next: NextFunction) => {
+    const authReq = req as AuthenticatedRequest;
 
-        const hasRequiredRole = requiredRoles.length === 0 ||
-            requiredRoles.includes(req.user.role);
+    if (!authReq.user) {
+      return next(new AppError('Authentication required', 401, 'AUTHENTICATION_REQUIRED'));
+    }
 
-        const hasRequiredPermissions = requiredPermissions.length === 0 ||
-            requiredPermissions.every(permission =>
-                req.user?.permissions?.includes(permission)
-            );
+    const hasRequiredRole = requiredRoles.length === 0 || requiredRoles.includes(authReq.user.role);
 
-        if (!hasRequiredRole || !hasRequiredPermissions) {
-            return next(new AppError('Insufficient permissions', 403, 'INSUFFICIENT_PERMISSIONS'));
-        }
+    const hasRequiredPermissions =
+      requiredPermissions.length === 0 ||
+      requiredPermissions.every(permission => authReq.user?.permissions?.includes(permission));
 
-        next();
-    };
+    if (!hasRequiredRole || !hasRequiredPermissions) {
+      return next(new AppError('Insufficient permissions', 403, 'INSUFFICIENT_PERMISSIONS'));
+    }
+
+    next();
+  };
 };
 
 export default authorize;
