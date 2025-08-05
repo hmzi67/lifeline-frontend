@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { CustomError } from '@/types/middlewareTypes';
+import { CustomError } from '../types/middlewareTypes.js';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 class AppError extends Error implements CustomError {

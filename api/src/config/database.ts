@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { logger } from '@utils/logger.js';
+import { logger } from '../utils/logger.js';
 import {NextFunction, Request, Response} from "express";
 
 

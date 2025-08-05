@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { AuthenticatedRequest } from '@/types/middlewareTypes';
-import { AppError } from './errorHandler';
+import { AuthenticatedRequest } from '../types/middlewareTypes.js';
+import { AppError } from './errorHandler.js';
 
 const authorize = (requiredRoles: string[] = [], requiredPermissions: string[] = []) => {
   return (req: Request, res: Response, next: NextFunction) => {

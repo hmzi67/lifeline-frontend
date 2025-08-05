@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { AppError } from './errorHandler';
+import { AppError } from './errorHandler.js';
 
 const timeout = (timeoutMs: number = 30000) => {
     return (req: Request, res: Response, next: NextFunction) => {

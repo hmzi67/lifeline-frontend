@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
-import { validateRequest, authenticate, authorize, asyncHandler } from '@/middleware';
-import { createUserSchema, updateUserSchema } from '@/validators/userSchema';
-import { AuthenticatedRequest } from '@/types/middlewareTypes';
+import { validateRequest, authenticate, authorize, asyncHandler } from '../middleware/index.js';
+import { createUserSchema, updateUserSchema } from '../validators/userSchema.js';
+import { AuthenticatedRequest } from '../types/middlewareTypes.js';
 
 const router = Router();
 

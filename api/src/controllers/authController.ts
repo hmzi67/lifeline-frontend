@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import crypto from 'crypto';
 import passport from 'passport';
-import { sendEmailVerificationEmail, sendPasswordResetEmail } from '@services/emailService';
+import { sendEmailVerificationEmail, sendPasswordResetEmail } from '../services/emailService.js';
 
 const prisma = new PrismaClient();
 

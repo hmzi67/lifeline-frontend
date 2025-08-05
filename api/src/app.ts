@@ -11,9 +11,10 @@ import {
   compression,
   notFound,
   timeout,
-} from '@/middleware';
-import authRoute from '@routes/authRoute';
-import { healthCheck } from '@config/database';
+} from './middleware/index.js';
+import authRoute from './routes/authRoute.js';
+import userRoutes from './routes/userRoutes.js';
+import { healthCheck } from './config/database.js';
 
 const app = express();
 
@@ -57,6 +58,9 @@ app.get('/health', healthCheck);
 
 // route for authentication
 app.use('/api/auth/', authRoute);
+
+// User routes
+app.use('/api/users/', userRoutes);
 
 // Example protected route
 // app.get('/api/protected', authenticate, (req, res) => {

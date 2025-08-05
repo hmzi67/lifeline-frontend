@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { AsyncMiddleware } from '@/types/middlewareTypes';
+import { AsyncMiddleware } from '../types/middlewareTypes.js';
 
 const asyncHandler = (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) => {
   return (req: Request, res: Response, next: NextFunction) => {
