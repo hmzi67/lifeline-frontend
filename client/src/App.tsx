@@ -48,27 +48,15 @@ function App() {
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/affiliate" element={<Affiliate />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/questions" element={
-
-                  <Questions />
-
-              } />
+              <Route path="/questions" element={<Questions />} />
               <Route path="/error" element={<Error type="error4" />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
               <Route path="/coming-soon" element={<CommingSoon />} />
 
               {/* Authentication routes - only accessible when not logged in */}
-              <Route path="/login" element={
-
-                  <Login />
-
-              } />
-              <Route path="/signup" element={
-
-                  <Signup />
-
-              } />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
               <Route path="/verify" element={<Verify />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/auth/callback" element={<OAuthCallback />} />
