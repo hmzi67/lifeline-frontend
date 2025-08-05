@@ -8,7 +8,7 @@ interface AuthContextType {
     token: string | null;
     isLoading: boolean;
     isAuthenticated: boolean;
-    login: (email: string, password: string) => Promise<void>;
+    login: (email: string, password: string, rememberMe: boolean) => Promise<void>;
     signup: (name: string, email: string, password: string) => Promise<void>;
     logout: () => void;
     setUser: (user: AuthUser | null) => void;
@@ -48,7 +48,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             }
         };
 
-        initializeAuth();
+        initializeAuth().then(r => console.log(r));
     }, []);
 
     const clearAuthState = () => {
@@ -56,14 +56,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setTokenState(null);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('token');
     };
 
     const setToken = (newToken: string | null) => {
         setTokenState(newToken);
         if (newToken) {
             localStorage.setItem('token', newToken);
+            sessionStorage.setItem('token', newToken);
         } else {
             localStorage.removeItem('token');
+            sessionStorage.removeItem('token');
         }
     };
 
@@ -71,12 +75,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(newUser);
         if (newUser) {
             localStorage.setItem('user', JSON.stringify(newUser));
+            sessionStorage.setItem('user', JSON.stringify(newUser));
         } else {
             localStorage.removeItem('user');
+            sessionStorage.removeItem('user');
         }
     };
 
-    const login = async (email: string, password: string): Promise<void> => {
+    const login = async (email: string, password: string, rememberMe: boolean): Promise<void> => {
         try {
             const response = await api.post('/auth/login', {
                 email,
@@ -84,28 +90,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             });
 
             if (response.data.success) {
-                const { user: userData, token: userToken } = response.data;
-                setToken(userToken);
-                updateUser(userData);
+              if (rememberMe) {
+                const { user, accessToken } = response.data.data;
+                setToken(accessToken);
+                updateUser(user);
+              }
             } else {
                 throw new Error(response.data.message || 'Login failed');
             }
         } catch (error: any) {
             // If API is not available, provide mock login for testing
             if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
-                console.warn('API not available, using mock login for testing');
-
-                // Mock successful login for testing
-                const mockUser = {
-                    id: '1',
-                    email: email,
-                    name: email.split('@')[0], // Use email prefix as name
-                };
-                const mockToken = 'mock-jwt-token-' + Date.now();
-
-                setToken(mockToken);
-                updateUser(mockUser);
-                return;
+                console.warn('API not available');
             }
 
             const errorMessage = error.response?.data?.message || error.message || 'Login failed';
@@ -132,18 +128,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             // If API is not available, provide mock signup for testing
             if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
                 console.warn('API not available, using mock signup for testing');
-
-                // Mock successful signup for testing
-                const mockUser = {
-                    id: '1',
-                    email: email,
-                    name: name,
-                };
-                const mockToken = 'mock-jwt-token-' + Date.now();
-
-                setToken(mockToken);
-                updateUser(mockUser);
-                return;
             }
 
             const errorMessage = error.response?.data?.message || error.message || 'Signup failed';

@@ -33,7 +33,7 @@ export default function Header() {
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 
-  // Close user menu when clicking outside
+  // Close the user menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (isUserMenuOpen && !(event.target as Element).closest('.user-menu-container')) {
@@ -117,7 +117,7 @@ export default function Header() {
                   <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
                     <User className="w-4 h-4 text-white" />
                   </div>
-                  <span className="font-medium">{user?.name}</span>
+                  <span className="font-medium">{user?.firstName}</span>
                 </button>
 
                 {/* User Dropdown Menu */}
@@ -223,7 +223,7 @@ export default function Header() {
                     <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
                       <User className="w-4 h-4 text-white" />
                     </div>
-                    <span className="font-medium text-gray-700">{user?.name}</span>
+                    <span className="font-medium text-gray-700">{user?.firstName}</span>
                   </div>
                   <Link to="/dashboard" className="w-full block" onClick={() => setIsMenuOpen(false)}>
                     <Button
