@@ -4,7 +4,7 @@
 
 import { useAuth } from '@/contexts/AuthContext';
 import { Navigate, useLocation } from 'react-router-dom';
-import React from 'react';
+import React, { type JSX } from 'react';
 import Loading from "@/components/common/Loading.tsx";
 
 interface ProtectedRouteProps {
