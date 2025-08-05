@@ -8,6 +8,7 @@ import Verify from "@/pages/auth/Verify.tsx";
 import ResetPassword from "@/pages/auth/ResetPassword.tsx";
 import OAuthCallback from "@/pages/auth/OAuthCallback.tsx";
 import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from "@/components/routes/ProtectedRoutes.tsx";
 
 
 // Lazy-loaded page components
@@ -31,6 +32,7 @@ const TermsAndConditions = lazy(() => import('./pages/legal/TermsAndConditions')
 const CommingSoon = lazy(() => import('./pages/utility/CommingSoon'));
 
 function App() {
+
   return (
     <AuthProvider>
       <Router>
@@ -73,9 +75,9 @@ function App() {
 
               {/* Protected routes - only accessible when logged in */}
               <Route path="/dashboard" element={
-
-                  <Dashboard />
-
+                  <ProtectedRoute>
+                      <Dashboard />
+                  </ProtectedRoute>
               } />
               <Route path="/goals" element={
                 

@@ -10,7 +10,7 @@ export default function Dashboard() {
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="px-4 py-5 sm:p-6">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              Welcome to your Dashboard, {user?.name}!
+              Welcome to your Dashboard, {user ? (user?.firstName + ' ' + user?.lastName) : ('Guest')}!
             </h1>
             <p className="text-lg text-gray-600 mb-6">
               This is a protected route. Only authenticated users can access this page.
@@ -19,7 +19,7 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-blue-50 p-6 rounded-lg">
                 <h3 className="text-lg font-semibold text-blue-900 mb-2">Profile Info</h3>
-                <p className="text-blue-700">Name: {user?.name}</p>
+                <p className="text-blue-700">Name: {user ? (user?.firstName + ' ' + user?.lastName) : ('Guest')}</p>
                 <p className="text-blue-700">Email: {user?.email}</p>
               </div>
 
