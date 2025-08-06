@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   User,
   Settings,
@@ -7,8 +7,6 @@ import {
   Target,
   Activity,
   Edit,
-  Eye,
-  EyeOff,
   Weight,
   Ruler,
   Flame,
@@ -18,6 +16,8 @@ import {
   BarChart3,
   Bell, Trash2
 } from "lucide-react";
+import api from "@/lib/axios.ts";
+
 
 // Mock data based on your schema
 const mockUser = {
@@ -99,8 +99,22 @@ const mockAchievements = [
 
 const Dashboard = () => {
   const [showProfileEdit, setShowProfileEdit] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get("/auth/me");
+
+        setUser(response.data.data.user)
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const calculateAge = (dateOfBirth: string) => {
     const dob = new Date(dateOfBirth);
@@ -127,6 +141,7 @@ const Dashboard = () => {
   };
 
   return (
+
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow">
@@ -179,14 +194,14 @@ const Dashboard = () => {
                   alt="Profile"
                 />
                 <h2 className="mt-4 text-xl font-bold text-gray-900">
-                  {mockUser.firstName} {mockUser.lastName}
+                  {user.firstName} {user.lastName}
                 </h2>
                 <p className="text-gray-500">@{mockUser.username}</p>
                 <div className="mt-4 flex space-x-4">
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                    {mockUser.role}
+                    {user.role || mockUser.role}
                   </span>
-                  {mockUser.isEmailVerified ? (
+                  {user.isEmailVerified ? (
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
                       Verified
                     </span>
@@ -278,7 +293,7 @@ const Dashboard = () => {
                 <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard Overview</h1>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                   <div className="bg-white rounded-lg shadow p-6">
                     <div className="flex items-center">
                       <div className="p-3 rounded-full bg-blue-100 text-blue-600">
@@ -286,7 +301,7 @@ const Dashboard = () => {
                       </div>
                       <div className="ml-4">
                         <p className="text-sm font-medium text-gray-500">Current Weight</p>
-                        <p className="text-2xl font-semibold text-gray-900">{mockUser.weight} kg</p>
+                        <p className="text-2xl font-semibold text-gray-900">{user.weight || 'null'} kg</p>
                       </div>
                     </div>
                   </div>
@@ -298,7 +313,7 @@ const Dashboard = () => {
                       </div>
                       <div className="ml-4">
                         <p className="text-sm font-medium text-gray-500">Height</p>
-                        <p className="text-2xl font-semibold text-gray-900">{mockUser.height} cm</p>
+                        <p className="text-2xl font-semibold text-gray-900">{user.height || 'null'} cm</p>
                       </div>
                     </div>
                   </div>
@@ -311,21 +326,7 @@ const Dashboard = () => {
                       <div className="ml-4">
                         <p className="text-sm font-medium text-gray-500">Calories Burned</p>
                         <p className="text-2xl font-semibold text-gray-900">
-                          {getCaloriesBurned(mockUser.activityLevel)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-lg shadow p-6">
-                    <div className="flex items-center">
-                      <div className="p-3 rounded-full bg-purple-100 text-purple-600">
-                        <Activity className="h-6 w-6" />
-                      </div>
-                      <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-500">Activity Level</p>
-                        <p className="text-2xl font-semibold text-gray-900">
-                          {mockUser.activityLevel.replace('_', ' ')}
+                          {getCaloriesBurned(user.activityLevel)}
                         </p>
                       </div>
                     </div>
@@ -340,7 +341,7 @@ const Dashboard = () => {
                       <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
                         <div
                           className="h-full bg-gradient-to-r from-blue-500 to-green-500 rounded-full"
-                          style={{ width: `${Math.min(100, (parseFloat(getBMI(mockUser.weight, mockUser.height)) / 40) * 100)}%` }}
+                          style={{ width: `${Math.min(100, (parseFloat(getBMI(user.weight, user.height)) / 40) * 100)}%` }}
                         ></div>
                       </div>
                       <div className="flex justify-between text-xs text-gray-500 mt-2">
@@ -352,7 +353,7 @@ const Dashboard = () => {
                     </div>
                     <div className="ml-6 text-center">
                       <p className="text-3xl font-bold text-gray-900">
-                        {getBMI(mockUser.weight, mockUser.height)}
+                        {getBMI(user.weight, user.height)}
                       </p>
                       <p className="text-sm text-gray-500">BMI</p>
                     </div>
@@ -424,55 +425,55 @@ const Dashboard = () => {
                       <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-500">Full name</dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {mockUser.firstName} {mockUser.lastName}
+                          {user.firstName} {user.lastName}
                         </dd>
                       </div>
                       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-500">Username</dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {mockUser.username}
+                          {user.firstName}_{user.id.slice(0, 6)}
                         </dd>
                       </div>
                       <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-500">Email address</dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {mockUser.email}
+                          {user.email}
                         </dd>
                       </div>
                       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-500">Date of Birth</dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {new Date(mockUser.dateOfBirth).toLocaleDateString()} (Age: {calculateAge(mockUser.dateOfBirth)})
+                          {new Date(user.dateOfBirth).toLocaleDateString()} (Age: {calculateAge(user.dateOfBirth)})
                         </dd>
                       </div>
                       <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-500">Gender</dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {mockUser.gender}
+                          {user.gender || 'null'}
                         </dd>
                       </div>
                       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-500">Height</dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {mockUser.height} cm
+                          {user.height || 'null'} cm
                         </dd>
                       </div>
                       <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-500">Weight</dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {mockUser.weight} kg
+                          {user.weight || 'null'} kg
                         </dd>
                       </div>
                       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-500">Activity Level</dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {mockUser.activityLevel.replace('_', ' ')}
+                          {user.activityLevel.replace('_', ' ')}
                         </dd>
                       </div>
                       <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-500">Account Created</dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {new Date(mockUser.createdAt).toLocaleDateString()}
+                          {new Date(user.createdAt).toLocaleDateString()}
                         </dd>
                       </div>
                     </dl>
@@ -613,45 +614,6 @@ const Dashboard = () => {
             {activeTab === 'settings' && (
               <div>
                 <h1 className="text-2xl font-bold text-gray-900 mb-6">Account Settings</h1>
-
-                <div className="bg-white rounded-lg shadow overflow-hidden mb-8">
-                  <div className="px-4 py-5 sm:px-6">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900">Login & Security</h3>
-                    <p className="mt-1 max-w-2xl text-sm text-gray-500">Manage your account security settings.</p>
-                  </div>
-                  <div className="border-t border-gray-200">
-                    <dl>
-                      <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Email</dt>
-                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {mockUser.email}
-                        </dd>
-                      </div>
-                      <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Password</dt>
-                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          <div className="flex items-center">
-                            <span className="mr-2">••••••••</span>
-                            <button
-                              onClick={() => setShowPassword(!showPassword)}
-                              className="text-blue-600 hover:text-blue-500"
-                            >
-                              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                            </button>
-                          </div>
-                        </dd>
-                      </div>
-                      <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Two-Factor Authentication</dt>
-                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                            Not enabled
-                          </span>
-                        </dd>
-                      </div>
-                    </dl>
-                  </div>
-                </div>
 
                 <div className="bg-white rounded-lg shadow overflow-hidden mb-8">
                   <div className="px-4 py-5 sm:px-6">
