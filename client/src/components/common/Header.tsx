@@ -213,36 +213,59 @@ export default function Header() {
               }`} style={{ transitionDelay: `${navigation.length * 50}ms` }}>
                 {isAuthenticated ? (
                     <div className="space-y-3">
-                      <div className="flex items-center space-x-3 px-4 py-2">
-                        <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-                          <User className="w-4 h-4 text-white" />
-                        </div>
-                        <span className="font-medium text-gray-700">{user?.firstName}</span>
-                      </div>
-                      <Link to="/dashboard" className="w-full block" onClick={() => setIsMenuOpen(false)}>
-                        <Button
-                            variant="outline"
-                            className="w-full justify-start font-medium py-3 text-base"
-                        >
-                          <User className="w-4 h-4 mr-2" />
-                          Dashboard
-                        </Button>
-                      </Link>
-                      <button
-                          onClick={() => {
-                            logout();
-                            setIsMenuOpen(false);
-                          }}
-                          className="w-full"
-                      >
-                        <Button
-                            variant="outline"
-                            className="w-full justify-start font-medium py-3 text-base text-red-600 border-red-200 hover:bg-red-50"
-                        >
-                          <LogOut className="w-4 h-4 mr-2" />
-                          Logout
-                        </Button>
-                      </button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                              variant="ghost"
+                              className="w-full flex items-center justify-start space-x-3 px-4 py-3 h-auto hover:bg-gray-50"
+                          >
+                            <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
+                              <User className="w-4 h-4 text-white" />
+                            </div>
+                            <span className="font-medium text-gray-700">{user?.firstName}</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start" className="w-56 ml-4">
+                          <DropdownMenuItem asChild>
+                            <p className="flex items-center px-2 py-2">
+                              <Hand className="w-4 h-4 mr-2" />
+                              Hi, {user?.firstName}
+                            </p>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem asChild>
+                            <Link
+                                to="/dashboard"
+                                className="flex items-center cursor-pointer w-full px-2 py-2"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                              <User className="w-4 h-4 mr-2" />
+                              Dashboard
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link
+                                to="/goals"
+                                className="flex items-center cursor-pointer w-full px-2 py-2"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                              <Settings className="w-4 h-4 mr-2" />
+                              Goals
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                              onClick={() => {
+                                logout();
+                                setIsMenuOpen(false);
+                              }}
+                              className="flex items-center cursor-pointer text-red-600 focus:text-red-600 px-2 py-2"
+                          >
+                            <LogOut className="w-4 h-4 mr-2" />
+                            Logout
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                 ) : (
                     <Link to="/signup" className="w-full block" onClick={() => setIsMenuOpen(false)}>
