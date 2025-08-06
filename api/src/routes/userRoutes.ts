@@ -32,20 +32,20 @@ router.put(
   authenticate,
   validateRequest(updateUserSchema),
   asyncHandler(async (req: Request, res: Response) => {
-    // Type assertion since authenticate middleware adds user to req
+    // Type assertion since authenticated middleware adds user to req
     const authReq = req as AuthenticatedRequest;
     const userId = req.params.id;
     res.json({ success: true, message: 'User updated successfully', userId, user: authReq.user });
   })
 );
 
-// Admin only route
+// Admin-only route
 router.delete(
   '/:id',
   authenticate,
   authorize(['admin']),
   asyncHandler(async (req: Request, res: Response) => {
-    // Type assertion since authenticate middleware adds user to req
+    // Type assertion since authenticated middleware adds user to req
     const authReq = req as AuthenticatedRequest;
     const userId = req.params.id;
     res.json({ success: true, message: 'User deleted successfully', userId, user: authReq.user });

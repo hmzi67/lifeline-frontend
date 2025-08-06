@@ -1,370 +1,730 @@
-//
-// import { useAuth } from '../../contexts/AuthContext';
-//
-// export default function Dashboard() {
-//   const { user, logout } = useAuth();
-//
-//   return (
-//     <div className="min-h-screen bg-gray-50 py-8">
-//       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-//         <div className="bg-white overflow-hidden shadow rounded-lg">
-//           <div className="px-4 py-5 sm:p-6">
-//             <h1 className="text-3xl font-bold text-gray-900 mb-4">
-//               Welcome to your Dashboard, {user ? (user?.firstName + ' ' + user?.lastName) : ('Guest')}!
-//             </h1>
-//             <p className="text-lg text-gray-600 mb-6">
-//               This is a protected route. Only authenticated users can access this page.
-//             </p>
-//
-//             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-//               <div className="bg-blue-50 p-6 rounded-lg">
-//                 <h3 className="text-lg font-semibold text-blue-900 mb-2">Profile Info</h3>
-//                 <p className="text-blue-700">Name: {user ? (user?.firstName + ' ' + user?.lastName) : ('Guest')}</p>
-//                 <p className="text-blue-700">Email: {user?.email}</p>
-//               </div>
-//
-//               <div className="bg-green-50 p-6 rounded-lg">
-//                 <h3 className="text-lg font-semibold text-green-900 mb-2">Quick Actions</h3>
-//                 <div className="space-y-2">
-//                   <a href="/goals" className="block text-green-700 hover:text-green-900">
-//                     → Set Fitness Goals
-//                   </a>
-//                   <a href="/analytics" className="block text-green-700 hover:text-green-900">
-//                     → View Analytics
-//                   </a>
-//                 </div>
-//               </div>
-//
-//               <div className="bg-red-50 p-6 rounded-lg">
-//                 <h3 className="text-lg font-semibold text-red-900 mb-2">Account Actions</h3>
-//                 <button
-//                   onClick={logout}
-//                   className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
-//                 >
-//                   Logout
-//                 </button>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
+import { useState } from "react";
+import {
+  User,
+  Settings,
+  Trophy,
+  Calendar,
+  Target,
+  Activity,
+  Edit,
+  Eye,
+  EyeOff,
+  Weight,
+  Ruler,
+  Flame,
+  Clock,
+  Users,
+  Award,
+  BarChart3,
+  Bell, Trash2
+} from "lucide-react";
 
+// Mock data based on your schema
+const mockUser = {
+  id: "user_123456",
+  username: "fitness_enthusiast",
+  email: "user@example.com",
+  firstName: "Alex",
+  lastName: "Johnson",
+  dateOfBirth: "1990-05-15",
+  gender: "MALE",
+  height: 180,
+  weight: 75,
+  activityLevel: "MODERATELY_ACTIVE",
+  role: "USER",
+  isEmailVerified: true,
+  profileImage: "https://placehold.co/400x400",
+  createdAt: "2023-01-15",
+  updatedAt: "2023-10-20"
+};
 
-import { useAuth } from '../../contexts/AuthContext';
-import { useState } from 'react';
+const mockPreferences = {
+  dietaryRestrictions: ["Vegetarian"],
+  allergies: ["Peanuts"],
+  fitnessGoals: ["Weight Loss", "Muscle Gain"],
+  notificationsEnabled: true,
+  units: "METRIC",
+  privacy: "FRIENDS"
+};
+
+const mockActivePlans = [
+  {
+    id: "plan_1",
+    title: "30-Day Cardio Challenge",
+    description: "Improve cardiovascular health through daily cardio workouts",
+    progress: 65,
+    startDate: "2023-10-01",
+    endDate: "2023-10-31",
+    participants: 1242,
+    category: "Cardio"
+  },
+  {
+    id: "plan_2",
+    title: "Strength Training Program",
+    description: "Build muscle mass with progressive overload techniques",
+    progress: 30,
+    startDate: "2023-09-15",
+    endDate: "2023-12-15",
+    participants: 876,
+    category: "Strength"
+  }
+];
+
+const mockChallenges = [
+  {
+    id: "chal_1",
+    title: "10K Steps Daily",
+    description: "Reach 10,000 steps every day for a week",
+    reward: "100 points",
+    deadline: "2023-10-27",
+    participants: 5432,
+    completed: false
+  },
+  {
+    id: "chal_2",
+    title: "Hydration Challenge",
+    description: "Drink 2L of water daily for 5 days",
+    reward: "50 points",
+    deadline: "2023-10-25",
+    participants: 3210,
+    completed: true
+  }
+];
+
+const mockAchievements = [
+  { id: "ach_1", title: "First Workout", description: "Completed your first workout", icon: "💪", earned: "2023-01-20" },
+  { id: "ach_2", title: "Week Warrior", description: "Worked out 5 days in a row", icon: "🔥", earned: "2023-03-15" },
+  { id: "ach_3", title: "Social Butterfly", description: "Joined 3 challenges", icon: "🏆", earned: "2023-05-30" }
+];
 
 const Dashboard = () => {
-  const [activeSection, setActiveSection] = useState('dashboard');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { user, logout } = useAuth();
+  const [showProfileEdit, setShowProfileEdit] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [activeTab, setActiveTab] = useState('overview');
 
-  const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-    { id: 'analytics', label: 'Analytics', icon: '📈' },
-    { id: 'users', label: 'Users', icon: '👥' },
-    { id: 'products', label: 'Products', icon: '📦' },
-    { id: 'orders', label: 'Orders', icon: '🛒' },
-    { id: 'reports', label: 'Reports', icon: '📋' },
-  ];
+  const calculateAge = (dateOfBirth: string) => {
+    const dob = new Date(dateOfBirth);
+    const diff = Date.now() - dob.getTime();
+    const ageDate = new Date(diff);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+  };
 
-  const preferenceItems = [
-    { id: 'preferences', label: 'Preferences', icon: '⚙️' },
-    { id: 'settings', label: 'Settings', icon: '🔧' },
-    { id: 'help', label: 'Help Center', icon: '❓' },
-  ];
+  const getBMI = (weight: number, height: number) => {
+    const heightInMeters = height / 100;
+    return (weight / (heightInMeters * heightInMeters)).toFixed(1);
+  };
 
-  const renderContent = () => {
-    switch (activeSection) {
-      case 'dashboard':
-        return (
-          <div className="space-y-6">
-            <div className={'space-y-6'}>
-              <h1 className={'font-medium text-2xl'}>Welcome to your Dashboard, {user ? (user?.firstName + ' ' + user?.lastName) : ('Guest')}!</h1>
-              <button onClick={logout} className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors">Logout</button>
+  const getCaloriesBurned = (activityLevel: string) => {
+    const base = 2000;
+    switch(activityLevel) {
+      case "SEDENTARY": return base;
+      case "LIGHTLY_ACTIVE": return base * 1.2;
+      case "MODERATELY_ACTIVE": return base * 1.4;
+      case "VERY_ACTIVE": return base * 1.6;
+      case "EXTREMELY_ACTIVE": return base * 1.8;
+      default: return base;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex">
+              <div className="flex-shrink-0 flex items-center">
+                <Activity className="h-8 w-8 text-blue-600" />
+                <span className="ml-2 text-xl font-bold text-gray-900">FitTracker</span>
+              </div>
+              <nav className="ml-6 flex space-x-8">
+                <a href="#" className="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                  Dashboard
+                </a>
+                <a href="#" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                  Plans
+                </a>
+                <a href="#" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                  Challenges
+                </a>
+                <a href="#" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                  Community
+                </a>
+              </nav>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="flex items-center">
+              <button className="bg-gray-100 p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none">
+                <Bell className="h-6 w-6" />
+              </button>
+              <div className="ml-3 relative">
                 <div className="flex items-center">
-                  <div className="p-3 bg-blue-100 rounded-lg">
-                    <span className="text-blue-600 text-xl">📊</span>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">Total Revenue</p>
-                    <p className="text-2xl font-bold">$45,231.89</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <div className="flex items-center">
-                  <div className="p-3 bg-green-100 rounded-lg">
-                    <span className="text-green-600 text-xl">👥</span>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">Subscriptions</p>
-                    <p className="text-2xl font-bold">+2350</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <div className="flex items-center">
-                  <div className="p-3 bg-amber-100 rounded-lg">
-                    <span className="text-amber-600 text-xl">🛒</span>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">Sales</p>
-                    <p className="text-2xl font-bold">+12,234</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <div className="flex items-center">
-                  <div className="p-3 bg-rose-100 rounded-lg">
-                    <span className="text-rose-600 text-xl">💳</span>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">Active Now</p>
-                    <p className="text-2xl font-bold">+573</p>
-                  </div>
+                  <img className="h-8 w-8 rounded-full" src={mockUser.profileImage} alt="Profile" />
+                  <span className="ml-2 text-sm font-medium text-gray-700 hidden md:block">{mockUser.firstName}</span>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
-                <div className="space-y-4">
-                  {[1, 2, 3, 4].map((item) => (
-                    <div key={item} className="flex items-center">
-                      <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                        <span className="text-gray-600">👤</span>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Sidebar */}
+          <div className="w-full md:w-64 flex-shrink-0">
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="flex flex-col items-center">
+                <img
+                  className="h-24 w-24 rounded-full"
+                  src={mockUser.profileImage}
+                  alt="Profile"
+                />
+                <h2 className="mt-4 text-xl font-bold text-gray-900">
+                  {mockUser.firstName} {mockUser.lastName}
+                </h2>
+                <p className="text-gray-500">@{mockUser.username}</p>
+                <div className="mt-4 flex space-x-4">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                    {mockUser.role}
+                  </span>
+                  {mockUser.isEmailVerified ? (
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                      Verified
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                      Unverified
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <nav className="mt-8">
+                <div className="space-y-1">
+                  <button
+                    onClick={() => setActiveTab('overview')}
+                    className={`w-full flex items-center px-4 py-2 text-sm font-medium rounded-md ${
+                      activeTab === 'overview'
+                        ? 'bg-blue-50 text-blue-700'
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <BarChart3 className="mr-3 h-5 w-5" />
+                    Overview
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('profile')}
+                    className={`w-full flex items-center px-4 py-2 text-sm font-medium rounded-md ${
+                      activeTab === 'profile'
+                        ? 'bg-blue-50 text-blue-700'
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <User className="mr-3 h-5 w-5" />
+                    Profile
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('plans')}
+                    className={`w-full flex items-center px-4 py-2 text-sm font-medium rounded-md ${
+                      activeTab === 'plans'
+                        ? 'bg-blue-50 text-blue-700'
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Target className="mr-3 h-5 w-5" />
+                    Active Plans
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('challenges')}
+                    className={`w-full flex items-center px-4 py-2 text-sm font-medium rounded-md ${
+                      activeTab === 'challenges'
+                        ? 'bg-blue-50 text-blue-700'
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Trophy className="mr-3 h-5 w-5" />
+                    Challenges
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('achievements')}
+                    className={`w-full flex items-center px-4 py-2 text-sm font-medium rounded-md ${
+                      activeTab === 'achievements'
+                        ? 'bg-blue-50 text-blue-700'
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Award className="mr-3 h-5 w-5" />
+                    Achievements
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('settings')}
+                    className={`w-full flex items-center px-4 py-2 text-sm font-medium rounded-md ${
+                      activeTab === 'settings'
+                        ? 'bg-blue-50 text-blue-700'
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Settings className="mr-3 h-5 w-5" />
+                    Settings
+                  </button>
+                </div>
+              </nav>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1">
+            {activeTab === 'overview' && (
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard Overview</h1>
+
+                {/* Stats Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                  <div className="bg-white rounded-lg shadow p-6">
+                    <div className="flex items-center">
+                      <div className="p-3 rounded-full bg-blue-100 text-blue-600">
+                        <Weight className="h-6 w-6" />
                       </div>
                       <div className="ml-4">
-                        <p className="font-medium">User {item} performed an action</p>
-                        <p className="text-sm text-gray-500">2 hours ago</p>
+                        <p className="text-sm font-medium text-gray-500">Current Weight</p>
+                        <p className="text-2xl font-semibold text-gray-900">{mockUser.weight} kg</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg shadow p-6">
+                    <div className="flex items-center">
+                      <div className="p-3 rounded-full bg-green-100 text-green-600">
+                        <Ruler className="h-6 w-6" />
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-500">Height</p>
+                        <p className="text-2xl font-semibold text-gray-900">{mockUser.height} cm</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg shadow p-6">
+                    <div className="flex items-center">
+                      <div className="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                        <Flame className="h-6 w-6" />
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-500">Calories Burned</p>
+                        <p className="text-2xl font-semibold text-gray-900">
+                          {getCaloriesBurned(mockUser.activityLevel)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg shadow p-6">
+                    <div className="flex items-center">
+                      <div className="p-3 rounded-full bg-purple-100 text-purple-600">
+                        <Activity className="h-6 w-6" />
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-500">Activity Level</p>
+                        <p className="text-2xl font-semibold text-gray-900">
+                          {mockUser.activityLevel.replace('_', ' ')}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* BMI Card */}
+                <div className="bg-white rounded-lg shadow p-6 mb-8">
+                  <h2 className="text-lg font-medium text-gray-900 mb-4">Body Mass Index (BMI)</h2>
+                  <div className="flex items-center">
+                    <div className="relative w-full">
+                      <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-blue-500 to-green-500 rounded-full"
+                          style={{ width: `${Math.min(100, (parseFloat(getBMI(mockUser.weight, mockUser.height)) / 40) * 100)}%` }}
+                        ></div>
+                      </div>
+                      <div className="flex justify-between text-xs text-gray-500 mt-2">
+                        <span>Underweight</span>
+                        <span>Normal</span>
+                        <span>Overweight</span>
+                        <span>Obese</span>
+                      </div>
+                    </div>
+                    <div className="ml-6 text-center">
+                      <p className="text-3xl font-bold text-gray-900">
+                        {getBMI(mockUser.weight, mockUser.height)}
+                      </p>
+                      <p className="text-sm text-gray-500">BMI</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Recent Activity */}
+                <div className="bg-white rounded-lg shadow p-6">
+                  <h2 className="text-lg font-medium text-gray-900 mb-4">Recent Activity</h2>
+                  <div className="space-y-4">
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0">
+                        <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                          <Trophy className="h-5 w-5 text-blue-600" />
+                        </div>
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-900">Completed 30-Day Cardio Challenge</p>
+                        <p className="text-sm text-gray-500">2 days ago</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0">
+                        <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                          <Target className="h-5 w-5 text-green-600" />
+                        </div>
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-900">Joined Strength Training Program</p>
+                        <p className="text-sm text-gray-500">5 days ago</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0">
+                        <div className="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center">
+                          <Users className="h-5 w-5 text-yellow-600" />
+                        </div>
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-900">Invited 3 friends to Hydration Challenge</p>
+                        <p className="text-sm text-gray-500">1 week ago</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'profile' && (
+              <div>
+                <div className="flex justify-between items-center mb-6">
+                  <h1 className="text-2xl font-bold text-gray-900">Profile Information</h1>
+                  <button
+                    onClick={() => setShowProfileEdit(!showProfileEdit)}
+                    className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none"
+                  >
+                    <Edit className="mr-2 h-4 w-4" />
+                    Edit Profile
+                  </button>
+                </div>
+
+                <div className="bg-white rounded-lg shadow overflow-hidden">
+                  <div className="px-4 py-5 sm:px-6">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">Personal Information</h3>
+                    <p className="mt-1 max-w-2xl text-sm text-gray-500">Personal details and account information.</p>
+                  </div>
+                  <div className="border-t border-gray-200">
+                    <dl>
+                      <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Full name</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          {mockUser.firstName} {mockUser.lastName}
+                        </dd>
+                      </div>
+                      <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Username</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          {mockUser.username}
+                        </dd>
+                      </div>
+                      <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Email address</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          {mockUser.email}
+                        </dd>
+                      </div>
+                      <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Date of Birth</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          {new Date(mockUser.dateOfBirth).toLocaleDateString()} (Age: {calculateAge(mockUser.dateOfBirth)})
+                        </dd>
+                      </div>
+                      <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Gender</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          {mockUser.gender}
+                        </dd>
+                      </div>
+                      <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Height</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          {mockUser.height} cm
+                        </dd>
+                      </div>
+                      <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Weight</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          {mockUser.weight} kg
+                        </dd>
+                      </div>
+                      <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Activity Level</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          {mockUser.activityLevel.replace('_', ' ')}
+                        </dd>
+                      </div>
+                      <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Account Created</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          {new Date(mockUser.createdAt).toLocaleDateString()}
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'plans' && (
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-6">Active Plans</h1>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {mockActivePlans.map((plan) => (
+                    <div key={plan.id} className="bg-white rounded-lg shadow overflow-hidden">
+                      <div className="p-6">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h3 className="text-lg font-medium text-gray-900">{plan.title}</h3>
+                            <p className="mt-1 text-sm text-gray-500">{plan.description}</p>
+                            <span className="inline-flex items-center mt-2 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                              {plan.category}
+                            </span>
+                          </div>
+                          <div className="bg-gray-100 rounded-full p-2">
+                            <Calendar className="h-5 w-5 text-gray-600" />
+                          </div>
+                        </div>
+
+                        <div className="mt-4">
+                          <div className="flex justify-between text-sm text-gray-500 mb-1">
+                            <span>Progress</span>
+                            <span>{plan.progress}%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-blue-600 h-2 rounded-full"
+                              style={{ width: `${plan.progress}%` }}
+                            ></div>
+                          </div>
+                        </div>
+
+                        <div className="mt-4 flex justify-between text-sm text-gray-500">
+                          <div className="flex items-center">
+                            <Users className="h-4 w-4 mr-1" />
+                            <span>{plan.participants.toLocaleString()} participants</span>
+                          </div>
+                          <div className="flex items-center">
+                            <Clock className="h-4 w-4 mr-1" />
+                            <span>{new Date(plan.endDate).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+
+                        <div className="mt-6">
+                          <button className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
+                            View Details
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
+            )}
 
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h3 className="text-lg font-semibold mb-4">Performance Metrics</h3>
-                <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
-                  <p className="text-gray-500">Chart visualization area</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      case 'analytics':
-        return (
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <h2 className="text-2xl font-bold mb-6">Analytics Overview</h2>
-            <div className="h-96 flex items-center justify-center bg-gray-50 rounded-lg">
-              <p className="text-gray-500">Analytics dashboard content</p>
-            </div>
-          </div>
-        );
-      case 'preferences':
-        return (
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <h2 className="text-2xl font-bold mb-6">Preferences</h2>
-            <div className="space-y-6">
+            {activeTab === 'challenges' && (
               <div>
-                <h3 className="text-lg font-medium mb-3">Theme Settings</h3>
-                <div className="flex space-x-4">
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded-lg">Light</button>
-                  <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">Dark</button>
-                  <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">System</button>
+                <h1 className="text-2xl font-bold text-gray-900 mb-6">Active Challenges</h1>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {mockChallenges.map((challenge) => (
+                    <div key={challenge.id} className="bg-white rounded-lg shadow overflow-hidden">
+                      <div className="p-6">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h3 className="text-lg font-medium text-gray-900">{challenge.title}</h3>
+                            <p className="mt-1 text-sm text-gray-500">{challenge.description}</p>
+                          </div>
+                          <div className="bg-gray-100 rounded-full p-2">
+                            <Trophy className="h-5 w-5 text-gray-600" />
+                          </div>
+                        </div>
+
+                        <div className="mt-4 flex items-center text-sm text-gray-500">
+                          <Award className="h-4 w-4 mr-1" />
+                          <span>Reward: {challenge.reward}</span>
+                        </div>
+
+                        <div className="mt-2 flex items-center text-sm text-gray-500">
+                          <Clock className="h-4 w-4 mr-1" />
+                          <span>Deadline: {new Date(challenge.deadline).toLocaleDateString()}</span>
+                        </div>
+
+                        <div className="mt-2 flex items-center text-sm text-gray-500">
+                          <Users className="h-4 w-4 mr-1" />
+                          <span>{challenge.participants.toLocaleString()} participants</span>
+                        </div>
+
+                        <div className="mt-6 flex space-x-3">
+                          <button className={`flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
+                            challenge.completed
+                              ? 'bg-green-600 hover:bg-green-700'
+                              : 'bg-blue-600 hover:bg-blue-700'
+                          } focus:outline-none`}>
+                            {challenge.completed ? 'Completed' : 'Join Challenge'}
+                          </button>
+                          <button className="inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
+                            Details
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
+            )}
 
+            {activeTab === 'achievements' && (
               <div>
-                <h3 className="text-lg font-medium mb-3">Notification Preferences</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span>Email Notifications</span>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" className="sr-only peer" defaultChecked />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                    </label>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>Push Notifications</span>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" className="sr-only peer" />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                    </label>
-                  </div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-6">Achievements</h1>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {mockAchievements.map((achievement) => (
+                    <div key={achievement.id} className="bg-white rounded-lg shadow overflow-hidden">
+                      <div className="p-6">
+                        <div className="flex items-center">
+                          <div className="text-3xl">{achievement.icon}</div>
+                          <div className="ml-4">
+                            <h3 className="text-lg font-medium text-gray-900">{achievement.title}</h3>
+                            <p className="text-sm text-gray-500">{achievement.description}</p>
+                            <p className="mt-2 text-xs text-gray-400">Earned: {new Date(achievement.earned).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
-          </div>
-        );
-      case 'settings':
-        return (
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <h2 className="text-2xl font-bold mb-6">Settings</h2>
-            <div className="space-y-6">
+            )}
+
+            {activeTab === 'settings' && (
               <div>
-                <h3 className="text-lg font-medium mb-3">Account Settings</h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                    <input
-                      type="text"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      defaultValue="admin_user"
-                    />
+                <h1 className="text-2xl font-bold text-gray-900 mb-6">Account Settings</h1>
+
+                <div className="bg-white rounded-lg shadow overflow-hidden mb-8">
+                  <div className="px-4 py-5 sm:px-6">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">Login & Security</h3>
+                    <p className="mt-1 max-w-2xl text-sm text-gray-500">Manage your account security settings.</p>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input
-                      type="email"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      defaultValue="admin@example.com"
-                    />
+                  <div className="border-t border-gray-200">
+                    <dl>
+                      <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Email</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          {mockUser.email}
+                        </dd>
+                      </div>
+                      <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Password</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <div className="flex items-center">
+                            <span className="mr-2">••••••••</span>
+                            <button
+                              onClick={() => setShowPassword(!showPassword)}
+                              className="text-blue-600 hover:text-blue-500"
+                            >
+                              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            </button>
+                          </div>
+                        </dd>
+                      </div>
+                      <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Two-Factor Authentication</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                            Not enabled
+                          </span>
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow overflow-hidden mb-8">
+                  <div className="px-4 py-5 sm:px-6">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">Preferences</h3>
+                    <p className="mt-1 max-w-2xl text-sm text-gray-500">Manage your notification and privacy preferences.</p>
+                  </div>
+                  <div className="border-t border-gray-200">
+                    <dl>
+                      <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Dietary Restrictions</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          {mockPreferences.dietaryRestrictions.join(', ') || 'None'}
+                        </dd>
+                      </div>
+                      <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Allergies</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          {mockPreferences.allergies.join(', ') || 'None'}
+                        </dd>
+                      </div>
+                      <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Fitness Goals</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          {mockPreferences.fitnessGoals.join(', ') || 'None'}
+                        </dd>
+                      </div>
+                      <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Notifications</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            mockPreferences.notificationsEnabled
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            {mockPreferences.notificationsEnabled ? 'Enabled' : 'Disabled'}
+                          </span>
+                        </dd>
+                      </div>
+                      <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">Privacy</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {mockPreferences.privacy}
+                          </span>
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow overflow-hidden">
+                  <div className="px-4 py-5 sm:px-6">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">Account Management</h3>
+                    <p className="mt-1 max-w-2xl text-sm text-gray-500">Manage your account settings and preferences.</p>
+                  </div>
+                  <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-900">Delete Account</h4>
+                        <p className="text-sm text-gray-500">Permanently delete your account and all associated data.</p>
+                      </div>
+                      <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none">
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete Account
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-
-              <div>
-                <h3 className="text-lg font-medium mb-3">Security</h3>
-                <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                  Change Password
-                </button>
-              </div>
-            </div>
-          </div>
-        );
-      default:
-        return (
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <h2 className="text-2xl font-bold capitalize">{activeSection}</h2>
-            <p className="mt-4 text-gray-600">Content for {activeSection} section</p>
-          </div>
-        );
-    }
-  };
-
-  return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div className={`bg-white shadow-md transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-20'}`}>
-        <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className="p-4 border-b border-gray-200">
-            <div className="flex items-center">
-              <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center">
-                <span className="text-white font-bold text-xl">D</span>
-              </div>
-              {sidebarOpen && (
-                <h1 className="ml-3 text-xl font-bold text-gray-800">Dashboard</h1>
-              )}
-            </div>
-          </div>
-
-          {/* Navigation */}
-          <div className="flex-1 overflow-y-auto py-4">
-            <nav className="px-2">
-              <div className="space-y-1">
-                {menuItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveSection(item.id)}
-                    className={`w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors ${
-                      activeSection === item.id
-                        ? 'bg-blue-50 text-blue-600'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    <span className="text-lg">{item.icon}</span>
-                    {sidebarOpen && (
-                      <span className="ml-3 font-medium">{item.label}</span>
-                    )}
-                  </button>
-                ))}
-              </div>
-
-              {/* Divider */}
-              {sidebarOpen && (
-                <div className="my-4 border-t border-gray-200"></div>
-              )}
-
-              {/* Preferences & Settings */}
-              <div className="space-y-1 mt-4">
-                {preferenceItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveSection(item.id)}
-                    className={`w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors ${
-                      activeSection === item.id
-                        ? 'bg-blue-50 text-blue-600'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    <span className="text-lg">{item.icon}</span>
-                    {sidebarOpen && (
-                      <span className="ml-3 font-medium">{item.label}</span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </nav>
-          </div>
-
-          {/* User Profile */}
-          <div className="p-4 border-t border-gray-200">
-            <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
-                <span className="text-gray-600">👤</span>
-              </div>
-              {sidebarOpen && (
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-800">{user ? user.firstName + ' ' + user.lastName : 'Admin'}</p>
-                  <p className="text-xs text-gray-500">{user ? user.email : 'admin@lifeline.com'}</p>
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <header className="bg-white shadow-sm border-b border-gray-200">
-          <div className="flex items-center justify-between p-4">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 rounded-lg hover:bg-gray-100"
-            >
-              <span className="text-gray-600">☰</span>
-            </button>
-
-            <div className="flex items-center space-x-4">
-              <button className="p-2 rounded-lg hover:bg-gray-100 relative">
-                <span className="text-gray-600">🔔</span>
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-              </button>
-              <button className="p-2 rounded-lg hover:bg-gray-100">
-                <span className="text-gray-600">⚙️</span>
-              </button>
-            </div>
-          </div>
-        </header>
-
-        {/* Content */}
-        <main className="flex-1 overflow-y-auto p-6">
-          {renderContent()}
-        </main>
-      </div>
+      </main>
     </div>
   );
 };
