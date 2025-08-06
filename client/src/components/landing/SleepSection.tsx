@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Check, Download, X, Play } from 'lucide-react';
-import sleepimg from '@/assets/images/landing/sleeping img.jpeg';
+import sleepimg from '@/assets/images/landing/sleeping img.png';
 
 export const SleepSection: React.FC = () => {
     const [isVideoOpen, setIsVideoOpen] = useState(false);

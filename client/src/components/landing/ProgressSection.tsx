@@ -1,6 +1,6 @@
 import React from 'react';
 import { Check } from "lucide-react";
-import progressTrackerImage from "../../assets/images/landing/trackerSectionBoth.svg"
+import progressTrackerImage from "../../assets/images/landing/trackerSectionBoth.png"
 import { Button } from '../ui/button';
 
 // Fixed mobile layout to match the design image
