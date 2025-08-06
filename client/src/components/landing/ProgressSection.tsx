@@ -80,7 +80,7 @@ export const ProgressSection: React.FC = () => {
                     {/* Image - Centered */}
                     <div className="flex justify-center mb-4 sm:mb-4 translate-x-6">
                         <img
-                            className="w-full max-w-sm sm:max-w-md md:max-w-lg h-full"
+                            className="w-full h-auto"
                             src={progressTrackerImage}
                             alt="Fitness Progress Tracker"
                         />
