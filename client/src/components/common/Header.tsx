@@ -1,14 +1,19 @@
-// done
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '../ui/button';
-import { X, User, LogOut, Settings } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
+import {X, User, LogOut, Settings, Hand} from 'lucide-react';
 import menu from "../../assets/images/comming-soon/menu.png";
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const location = useLocation();
   const [isVisible, setIsVisible] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
@@ -32,18 +37,6 @@ export default function Header() {
     window.addEventListener("scroll", toggleVisibility);
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
-
-  // Close the user menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (isUserMenuOpen && !(event.target as Element).closest('.user-menu-container')) {
-        setIsUserMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, [isUserMenuOpen]);
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -85,184 +78,185 @@ export default function Header() {
   };
 
   return (
-    <header className={getHeaderClasses()}>
-      <nav className="container mx-auto px-4 sm:px-6 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3">
-            <img src={"/logo.svg"} alt="Lifeline Logo" className="w-16 h-16 sm:w-20 sm:h-20" />
-          </Link>
+      <header className={getHeaderClasses()}>
+        <nav className="container mx-auto px-4 sm:px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-3">
+              <img src={"/logo.svg"} alt="Lifeline Logo" className="w-16 h-16 sm:w-20 sm:h-20" />
+            </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-6 xl:space-x-8 ms-auto me-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={getNavLinkClasses(item.href)}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </div>
-
-          {/* CTA Button / User Menu for Desktop */}
-          <div className="hidden lg:flex items-center">
-            {isAuthenticated ? (
-              <div className="relative user-menu-container">
-                <button
-                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center space-x-2 text-gray-700 hover:text-primary-500 focus:outline-none"
-                >
-                  <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-                    <User className="w-4 h-4 text-white" />
-                  </div>
-                  <span className="font-medium">{user?.firstName}</span>
-                </button>
-
-                {/* User Dropdown Menu */}
-                {isUserMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 border border-gray-200">
-                    <div className="py-1">
-                      <Link
-                        to="/dashboard"
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => setIsUserMenuOpen(false)}
-                      >
-                        <User className="w-4 h-4 mr-2" />
-                        Dashboard
-                      </Link>
-                      <Link
-                        to="/goals"
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => setIsUserMenuOpen(false)}
-                      >
-                        <Settings className="w-4 h-4 mr-2" />
-                        Goals
-                      </Link>
-                      <button
-                        onClick={() => {
-                          logout();
-                          setIsUserMenuOpen(false);
-                        }}
-                        className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Logout
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <Link to="/signup">
-                <Button
-                  className="bg-gradient-to-r from-primary-400 to-primary-500 hover:from-primary-500 hover:to-primary-600 text-white font-semibold px-4 py-2 sm:px-6 sm:py-2.5 rounded-full transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg text-sm sm:text-base"
-                >
-                  Try for Free
-                </Button>
-              </Link>
-            )}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className={getMobileButtonClasses()}
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <img src={menu} alt="menu icon"
-              className='w-9 h-9' />
-          </button>
-        </div>
-
-        {/* Mobile Menu Overlay */}
-        <div className={`lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`} onClick={() => setIsMenuOpen(false)} />
-
-        {/* Mobile Menu */}
-        <div className={`lg:hidden fixed inset-y-0 left-0 w-full bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}>
-          <div className="flex flex-col h-full">
-            {/* Header */}
-            <div className="flex justify-between items-center p-4 border-b border-gray-100">
-              <Link to="/" className="flex items-center space-x-3" onClick={() => setIsMenuOpen(false)}>
-                <img src={"/logo.svg"} alt="Lifeline Logo" className="w-12 h-12" />
-              </Link>
-              <button
-                className="text-gray-600 p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Navigation Links */}
-            <div className="flex flex-col flex-grow overflow-y-auto">
-              <div className="px-4 py-2">
-                {navigation.map((item, index) => (
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center space-x-6 xl:space-x-8 ms-auto me-8">
+              {navigation.map((item) => (
                   <Link
-                    key={item.name}
-                    to={item.href}
-                    className={`block text-gray-700 hover:text-teal-500 hover:bg-teal-50 font-medium py-4 px-4 rounded-lg my-1 transform transition-transform ${isMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
-                      }`}
-                    style={{ transitionDelay: `${index * 50}ms` }}
-                    onClick={() => setIsMenuOpen(false)}
+                      key={item.name}
+                      to={item.href}
+                      className={getNavLinkClasses(item.href)}
                   >
                     {item.name}
                   </Link>
-                ))}
-              </div>
+              ))}
             </div>
 
-            {/* CTA Button / User Actions */}
-            <div className={`p-4 border-t border-gray-100 transform transition-all duration-300 ${isMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
-              }`} style={{ transitionDelay: `${navigation.length * 50}ms` }}>
+            {/* CTA Button / User Menu for Desktop */}
+            <div className="hidden lg:flex items-center">
               {isAuthenticated ? (
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-3 px-4 py-2">
-                    <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-                      <User className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="font-medium text-gray-700">{user?.firstName}</span>
-                  </div>
-                  <Link to="/dashboard" className="w-full block" onClick={() => setIsMenuOpen(false)}>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                          variant="ghost"
+                          className="flex items-center space-x-2 text-gray-700 hover:text-primary-500 focus:outline-none h-auto p-2"
+                      >
+                        <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
+                          <User className="w-4 h-4 text-white" />
+                        </div>
+                        {/*<span className="font-medium">{user?.firstName}</span>*/}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem asChild>
+                        <p>
+                          <Hand className={'w-4 h-4 mr-2'} />
+                          hi, {user?.firstName}</p>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link
+                            to="/dashboard"
+                            className="flex items-center cursor-pointer w-full"
+                        >
+                          <User className="w-4 h-4 mr-2" />
+                          Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link
+                            to="/goals"
+                            className="flex items-center cursor-pointer w-full"
+                        >
+                          <Settings className="w-4 h-4 mr-2" />
+                          Goals
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                          onClick={logout}
+                          className="flex items-center cursor-pointer text-red-600 focus:text-red-600"
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Logout
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+              ) : (
+                  <Link to="/signup">
                     <Button
-                      variant="outline"
-                      className="w-full justify-start font-medium py-3 text-base"
+                        className="bg-gradient-to-r from-primary-400 to-primary-500 hover:from-primary-500 hover:to-primary-600 text-white font-semibold px-4 py-2 sm:px-6 sm:py-2.5 rounded-full transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg text-sm sm:text-base"
                     >
-                      <User className="w-4 h-4 mr-2" />
-                      Dashboard
+                      Try for Free
                     </Button>
                   </Link>
-                  <button
-                    onClick={() => {
-                      logout();
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full"
-                  >
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start font-medium py-3 text-base text-red-600 border-red-200 hover:bg-red-50"
-                    >
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Logout
-                    </Button>
-                  </button>
-                </div>
-              ) : (
-                <Link to="/signup" className="w-full block" onClick={() => setIsMenuOpen(false)}>
-                  <Button
-                    className="w-full bg-gradient-to-r from-primary-400 to-primary-500 hover:from-primary-500 hover:to-primary-600 text-white font-semibold rounded-full py-3 text-base transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
-                  >
-                    Try for Free
-                  </Button>
-                </Link>
               )}
             </div>
+
+            {/* Mobile Menu Button */}
+            <button
+                className={getMobileButtonClasses()}
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <img src={menu} alt="menu icon"
+                   className='w-9 h-9' />
+            </button>
           </div>
-        </div>
-      </nav>
-    </header>
+
+          {/* Mobile Menu Overlay */}
+          <div className={`lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`} onClick={() => setIsMenuOpen(false)} />
+
+          {/* Mobile Menu */}
+          <div className={`lg:hidden fixed inset-y-0 left-0 w-full bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}>
+            <div className="flex flex-col h-full">
+              {/* Header */}
+              <div className="flex justify-between items-center p-4 border-b border-gray-100">
+                <Link to="/" className="flex items-center space-x-3" onClick={() => setIsMenuOpen(false)}>
+                  <img src={"/logo.svg"} alt="Lifeline Logo" className="w-12 h-12" />
+                </Link>
+                <button
+                    className="text-gray-600 p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                    onClick={() => setIsMenuOpen(false)}
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Navigation Links */}
+              <div className="flex flex-col flex-grow overflow-y-auto">
+                <div className="px-4 py-2">
+                  {navigation.map((item, index) => (
+                      <Link
+                          key={item.name}
+                          to={item.href}
+                          className={`block text-gray-700 hover:text-teal-500 hover:bg-teal-50 font-medium py-4 px-4 rounded-lg my-1 transform transition-transform ${isMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+                          }`}
+                          style={{ transitionDelay: `${index * 50}ms` }}
+                          onClick={() => setIsMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* CTA Button / User Actions */}
+              <div className={`p-4 border-t border-gray-100 transform transition-all duration-300 ${isMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+              }`} style={{ transitionDelay: `${navigation.length * 50}ms` }}>
+                {isAuthenticated ? (
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3 px-4 py-2">
+                        <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
+                          <User className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="font-medium text-gray-700">{user?.firstName}</span>
+                      </div>
+                      <Link to="/dashboard" className="w-full block" onClick={() => setIsMenuOpen(false)}>
+                        <Button
+                            variant="outline"
+                            className="w-full justify-start font-medium py-3 text-base"
+                        >
+                          <User className="w-4 h-4 mr-2" />
+                          Dashboard
+                        </Button>
+                      </Link>
+                      <button
+                          onClick={() => {
+                            logout();
+                            setIsMenuOpen(false);
+                          }}
+                          className="w-full"
+                      >
+                        <Button
+                            variant="outline"
+                            className="w-full justify-start font-medium py-3 text-base text-red-600 border-red-200 hover:bg-red-50"
+                        >
+                          <LogOut className="w-4 h-4 mr-2" />
+                          Logout
+                        </Button>
+                      </button>
+                    </div>
+                ) : (
+                    <Link to="/signup" className="w-full block" onClick={() => setIsMenuOpen(false)}>
+                      <Button
+                          className="w-full bg-gradient-to-r from-primary-400 to-primary-500 hover:from-primary-500 hover:to-primary-600 text-white font-semibold rounded-full py-3 text-base transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
+                      >
+                        Try for Free
+                      </Button>
+                    </Link>
+                )}
+              </div>
+            </div>
+          </div>
+        </nav>
+      </header>
   );
 }
