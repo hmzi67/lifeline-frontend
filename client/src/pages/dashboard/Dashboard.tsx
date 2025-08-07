@@ -14,7 +14,6 @@ import {
   Users,
   Award,
   BarChart3,
-  Bell,
   Trash2,
   Menu,
   X,
