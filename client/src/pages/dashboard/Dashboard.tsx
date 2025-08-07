@@ -139,15 +139,25 @@ const Dashboard = () => {
               <div className="flex-shrink-0 flex items-center">
                 {/*<Activity className="h-8 w-8 text-indigo-600" />*/}
                 <Link to="/" className="flex items-center space-x-3">
-                  <img src={"/logo.svg"} alt="Lifeline Logo" className="w-16 h-16 sm:w-20 sm:h-20" />
-                  <span className="ml-2 text-xl font-bold text-gray-900 hidden sm:block">LifeLine Dashboard</span>
+                  <img
+                    src={"/logo.svg"}
+                    alt="Lifeline Logo"
+                    className="w-16 h-16 sm:w-20 sm:h-20"
+                  />
+                  <span className="ml-2 text-xl font-bold text-gray-900 hidden sm:block">
+                    LifeLine Dashboard
+                  </span>
                 </Link>
               </div>
               <button
                 className="ml-4 sm:hidden text-gray-500 hover:text-gray-700"
                 onClick={() => setSidebarOpen(!sidebarOpen)}
               >
-                {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                {sidebarOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
               </button>
             </div>
             <div className="flex items-center">
@@ -171,7 +181,7 @@ const Dashboard = () => {
           {/* Sidebar */}
           <div
             className={`fixed rounded-xl inset-y-0 left-0 z-20 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-0 ${
-              sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+              sidebarOpen ? "translate-x-0" : "-translate-x-full"
             }`}
           >
             <div className="flex flex-col h-full">
@@ -185,7 +195,9 @@ const Dashboard = () => {
                   <h2 className="mt-4 text-lg font-bold text-gray-900">
                     {user.firstName} {user.lastName}
                   </h2>
-                  <p className="text-gray-500 text-sm">@{user.firstName}_{user.id?.slice(0, 6)}</p>
+                  <p className="text-gray-500 text-sm">
+                    @{user.firstName}_{user.id?.slice(0, 6)}
+                  </p>
                   <div className="mt-3 flex flex-wrap justify-center gap-2">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
                       {user.role}
@@ -215,8 +227,8 @@ const Dashboard = () => {
                         }}
                         className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
                           activeTab === item.id
-                            ? 'bg-indigo-50 text-indigo-700 shadow-sm'
-                            : 'text-gray-700 hover:bg-gray-100'
+                            ? "bg-indigo-50 text-indigo-700 shadow-sm"
+                            : "text-gray-700 hover:bg-gray-100"
                         }`}
                       >
                         <Icon className="mr-3 h-5 w-5" />
@@ -239,9 +251,8 @@ const Dashboard = () => {
 
           {/* Main Content */}
           <div className="flex-1">
-            {activeTab === 'overview' && (
+            {activeTab === "overview" && (
               <div>
-
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-6">
                   <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100 hover:shadow-md transition-shadow">
@@ -250,8 +261,12 @@ const Dashboard = () => {
                         <Weight className="h-6 w-6" />
                       </div>
                       <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-500">Current Weight</p>
-                        <p className="text-2xl font-bold text-gray-900">{user.weight || '0'} kg</p>
+                        <p className="text-sm font-medium text-gray-500">
+                          Current Weight
+                        </p>
+                        <p className="text-2xl font-bold text-gray-900">
+                          {user.weight || "0"} kg
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -262,8 +277,12 @@ const Dashboard = () => {
                         <Ruler className="h-6 w-6" />
                       </div>
                       <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-500">Height</p>
-                        <p className="text-2xl font-bold text-gray-900">{user.height || '0'} cm</p>
+                        <p className="text-sm font-medium text-gray-500">
+                          Height
+                        </p>
+                        <p className="text-2xl font-bold text-gray-900">
+                          {user.height || "0"} cm
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -274,7 +293,9 @@ const Dashboard = () => {
                         <Flame className="h-6 w-6" />
                       </div>
                       <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-500">Calories Burned</p>
+                        <p className="text-sm font-medium text-gray-500">
+                          Calories Burned
+                        </p>
                         <p className="text-2xl font-bold text-gray-900">
                           {getCaloriesBurned(user.activityLevel)}
                         </p>
@@ -286,14 +307,21 @@ const Dashboard = () => {
                 {/* BMI Card */}
                 <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-100">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                    <h2 className="text-lg font-bold text-gray-900">Body Mass Index (BMI)</h2>
+                    <h2 className="text-lg font-bold text-gray-900">
+                      Body Mass Index (BMI)
+                    </h2>
                     <div className="mt-2 md:mt-0">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        bmiCategory === 'Underweight' ? 'bg-blue-100 text-blue-800' :
-                          bmiCategory === 'Normal' ? 'bg-green-100 text-green-800' :
-                            bmiCategory === 'Overweight' ? 'bg-yellow-100 text-yellow-800' :
-                              'bg-red-100 text-red-800'
-                      }`}>
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          bmiCategory === "Underweight"
+                            ? "bg-blue-100 text-blue-800"
+                            : bmiCategory === "Normal"
+                              ? "bg-green-100 text-green-800"
+                              : bmiCategory === "Overweight"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-red-100 text-red-800"
+                        }`}
+                      >
                         {bmiCategory}
                       </span>
                     </div>
@@ -323,7 +351,9 @@ const Dashboard = () => {
 
                 {/* Recent Activity */}
                 <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">Recent Activity</h2>
+                  <h2 className="text-lg font-bold text-gray-900 mb-4">
+                    Recent Activity
+                  </h2>
                   <div className="space-y-4">
                     <div className="flex items-start">
                       <div className="flex-shrink-0">
@@ -332,7 +362,9 @@ const Dashboard = () => {
                         </div>
                       </div>
                       <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-900">Completed 30-Day Cardio Challenge</p>
+                        <p className="text-sm font-medium text-gray-900">
+                          Completed 30-Day Cardio Challenge
+                        </p>
                         <p className="text-sm text-gray-500">2 days ago</p>
                       </div>
                     </div>
@@ -343,7 +375,9 @@ const Dashboard = () => {
                         </div>
                       </div>
                       <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-900">Joined Strength Training Program</p>
+                        <p className="text-sm font-medium text-gray-900">
+                          Joined Strength Training Program
+                        </p>
                         <p className="text-sm text-gray-500">5 days ago</p>
                       </div>
                     </div>
@@ -354,7 +388,9 @@ const Dashboard = () => {
                         </div>
                       </div>
                       <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-900">Invited 3 friends to Hydration Challenge</p>
+                        <p className="text-sm font-medium text-gray-900">
+                          Invited 3 friends to Hydration Challenge
+                        </p>
                         <p className="text-sm text-gray-500">1 week ago</p>
                       </div>
                     </div>
@@ -363,68 +399,94 @@ const Dashboard = () => {
               </div>
             )}
 
-            {activeTab === 'profile' && (
+            {activeTab === "profile" && (
               <div>
                 <div className="flex justify-between items-center mb-6">
-                  <h1 className="text-2xl font-bold text-gray-900">Profile Information</h1>
-                  <EditProfile />
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    Profile Information
+                  </h1>
+                  <EditProfile user={user} />
                 </div>
                 <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
                   <div className="border-t border-gray-200">
                     <dl>
                       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Full name</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Full name
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                           {user.firstName} {user.lastName}
                         </dd>
                       </div>
                       <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Username</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Username
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                           {user.firstName}_{user.id?.slice(0, 6)}
                         </dd>
                       </div>
                       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Email address</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Email address
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                           {user.email}
                         </dd>
                       </div>
                       <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Date of Birth</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Date of Birth
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {user.dateOfBirth ? new Date(user.dateOfBirth).toLocaleDateString() : 'Not set'}
-                          {user.dateOfBirth && ` (Age: ${calculateAge(user.dateOfBirth)})`}
+                          {user.dateOfBirth
+                            ? new Date(user.dateOfBirth).toLocaleDateString()
+                            : "Not set"}
+                          {user.dateOfBirth &&
+                            ` (Age: ${calculateAge(user.dateOfBirth)})`}
                         </dd>
                       </div>
                       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Gender</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Gender
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {user.gender || 'Not specified'}
+                          {user.gender || "Not specified"}
                         </dd>
                       </div>
                       <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Height</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Height
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {user.height || '0'} cm
+                          {user.height || "0"} cm
                         </dd>
                       </div>
                       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Weight</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Weight
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {user.weight || '0'} kg
+                          {user.weight || "0"} kg
                         </dd>
                       </div>
                       <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Activity Level</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Activity Level
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {user.activityLevel?.replace('_', ' ') || 'Not specified'}
+                          {user.activityLevel?.replace("_", " ") ||
+                            "Not specified"}
                         </dd>
                       </div>
                       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Account Created</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Account Created
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Not available'}
+                          {user.createdAt
+                            ? new Date(user.createdAt).toLocaleDateString()
+                            : "Not available"}
                         </dd>
                       </div>
                     </dl>
@@ -433,17 +495,26 @@ const Dashboard = () => {
               </div>
             )}
 
-            {activeTab === 'plans' && (
+            {activeTab === "plans" && (
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">Active Plans</h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-6">
+                  Active Plans
+                </h1>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {activePlans.map((plan) => (
-                    <div key={plan.id} className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow">
+                    <div
+                      key={plan.id}
+                      className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow"
+                    >
                       <div className="p-6">
                         <div className="flex justify-between items-start">
                           <div>
-                            <h3 className="text-lg font-bold text-gray-900">{plan.title}</h3>
-                            <p className="mt-1 text-sm text-gray-500">{plan.description}</p>
+                            <h3 className="text-lg font-bold text-gray-900">
+                              {plan.title}
+                            </h3>
+                            <p className="mt-1 text-sm text-gray-500">
+                              {plan.description}
+                            </p>
                             <span className="inline-flex items-center mt-3 px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
                               {plan.category}
                             </span>
@@ -467,11 +538,18 @@ const Dashboard = () => {
                         <div className="mt-4 flex justify-between text-sm text-gray-500">
                           <div className="flex items-center">
                             <Users className="h-4 w-4 mr-1" />
-                            <span>{plan.participants?.toLocaleString() || 0} participants</span>
+                            <span>
+                              {plan.participants?.toLocaleString() || 0}{" "}
+                              participants
+                            </span>
                           </div>
                           <div className="flex items-center">
                             <Clock className="h-4 w-4 mr-1" />
-                            <span>{plan.endDate ? new Date(plan.endDate).toLocaleDateString() : 'N/A'}</span>
+                            <span>
+                              {plan.endDate
+                                ? new Date(plan.endDate).toLocaleDateString()
+                                : "N/A"}
+                            </span>
                           </div>
                         </div>
                         <div className="mt-6">
@@ -486,17 +564,26 @@ const Dashboard = () => {
               </div>
             )}
 
-            {activeTab === 'challenges' && (
+            {activeTab === "challenges" && (
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">Active Challenges</h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-6">
+                  Active Challenges
+                </h1>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {challenges.map((challenge) => (
-                    <div key={challenge.id} className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow">
+                    <div
+                      key={challenge.id}
+                      className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow"
+                    >
                       <div className="p-6">
                         <div className="flex justify-between items-start">
                           <div>
-                            <h3 className="text-lg font-bold text-gray-900">{challenge.title}</h3>
-                            <p className="mt-1 text-sm text-gray-500">{challenge.description}</p>
+                            <h3 className="text-lg font-bold text-gray-900">
+                              {challenge.title}
+                            </h3>
+                            <p className="mt-1 text-sm text-gray-500">
+                              {challenge.description}
+                            </p>
                           </div>
                           <div className="bg-gray-100 rounded-full p-2">
                             <Trophy className="h-5 w-5 text-gray-600" />
@@ -504,28 +591,42 @@ const Dashboard = () => {
                         </div>
                         <div className="mt-4 flex items-center text-sm text-gray-500">
                           <Award className="h-4 w-4 mr-1" />
-                          <span>Reward: {challenge.reward || 'N/A'}</span>
+                          <span>Reward: {challenge.reward || "N/A"}</span>
                         </div>
                         <div className="mt-2 flex items-center text-sm text-gray-500">
                           <Clock className="h-4 w-4 mr-1" />
-                          <span>Deadline: {challenge.deadline ? new Date(challenge.deadline).toLocaleDateString() : 'N/A'}</span>
+                          <span>
+                            Deadline:{" "}
+                            {challenge.deadline
+                              ? new Date(
+                                  challenge.deadline,
+                                ).toLocaleDateString()
+                              : "N/A"}
+                          </span>
                         </div>
                         <div className="mt-2 flex items-center text-sm text-gray-500">
                           <Users className="h-4 w-4 mr-1" />
-                          <span>{challenge.participants?.toLocaleString() || 0} participants</span>
+                          <span>
+                            {challenge.participants?.toLocaleString() || 0}{" "}
+                            participants
+                          </span>
                         </div>
                         <div className="mt-6 flex space-x-3">
-                          <button className={`flex-1 inline-flex justify-center items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white ${
-                            challenge.completed
-                              ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
-                              : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700'
-                          } focus:outline-none transition-all`}>
+                          <button
+                            className={`flex-1 inline-flex justify-center items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white ${
+                              challenge.completed
+                                ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                                : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                            } focus:outline-none transition-all`}
+                          >
                             {challenge.completed ? (
                               <>
                                 <CheckCircle className="mr-2 h-4 w-4" />
                                 Completed
                               </>
-                            ) : 'Join Challenge'}
+                            ) : (
+                              "Join Challenge"
+                            )}
                           </button>
                           <button className="inline-flex justify-center items-center px-4 py-2.5 border border-gray-300 text-sm font-medium rounded-lg shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none transition-colors">
                             Details
@@ -538,20 +639,36 @@ const Dashboard = () => {
               </div>
             )}
 
-            {activeTab === 'achievements' && (
+            {activeTab === "achievements" && (
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">Achievements</h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-6">
+                  Achievements
+                </h1>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {achievements.map((achievement) => (
-                    <div key={achievement.id} className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow">
+                    <div
+                      key={achievement.id}
+                      className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow"
+                    >
                       <div className="p-6">
                         <div className="flex items-center">
-                          <div className="text-3xl">{achievement.icon || '🏆'}</div>
+                          <div className="text-3xl">
+                            {achievement.icon || "🏆"}
+                          </div>
                           <div className="ml-4">
-                            <h3 className="text-lg font-bold text-gray-900">{achievement.title}</h3>
-                            <p className="text-sm text-gray-500">{achievement.description}</p>
+                            <h3 className="text-lg font-bold text-gray-900">
+                              {achievement.title}
+                            </h3>
+                            <p className="text-sm text-gray-500">
+                              {achievement.description}
+                            </p>
                             <p className="mt-2 text-xs text-gray-400">
-                              Earned: {achievement.earned ? new Date(achievement.earned).toLocaleDateString() : 'N/A'}
+                              Earned:{" "}
+                              {achievement.earned
+                                ? new Date(
+                                    achievement.earned,
+                                  ).toLocaleDateString()
+                                : "N/A"}
                             </p>
                           </div>
                         </div>
@@ -562,68 +679,90 @@ const Dashboard = () => {
               </div>
             )}
 
-            {activeTab === 'settings' && (
+            {activeTab === "settings" && (
               <div>
-                <div className={'flex justify-between items-center mb-6'}>
-                  <h1 className="text-2xl font-bold text-gray-900 ">Account Settings</h1>
+                <div className={"flex justify-between items-center mb-6"}>
+                  <h1 className="text-2xl font-bold text-gray-900 ">
+                    Account Settings
+                  </h1>
                   <EditProfile />
                 </div>
                 <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6 border border-gray-100">
                   <div className="border-t border-gray-200">
                     <dl>
                       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Dietary Restrictions</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Dietary Restrictions
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {preferences.dietaryRestrictions?.join(', ') || '[]'}
+                          {preferences.dietaryRestrictions?.join(", ") || "[]"}
                         </dd>
                       </div>
                       <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Allergies</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Allergies
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {preferences.allergies?.join(', ') || '[]'}
+                          {preferences.allergies?.join(", ") || "[]"}
                         </dd>
                       </div>
                       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Fitness Goals</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Fitness Goals
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {preferences.fitnessGoals?.join(', ') || '[]'}
+                          {preferences.fitnessGoals?.join(", ") || "[]"}
                         </dd>
                       </div>
                       <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Focus Areas</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Focus Areas
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {preferences.fitnessGoals?.join(', ') || '[]'}
+                          {preferences.fitnessGoals?.join(", ") || "[]"}
                         </dd>
                       </div>
                       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Typical Day</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Typical Day
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {preferences.fitnessGoals?.join(', ') || 'none'}
+                          {preferences.fitnessGoals?.join(", ") || "none"}
                         </dd>
                       </div>
                       <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Motivation</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Motivation
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {preferences.fitnessGoals?.join(', ') || 'none'}
+                          {preferences.fitnessGoals?.join(", ") || "none"}
                         </dd>
                       </div>
                       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Notifications</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Notifications
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            preferences.notificationsEnabled
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-red-100 text-red-800'
-                          }`}>
-                            {preferences.notificationsEnabled ? 'Enabled' : 'Disabled'}
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              preferences.notificationsEnabled
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                            }`}
+                          >
+                            {preferences.notificationsEnabled
+                              ? "Enabled"
+                              : "Disabled"}
                           </span>
                         </dd>
                       </div>
                       <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">Privacy</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Privacy
+                        </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
-                            {preferences.privacy || 'Not set'}
+                            {preferences.privacy || "Not set"}
                           </span>
                         </dd>
                       </div>
@@ -632,14 +771,23 @@ const Dashboard = () => {
                 </div>
                 <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
                   <div className="px-4 py-5 sm:px-6 bg-gradient-to-r from-rose-50 to-red-50">
-                    <h3 className="text-lg leading-6 font-bold text-gray-900">Account Management</h3>
-                    <p className="mt-1 max-w-2xl text-sm text-gray-500">Manage your account settings and preferences.</p>
+                    <h3 className="text-lg leading-6 font-bold text-gray-900">
+                      Account Management
+                    </h3>
+                    <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                      Manage your account settings and preferences.
+                    </p>
                   </div>
                   <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
                       <div>
-                        <h4 className="text-sm font-bold text-gray-900">Delete Account</h4>
-                        <p className="text-sm text-gray-500">Permanently delete your account and all associated data.</p>
+                        <h4 className="text-sm font-bold text-gray-900">
+                          Delete Account
+                        </h4>
+                        <p className="text-sm text-gray-500">
+                          Permanently delete your account and all associated
+                          data.
+                        </p>
                       </div>
                       <button className="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 focus:outline-none transition-all">
                         <Trash2 className="mr-2 h-4 w-4" />

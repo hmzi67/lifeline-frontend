@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {Edit} from "lucide-react";
 
-export function EditProfile() {
+export function EditProfile({user}) {
     return (
         <Dialog>
             <form>
@@ -33,7 +33,7 @@ export function EditProfile() {
                         {/* Name */}
                         <div className="grid gap-3">
                             <Label htmlFor="name-1">Name</Label>
-                            <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
+                            <Input id="name-1" name="name" defaultValue={user.firstName + ' ' + user.lastName} />
                         </div>
 
                         {/* Username */}
@@ -51,20 +51,20 @@ export function EditProfile() {
                         {/* Date of Birth */}
                         <div className="grid gap-3">
                             <Label htmlFor="dob">Date of Birth</Label>
-                            <Input id="dob" name="dob" type="date" />
+                            <Input id="dob" name="dob" type="date" defaultValue={new Date(user.dateOfBirth).toISOString().split("T")[0]} />
                         </div>
 
                         {/* Gender */}
                         <div className="grid gap-3">
                             <Label htmlFor="gender">Gender</Label>
-                            <Select name="gender">
-                                <SelectTrigger id="gender">
+                            <Select name="gender" defaultValue={user.gender}>
+                                <SelectTrigger id="gender" className={'w-full'}>
                                     <SelectValue placeholder="Select gender" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="male">Male</SelectItem>
-                                    <SelectItem value="female">Female</SelectItem>
-                                    <SelectItem value="other">Other</SelectItem>
+                                    <SelectItem value="MALE">Male</SelectItem>
+                                    <SelectItem value="FEMALE">Female</SelectItem>
+                                    <SelectItem value="OTHER">Other</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -72,13 +72,13 @@ export function EditProfile() {
                         {/* Weight */}
                         <div className="grid gap-3">
                             <Label htmlFor="weight">Weight (kg)</Label>
-                            <Input id="weight" name="weight" type="number" step="0.1" placeholder="e.g., 70.5" />
+                            <Input id="weight" name="weight" type="number" step="0.1" defaultValue={user.weight ? user.weight : 'e.g., 70'} />
                         </div>
 
                         {/* Height */}
                         <div className="grid gap-3">
                             <Label htmlFor="height">Height (cm)</Label>
-                            <Input id="height" name="height" type="number" step="0.1" placeholder="e.g., 175" />
+                            <Input id="height" name="height" type="number" step="0.1" defaultValue={user.height ? user.height : 'e.g., 180'} />
                         </div>
                     </div>
 
