@@ -1,55 +1,19 @@
-import { Router, Request, Response } from 'express';
-import { validateRequest, authenticate, authorize, asyncHandler } from '../middleware/index.js';
-import { createUserSchema, updateUserSchema } from '../validators/userSchema.js';
-import { AuthenticatedRequest } from '../types/middlewareTypes.js';
+import { Router } from 'express';
+import { authenticate } from '../middleware/index.js';
+import { deleteUser, getCurrentUser, updateUser } from '@controllers/userController';
 
-const router = Router();
+const userRoute = Router();
 
-// Public route - no authentication required
-router.post(
-  '/',
-  validateRequest(createUserSchema),
-  asyncHandler(async (req: Request, res: Response) => {
-    // Create user logic here
-    res.status(201).json({ success: true, message: 'User created successfully' });
-  })
-);
+userRoute.get('/profile', authenticate, getCurrentUser)
+userRoute.put('/profile/:id', authenticate, updateUser)
+userRoute.delete('/profile/:id', authenticate, deleteUser)
 
-// Protected route - authentication required
-router.get(
-  '/profile',
-  authenticate,
-  asyncHandler(async (req: Request, res: Response) => {
-    // Type assertion since authenticate middleware adds user to req
-    const authReq = req as AuthenticatedRequest;
-    res.json({ success: true, user: authReq.user });
-  })
-);
+export default userRoute;
 
-// Protected route with validation
-router.put(
-  '/:id',
-  authenticate,
-  validateRequest(updateUserSchema),
-  asyncHandler(async (req: Request, res: Response) => {
-    // Type assertion since authenticated middleware adds user to req
-    const authReq = req as AuthenticatedRequest;
-    const userId = req.params.id;
-    res.json({ success: true, message: 'User updated successfully', userId, user: authReq.user });
-  })
-);
 
 // Admin-only route
-router.delete(
-  '/:id',
-  authenticate,
-  authorize(['admin']),
-  asyncHandler(async (req: Request, res: Response) => {
-    // Type assertion since authenticated middleware adds user to req
-    const authReq = req as AuthenticatedRequest;
-    const userId = req.params.id;
-    res.json({ success: true, message: 'User deleted successfully', userId, user: authReq.user });
-  })
-);
-
-export default router;
+// router.delete(
+//   '/:id',
+//   authenticate,
+//   authorize(['admin']),
+//  );

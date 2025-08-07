@@ -13,8 +13,8 @@ import {
   timeout,
 } from './middleware/index.js';
 import authRoute from './routes/authRoute.js';
-import userRoutes from './routes/userRoutes.js';
 import { healthCheck } from './config/database.js';
+import userRoute from './routes/userRoutes.js';
 
 const app = express();
 
@@ -60,7 +60,7 @@ app.get('/health', healthCheck);
 app.use('/api/auth/', authRoute);
 
 // User routes
-app.use('/api/users/', userRoutes);
+app.use('/api/user/', userRoute);
 
 // Example protected route
 // app.get('/api/protected', authenticate, (req, res) => {

@@ -6,7 +6,6 @@ import {
   Calendar,
   Target,
   Activity,
-  Edit,
   Weight,
   Ruler,
   Flame,
@@ -20,9 +19,10 @@ import {
   CheckCircle,
 } from "lucide-react";
 import api from "@/lib/axios.ts";
+import { EditProfile } from "@/components/dashboard/EditProfile.tsx";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
-  const [showProfileEdit, setShowProfileEdit] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [user, setUser] = useState({});
   const [preferences, setPreferences] = useState({});
@@ -38,7 +38,7 @@ const Dashboard = () => {
         setLoading(true);
 
         // Fetch user data
-        const userResponse = await api.get("/auth/me");
+        const userResponse = await api.get("/user/profile");
         setUser(userResponse.data.data.user);
 
         // Fetch preferences
@@ -123,8 +123,8 @@ const Dashboard = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading dashboard...</p>
+          <div className="animate-pulse rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Fetching API...</p>
         </div>
       </div>
     );
@@ -138,8 +138,11 @@ const Dashboard = () => {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center">
-                <Activity className="h-8 w-8 text-indigo-600" />
-                <span className="ml-2 text-xl font-bold text-gray-900 hidden sm:block">FitTracker</span>
+                {/*<Activity className="h-8 w-8 text-indigo-600" />*/}
+                <Link to="/" className="flex items-center space-x-3">
+                  <img src={"/logo.svg"} alt="Lifeline Logo" className="w-16 h-16 sm:w-20 sm:h-20" />
+                  <span className="ml-2 text-xl font-bold text-gray-900 hidden sm:block">LifeLine Dashboard</span>
+                </Link>
               </div>
               <button
                 className="ml-4 sm:hidden text-gray-500 hover:text-gray-700"
@@ -168,7 +171,7 @@ const Dashboard = () => {
         <div className="flex flex-col md:flex-row gap-6">
           {/* Sidebar */}
           <div
-            className={`fixed inset-y-0 left-0 z-20 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-0 ${
+            className={`fixed rounded-xl inset-y-0 left-0 z-20 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-0 ${
               sidebarOpen ? 'translate-x-0' : '-translate-x-full'
             }`}
           >
@@ -239,7 +242,6 @@ const Dashboard = () => {
           <div className="flex-1">
             {activeTab === 'overview' && (
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard Overview</h1>
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-6">
@@ -366,19 +368,9 @@ const Dashboard = () => {
               <div>
                 <div className="flex justify-between items-center mb-6">
                   <h1 className="text-2xl font-bold text-gray-900">Profile Information</h1>
-                  <button
-                    onClick={() => setShowProfileEdit(!showProfileEdit)}
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none transition-colors"
-                  >
-                    <Edit className="mr-2 h-4 w-4" />
-                    Edit Profile
-                  </button>
+                  <EditProfile />
                 </div>
                 <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
-                  <div className="px-4 py-5 sm:px-6 bg-gradient-to-r from-indigo-50 to-blue-50">
-                    <h3 className="text-lg leading-6 font-bold text-gray-900">Personal Information</h3>
-                    <p className="mt-1 max-w-2xl text-sm text-gray-500">Personal details and account information.</p>
-                  </div>
                   <div className="border-t border-gray-200">
                     <dl>
                       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -573,12 +565,11 @@ const Dashboard = () => {
 
             {activeTab === 'settings' && (
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">Account Settings</h1>
+                <div className={'flex justify-between items-center mb-6'}>
+                  <h1 className="text-2xl font-bold text-gray-900 ">Account Settings</h1>
+                  <EditProfile />
+                </div>
                 <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6 border border-gray-100">
-                  <div className="px-4 py-5 sm:px-6 bg-gradient-to-r from-indigo-50 to-blue-50">
-                    <h3 className="text-lg leading-6 font-bold text-gray-900">Preferences</h3>
-                    <p className="mt-1 max-w-2xl text-sm text-gray-500">Manage your notification and privacy preferences.</p>
-                  </div>
                   <div className="border-t border-gray-200">
                     <dl>
                       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
