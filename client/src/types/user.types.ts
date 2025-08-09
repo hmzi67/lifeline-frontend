@@ -15,6 +15,7 @@ export interface UserProfile {
   id?: string;
   firstName?: string;
   lastName?: string;
+  username?: string;
   email?: string;
   dateOfBirth?: string;
   gender?: string;

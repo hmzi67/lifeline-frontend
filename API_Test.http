@@ -16,7 +16,7 @@ Content-Type: application/json
 
 {
   "email": "muhammadnaveedcis@gmail.com",
-  "password": "naveed9039"
+  "password": "admin@123"
 }
 
 ###
@@ -33,7 +33,7 @@ Content-Type: application/json
 
 ### Get current user (with access token from login)
 GET http://localhost:3000/api/auth/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWR5ZXZzMDIwMDAwMTIzdXA5MW5ocDBxIiwiZW1haWwiOiJtdWhhbW1hZG5hdmVlZGNpc0BnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc1NDU1ODMwNiwiZXhwIjoxNzU0NTU5MjA2fQ.i8aO0LoXmUyOfARK7sqL47WJdpwTi6NYmSpbSIiKOjc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWR5ZXZzMDIwMDAwMTIzdXA5MW5ocDBxIiwiZW1haWwiOiJtdWhhbW1hZG5hdmVlZGNpc0BnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc1NDczODY4NiwiZXhwIjoxNzU0NzM5NTg2fQ.3KiP8JC1i2XEcxyxKHKXPBnHWeWH0wLyoG6ImsKLCXw
 
 ###
 
@@ -64,6 +64,11 @@ Content-Type: application/json
 Cookie: refreshToken=PASTE_REFRESH_TOKEN_HERE
 
 ###
+
+
+
+
+
 
 ### Logout
 POST http://localhost:3000/api/auth/logout

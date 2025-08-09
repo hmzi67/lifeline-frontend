@@ -12,7 +12,6 @@ import {
   Users,
   Award,
   BarChart3,
-  Trash2,
   Menu,
   X,
   CheckCircle,
@@ -21,6 +20,7 @@ import api from "@/lib/axios.ts";
 import { EditProfile } from "@/components/dashboard/EditProfile.tsx";
 import { Link } from "react-router-dom";
 import type { Achievement, Challenge, Plan, UserPreferences, UserProfile } from "@/types/user.types";
+import DeleteAccount from "@/components/dashboard/DeleteAccount.tsx";
 
 
 
@@ -32,6 +32,7 @@ const Dashboard = () => {
     dateOfBirth: "",
     email: "",
     firstName: "",
+    username: "",
     gender: "",
     height: 0,
     id: "",
@@ -214,7 +215,7 @@ const Dashboard = () => {
                       {user.firstName} {user.lastName}
                     </h2>
                     <p className="text-gray-500 text-sm">
-                      @{user.firstName || "user"}_{user.id ? user.id.slice(0, 6) : ""}
+                      {user.username}
                     </p>
                     <div className="mt-3 flex flex-wrap justify-center gap-2">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
@@ -774,10 +775,7 @@ const Dashboard = () => {
                               data.
                             </p>
                           </div>
-                          <button className="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 focus:outline-none transition-all">
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete Account
-                          </button>
+                          <DeleteAccount id={user.id} />
                         </div>
                       </div>
                     </div>

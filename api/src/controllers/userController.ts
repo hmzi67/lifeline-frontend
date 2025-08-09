@@ -29,6 +29,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
                 email: true,
                 firstName: true,
                 lastName: true,
+                username: true,
                 role: true,
                 isEmailVerified: true,
                 profileImage: true,

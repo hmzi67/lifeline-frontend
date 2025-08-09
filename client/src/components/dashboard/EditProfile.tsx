@@ -24,7 +24,7 @@ import {
 import type { UserProfile } from "@/types/user.types"
 import { Edit } from "lucide-react"
 import { toast } from "sonner"
-import api from "../../lib/axios" // <-- your axios instance
+import api from "../../lib/axios"
 
 interface EditProfileProps {
     user: UserProfile
@@ -55,6 +55,7 @@ export function EditProfile({ user }: EditProfileProps) {
             await api.put(`/user/profile/${user.id}`, payload)
             toast.success("Profile updated successfully")
             setOpen(false) // close modal
+            window.location.reload()
         } catch (err) {
             console.error(err)
            
@@ -90,7 +91,7 @@ export function EditProfile({ user }: EditProfileProps) {
                         </div>
                         <div className="grid gap-3">
                             <Label htmlFor="username">Username</Label>
-                            <Input id="username" name="username" defaultValue="@peduarte" />
+                            <Input id="username" name="username" defaultValue={user.username} />
                         </div>
                         <div className="grid gap-3">
                             <Label htmlFor="password">Reset Password</Label>
