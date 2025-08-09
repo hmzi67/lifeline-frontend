@@ -71,6 +71,7 @@ export const updateUser = async (req: Request, res: Response) => {
                 ...req.body,
             },
         });
+
         res.status(200).json({
             success: true,
             data: { user },
@@ -82,4 +83,24 @@ export const updateUser = async (req: Request, res: Response) => {
         })
     }
 }
-export const deleteUser = () => {}
+
+// delete user
+export const deleteUser = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+        const user = await prisma.user.delete({
+            where: { id },
+        });
+
+        res.status(200).json({
+            success: true,
+            data: { user },
+        });
+    } catch (e) {
+        res.status(400).json({
+            success: false,
+            message: 'Failed to delete user',
+        })
+    }
+
+}
