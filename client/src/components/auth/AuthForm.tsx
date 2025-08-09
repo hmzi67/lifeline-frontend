@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export interface AuthFormProps {
   mode: 'login' | 'signup';
@@ -48,20 +48,20 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit, loading, errors = {
       {/* Name field */}
       {mode === "signup" && (
         <>
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <User className="h-5 w-5 text-gray-400" />
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <User className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              placeholder="Name"
+              className={`w-full pl-10 pr-4 py-3 border border-gray-300 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors ${errors.name ? "border-red-400" : ""}`}
+              required
+            />
           </div>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            placeholder="Name"
-            className={`w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors ${errors.name ? "border-red-400" : ""}`}
-            required
-          />
-        </div>
           {errors.name && (
             <p className="text-sm text-red-600 mt-1">{errors.name} NAME ERROR</p>
           )}
@@ -79,7 +79,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit, loading, errors = {
           value={formData.email}
           onChange={handleInputChange}
           placeholder="Email"
-          className={`w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors ${errors.email ? "border-red-400" : ""}`}
+          className={`w-full pl-10 pr-4 py-3 border border-gray-300 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors ${errors.email ? "border-red-400" : ""}`}
           required
         />
       </div>
@@ -98,7 +98,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit, loading, errors = {
           value={formData.password}
           onChange={handleInputChange}
           placeholder="Password"
-          className={`w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors ${errors.password ? "border-red-400" : ""}`}
+          className={`w-full pl-10 pr-12 py-3 border border-gray-300 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors ${errors.password ? "border-red-400" : ""}`}
           required
         />
         <button
@@ -132,8 +132,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit, loading, errors = {
           </label>
           <Link to={"/reset-password"}>
             <button
-                type="button"
-                className="text-sm text-gray-600 hover:text-primary-600"
+              type="button"
+              className="text-sm text-gray-600 hover:text-primary-600"
             >
               Forgot password?
             </button>

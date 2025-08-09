@@ -7,7 +7,9 @@ import Loading from "@/components/common/Loading.tsx";
 import Verify from "@/pages/auth/Verify.tsx";
 import ResetPassword from "@/pages/auth/ResetPassword.tsx";
 import OAuthCallback from "@/pages/auth/OAuthCallback.tsx";
-import { AuthProvider } from './contexts/AuthContext';
+import { StoreInitializer } from './components/common/StoreInitializer';
+import { NotificationContainer } from './components/common/NotificationContainer';
+import ProtectedRoute from './components/routes/ProtectedRoutes';
 
 
 // Lazy-loaded page components
@@ -33,7 +35,7 @@ const CommingSoon = lazy(() => import('./pages/utility/CommingSoon'));
 function App() {
 
   return (
-    <AuthProvider>
+    <StoreInitializer>
       <Router>
         <ScrollToTop />
         <Layout>
@@ -62,21 +64,21 @@ function App() {
 
               {/* Protected routes - only accessible when logged in */}
               <Route path="/dashboard" element={
-                      <Dashboard />
+                <Dashboard />
               } />
               <Route path="/goals" element={
-                
-                  <Goals />
-                
+
+                <Goals />
+
               } />
               <Route path="/analytics" element={
-                
-                  <Analytics />
-                
+
+                <Analytics />
+
               } />
               <Route path="/checkout" element={
 
-                  <Checkout />
+                <Checkout />
 
               } />
 
@@ -85,8 +87,9 @@ function App() {
             </Routes>
           </Suspense>
         </Layout>
+        <NotificationContainer />
       </Router>
-    </AuthProvider>
+    </StoreInitializer>
   );
 }
 

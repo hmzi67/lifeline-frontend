@@ -2,7 +2,7 @@
 
 
 
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuthStore } from '../../stores';
 import { Navigate, useLocation } from 'react-router-dom';
 import React, { type JSX } from 'react';
 import Loading from "@/components/common/Loading.tsx";
@@ -12,7 +12,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-    const { isAuthenticated, isLoading } = useAuth();
+    const { isAuthenticated, isLoading } = useAuthStore();
     const location = useLocation();
 
     if (isLoading) {

@@ -4,14 +4,14 @@ import AuthForm from '../../components/auth/AuthForm';
 import AuthLayout from '../../components/auth/AuthLayout';
 import SocialAuthButtons from '../../components/auth/SocialAuthButtons';
 import axios from "axios";
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuthStore } from '../../stores';
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const { signup } = useAuth();
+  const { signup } = useAuthStore();
 
   // Get the intended destination from location state, or default to dashboard
   const from = location.state?.from?.pathname || '/dashboard';

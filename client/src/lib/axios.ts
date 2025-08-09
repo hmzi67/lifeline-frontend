@@ -7,20 +7,38 @@
 //
 // export default api;
 
-
-
-import axios from 'axios';
+import axios from "axios";
 
 // Create axios instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000/api",
   withCredentials: true, // Needed to send refresh token cookie
 });
 
 // Request interceptor: Add access token from localStorage
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    // Try to get token from different possible locations
+    let token = localStorage.getItem("token");
+
+    // If not found, try to get from Zustand persistence
+    if (!token) {
+      try {
+        const authStorage = localStorage.getItem("auth-storage");
+        if (authStorage) {
+          const parsedAuth = JSON.parse(authStorage);
+          token = parsedAuth?.state?.token;
+        }
+      } catch (e) {
+        console.warn("Could not parse auth storage:", e);
+      }
+    }
+
+    // If still not found, try sessionStorage
+    if (!token) {
+      token = sessionStorage.getItem("token");
+    }
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -41,19 +59,19 @@ api.interceptors.response.use(
 
       try {
         // Call your refresh endpoint (must be set up server-side)
-        const res = await api.post('/auth/refresh');
+        const res = await api.post("/auth/refresh");
         const newAccessToken = res.data.accessToken;
 
         // Save new access token
-        localStorage.setItem('access_token', newAccessToken);
+        localStorage.setItem("access_token", newAccessToken);
 
         // Update Authorization header and retry original request
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
         // Optionally, logout user here
-        localStorage.removeItem('access_token');
-        window.location.href = '/login'; // or any logout logic
+        localStorage.removeItem("access_token");
+        window.location.href = "/login"; // or any logout logic
         return Promise.reject(refreshError);
       }
     }

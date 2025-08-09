@@ -23,8 +23,7 @@ import {
 } from "@/components/ui/select"
 import type { UserProfile } from "@/types/user.types"
 import { Edit } from "lucide-react"
-import { toast } from "sonner"
-import api from "../../lib/axios" // <-- your axios instance
+import { useUserStore, useUIStore } from "@/stores"
 
 interface EditProfileProps {
     user: UserProfile
@@ -32,35 +31,43 @@ interface EditProfileProps {
 
 export function EditProfile({ user }: EditProfileProps) {
     const [open, setOpen] = useState(false)
-    const [loading, setLoading] = useState(false)
     const [gender, setGender] = useState(user.gender ?? "")
+
+    const { updateProfile, isLoading } = useUserStore()
+    const { addNotification } = useUIStore() as { addNotification: (args: any) => void }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        setLoading(true)
 
         const formData = new FormData(e.currentTarget)
-        const payload = {
+        const updates = {
             firstName: formData.get("firstName")?.toString() || "",
             lastName: formData.get("lastName")?.toString() || "",
-            username: formData.get("username")?.toString() || "",
             password: formData.get("password")?.toString() || undefined,
             dateOfBirth: formData.get("dob")?.toString() || undefined,
-            gender,
+            gender, // from state
             weight: formData.get("weight") ? Number(formData.get("weight")) : undefined,
             height: formData.get("height") ? Number(formData.get("height")) : undefined,
         }
 
         try {
-            await api.put(`/user/profile/${user.id}`, payload)
-            toast.success("Profile updated successfully")
-            setOpen(false) // close modal
-        } catch (err) {
-            console.error(err)
-           
-            toast.error("Failed to update profile")
-        } finally {
-            setLoading(false)
+            await updateProfile(updates)
+
+            addNotification({
+                type: 'success',
+                title: 'Profile Updated',
+                message: 'Your profile has been successfully updated!',
+            })
+
+            setOpen(false) // close dialog
+        } catch (err: any) {
+            console.error("Error updating profile:", err)
+
+            addNotification({
+                type: 'error',
+                title: 'Update Failed',
+                message: err.message || 'Failed to update profile. Please try again.',
+            })
         }
     }
 
@@ -148,8 +155,8 @@ export function EditProfile({ user }: EditProfileProps) {
                         <DialogClose asChild>
                             <Button variant="outline" type="button">Cancel</Button>
                         </DialogClose>
-                        <Button type="submit" disabled={loading}>
-                            {loading ? "Saving..." : "Save changes"}
+                        <Button type="submit" disabled={isLoading}>
+                            {isLoading ? "Saving..." : "Save changes"}
                         </Button>
                     </DialogFooter>
                 </form>

@@ -3,14 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthForm from '../../components/auth/AuthForm';
 import AuthLayout from '../../components/auth/AuthLayout';
 import SocialAuthButtons from '../../components/auth/SocialAuthButtons';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuthStore } from '../../stores';
 import axios from "axios";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const { login } = useAuth();
+  const { login } = useAuthStore();
 
   const handleLogin = async (data: Record<string, string | boolean>) => {
     setFieldErrors({})
@@ -33,7 +33,7 @@ const Login: React.FC = () => {
 
       navigate("/questions")
 
-    }catch (error: any) {
+    } catch (error: any) {
       setLoading(false);
       if (axios.isAxiosError(error)) {
         const responseErrors = error.response?.data?.errors;
