@@ -20,5 +20,8 @@
     "fullstack"
   ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "sonner": "^2.0.7"
+  }
 }

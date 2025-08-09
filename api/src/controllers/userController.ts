@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import {Request, Response} from "express";
 import {PrismaClient} from "@prisma/client";
+import bcrypt from 'bcryptjs';
+
 
 const prisma = new PrismaClient();
 
@@ -63,26 +65,59 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 
 // update user
 export const updateUser = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    try {
-        const user = await prisma.user.update({
-            where: { id },
-            data: {
-                ...req.body,
-            },
-        });
+  const { id } = req.params;
+  try {
+    const allowedFields = [
+      'firstName',
+      'lastName',
+      'username',
+      'password',
+      'dateOfBirth',
+      'gender',
+      'height',
+      'weight',
+    ];
 
-        res.status(200).json({
-            success: true,
-            data: { user },
-        });
-    } catch (e) {
-        res.status(400).json({
-            success: false,
-            message: 'Failed to update user',
-        })
+    let data: any = {};
+    for (const key of allowedFields) {
+      if (req.body[key] !== undefined && req.body[key] !== null && req.body[key] !== '') {
+        data[key] = req.body[key];
+      }
     }
-}
+
+    if (data.dateOfBirth) {
+      data.dateOfBirth = new Date(data.dateOfBirth);
+    }
+
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
+
+    const user = await prisma.user.update({
+      where: { id },
+      data,
+    });
+
+    res.status(200).json({
+      success: true,
+      data: { user },
+    });
+  } catch (e: any) {
+    console.error('Update error:', e);
+    if (e.code === 'P2002') {
+      res.status(400).json({
+        success: false,
+        message: 'Username or email already exists',
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: 'Failed to update user',
+      });
+    }
+  }
+};
+
 
 // delete user
 export const deleteUser = async (req: Request, res: Response) => {

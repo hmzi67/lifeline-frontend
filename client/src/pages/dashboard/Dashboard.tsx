@@ -20,58 +20,9 @@ import {
 import api from "@/lib/axios.ts";
 import { EditProfile } from "@/components/dashboard/EditProfile.tsx";
 import { Link } from "react-router-dom";
+import type { Achievement, Challenge, Plan, UserPreferences, UserProfile } from "@/types/user.types";
 
-interface UserProfile {
-  id?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  dateOfBirth?: string;
-  gender?: string;
-  height?: number;
-  weight?: number;
-  activityLevel: string;
-  role?: string;
-  isEmailVerified?: boolean;
-  profileImage?: string;
-  createdAt?: string;
-}
 
-interface UserPreferences {
-  dietaryRestrictions?: string[];
-  allergies?: string[];
-  fitnessGoals?: string[];
-  notificationsEnabled?: boolean;
-  privacy?: string;
-}
-
-interface Plan {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  progress: number;
-  participants?: number;
-  endDate?: string;
-}
-
-interface Challenge {
-  id: string;
-  title: string;
-  description: string;
-  reward?: string;
-  deadline?: string;
-  participants?: number;
-  completed?: boolean;
-}
-
-interface Achievement {
-  id: string;
-  title: string;
-  description: string;
-  icon?: string;
-  earned?: string;
-}
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
