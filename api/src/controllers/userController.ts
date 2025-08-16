@@ -23,24 +23,47 @@ export const getCurrentUser = async (req: Request, res: Response) => {
         };
 
         const user = await prisma.user.findUnique({
-            where: { id: decoded.userId },
+            where: { id: BigInt(decoded.userId) },
             select: {
                 id: true,
                 email: true,
-                firstName: true,
-                lastName: true,
                 username: true,
-                role: true,
-                isEmailVerified: true,
+                googleId: true,
                 profileImage: true,
-                dateOfBirth: true,
-                gender: true,
-                height: true,
-                weight: true,
-                activityLevel: true,
+                isEmailVerified: true,
+                subject: true,
+                status: true,
+                roleId: true,
                 createdAt: true,
                 updatedAt: true,
-                preferences: true,
+                role: {
+                    select: {
+                        id: true,
+                        name: true,
+                        description: true,
+                    }
+                },
+                questionnaires: {
+                    select: {
+                        id: true,
+                        gender: true,
+                        goal: true,
+                        dietType: true,
+                        isDiabetic: true,
+                        allergenFood: true,
+                        fitnessLevel: true,
+                        typicalDayType: true,
+                        physicalLimitations: true,
+                        bodyFocusArea: true,
+                        dateOfBirth: true,
+                        height: true,
+                        heightUnit: true,
+                        weight: true,
+                        weightUnit: true,
+                        goalWeight: true,
+                        motivationFor: true,
+                    }
+                }
             },
         });
 
@@ -68,15 +91,17 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
+    // Convert id to BigInt
+    const userId = BigInt(id);
+
     const allowedFields = [
-      'firstName',
-      'lastName',
+      'email',
       'username',
+      'profileImage',
+      'subject',
       'password',
-      'dateOfBirth',
-      'gender',
-      'height',
-      'weight',
+      'status',
+      'roleId',
     ];
 
     let data: any = {};
@@ -86,17 +111,37 @@ export const updateUser = async (req: Request, res: Response) => {
       }
     }
 
-    if (data.dateOfBirth) {
-      data.dateOfBirth = new Date(data.dateOfBirth);
-    }
-
     if (data.password) {
       data.password = await bcrypt.hash(data.password, 10);
     }
 
+    if (data.roleId) {
+      data.roleId = BigInt(data.roleId);
+    }
+
     const user = await prisma.user.update({
-      where: { id },
+      where: { id: userId },
       data,
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        googleId: true,
+        profileImage: true,
+        isEmailVerified: true,
+        subject: true,
+        status: true,
+        roleId: true,
+        createdAt: true,
+        updatedAt: true,
+        role: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+          }
+        }
+      }
     });
 
     res.status(200).json({
@@ -124,19 +169,36 @@ export const updateUser = async (req: Request, res: Response) => {
 export const deleteUser = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
+        const userId = BigInt(id);
+        
         const user = await prisma.user.delete({
-            where: { id },
+            where: { id: userId },
+            select: {
+                id: true,
+                email: true,
+                username: true,
+                profileImage: true,
+                createdAt: true,
+            }
         });
 
         res.status(200).json({
             success: true,
             data: { user },
+            message: 'User deleted successfully',
         });
-    } catch (e) {
-        res.status(400).json({
-            success: false,
-            message: 'Failed to delete user',
-        })
+    } catch (e: any) {
+        console.error('Delete user error:', e);
+        if (e.code === 'P2025') {
+            res.status(404).json({
+                success: false,
+                message: 'User not found',
+            });
+        } else {
+            res.status(400).json({
+                success: false,
+                message: 'Failed to delete user',
+            });
+        }
     }
-
 }
