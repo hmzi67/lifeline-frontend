@@ -114,7 +114,7 @@ export const signup = async (req: Request, res: Response) => {
         user.roleId?.toString()
     );
 
-    // Save refresh token to a database
+    // Save a refresh token to a database
     await prisma.refreshToken.create({
       data: {
         token: refreshToken,
@@ -362,7 +362,7 @@ export const login = async (req: Request, res: Response) => {
       });
     }
 
-    // Save new refresh token to a database
+    // Save a new refresh token to a database
     await prisma.refreshToken.create({
       data: {
         token: refreshToken,
@@ -456,7 +456,7 @@ export const refreshToken = async (req: Request, res: Response) => {
         process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret'
     ) as { userId: string };
 
-    // Check if refresh token exists in a database and is not expired
+    // Check if the refresh token exists in a database and is not expired
     const storedToken = await prisma.refreshToken.findFirst({
       where: {
         token: refreshToken,
@@ -576,7 +576,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
       });
     }
 
-    // Check if user exists
+    // Check if a user exists
     const user = await prisma.user.findUnique({
       where: { email: email.toLowerCase() },
       select: { id: true, email: true, username: true },
@@ -727,7 +727,7 @@ export const googleAuthCallback = (req: Request, res: Response) => {
               user.roleId?.toString()
           );
 
-          // Save refresh token to a database
+          // Save a refresh token to a database
           await prisma.refreshToken.create({
             data: {
               token: refreshToken,
