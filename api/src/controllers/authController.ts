@@ -3,16 +3,15 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
-import crypto from 'crypto';
 import passport from 'passport';
-import { sendEmailVerificationEmail, sendPasswordResetEmail } from '../services/emailService.js';
+import { sendEmailVerificationEmail, sendPasswordResetEmail } from '@services/emailService';
 
 const prisma = new PrismaClient();
 
 // Validation schemas
 const signupSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
   email: z.string().email('Please provide a valid email address'),
+  username: z.string().min(1, 'Username is required').optional(),
   password: z.string().min(8, 'Password must be at least 8 characters long'),
 });
 
@@ -22,20 +21,25 @@ const loginSchema = z.object({
 });
 
 // Helper function to generate JWT tokens
-const generateTokens = (userId: string, email: string, role: string) => {
+const generateTokens = (userId: string, email: string, roleId?: string) => {
   const accessToken = jwt.sign(
-    { userId, email, role },
-    process.env.JWT_SECRET || 'fallback-secret',
-    { expiresIn: '15m' }
+      { userId, email, roleId },
+      process.env.JWT_SECRET || 'fallback-secret',
+      { expiresIn: '15m' }
   );
 
   const refreshToken = jwt.sign(
-    { userId },
-    process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret',
-    { expiresIn: '7d' }
+      { userId },
+      process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret',
+      { expiresIn: '7d' }
   );
 
   return { accessToken, refreshToken };
+};
+
+// Helper function to generate OTP
+const generateOTP = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
 };
 
 // Signup function
@@ -43,17 +47,23 @@ export const signup = async (req: Request, res: Response) => {
   try {
     // Validate request body
     const validatedData = signupSchema.parse(req.body);
-    const { name, email, password } = validatedData;
+    const { email, username, password } = validatedData;
 
     // Check if a user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email },
+          { username: username || undefined }
+        ]
+      },
     });
 
     if (existingUser) {
+      const field = existingUser.email === email ? 'email' : 'username';
       return res.status(400).json({
         success: false,
-        message: 'User with this email already exists',
+        message: `User with this ${field} already exists`,
       });
     }
 
@@ -61,51 +71,50 @@ export const signup = async (req: Request, res: Response) => {
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Split the name into firstName and lastName (assuming single space)
-    const nameParts = name.trim().split(' ');
-    const firstName = nameParts[0];
-    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
-
-    // Generate a unique username from email (take part before @)
-    const baseUsername = email.split('@')[0].toLowerCase();
-
-    // Check if a username already exists and create a unique one
-    let username = baseUsername;
-    let counter = 1;
-    while (await prisma.user.findUnique({ where: { username } })) {
-      username = `${baseUsername}${counter}`;
-      counter++;
+    // Generate username if not provided
+    let finalUsername = username;
+    if (!finalUsername) {
+      const baseUsername = email.split('@')[0].toLowerCase();
+      finalUsername = baseUsername;
+      let counter = 1;
+      while (await prisma.user.findUnique({ where: { username: finalUsername } })) {
+        finalUsername = `${baseUsername}${counter}`;
+        counter++;
+      }
     }
+
+    // Generate OTP for email verification
+    const otp = generateOTP();
 
     // Create user
     const user = await prisma.user.create({
       data: {
-        username,
+        username: finalUsername,
         email,
         password: hashedPassword,
-        firstName,
-        lastName,
-        preferences: {
-          create: {
-            // Create default preferences
-          },
-        },
+        otp,
+        status: 'pending', // Set status as pending until email verification
+        isEmailVerified: false,
       },
       select: {
         id: true,
         email: true,
-        firstName: true,
-        lastName: true,
-        role: true,
+        username: true,
+        roleId: true,
         isEmailVerified: true,
+        status: true,
         createdAt: true,
       },
     });
 
     // Generate tokens
-    const { accessToken, refreshToken } = generateTokens(user.id, user.email, user.role);
+    const { accessToken, refreshToken } = generateTokens(
+        user.id.toString(),
+        user.email,
+        user.roleId?.toString()
+    );
 
-    // Save refresh token to database
+    // Save refresh token to a database
     await prisma.refreshToken.create({
       data: {
         token: refreshToken,
@@ -122,44 +131,27 @@ export const signup = async (req: Request, res: Response) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    // Generate reset token
-    const verificationToken = crypto.randomBytes(32).toString('hex');
-    const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-
-    // Save reset token to database
-    await prisma.emailVerification.create({
-      data: {
-        email: user.email,
-        token: verificationToken,
-        expiresAt: resetTokenExpiry,
-      },
-    });
-
-    // Send email with a reset link
+    // Send email verification with OTP
     try {
-      const resetUrl = `${process.env.FRONTEND_URL}/verify?token=${verificationToken}`;
-      await sendEmailVerificationEmail(user.email, user.firstName, resetUrl);
-
+      await sendEmailVerificationEmail(user.email, user.username || '', otp);
       console.log(`Verification email sent successfully to ${user.email}`);
     } catch (emailError) {
-      console.error('Failed to send verififaction email:', emailError);
+      console.error('Failed to send verification email:', emailError);
 
-      // Clean up the token since email failed
-      await prisma.emailVerification.delete({
-        where: {
-          token: verificationToken,
+      // Don't delete user, but inform about email failure
+      return res.status(201).json({
+        success: true,
+        message: 'Account created successfully, but verification email failed to send. You can request a new verification email.',
+        data: {
+          user,
+          accessToken,
         },
-      });
-
-      return res.status(500).json({
-        success: false,
-        message: 'Failed to send verification email. Please try again later.',
       });
     }
 
     res.status(201).json({
       success: true,
-      message: 'Account created successfully',
+      message: 'Account created successfully. Please check your email for verification.',
       data: {
         user,
         accessToken,
@@ -185,7 +177,7 @@ export const signup = async (req: Request, res: Response) => {
   }
 };
 
-// Email Resend Verification
+// Resend verification email with OTP
 export const resendVerificationEmail = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
@@ -201,86 +193,46 @@ export const resendVerificationEmail = async (req: Request, res: Response) => {
       where: { email },
     });
 
-    if (user) {
-      if (user.isEmailVerified) {
-        // Generate tokens
-        const { refreshToken } = generateTokens(user.id, user.email, user.role);
-
-        // Save refresh token to database
-        await prisma.refreshToken.create({
-          data: {
-            token: refreshToken,
-            userId: user.id,
-            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-          },
-        });
-
-        // Set the refresh token as httpOnly cookie
-        res.cookie('refreshToken', refreshToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict',
-          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-        });
-
-        // Generate reset token
-        const verificationToken = crypto.randomBytes(32).toString('hex');
-        const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-
-        // Save reset token to database
-        await prisma.emailVerification.create({
-          data: {
-            email: user.email,
-            token: verificationToken,
-            expiresAt: resetTokenExpiry,
-          },
-        });
-
-        // Send email with a reset link
-        try {
-          const resetUrl = `${process.env.FRONTEND_URL}/verify?token=${verificationToken}`;
-          await sendEmailVerificationEmail(user.email, user.firstName, resetUrl);
-
-          console.log(`Verification email sent successfully to ${user.email}`);
-        } catch (emailError) {
-          console.error('Failed to send verification email:', emailError);
-
-          // Clean up the token since email failed
-          await prisma.emailVerification.delete({
-            where: {
-              token: verificationToken,
-            },
-          });
-          return res.status(500).json({
-            success: false,
-            message: 'Failed to send verification email. Please try again later.',
-          });
-        }
-      } else {
-        return res.status(201).json({
-          success: true,
-          message: 'User is already verified',
-        });
-      }
-    } else {
-      return res.status(401).json({
+    if (!user) {
+      return res.status(404).json({
         success: false,
-        message: 'Invalid email or password',
+        message: 'User not found',
       });
     }
-  } catch (error) {
-    if (error instanceof z.ZodError) {
+
+    if (user.isEmailVerified) {
       return res.status(400).json({
         success: false,
-        message: 'Validation error',
-        errors: error.errors.map(err => ({
-          field: err.path.join('.'),
-          message: err.message,
-        })),
+        message: 'User is already verified',
       });
     }
 
-    // Handle other errors
+    // Generate new OTP
+    const otp = generateOTP();
+
+    // Update user with new OTP
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { otp },
+    });
+
+    // Send email with new OTP
+    try {
+      await sendEmailVerificationEmail(user.email, user.username || '', otp);
+      console.log(`Verification email sent successfully to ${user.email}`);
+    } catch (emailError) {
+      console.error('Failed to send verification email:', emailError);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to send verification email. Please try again later.',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Verification email sent successfully',
+    });
+  } catch (error) {
     console.error('Error in resendVerificationEmail:', error);
     return res.status(500).json({
       success: false,
@@ -289,41 +241,40 @@ export const resendVerificationEmail = async (req: Request, res: Response) => {
   }
 };
 
-// Email Verification
+// Email verification with OTP
 export const verify = async (req: Request, res: Response) => {
   try {
-    const { token } = req.body;
+    const { email, otp } = req.body;
 
-    if (!token) {
+    if (!email || !otp) {
       return res.status(400).json({
         success: false,
-        message: 'Token is required',
+        message: 'Email and OTP are required',
       });
     }
 
-    const validVerifyToken = await prisma.emailVerification.findUnique({
+    const user = await prisma.user.findFirst({
       where: {
-        token,
-        expiresAt: {
-          gt: new Date(),
-        },
+        email,
+        otp,
       },
     });
 
-    if (!validVerifyToken) {
+    if (!user) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid or expired token',
+        message: 'Invalid OTP or email',
       });
     }
 
+    // Update user as verified
     await prisma.user.update({
-      where: { email: validVerifyToken.email },
-      data: { isEmailVerified: true },
-    });
-
-    await prisma.emailVerification.delete({
-      where: { token },
+      where: { id: user.id },
+      data: {
+        isEmailVerified: true,
+        otp: null, // Clear the OTP
+        status: 'active', // Update status to active
+      },
     });
 
     res.status(200).json({
@@ -346,17 +297,11 @@ export const login = async (req: Request, res: Response) => {
     const validatedData = loginSchema.parse(req.body);
     const { email, password } = validatedData;
 
-    // Find user by email
+    // Find the user by email with role information
     const user = await prisma.user.findUnique({
       where: { email },
-      select: {
-        id: true,
-        email: true,
-        password: true,
-        firstName: true,
-        lastName: true,
+      include: {
         role: true,
-        isEmailVerified: true,
       },
     });
 
@@ -367,7 +312,7 @@ export const login = async (req: Request, res: Response) => {
       });
     }
 
-    // Check if user has a password (not OAuth user)
+    // Check if the user has a password (not OAuth user)
     if (!user.password) {
       return res.status(401).json({
         success: false,
@@ -385,10 +330,22 @@ export const login = async (req: Request, res: Response) => {
       });
     }
 
-    // Generate tokens
-    const { accessToken, refreshToken } = generateTokens(user.id, user.email, user.role);
+    // Check if an account is active
+    if (user.status === 'blocked' || user.status === 'suspended') {
+      return res.status(403).json({
+        success: false,
+        message: 'Your account has been suspended. Please contact support.',
+      });
+    }
 
-    // Clean up old refresh tokens for this user (optional - keep only the latest 5)
+    // Generate tokens
+    const { accessToken, refreshToken } = generateTokens(
+        user.id.toString(),
+        user.email,
+        user.roleId?.toString()
+    );
+
+    // Clean up old refresh tokens for this user (keep only the latest 5)
     const existingTokens = await prisma.refreshToken.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: 'desc' },
@@ -405,7 +362,7 @@ export const login = async (req: Request, res: Response) => {
       });
     }
 
-    // Save a new refresh token to a database
+    // Save new refresh token to a database
     await prisma.refreshToken.create({
       data: {
         token: refreshToken,
@@ -422,14 +379,14 @@ export const login = async (req: Request, res: Response) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    // Remove password from response
-    const { password: _, ...userWithoutPassword } = user;
+    // Remove sensitive data from response
+    const { password: _, otp: __, ...userWithoutSensitiveData } = user;
 
     res.status(200).json({
       success: true,
       message: 'Login successful',
       data: {
-        user: userWithoutPassword,
+        user: userWithoutSensitiveData,
         accessToken,
       },
     });
@@ -495,15 +452,15 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     // Verify refresh token
     const decoded = jwt.verify(
-      refreshToken,
-      process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret'
+        refreshToken,
+        process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret'
     ) as { userId: string };
 
     // Check if refresh token exists in a database and is not expired
     const storedToken = await prisma.refreshToken.findFirst({
       where: {
         token: refreshToken,
-        userId: decoded.userId,
+        userId: BigInt(decoded.userId),
         expiresAt: {
           gt: new Date(),
         },
@@ -513,7 +470,7 @@ export const refreshToken = async (req: Request, res: Response) => {
           select: {
             id: true,
             email: true,
-            role: true,
+            roleId: true,
           },
         },
       },
@@ -528,9 +485,9 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     // Generate a new access token
     const { accessToken } = generateTokens(
-      storedToken.user.id,
-      storedToken.user.email,
-      storedToken.user.role
+        storedToken.user.id.toString(),
+        storedToken.user.email,
+        storedToken.user.roleId?.toString()
     );
 
     res.status(200).json({
@@ -567,24 +524,12 @@ export const getCurrentUser = async (req: Request, res: Response) => {
     };
 
     const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
-      select: {
-        id: true,
-        email: true,
-        firstName: true,
-        lastName: true,
+      where: { id: BigInt(decoded.userId) },
+      include: {
         role: true,
-        isEmailVerified: true,
-        profileImage: true,
-        dateOfBirth: true,
-        gender: true,
-        height: true,
-        weight: true,
-        activityLevel: true,
-        createdAt: true,
-        updatedAt: true,
-        preferences: true,
+        questionnaires: true,
       },
+      // Exclude sensitive fields
     });
 
     if (!user) {
@@ -594,9 +539,12 @@ export const getCurrentUser = async (req: Request, res: Response) => {
       });
     }
 
+    // Remove sensitive data
+    const { password, otp, ...userWithoutSensitiveData } = user;
+
     res.status(200).json({
       success: true,
-      data: { user },
+      data: { user: userWithoutSensitiveData },
     });
   } catch (error) {
     console.error('Get current user error:', error);
@@ -607,6 +555,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
   }
 };
 
+// Password reset request
 export const requestPasswordReset = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
@@ -627,74 +576,40 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
       });
     }
 
-    // Check if a user exists
+    // Check if user exists
     const user = await prisma.user.findUnique({
       where: { email: email.toLowerCase() },
-      select: { id: true, email: true, firstName: true },
+      select: { id: true, email: true, username: true },
     });
 
     // Always return success to prevent email enumeration attacks
     if (!user) {
       return res.status(200).json({
         success: true,
-        message: 'No User Found', //'If an account with this email exists, a password reset link has been sent.',
+        message: 'If an account with this email exists, a password reset OTP has been sent.',
       });
     }
 
-    // Check for existing reset tokens and clean up expired ones
-    await prisma.passwordReset.deleteMany({
-      where: {
-        email: user.email,
-        expiresAt: {
-          lt: new Date(),
-        },
-      },
+    // Generate OTP for password reset
+    const resetOTP = generateOTP();
+
+    // Update user with reset OTP
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { otp: resetOTP },
     });
 
-    // Check if there's a recent reset request (prevent spam)
-    const recentReset = await prisma.passwordReset.findFirst({
-      where: {
-        email: user.email,
-        createdAt: {
-          gt: new Date(Date.now() - 5 * 60 * 1000), // 5 minutes ago
-        },
-      },
-    });
-
-    if (recentReset) {
-      return res.status(200).json({
-        success: true,
-        message: 'To Prevent Spam Wait 5 Minutes Before Resting Password',
-      });
-    }
-
-    // Generate reset token
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-
-    // Save reset token to database
-    await prisma.passwordReset.create({
-      data: {
-        email: user.email,
-        token: resetToken,
-        expiresAt: resetTokenExpiry,
-      },
-    });
-
-    // Send email with a reset link
+    // Send email with reset OTP
     try {
-      const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
-      await sendPasswordResetEmail(user.email, user.firstName, resetUrl);
-
+      await sendPasswordResetEmail(user.email, user.username || '', resetOTP);
       console.log(`Password reset email sent successfully to ${user.email}`);
     } catch (emailError) {
       console.error('Failed to send password reset email:', emailError);
 
-      // Clean up the token since email failed
-      await prisma.passwordReset.delete({
-        where: {
-          token: resetToken,
-        },
+      // Clear the OTP since email failed
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { otp: null },
       });
 
       return res.status(500).json({
@@ -705,7 +620,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'If an account with this email exists, a password reset link has been sent.',
+      message: 'Password reset OTP has been sent to your email.',
     });
   } catch (error) {
     console.error('Password reset request error:', error);
@@ -716,15 +631,15 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
   }
 };
 
-// Reset password
+// Reset password with OTP
 export const resetPassword = async (req: Request, res: Response) => {
   try {
-    const { token, newPassword } = req.body;
+    const { email, otp, newPassword } = req.body;
 
-    if (!token || !newPassword) {
+    if (!email || !otp || !newPassword) {
       return res.status(400).json({
         success: false,
-        message: 'Token and new password are required',
+        message: 'Email, OTP, and new password are required',
       });
     }
 
@@ -735,32 +650,18 @@ export const resetPassword = async (req: Request, res: Response) => {
       });
     }
 
-    // Find valid reset token
-    const resetRecord = await prisma.passwordReset.findFirst({
+    // Find a user with matching email and OTP
+    const user = await prisma.user.findFirst({
       where: {
-        token,
-        expiresAt: {
-          gt: new Date(),
-        },
+        email,
+        otp,
       },
     });
 
-    if (!resetRecord) {
+    if (!user) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid or expired reset token',
-      });
-    }
-
-    // Find user
-    const user = await prisma.user.findUnique({
-      where: { email: resetRecord.email },
-    });
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found',
+        message: 'Invalid email or OTP',
       });
     }
 
@@ -768,16 +669,15 @@ export const resetPassword = async (req: Request, res: Response) => {
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
-    // Update user password and delete reset token
+    // Update user password and clear OTP, also invalidate all refresh tokens
     await prisma.$transaction([
       prisma.user.update({
         where: { id: user.id },
-        data: { password: hashedPassword },
+        data: {
+          password: hashedPassword,
+          otp: null, // Clear OTP after a successful reset
+        },
       }),
-      prisma.passwordReset.delete({
-        where: { id: resetRecord.id },
-      }),
-      // Also invalidate all refresh tokens for security
       prisma.refreshToken.deleteMany({
         where: { userId: user.id },
       }),
@@ -805,50 +705,55 @@ export const googleAuth = (req: Request, res: Response) => {
 
 export const googleAuthCallback = (req: Request, res: Response) => {
   passport.authenticate(
-    'google',
-    {
-      failureRedirect: `${process.env.FRONTEND_URL}/auth/login?error=oauth_failed`,
-    },
-    async (err: any, user: any) => {
-      if (err) {
-        console.error('Google OAuth callback error:', err);
-        return res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=oauth_error`);
+      'google',
+      {
+        failureRedirect: `${process.env.FRONTEND_URL}/auth/login?error=oauth_failed`,
+      },
+      async (err: any, user: any) => {
+        if (err) {
+          console.error('Google OAuth callback error:', err);
+          return res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=oauth_error`);
+        }
+
+        if (!user) {
+          return res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=oauth_denied`);
+        }
+
+        try {
+          // Generate JWT tokens
+          const { accessToken, refreshToken } = generateTokens(
+              user.id.toString(),
+              user.email,
+              user.roleId?.toString()
+          );
+
+          // Save refresh token to a database
+          await prisma.refreshToken.create({
+            data: {
+              token: refreshToken,
+              userId: user.id,
+              expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+            },
+          });
+
+          // Set the refresh token as httpOnly cookie
+          res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+          });
+
+          // Redirect to frontend with access token
+          const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?token=${accessToken}`;
+          res.redirect(redirectUrl);
+        } catch (error) {
+          console.error('Error generating tokens for Google OAuth:', error);
+          res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=token_generation_failed`);
+        }
       }
-
-      if (!user) {
-        return res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=oauth_denied`);
-      }
-
-      try {
-        // Generate JWT tokens
-        const { accessToken, refreshToken } = generateTokens(user.id, user.email, user.role);
-
-        // Save refresh token to database
-        await prisma.refreshToken.create({
-          data: {
-            token: refreshToken,
-            userId: user.id,
-            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-          },
-        });
-
-        // Set the refresh token as httpOnly cookie
-        res.cookie('refreshToken', refreshToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict',
-          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-        });
-
-        // Redirect to frontend with access token
-        const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?token=${accessToken}`;
-        res.redirect(redirectUrl);
-      } catch (error) {
-        console.error('Error generating tokens for Google OAuth:', error);
-        res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=token_generation_failed`);
-      }
-    }
   )(req, res);
 };
+
 export const appleAuth = () => {};
 export const appleAuthCallback = () => {};
