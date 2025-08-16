@@ -5,7 +5,6 @@ import {
     Droplets,
     MapPin,
     Plus,
-
     Zap,
     Home,
     Timer,
@@ -28,7 +27,14 @@ import {
     Activity,
     Target,
     Award,
-    User as UserIcon
+    User as UserIcon,
+    DollarSign,
+    ShoppingCart,
+    CreditCard,
+    BarChart3,
+    PieChart,
+    ArrowUpRight,
+    ArrowDownRight
 } from 'lucide-react';
 
 // Type definitions
@@ -43,6 +49,7 @@ interface StatData {
     chart?: number[];
     percentage?: number;
     trend: string;
+    trendDirection: 'up' | 'down';
 }
 
 interface WeekData {
@@ -56,6 +63,29 @@ interface NavigationItem {
     id: string;
     label: string;
     icon: React.ElementType;
+}
+
+interface OrderStats {
+    category: string;
+    value: string;
+    description: string;
+    icon: React.ElementType;
+    color: string;
+}
+
+interface TransactionData {
+    id: string;
+    type: string;
+    method: string;
+    amount: number;
+    icon: React.ElementType;
+    color: string;
+}
+
+interface RevenueData {
+    month: string;
+    current: number;
+    previous: number;
 }
 
 // Component for Users section
@@ -356,7 +386,7 @@ const CircularProgress: React.FC<{
                 <span className="text-3xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
                     {percentage}%
                 </span>
-                <span className="text-xs text-gray-500">Complete</span>
+                <span className="text-xs text-gray-500">Growth</span>
             </div>
         </div>
     );
@@ -468,7 +498,7 @@ const Header: React.FC<{ activeNav: string }> = ({ activeNav }) => {
     const getPageTitle = () => {
         switch (activeNav) {
             case 'dashboard':
-                return 'Activity Tracking';
+                return 'Business Dashboard';
             case 'users':
                 return 'Users Management';
             case 'diet':
@@ -545,8 +575,12 @@ const StatsCard: React.FC<{ stat: StatData; index: number }> = ({ stat, index })
                 <stat.icon className="w-6 h-6 text-gray-700" />
             </div>
             <div className="flex items-center gap-1">
-                <TrendingUp className="w-4 h-4 text-green-500" />
-                <span className="text-sm font-medium text-green-600">{stat.trend}</span>
+                {stat.trendDirection === 'up' ? (
+                    <ArrowUpRight className="w-4 h-4 text-green-500" />
+                ) : (
+                    <ArrowDownRight className="w-4 h-4 text-red-500" />
+                )}
+                <span className={`text-sm font-medium ${stat.trendDirection === 'up' ? 'text-green-600' : 'text-red-600'}`}>{stat.trend}</span>
             </div>
         </div>
 
@@ -571,164 +605,362 @@ const StatsCard: React.FC<{ stat: StatData; index: number }> = ({ stat, index })
     </GlowingCard>
 );
 
-// Weekly Progress Component
-const WeeklyProgress: React.FC<{ weekData: WeekData[] }> = ({ weekData }) => (
+// Revenue Chart Component
+const RevenueChart: React.FC<{ data: RevenueData[] }> = ({ data }) => (
     <GlowingCard className="p-8 mb-8" glowColor="rgba(62, 198, 201, 0.1)">
         <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
-                <div className="p-3 bg-gradient-to-r from-teal-100 to-cyan-100 rounded-xl">
-                    <Calendar className="w-6 h-6 text-teal-600" />
+                <div className="p-3 bg-gradient-to-r from-blue-100 to-purple-100 rounded-xl">
+                    <BarChart3 className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
-                    <h3 className="text-2xl font-bold text-gray-900">Weekly Progress</h3>
-                    <p className="text-gray-500">Track your daily achievements</p>
+                    <h3 className="text-2xl font-bold text-gray-900">Total Revenue</h3>
+                    <p className="text-gray-500">Monthly revenue comparison</p>
                 </div>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl">
-                <span className="text-sm font-medium text-gray-600">Sep 18 - Sep 24</span>
+                <span className="text-sm font-medium text-gray-600">2022</span>
             </div>
         </div>
 
-        <div className="grid grid-cols-7 gap-4 mb-8">
-            {weekData.map((data, index) => (
-                <div key={index} className="text-center">
-                    <div className="text-sm font-medium text-gray-500 mb-3">{data.day}</div>
-                    <button className={`w-14 h-14 rounded-2xl flex items-center justify-center text-lg font-bold 
-                                      transition-all duration-300 transform hover:scale-110 
-                                      ${data.active
-                            ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg'
-                            : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-                        }`}
-                        aria-label={`${data.day} ${data.label}`}
-                        aria-pressed={data.active}
-                    >
-                        {data.label}
-                    </button>
-                </div>
-            ))}
-        </div>
-
-        <div className="relative h-40 bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-6 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-cyan-500/5" />
-            <svg className="w-full h-full relative z-10" viewBox="0 0 350 120" aria-label="Weekly progress chart">
-                <defs>
-                    <linearGradient id="chartGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#3EC6C9" stopOpacity="0.8" />
-                        <stop offset="50%" stopColor="#22d3ee" stopOpacity="0.6" />
-                        <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.4" />
-                    </linearGradient>
-                    <filter id="glow">
-                        <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-                        <feMerge>
-                            <feMergeNode in="coloredBlur" />
-                            <feMergeNode in="SourceGraphic" />
-                        </feMerge>
-                    </filter>
-                </defs>
-                <polyline
-                    fill="none"
-                    stroke="url(#chartGradient)"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                    points={weekData.map((data, index) =>
-                        `${(index / (weekData.length - 1)) * 320 + 15},${100 - (data.value / 100) * 70}`
-                    ).join(' ')}
-                    filter="url(#glow)"
-                />
-                {weekData.map((data, index) => (
-                    <circle
-                        key={index}
-                        cx={(index / (weekData.length - 1)) * 320 + 15}
-                        cy={100 - (data.value / 100) * 70}
-                        r="6"
-                        fill={data.active ? "#3EC6C9" : "#94a3b8"}
-                        className="drop-shadow-lg"
-                    />
+        <div className="relative h-64 bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-6 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5" />
+            <div className="flex items-end justify-between h-full relative z-10 gap-4">
+                {data.map((item, index) => (
+                    <div key={index} className="flex flex-col items-center flex-1">
+                        <div className="flex items-end gap-2 mb-4 w-full">
+                            <div
+                                className="bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg transition-all duration-1000 ease-out"
+                                style={{
+                                    height: `${(item.current / Math.max(...data.map(d => d.current))) * 150}px`,
+                                    width: '20px'
+                                }}
+                            />
+                            <div
+                                className="bg-gradient-to-t from-cyan-500 to-cyan-400 rounded-t-lg transition-all duration-1000 ease-out"
+                                style={{
+                                    height: `${(item.previous / Math.max(...data.map(d => Math.max(d.current, d.previous)))) * 150}px`,
+                                    width: '20px'
+                                }}
+                            />
+                        </div>
+                        <span className="text-sm font-medium text-gray-600">{item.month}</span>
+                    </div>
                 ))}
-            </svg>
-            <div className="absolute bottom-4 left-6 flex items-center gap-6 text-sm">
+            </div>
+            <div className="absolute bottom-4 right-6 flex items-center gap-4 text-sm">
                 <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-red-400 rounded-full" />
-                    <span className="font-medium text-gray-700">-5.6 Done</span>
+                    <div className="w-3 h-3 bg-blue-500 rounded-full" />
+                    <span className="font-medium text-gray-700">2021</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-teal-400 rounded-full" />
-                    <span className="font-medium text-gray-700">4.4 Left</span>
+                    <div className="w-3 h-3 bg-cyan-500 rounded-full" />
+                    <span className="font-medium text-gray-700">2020</span>
                 </div>
             </div>
         </div>
     </GlowingCard>
 );
 
-// Running Activity Component
-const RunningActivity: React.FC = () => (
+// Company Growth Component
+const CompanyGrowthCard: React.FC = () => (
+    <GlowingCard className="p-8" glowColor="rgba(62, 198, 201, 0.1)">
+        <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-r from-teal-100 to-cyan-100 rounded-xl">
+                    <TrendingUp className="w-6 h-6 text-teal-600" />
+                </div>
+                <div>
+                    <h3 className="text-2xl font-bold text-gray-900">Company Growth</h3>
+                    <p className="text-gray-500">Overall business performance</p>
+                </div>
+            </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="flex items-center justify-center">
+                <CircularProgress percentage={78} size={180} showAnimation={true} />
+            </div>
+
+            <div className="space-y-6">
+                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl">
+                    <div className="flex items-center gap-3">
+                        <DollarSign className="w-5 h-5 text-blue-600" />
+                        <div>
+                            <p className="font-semibold text-gray-900">2022</p>
+                            <p className="text-sm text-gray-500">Current Year</p>
+                        </div>
+                    </div>
+                    <span className="text-xl font-bold text-gray-900">$32.5k</span>
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-teal-50 to-cyan-50 rounded-xl">
+                    <div className="flex items-center gap-3">
+                        <Calendar className="w-5 h-5 text-teal-600" />
+                        <div>
+                            <p className="font-semibold text-gray-900">2021</p>
+                            <p className="text-sm text-gray-500">Previous Year</p>
+                        </div>
+                    </div>
+                    <span className="text-xl font-bold text-gray-900">$41.2k</span>
+                </div>
+
+                <div className="p-4 bg-gradient-to-r from-green-50 to-teal-50 rounded-xl">
+                    <p className="text-sm text-gray-600 mb-2">Company Growth Rate</p>
+                    <p className="text-2xl font-bold text-green-600">62%</p>
+                </div>
+            </div>
+        </div>
+    </GlowingCard>
+);
+
+// Order Statistics Component
+const OrderStatsCard: React.FC<{ orderStats: OrderStats[] }> = ({ orderStats }) => (
     <GlowingCard className="p-8" glowColor="rgba(62, 198, 201, 0.1)">
         <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
                 <div className="p-3 bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl">
-                    <Activity className="w-6 h-6 text-purple-600" />
+                    <ShoppingCart className="w-6 h-6 text-purple-600" />
                 </div>
                 <div>
-                    <h3 className="text-2xl font-bold text-gray-900">Running with Kate</h3>
-                    <p className="text-gray-500">9 July, 2022 • Morning Session</p>
+                    <h3 className="text-2xl font-bold text-gray-900">Order Statistics</h3>
+                    <p className="text-gray-500">42.82k Total Sales</p>
                 </div>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-green-100 rounded-xl">
-                <Award className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-medium text-green-600">Personal Best</span>
+            <div className="flex items-center justify-center">
+                <div className="relative w-24 h-24">
+                    <CircularProgress percentage={38} size={96} showAnimation={false} />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-center">
+                            <span className="text-lg font-bold text-gray-900">38%</span>
+                            <p className="text-xs text-gray-500">Weekly</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div className="bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl h-64 relative overflow-hidden mb-8">
-            <img
-                src="https://images.unsplash.com/photo-1524863479829-916d8e77f114?w=800&h=400&fit=crop"
-                alt="Running route map"
-                className="w-full h-full object-cover"
-                loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-            <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-sm rounded-xl px-4 py-3">
-                <p className="font-semibold text-gray-900">Interval Running</p>
-                <p className="text-sm text-gray-600">High Intensity</p>
+        <div className="mb-6">
+            <div className="flex items-center justify-between mb-4">
+                <span className="text-3xl font-bold text-gray-900">8,258</span>
+                <span className="text-sm text-gray-500">Total Orders</span>
             </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-8">
-            <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl">
-                <Target className="w-8 h-8 text-blue-600 mx-auto mb-3" />
-                <p className="text-sm text-gray-600 mb-2">Double Walking Time</p>
-                <p className="text-3xl font-bold text-gray-900">34 min</p>
-            </div>
-            <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl">
-                <MapPin className="w-8 h-8 text-purple-600 mx-auto mb-3" />
-                <p className="text-sm text-gray-600 mb-2">Total Distance</p>
-                <p className="text-3xl font-bold text-gray-900">10 km</p>
-            </div>
-            <div className="text-center p-6 bg-gradient-to-br from-green-50 to-teal-50 rounded-2xl">
-                <TrendingUp className="w-8 h-8 text-green-600 mx-auto mb-3" />
-                <p className="text-sm text-gray-600 mb-2">Average Speed</p>
-                <p className="text-3xl font-bold text-gray-900">6.1 p/km</p>
-            </div>
+        <div className="space-y-4">
+            {orderStats.map((stat, index) => (
+                <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
+                    <div className="flex items-center gap-3">
+                        <div className={`p-2 ${stat.color} rounded-lg`}>
+                            <stat.icon className="w-4 h-4 text-gray-700" />
+                        </div>
+                        <div>
+                            <p className="font-semibold text-gray-900">{stat.category}</p>
+                            <p className="text-sm text-gray-500">{stat.description}</p>
+                        </div>
+                    </div>
+                    <span className="text-lg font-bold text-gray-900">{stat.value}</span>
+                </div>
+            ))}
         </div>
     </GlowingCard>
 );
 
-// Dashboard Component (original main content)
-const DashboardComponent: React.FC<{
-    statsData: StatData[];
-    weekData: WeekData[];
-    animatedValues: Record<string, number>
-}> = ({ statsData, weekData }) => (
-    <div className="space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-            {statsData.map((stat, index) => (
-                <StatsCard key={index} stat={stat} index={index} />
+// Transactions Component
+const TransactionsCard: React.FC<{ transactions: TransactionData[] }> = ({ transactions }) => (
+    <GlowingCard className="p-8" glowColor="rgba(62, 198, 201, 0.1)">
+        <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-r from-green-100 to-emerald-100 rounded-xl">
+                    <CreditCard className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                    <h3 className="text-2xl font-bold text-gray-900">Transactions</h3>
+                    <p className="text-gray-500">Recent payment activities</p>
+                </div>
+            </div>
+        </div>
+
+        <div className="space-y-4">
+            {transactions.map((transaction, index) => (
+                <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:shadow-md transition-all duration-300">
+                    <div className="flex items-center gap-3">
+                        <div className={`p-2 ${transaction.color} rounded-lg`}>
+                            <transaction.icon className="w-4 h-4 text-white" />
+                        </div>
+                        <div>
+                            <p className="font-semibold text-gray-900">{transaction.method}</p>
+                            <p className="text-sm text-gray-500">{transaction.type}</p>
+                        </div>
+                    </div>
+                    <span className={`text-lg font-bold ${transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {transaction.amount >= 0 ? '+' : ''}${Math.abs(transaction.amount).toFixed(2)} USD
+                    </span>
+                </div>
             ))}
         </div>
-        <WeeklyProgress weekData={weekData} />
-        <RunningActivity />
+    </GlowingCard>
+);
+
+// Profit Report Component
+const ProfitReportCard: React.FC = () => (
+    <GlowingCard className="p-8" glowColor="rgba(62, 198, 201, 0.1)">
+        <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl">
+                    <PieChart className="w-6 h-6 text-yellow-600" />
+                </div>
+                <div>
+                    <h3 className="text-2xl font-bold text-gray-900">Profit Report</h3>
+                    <p className="text-gray-500">YEAR 2021</p>
+                </div>
+            </div>
+            <div className="flex items-center gap-1">
+                <ArrowUpRight className="w-4 h-4 text-green-500" />
+                <span className="text-sm font-medium text-green-600">68.2%</span>
+            </div>
+        </div>
+
+        <div className="mb-6">
+            <span className="text-4xl font-bold text-gray-900">$84,686k</span>
+        </div>
+
+        <div className="relative h-32 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-6 overflow-hidden">
+            <svg className="w-full h-full" viewBox="0 0 350 100" aria-label="Profit trend chart">
+                <defs>
+                    <linearGradient id="profitGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.8" />
+                        <stop offset="100%" stopColor="#ea580c" stopOpacity="0.6" />
+                    </linearGradient>
+                </defs>
+                <polyline
+                    fill="none"
+                    stroke="url(#profitGradient)"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    points="20,70 70,50 120,60 170,40 220,45 270,30 320,35"
+                />
+                {[20, 70, 120, 170, 220, 270, 320].map((x, index) => {
+                    const y = [70, 50, 60, 40, 45, 30, 35][index];
+                    return (
+                        <circle
+                            key={index}
+                            cx={x}
+                            cy={y}
+                            r="4"
+                            fill="#f59e0b"
+                            className="drop-shadow-sm"
+                        />
+                    );
+                })}
+            </svg>
+        </div>
+    </GlowingCard>
+);
+
+// App Usage Stats Component
+const AppUsageStats: React.FC = () => (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <GlowingCard className="p-6" glowColor="rgba(239, 68, 68, 0.1)">
+            <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-red-100 rounded-lg">
+                    <ArrowDownRight className="w-5 h-5 text-red-600" />
+                </div>
+                <div>
+                    <h4 className="font-semibold text-gray-900">Uninstalls</h4>
+                    <p className="text-sm text-gray-500">App removals</p>
+                </div>
+            </div>
+            <div className="flex items-end gap-2 mb-2">
+                <span className="text-3xl font-bold text-gray-900">2,456</span>
+            </div>
+            <div className="flex items-center gap-1">
+                <ArrowDownRight className="w-4 h-4 text-red-500" />
+                <span className="text-sm font-medium text-red-600">-14.82%</span>
+            </div>
+        </GlowingCard>
+
+        <GlowingCard className="p-6" glowColor="rgba(16, 185, 129, 0.1)">
+            <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                    <Activity className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                    <h4 className="font-semibold text-gray-900">Exercises</h4>
+                    <p className="text-sm text-gray-500">Completed workouts</p>
+                </div>
+            </div>
+            <div className="flex items-end gap-2 mb-2">
+                <span className="text-3xl font-bold text-gray-900">3645</span>
+            </div>
+            <div className="flex items-center gap-1">
+                <ArrowUpRight className="w-4 h-4 text-green-500" />
+                <span className="text-sm font-medium text-green-600">+28.14%</span>
+            </div>
+        </GlowingCard>
     </div>
 );
+
+// Dashboard Component (Updated with business data)
+const DashboardComponent: React.FC<{
+    statsData: StatData[];
+    animatedValues: Record<string, number>
+}> = ({ statsData }) => {
+    const revenueData: RevenueData[] = [
+        { month: 'Jan', current: 16, previous: -15 },
+        { month: 'Feb', current: 4, previous: -8 },
+        { month: 'Mar', current: 12, previous: -10 },
+        { month: 'Apr', current: 27, previous: -15 },
+        { month: 'May', current: 17, previous: -5 },
+        { month: 'Jun', current: 10, previous: -18 },
+        { month: 'Jul', current: 6, previous: -16 }
+    ];
+
+    const orderStats: OrderStats[] = [
+        { category: 'Electronic', value: '82.5k', description: 'Mobile, Earbuds, TV', icon: Zap, color: 'bg-purple-100' },
+        { category: 'Fashion', value: '23.8k', description: 'T-shirt, Jeans, Shoes', icon: Users, color: 'bg-green-100' },
+        { category: 'Decor', value: '849k', description: 'Fine Art, Dining', icon: Home, color: 'bg-cyan-100' },
+        { category: 'Sports', value: '99', description: 'Football, Cricket Kit', icon: Target, color: 'bg-gray-100' }
+    ];
+
+    const transactions: TransactionData[] = [
+        { id: '1', type: 'Send money', method: 'Paypal', amount: 82.6, icon: CreditCard, color: 'bg-red-500' },
+        { id: '2', type: "Mac'D", method: 'Wallet', amount: 270.69, icon: Droplets, color: 'bg-purple-500' },
+        { id: '3', type: 'Refund', method: 'Transfer', amount: 637.91, icon: Timer, color: 'bg-cyan-500' },
+        { id: '4', type: 'Ordered Food', method: 'Credit Card', amount: -838.71, icon: CreditCard, color: 'bg-green-500' },
+        { id: '5', type: 'Starbucks', method: 'Wallet', amount: 203.33, icon: Droplets, color: 'bg-purple-500' },
+        { id: '6', type: 'Ordered Food', method: 'Mastercard', amount: -92.45, icon: CreditCard, color: 'bg-yellow-500' }
+    ];
+
+    return (
+        <div className="space-y-8">
+            {/* Main Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                {statsData.map((stat, index) => (
+                    <StatsCard key={index} stat={stat} index={index} />
+                ))}
+            </div>
+
+            {/* Revenue Chart and Company Growth */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <RevenueChart data={revenueData} />
+                <CompanyGrowthCard />
+            </div>
+
+            {/* Order Stats and Profit Report */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <OrderStatsCard orderStats={orderStats} />
+                <ProfitReportCard />
+            </div>
+
+            {/* App Usage Stats */}
+            <AppUsageStats />
+
+            {/* Transactions */}
+            <TransactionsCard transactions={transactions} />
+        </div>
+    );
+};
 
 // Main Dashboard Component
 const FitnessActivityDashboard: React.FC = () => {
@@ -751,10 +983,10 @@ const FitnessActivityDashboard: React.FC = () => {
         };
 
         const timeoutId = setTimeout(() => {
-            animateValue('steps', 0, 11222, 2000);
-            animateValue('calories', 0, 1345, 1800);
-            animateValue('minutes', 0, 125, 1500);
-            animateValue('water', 0, 3, 1200);
+            animateValue('totalBalance', 0, 459, 2000);
+            animateValue('totalSales', 0, 42820, 1800);
+            animateValue('totalOrders', 0, 8258, 1500);
+            animateValue('expenses', 0, 65, 1200);
         }, 500);
 
         return () => clearTimeout(timeoutId);
@@ -782,66 +1014,60 @@ const FitnessActivityDashboard: React.FC = () => {
 
     const statsData: StatData[] = [
         {
-            title: 'Active Minutes',
-            value: animatedValues.minutes || 0,
-            unit: 'Min',
-            icon: Timer,
+            title: 'Total Balance',
+            value: `${animatedValues.totalBalance || 0}.10`,
+            unit: 'USD',
+            icon: DollarSign,
             gradient: 'from-emerald-400 to-teal-500',
             bgGradient: 'from-emerald-50 to-teal-50',
             iconBg: 'from-emerald-100 to-teal-100',
             chart: [40, 60, 30, 80, 45, 70, 35, 90, 25, 55, 75, 40],
-            trend: '+12%'
+            trend: '+42.9%',
+            trendDirection: 'up'
         },
         {
-            title: 'Calories Burned',
-            value: animatedValues.calories || 0,
-            unit: 'Kcal',
-            icon: Flame,
+            title: 'Total Sales',
+            value: `${(animatedValues.totalSales || 0) / 1000}k`,
+            unit: 'Sales',
+            icon: ShoppingCart,
             gradient: 'from-orange-400 to-red-500',
             bgGradient: 'from-orange-50 to-red-50',
             iconBg: 'from-orange-100 to-red-100',
             chart: [60, 80, 45, 70, 55, 85, 40, 65, 50, 75, 35, 60],
-            trend: '+8%'
+            trend: '+18.2%',
+            trendDirection: 'up'
         },
         {
-            title: 'Steps Taken',
-            value: animatedValues.steps || 0,
-            unit: 'Steps',
-            icon: Footprints,
+            title: 'Total Orders',
+            value: animatedValues.totalOrders || 0,
+            unit: 'Orders',
+            icon: Package,
             gradient: 'from-blue-400 to-purple-500',
             bgGradient: 'from-blue-50 to-purple-50',
             iconBg: 'from-blue-100 to-purple-100',
             chart: [30, 45, 60, 40, 70, 55, 80, 45, 65, 50, 75, 40],
-            trend: '+15%'
+            trend: '+25.4%',
+            trendDirection: 'up'
         },
         {
-            title: 'Water Intake',
-            value: `${animatedValues.water || 0}/10`,
-            unit: 'Glasses',
-            icon: Droplets,
+            title: 'Expenses This Week',
+            value: `${animatedValues.expenses || 0}`,
+            unit: 'USD',
+            icon: CreditCard,
             gradient: 'from-cyan-400 to-blue-500',
             bgGradient: 'from-cyan-50 to-blue-50',
             iconBg: 'from-cyan-100 to-blue-100',
-            percentage: 75,
-            trend: '+5%'
+            percentage: 85,
+            trend: '$39 less',
+            trendDirection: 'down'
         }
-    ];
-
-    const weekData: WeekData[] = [
-        { day: 'Mon', value: 60, label: '18', active: false },
-        { day: 'Tue', value: 80, label: '19', active: false },
-        { day: 'Wed', value: 40, label: '20', active: false },
-        { day: 'Thu', value: 90, label: '21', active: true },
-        { day: 'Fri', value: 70, label: '22', active: false },
-        { day: 'Sat', value: 50, label: '23', active: false },
-        { day: 'Sun', value: 85, label: '24', active: false }
     ];
 
     // Render content based on active navigation
     const renderContent = () => {
         switch (activeNav) {
             case 'dashboard':
-                return <DashboardComponent statsData={statsData} weekData={weekData} animatedValues={animatedValues} />;
+                return <DashboardComponent statsData={statsData} animatedValues={animatedValues} />;
             case 'users':
                 return <UsersComponent />;
             case 'diet':
@@ -873,7 +1099,7 @@ const FitnessActivityDashboard: React.FC = () => {
             case 'leftUsers':
                 return <GenericComponent title="Left Users" icon={LogOut} description="Users who have left the platform" />;
             default:
-                return <DashboardComponent statsData={statsData} weekData={weekData} animatedValues={animatedValues} />;
+                return <DashboardComponent statsData={statsData} animatedValues={animatedValues} />;
         }
     };
 
