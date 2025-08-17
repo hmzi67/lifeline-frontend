@@ -17,6 +17,8 @@ import { healthCheck } from './config/database.js';
 import userRoute from './routes/userRoutes.js';
 import questionnaireRoutes from '@routes/questionnaireRoutes';
 import subscriptionPaymentRoutes from './routes/subscriptionPaymentRoutes';
+import dietPlanRoutes from './routes/dietPlanRoutes.js';
+import userDietPlanRoutes from './routes/userDietPlanRoutes.js';
 
 const app = express();
 
@@ -69,6 +71,10 @@ app.use('/api/questionnaire', questionnaireRoutes);
 
 // subscription payment routes
 app.use('/api/subscription-payments', subscriptionPaymentRoutes);
+
+// diet plan routes
+app.use('/api/diet-plans', dietPlanRoutes);
+app.use('/api/user-diet-plans', userDietPlanRoutes);
 
 // Example protected route
 // app.get('/api/protected', authenticate, (req, res) => {
