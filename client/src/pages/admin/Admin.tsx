@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import type { User, UserProfile } from '@/types/user.types';
 import api from '@/lib/axios';
+import { useUserStore } from '@/store/useUserStore';
 
 // Type definitions
 interface StatData {
@@ -92,19 +93,20 @@ interface RevenueData {
 
 // Users Component
 const UsersComponent: React.FC = () => {
-    const [users, setUsers] = useState<UserProfile[]>([]);
+    const { users, loading, error, fetchUsers, deleteUser } = useUserStore();
+
 
 
     useEffect(() => {
-        const fetchUser = async () => {
-            const response = await api.get('user/admin/users');
-            console.log(response.data.data.users);
-            setUsers(response.data.data.users);
-        };
-        fetchUser();
+        fetchUsers(); // fetch on mount
     }, []);
 
-    console.log(users);
+    console.log("users:", users);
+    console.log("loading:", loading);
+    console.log("error:", error);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
 
     return (
         <div className="space-y-8">
