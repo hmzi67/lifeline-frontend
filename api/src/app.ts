@@ -19,6 +19,8 @@ import questionnaireRoutes from '@routes/questionnaireRoutes';
 import subscriptionPaymentRoutes from './routes/subscriptionPaymentRoutes';
 import dietPlanRoutes from './routes/dietPlanRoutes.js';
 import userDietPlanRoutes from './routes/userDietPlanRoutes.js';
+import exerciseRoutes from './routes/exerciseRoutes.js';
+import userExerciseRoutes from "@routes/userExerciseRoutes";
 
 const app = express();
 
@@ -75,6 +77,10 @@ app.use('/api/subscription-payments', subscriptionPaymentRoutes);
 // diet plan routes
 app.use('/api/diet-plans', dietPlanRoutes);
 app.use('/api/user-diet-plans', userDietPlanRoutes);
+
+// Exercise routes
+app.use('/api/exercises', exerciseRoutes);
+app.use('/api/user-exercises', userExerciseRoutes);
 
 // Example protected route
 // app.get('/api/protected', authenticate, (req, res) => {
