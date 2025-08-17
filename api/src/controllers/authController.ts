@@ -4,7 +4,27 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import passport from 'passport';
-import { sendEmailVerificationEmail, sendPasswordResetEmail } from '@services/emailService';
+import { sendEmailVerificationEmail, sendPasswordResetEmail } from '../services/emailService';
+
+// Extended Request interface for JWT payload
+interface AuthRequest extends Request {
+  user?: {
+    id: string;
+    email: string;
+    roleId?: string;
+  };
+}
+
+// JWT Payload interfaces
+interface JWTPayload {
+  userId: string;
+  email: string;
+  roleId?: string;
+}
+
+interface RefreshTokenPayload {
+  userId: string;
+}
 
 const prisma = new PrismaClient();
 
@@ -454,13 +474,13 @@ export const refreshToken = async (req: Request, res: Response) => {
     const decoded = jwt.verify(
         refreshToken,
         process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret'
-    ) as { userId: string };
+    ) as RefreshTokenPayload;
 
     // Check if the refresh token exists in a database and is not expired
     const storedToken = await prisma.refreshToken.findFirst({
       where: {
         token: refreshToken,
-        userId: BigInt(decoded.userId),
+        userId: parseInt(decoded.userId),
         expiresAt: {
           gt: new Date(),
         },
@@ -499,9 +519,21 @@ export const refreshToken = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('Refresh token error:', error);
-    res.status(401).json({
+    if (error instanceof jwt.JsonWebTokenError) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid refresh token',
+      });
+    }
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({
+        success: false,
+        message: 'Refresh token expired',
+      });
+    }
+    res.status(500).json({
       success: false,
-      message: 'Invalid refresh token',
+      message: 'Internal server error',
     });
   }
 };
@@ -519,17 +551,14 @@ export const getCurrentUser = async (req: Request, res: Response) => {
     }
 
     const token = authHeader.substring(7);
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as {
-      userId: string;
-    };
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as JWTPayload;
 
     const user = await prisma.user.findUnique({
-      where: { id: BigInt(decoded.userId) },
+      where: { id: parseInt(decoded.userId) },
       include: {
         role: true,
         questionnaires: true,
       },
-      // Exclude sensitive fields
     });
 
     if (!user) {
@@ -548,9 +577,21 @@ export const getCurrentUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('Get current user error:', error);
-    res.status(401).json({
+    if (error instanceof jwt.JsonWebTokenError) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid access token',
+      });
+    }
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({
+        success: false,
+        message: 'Access token expired',
+      });
+    }
+    res.status(500).json({
       success: false,
-      message: 'Invalid token',
+      message: 'Internal server error',
     });
   }
 };
@@ -755,5 +796,17 @@ export const googleAuthCallback = (req: Request, res: Response) => {
   )(req, res);
 };
 
-export const appleAuth = () => {};
-export const appleAuthCallback = () => {};
+// Apple OAuth functions - To be implemented
+export const appleAuth = (req: Request, res: Response) => {
+  res.status(501).json({
+    success: false,
+    message: 'Apple OAuth not implemented yet',
+  });
+};
+
+export const appleAuthCallback = (req: Request, res: Response) => {
+  res.status(501).json({
+    success: false,
+    message: 'Apple OAuth callback not implemented yet',
+  });
+};
