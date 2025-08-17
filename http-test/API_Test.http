@@ -4,8 +4,8 @@
 @contentType = application/json
 
 ### Variables for testing (update these values during testing)
-@testEmail = example@gmail.com
-@testUsername = username
+@testEmail = muhammadnaveedcis@gmail.com
+@testUsername = naveed
 @testPassword = password123
 @accessToken = your_access_token_here
 @otp = 000000

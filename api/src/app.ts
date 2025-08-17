@@ -15,6 +15,7 @@ import {
 import authRoute from './routes/authRoute.js';
 import { healthCheck } from './config/database.js';
 import userRoute from './routes/userRoutes.js';
+import questionnaireRoutes from '@routes/questionnaireRoutes';
 
 const app = express();
 
@@ -61,6 +62,9 @@ app.use('/api/auth/', authRoute);
 
 // User routes
 app.use('/api/user/', userRoute);
+
+// questionnaire route
+app.use('/api/questionnaire', questionnaireRoutes)
 
 // Example protected route
 // app.get('/api/protected', authenticate, (req, res) => {
