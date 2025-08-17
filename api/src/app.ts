@@ -21,6 +21,8 @@ import dietPlanRoutes from './routes/dietPlanRoutes.js';
 import userDietPlanRoutes from './routes/userDietPlanRoutes.js';
 import exerciseRoutes from './routes/exerciseRoutes.js';
 import userExerciseRoutes from "@routes/userExerciseRoutes";
+import challengeRoutes from './routes/challengeRoutes.js';
+import challengeExerciseRouter from "@routes/challengeExerciseRoutes";
 
 const app = express();
 
@@ -81,6 +83,10 @@ app.use('/api/user-diet-plans', userDietPlanRoutes);
 // Exercise routes
 app.use('/api/exercises', exerciseRoutes);
 app.use('/api/user-exercises', userExerciseRoutes);
+
+// Challenge routes
+app.use('/api/challenges', challengeRoutes);
+app.use('/api/challenge-exercises', challengeExerciseRouter);   // exercises for a challenge to user
 
 // Example protected route
 // app.get('/api/protected', authenticate, (req, res) => {

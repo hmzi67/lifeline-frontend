@@ -4,16 +4,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import passport from 'passport';
-import { sendEmailVerificationEmail, sendPasswordResetEmail } from '../services/emailService';
+import { sendEmailVerificationEmail, sendPasswordResetEmail } from '@services/emailService';
 
-// Extended Request interface for JWT payload
-interface AuthRequest extends Request {
-  user?: {
-    id: string;
-    email: string;
-    roleId?: string;
-  };
-}
 
 // JWT Payload interfaces
 interface JWTPayload {
@@ -43,15 +35,15 @@ const loginSchema = z.object({
 // Helper function to generate JWT tokens
 const generateTokens = (userId: string, email: string, roleId?: string) => {
   const accessToken = jwt.sign(
-      { userId, email, roleId },
-      process.env.JWT_SECRET || 'fallback-secret',
-      { expiresIn: '15m' }
+    { userId, email, roleId },
+    process.env.JWT_SECRET || 'fallback-secret',
+    { expiresIn: '15m' }
   );
 
   const refreshToken = jwt.sign(
-      { userId },
-      process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret',
-      { expiresIn: '7d' }
+    { userId },
+    process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret',
+    { expiresIn: '7d' }
   );
 
   return { accessToken, refreshToken };
@@ -60,6 +52,19 @@ const generateTokens = (userId: string, email: string, roleId?: string) => {
 // Helper function to generate OTP
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+};
+
+// Helper function to generate unique username
+const generateUniqueUsername = async (baseUsername: string): Promise<string> => {
+  let finalUsername = baseUsername.toLowerCase().replace(/[^a-zA-Z0-9]/g, '');
+  let counter = 1;
+
+  while (await prisma.user.findUnique({ where: { username: finalUsername } })) {
+    finalUsername = `${baseUsername.toLowerCase().replace(/[^a-zA-Z0-9]/g, '')}${counter}`;
+    counter++;
+  }
+
+  return finalUsername;
 };
 
 // Signup function
@@ -94,13 +99,8 @@ export const signup = async (req: Request, res: Response) => {
     // Generate username if not provided
     let finalUsername = username;
     if (!finalUsername) {
-      const baseUsername = email.split('@')[0].toLowerCase();
-      finalUsername = baseUsername;
-      let counter = 1;
-      while (await prisma.user.findUnique({ where: { username: finalUsername } })) {
-        finalUsername = `${baseUsername}${counter}`;
-        counter++;
-      }
+      const baseUsername = email.split('@')[0];
+      finalUsername = await generateUniqueUsername(baseUsername);
     }
 
     // Generate OTP for email verification
@@ -127,11 +127,11 @@ export const signup = async (req: Request, res: Response) => {
       },
     });
 
-    // Generate tokens
+    // Generate tokens - user.id is already a string (CUID)
     const { accessToken, refreshToken } = generateTokens(
-        user.id.toString(),
-        user.email,
-        user.roleId?.toString()
+      user.id,
+      user.email,
+      user.roleId || undefined
     );
 
     // Save a refresh token to a database
@@ -358,11 +358,11 @@ export const login = async (req: Request, res: Response) => {
       });
     }
 
-    // Generate tokens
+    // Generate tokens - user.id is already a string (CUID)
     const { accessToken, refreshToken } = generateTokens(
-        user.id.toString(),
-        user.email,
-        user.roleId?.toString()
+      user.id,
+      user.email,
+      user.roleId || undefined
     );
 
     // Clean up old refresh tokens for this user (keep only the latest 5)
@@ -472,15 +472,16 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     // Verify refresh token
     const decoded = jwt.verify(
-        refreshToken,
-        process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret'
+      refreshToken,
+      process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret'
     ) as RefreshTokenPayload;
 
     // Check if the refresh token exists in a database and is not expired
+    // No need to parse userId as integer - it's already a string (CUID)
     const storedToken = await prisma.refreshToken.findFirst({
       where: {
         token: refreshToken,
-        userId: parseInt(decoded.userId),
+        userId: decoded.userId,
         expiresAt: {
           gt: new Date(),
         },
@@ -505,9 +506,9 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     // Generate a new access token
     const { accessToken } = generateTokens(
-        storedToken.user.id.toString(),
-        storedToken.user.email,
-        storedToken.user.roleId?.toString()
+      storedToken.user.id,
+      storedToken.user.email,
+      storedToken.user.roleId || undefined
     );
 
     res.status(200).json({
@@ -553,8 +554,9 @@ export const getCurrentUser = async (req: Request, res: Response) => {
     const token = authHeader.substring(7);
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as JWTPayload;
 
+    // No need to parse userId as integer - it's already a string (CUID)
     const user = await prisma.user.findUnique({
-      where: { id: parseInt(decoded.userId) },
+      where: { id: decoded.userId },
       include: {
         role: true,
         questionnaires: true,
@@ -746,53 +748,53 @@ export const googleAuth = (req: Request, res: Response) => {
 
 export const googleAuthCallback = (req: Request, res: Response) => {
   passport.authenticate(
-      'google',
-      {
-        failureRedirect: `${process.env.FRONTEND_URL}/auth/login?error=oauth_failed`,
-      },
-      async (err: any, user: any) => {
-        if (err) {
-          console.error('Google OAuth callback error:', err);
-          return res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=oauth_error`);
-        }
-
-        if (!user) {
-          return res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=oauth_denied`);
-        }
-
-        try {
-          // Generate JWT tokens
-          const { accessToken, refreshToken } = generateTokens(
-              user.id.toString(),
-              user.email,
-              user.roleId?.toString()
-          );
-
-          // Save a refresh token to a database
-          await prisma.refreshToken.create({
-            data: {
-              token: refreshToken,
-              userId: user.id,
-              expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-            },
-          });
-
-          // Set the refresh token as httpOnly cookie
-          res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-          });
-
-          // Redirect to frontend with access token
-          const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?token=${accessToken}`;
-          res.redirect(redirectUrl);
-        } catch (error) {
-          console.error('Error generating tokens for Google OAuth:', error);
-          res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=token_generation_failed`);
-        }
+    'google',
+    {
+      failureRedirect: `${process.env.FRONTEND_URL}/auth/login?error=oauth_failed`,
+    },
+    async (err: any, user: any) => {
+      if (err) {
+        console.error('Google OAuth callback error:', err);
+        return res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=oauth_error`);
       }
+
+      if (!user) {
+        return res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=oauth_denied`);
+      }
+
+      try {
+        // Generate JWT tokens - user.id is already a string (CUID)
+        const { accessToken, refreshToken } = generateTokens(
+          user.id,
+          user.email,
+          user.roleId || undefined
+        );
+
+        // Save a refresh token to a database
+        await prisma.refreshToken.create({
+          data: {
+            token: refreshToken,
+            userId: user.id,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+          },
+        });
+
+        // Set the refresh token as httpOnly cookie
+        res.cookie('refreshToken', refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+
+        // Redirect to frontend with access token
+        const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?token=${accessToken}`;
+        res.redirect(redirectUrl);
+      } catch (error) {
+        console.error('Error generating tokens for Google OAuth:', error);
+        res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=token_generation_failed`);
+      }
+    }
   )(req, res);
 };
 
@@ -809,4 +811,46 @@ export const appleAuthCallback = (req: Request, res: Response) => {
     success: false,
     message: 'Apple OAuth callback not implemented yet',
   });
+};
+
+// Logout from all devices
+export const logoutFromAllDevices = async (req: Request, res: Response) => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({
+        success: false,
+        message: 'No token provided',
+      });
+    }
+
+    const token = authHeader.substring(7);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as JWTPayload;
+
+    // Delete all refresh tokens for this user
+    await prisma.refreshToken.deleteMany({
+      where: { userId: decoded.userId },
+    });
+
+    // Clear refresh token cookie
+    res.clearCookie('refreshToken');
+
+    res.status(200).json({
+      success: true,
+      message: 'Logged out from all devices successfully',
+    });
+  } catch (error) {
+    console.error('Logout from all devices error:', error);
+    if (error instanceof jwt.JsonWebTokenError || error instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid or expired token',
+      });
+    }
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    });
+  }
 };
