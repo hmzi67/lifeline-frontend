@@ -12,7 +12,7 @@ datasource db {
 
 // Roles Table
 model Role {
-  id          BigInt   @id @default(autoincrement())
+  id          String   @id @default(cuid())
   name        String   @db.VarChar(50)
   description String?  @db.Text
   users       User[]
@@ -22,7 +22,7 @@ model Role {
 
 // Users Table
 model User {
-  id                   BigInt                @id @default(autoincrement())
+  id                   String                @id @default(cuid())
   email                String                @unique @db.VarChar(255)
   username             String?               @unique @db.VarChar(100)
   googleId             String?               @unique @map("google_id") @db.VarChar(255)
@@ -32,7 +32,7 @@ model User {
   password             String?               @db.VarChar(255)
   otp                  String?               @db.VarChar(20)
   status               String?               @db.VarChar(20)
-  roleId               BigInt?               @map("role_id")
+  roleId               String?               @map("role_id")
   
   createdAt            DateTime              @default(now()) @map("created_at")
   updatedAt            DateTime              @updatedAt @map("updated_at")
@@ -59,8 +59,8 @@ model User {
 
 // Auth Tokens Table
 model AuthToken {
-  id           BigInt    @id @default(autoincrement())
-  userId       BigInt?   @map("user_id")
+  id           String    @id @default(cuid())
+  userId       String?   @map("user_id")
   accessToken  String?   @map("access_token") @db.Text
   refreshToken String?   @map("refresh_token") @db.Text
   authKey      String?   @map("auth_key") @db.Text
@@ -75,8 +75,8 @@ model AuthToken {
 
 // Refresh Tokens Table
 model RefreshToken {
-  id        BigInt    @id @default(autoincrement())
-  userId    BigInt    @map("user_id")
+  id        String    @id @default(cuid())
+  userId    String    @map("user_id")
   token     String    @unique @db.Text
   expiresAt DateTime  @map("expires_at")
   createdAt DateTime  @default(now()) @map("created_at")
@@ -87,8 +87,8 @@ model RefreshToken {
 
 // Subscription Payments Table
 model SubscriptionPayment {
-  id           BigInt        @id @default(autoincrement())
-  userId       BigInt?       @map("user_id")
+  id           String        @id @default(cuid())
+  userId       String?       @map("user_id")
   planName     String?       @map("plan_name") @db.VarChar(100)
   amount       Decimal?      @db.Decimal(10, 2)
   method       String?       @db.VarChar(50)
@@ -102,9 +102,9 @@ model SubscriptionPayment {
 
 // User Licenses Table
 model UserLicense {
-  id        BigInt               @id @default(autoincrement())
-  userId    BigInt?              @map("user_id")
-  paymentId BigInt?              @map("payment_id")
+  id        String               @id @default(cuid())
+  userId    String?              @map("user_id")
+  paymentId String?              @map("payment_id")
   createdAt DateTime?            @map("created_at")
   expiresAt DateTime?            @map("expires_at")
   user      User?                @relation(fields: [userId], references: [id])
@@ -115,8 +115,8 @@ model UserLicense {
 
 // Questionnaires Table
 model Questionnaire {
-  id                  BigInt    @id @default(autoincrement())
-  userId              BigInt?   @map("user_id")
+  id                  String    @id @default(cuid())
+  userId              String?   @map("user_id")
   gender              String?   @db.VarChar(10)
   goal                String?   @db.Text
   dietType            String?   @map("diet_type") @db.VarChar(50)
@@ -140,7 +140,7 @@ model Questionnaire {
 
 // Diet Plans Table
 model DietPlan {
-  id              BigInt           @id @default(autoincrement())
+  id              String           @id @default(cuid())
   name            String?          @db.VarChar(100)
   calories        Int?
   duration        String?          @db.VarChar(50)
@@ -152,9 +152,9 @@ model DietPlan {
 
 // User Diet Plans Table
 model UserDietPlan {
-  id     BigInt    @id @default(autoincrement())
-  userId BigInt?   @map("user_id")
-  dietId BigInt?   @map("diet_id")
+  id     String    @id @default(cuid())
+  userId String?   @map("user_id")
+  dietId String?   @map("diet_id")
   user   User?     @relation(fields: [userId], references: [id])
   diet   DietPlan? @relation(fields: [dietId], references: [id])
 
@@ -163,7 +163,7 @@ model UserDietPlan {
 
 // Exercises Table
 model Exercise {
-  id                 BigInt              @id @default(autoincrement())
+  id                 String              @id @default(cuid())
   name               String?             @db.VarChar(100)
   purpose            String?             @db.Text
   description        String?             @db.Text
@@ -178,9 +178,9 @@ model Exercise {
 
 // User Exercises Table
 model UserExercise {
-  id         BigInt    @id @default(autoincrement())
-  userId     BigInt?   @map("user_id")
-  exerciseId BigInt?   @map("exercise_id")
+  id         String    @id @default(cuid())
+  userId     String?   @map("user_id")
+  exerciseId String?   @map("exercise_id")
   user       User?     @relation(fields: [userId], references: [id])
   exercise   Exercise? @relation(fields: [exerciseId], references: [id])
 
@@ -189,7 +189,7 @@ model UserExercise {
 
 // Challenges Table
 model Challenge {
-  id                 BigInt              @id @default(autoincrement())
+  id                 String              @id @default(cuid())
   name               String?             @db.VarChar(100)
   purpose            String?             @db.Text
   description        String?             @db.Text
@@ -204,8 +204,8 @@ model Challenge {
 
 // Challenge Exercises Table (Many-to-Many)
 model ChallengeExercise {
-  challengeId BigInt    @map("challenge_id")
-  exerciseId  BigInt    @map("exercise_id")
+  challengeId String    @map("challenge_id")
+  exerciseId  String    @map("exercise_id")
   challenge   Challenge @relation(fields: [challengeId], references: [id])
   exercise    Exercise  @relation(fields: [exerciseId], references: [id])
 
@@ -215,8 +215,8 @@ model ChallengeExercise {
 
 // Challenge Diets Table (Many-to-Many)
 model ChallengeDiet {
-  challengeId BigInt    @map("challenge_id")
-  dietId      BigInt    @map("diet_id")
+  challengeId String    @map("challenge_id")
+  dietId      String    @map("diet_id")
   challenge   Challenge @relation(fields: [challengeId], references: [id])
   diet        DietPlan  @relation(fields: [dietId], references: [id])
 
@@ -226,9 +226,9 @@ model ChallengeDiet {
 
 // Challenge Fees Table
 model ChallengeFee {
-  id             BigInt          @id @default(autoincrement())
-  userId         BigInt?         @map("user_id")
-  challengeId    BigInt?         @map("challenge_id")
+  id             String          @id @default(cuid())
+  userId         String?         @map("user_id")
+  challengeId    String?         @map("challenge_id")
   amount         Decimal?        @db.Decimal(10, 2)
   method         String?         @db.VarChar(50)
   status         String?         @db.VarChar(20)
@@ -241,10 +241,10 @@ model ChallengeFee {
 
 // User Challenges Table
 model UserChallenge {
-  id          BigInt        @id @default(autoincrement())
-  challengeId BigInt?       @map("challenge_id")
-  feeId       BigInt?       @map("fee_id")
-  userId      BigInt?       @map("user_id")
+  id          String        @id @default(cuid())
+  challengeId String?       @map("challenge_id")
+  feeId       String?       @map("fee_id")
+  userId      String?       @map("user_id")
   date        DateTime?     @db.Date
   time        DateTime?     @db.Time(6)
   challenge   Challenge?    @relation(fields: [challengeId], references: [id])
@@ -256,8 +256,8 @@ model UserChallenge {
 
 // Cheat Days Table
 model CheatDay {
-  id          BigInt  @id @default(autoincrement())
-  userId      BigInt? @map("user_id")
+  id          String  @id @default(cuid())
+  userId      String? @map("user_id")
   foodName    String? @map("food_name") @db.VarChar(100)
   image       String? @db.Text
   mealType    String? @map("meal_type") @db.VarChar(50)
@@ -269,8 +269,8 @@ model CheatDay {
 
 // Fasting Logs Table
 model FastingLog {
-  id                BigInt             @id @default(autoincrement())
-  userId            BigInt?            @map("user_id")
+  id                String             @id @default(cuid())
+  userId            String?            @map("user_id")
   date              DateTime?          @db.Date
   timeStart         DateTime?          @map("time_start") @db.Time(6)
   timeEnd           DateTime?          @map("time_end") @db.Time(6)
@@ -282,8 +282,8 @@ model FastingLog {
 
 // Sleep Logs Table
 model SleepLog {
-  id                BigInt             @id @default(autoincrement())
-  userId            BigInt?            @map("user_id")
+  id                String             @id @default(cuid())
+  userId            String?            @map("user_id")
   date              DateTime?          @db.Date
   timeStart         DateTime?          @map("time_start") @db.Time(6)
   timeEnd           DateTime?          @map("time_end") @db.Time(6)
@@ -295,8 +295,8 @@ model SleepLog {
 
 // Water Intake Logs Table
 model WaterIntakeLog {
-  id                BigInt             @id @default(autoincrement())
-  userId            BigInt?            @map("user_id")
+  id                String             @id @default(cuid())
+  userId            String?            @map("user_id")
   date              DateTime?          @db.Date
   timeStart         DateTime?          @map("time_start") @db.Time(6)
   timeEnd           DateTime?          @map("time_end") @db.Time(6)
@@ -308,8 +308,8 @@ model WaterIntakeLog {
 
 // Medications Table
 model Medication {
-  id                BigInt             @id @default(autoincrement())
-  userId            BigInt?            @map("user_id")
+  id                String             @id @default(cuid())
+  userId            String?            @map("user_id")
   name              String?            @db.VarChar(100)
   quantity          Int?
   dose              String?            @db.VarChar(50)
@@ -325,7 +325,7 @@ model Medication {
 
 // Meditations Table
 model Meditation {
-  id                BigInt             @id @default(autoincrement())
+  id                String             @id @default(cuid())
   name              String?            @db.VarChar(100)
   type              String?            @db.VarChar(50)
   soundUrl          String?            @map("sound_url") @db.Text
@@ -336,13 +336,13 @@ model Meditation {
 
 // User Daily Routine Table
 model UserDailyRoutine {
-  id           BigInt          @id @default(autoincrement())
-  userId       BigInt?         @map("user_id")
-  fastingId    BigInt?         @map("fasting_id")
-  sleepId      BigInt?         @map("sleep_id")
-  medicationId BigInt?         @map("medication_id")
-  meditationId BigInt?         @map("meditation_id")
-  waterId      BigInt?         @map("water_id")
+  id           String          @id @default(cuid())
+  userId       String?         @map("user_id")
+  fastingId    String?         @map("fasting_id")
+  sleepId      String?         @map("sleep_id")
+  medicationId String?         @map("medication_id")
+  meditationId String?         @map("meditation_id")
+  waterId      String?         @map("water_id")
   user         User?           @relation(fields: [userId], references: [id])
   fasting      FastingLog?     @relation(fields: [fastingId], references: [id])
   sleep        SleepLog?       @relation(fields: [sleepId], references: [id])
@@ -355,7 +355,7 @@ model UserDailyRoutine {
 
 // App Settings Table
 model AppSetting {
-  id    BigInt  @id @default(autoincrement())
+  id    String  @id @default(cuid())
   key   String? @db.VarChar(100)
   value String? @db.Text
   scope String? @db.VarChar(50)
