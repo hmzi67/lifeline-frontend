@@ -23,6 +23,8 @@ import exerciseRoutes from './routes/exerciseRoutes.js';
 import userExerciseRoutes from "@routes/userExerciseRoutes";
 import challengeRoutes from './routes/challengeRoutes.js';
 import challengeExerciseRouter from "@routes/challengeExerciseRoutes";
+import fastingRoutes from './routes/fastingLogRoutes.js';
+import sleepRoutes from './routes/sleepLogRoutes.js';
 
 const app = express();
 
@@ -87,6 +89,12 @@ app.use('/api/user-exercises', userExerciseRoutes);
 // Challenge routes
 app.use('/api/challenges', challengeRoutes);
 app.use('/api/challenge-exercises', challengeExerciseRouter);   // exercises for a challenge to user
+
+// fasting routes
+app.use('/api/fasting-logs', fastingRoutes);
+
+// sleeping routes
+app.use('/api/sleep-logs', sleepRoutes)
 
 // Example protected route
 // app.get('/api/protected', authenticate, (req, res) => {
