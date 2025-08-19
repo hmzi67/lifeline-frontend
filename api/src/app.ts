@@ -25,6 +25,7 @@ import challengeRoutes from './routes/challengeRoutes.js';
 import challengeExerciseRouter from "@routes/challengeExerciseRoutes";
 import fastingRoutes from './routes/fastingLogRoutes.js';
 import sleepRoutes from './routes/sleepLogRoutes.js';
+import waterIntakeRoutes from './routes/waterIntakeRoutes.js';
 
 const app = express();
 
@@ -95,6 +96,9 @@ app.use('/api/fasting-logs', fastingRoutes);
 
 // sleeping routes
 app.use('/api/sleep-logs', sleepRoutes)
+
+// Water intake routes
+app.use('/api/water-intake', waterIntakeRoutes)
 
 // Example protected route
 // app.get('/api/protected', authenticate, (req, res) => {
