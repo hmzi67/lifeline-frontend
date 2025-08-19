@@ -28,6 +28,8 @@ import sleepRoutes from './routes/sleepLogRoutes.js';
 import waterIntakeRoutes from './routes/waterIntakeRoutes.js';
 import medicationRoutes from './routes/medicationRoutes.js';
 import meditationRoutes from './routes/meditationRoutes.js';
+import userDailyRoutes from './routes/userDailyRoutineRoutes.js';
+import appSetttingsRoutes from './routes/appSettingRoutes.js';
 
 const app = express();
 
@@ -107,6 +109,12 @@ app.use('/api/medications', medicationRoutes);
 
 // Meditation routes
 app.use('/api/meditations', meditationRoutes);
+
+// app settings routes
+app.use('/api/app-settings', appSetttingsRoutes)
+
+// user daily routines routes
+app.use('/api/user-daily-routines', userDailyRoutes)
 
 // Example protected route
 // app.get('/api/protected', authenticate, (req, res) => {
