@@ -99,13 +99,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 throw new Error(response.data.message || 'Login failed');
             }
         } catch (error: any) {
-            // If API is not available, provide mock login for testing
-            if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
-                console.warn('API not available');
+            // // If API is not available, provide mock login for testing
+            // if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
+            //     console.warn('API not available');
+            // }
+
+            // const errorMessage = error.response?.data?.message || error.message || 'Login failed';
+            // throw new Error(errorMessage);
+            if (error.response?.data?.errors) {
+                throw error.response.data.errors;
             }
 
-            const errorMessage = error.response?.data?.message || error.message || 'Login failed';
-            throw new Error(errorMessage);
+            throw new Error(error.response?.data?.message || error.message || 'Signin failed');
         }
     };
 
