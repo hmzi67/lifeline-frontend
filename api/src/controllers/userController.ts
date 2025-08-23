@@ -206,13 +206,13 @@ export const getUserStats = async (req: Request, res: Response) => {
       _count: {
         roleId: true,
       },
-      include: {
-        role: {
-          select: {
-            name: true,
-          },
-        },
-      },
+      // include: {
+      //   role: {
+      //     select: {
+      //       name: true,
+      //     },
+      //   },
+      // },
     });
 
     const recentUsers = await prisma.user.count({
