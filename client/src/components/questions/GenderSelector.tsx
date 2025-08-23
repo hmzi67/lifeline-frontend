@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
 import menimg from "@/assets/images/question/man-gender.jpg";
 import womenimg from "@/assets/images/question/women-gender.jpeg";
 import GoNext from '../common/GoNext';
+import api from '@/lib/axios'; // Adjust path as necessary
 
 interface GenderOption {
     id: 'male' | 'female';
@@ -15,25 +16,50 @@ interface GenderSelectorProps {
     onContinue?: (gender: 'male' | 'female') => void;
 }
 
+const normalizeGender = (gender: 'male' | 'female'): 'Male' | 'Female' => {
+    return gender === 'male' ? 'Male' : 'Female';
+};
+
 const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onContinue }) => {
     const [selectedGender, setSelectedGender] = useState<'male' | 'female' | null>(null);
+    const [loading, setLoading] = useState(false);
+
+    // Fetch previously-selected gender on mount
+    useEffect(() => {
+        const fetchGender = async () => {
+            try {
+                setLoading(true);
+                const res = await api.get('/questionnaire/gender');
+                const genderFromApi = res?.data?.data?.gender;
+                // Normalize backend value to lowercase for UI selections
+                if (genderFromApi === 'Male') setSelectedGender('male');
+                else if (genderFromApi === 'Female') setSelectedGender('female');
+            } catch {
+                // Optionally handle error
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchGender();
+    }, []);
 
     const genderOptions: GenderOption[] = [
-        {
-            id: 'male',
-            label: 'Male',
-            image: menimg
-        },
-        {
-            id: 'female',
-            label: 'Female',
-            image: womenimg
-        }
+        { id: 'male', label: 'Male', image: menimg },
+        { id: 'female', label: 'Female', image: womenimg }
     ];
 
-    const handleGenderSelect = (gender: 'male' | 'female') => {
+    // Save gender to backend with capitalized value when user selects a card
+    const handleGenderSelect = async (gender: 'male' | 'female') => {
         setSelectedGender(gender);
         onGenderSelect?.(gender);
+        setLoading(true);
+        try {
+            await api.put('/questionnaire/gender', { gender: normalizeGender(gender) });
+        } catch {
+            // Optionally handle API errors here
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleContinue = () => {
@@ -64,13 +90,14 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                             className={`relative rounded-3xl cursor-pointer transition-all duration-300 transform hover:scale-105`}
                         >
                             <div className="flex justify-center mb-8">
-                                <div className={`relative sm:w-64 sm:h-64 w-36 h-36 rounded-2xl overflow-hidden shadow-lg ${selectedGender === option.id ? 'ring-4 ring-primary-400 shadow-2xl' : 'shadow-xl ring-4 ring-white hover:shadow-xl'}`}>
+                                <div
+                                    className={`relative sm:w-64 sm:h-64 w-36 h-36 rounded-2xl overflow-hidden shadow-lg ${selectedGender === option.id ? 'ring-4 ring-primary-400 shadow-2xl' : 'shadow-xl ring-4 ring-white hover:shadow-xl'}`}
+                                >
                                     <img
                                         src={option.image}
-                                        alt={`${option.label} representative`}
+                                        alt={option.label}
                                         className="w-full h-full object-cover"
                                     />
-                                    {/* Checkmark for selected option */}
                                     {selectedGender === option.id && (
                                         <div className="absolute top-2 right-2 w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center shadow-lg z-10">
                                             <Check className="w-5 h-5 text-white" />
@@ -78,7 +105,6 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                                     )}
                                 </div>
                             </div>
-
                             <div className="text-center">
                                 <h3 className="text-3xl font-semibold text-gray-800 sm:block hidden">
                                     {option.label}
@@ -101,7 +127,7 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                 {/* Continue Button */}
                 {selectedGender && (
                     <div className="text-center">
-                        <GoNext onClick={handleContinue} />
+                        <GoNext onClick={handleContinue} loading={loading} />
                     </div>
                 )}
             </div>
