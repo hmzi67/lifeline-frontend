@@ -3,7 +3,6 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import AuthForm from '../../components/auth/AuthForm';
 import AuthLayout from '../../components/auth/AuthLayout';
 import SocialAuthButtons from '../../components/auth/SocialAuthButtons';
-import axios from "axios";
 import { useAuth } from '../../contexts/AuthContext';
 
 const Signup: React.FC = () => {
@@ -17,41 +16,33 @@ const Signup: React.FC = () => {
   const from = location.state?.from?.pathname || '/dashboard';
 
   const handleSignup = async (data: Record<string, string | boolean>) => {
-    setFieldErrors({})
-    const { name, email, password } = data as {
-      name: string;
-      email: string;
-      password: string;
-    };
-
-    setLoading(true);
-
-    try {
-      // Use the auth context signup method
-      await signup(name, email, password);
-
-      // Redirect to intended destination or dashboard
-      navigate(from, { replace: true });
-
-    } catch (error: any) {
-      setLoading(false);
-      if (axios.isAxiosError(error)) {
-        const responseErrors = error.response?.data?.errors;
-        if (Array.isArray(responseErrors)) {
-          const formattedErrors: Record<string, string> = {};
-          for (const err of responseErrors) {
-            formattedErrors[err.field] = err.message;
-          }
-          setFieldErrors(formattedErrors);
-        } else {
-          // fallback to general error
-          setFieldErrors({ general: error.response?.data?.message || 'Signup failed' });
-        }
-      } else {
-        setFieldErrors({ general: error.message || 'Unexpected error occurred.' });
-      }
-    }
+  setFieldErrors({});
+  const { name, email, password } = data as {
+    name: string;
+    email: string;
+    password: string;
   };
+
+  setLoading(true);
+
+  try {
+    await signup(name, email, password);
+    navigate(from, { replace: true });
+  } catch (error: any) {
+    setLoading(false);
+
+    if (Array.isArray(error)) {
+      const formattedErrors: Record<string, string> = {};
+      error.forEach((err: { field: string; message: string }) => {
+        formattedErrors[err.field] = err.message;
+      });
+      setFieldErrors(formattedErrors);
+    } else {
+      setFieldErrors({ general: error.message || 'Signup failed' });
+    }
+  }
+};
+
 
   return (
     <AuthLayout

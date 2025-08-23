@@ -111,11 +111,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const signup = async (name: string, email: string, password: string): Promise<void> => {
         try {
-            const response = await api.post('/auth/signup', {
-                name,
-                email,
-                password,
-            });
+            const response = await api.post('/auth/signup', { name, email, password });
 
             if (response.data.success) {
                 const { user: userData, token: userToken } = response.data;
@@ -125,15 +121,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 throw new Error(response.data.message || 'Signup failed');
             }
         } catch (error: any) {
-            // If API is not available, provide mock signup for testing
-            if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
-                console.warn('API not available, using mock signup for testing');
+            if (error.response?.data?.errors) {
+                throw error.response.data.errors;
             }
 
-            const errorMessage = error.response?.data?.message || error.message || 'Signup failed';
-            throw new Error(errorMessage);
+            throw new Error(error.response?.data?.message || error.message || 'Signup failed');
         }
     };
+
 
     const logout = () => {
         clearAuthState();
