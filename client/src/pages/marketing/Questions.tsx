@@ -16,56 +16,93 @@ import { FitnessGraph } from "@/components/questions/fitnessgraph.tsx";
 import ellipseImage from "@/assets/images/question/Ellipse 4.svg";
 import GoalWeightSelector from "@/components/questions/GoalWeightSelector.tsx";
 import vdo from "@/assets/Q-thankyou/applause.mp4";
-
-
-const LOCAL_STORAGE_KEY = "currentStepIndex";
+import api from "@/lib/axios";
+import Loading from "@/components/common/Loading";
 
 export default function Questions() {
-  const [currentStep, setCurrentStep] = useState(() => {
-    const savedStep = localStorage.getItem(LOCAL_STORAGE_KEY);
-    return savedStep ? parseInt(savedStep, 10) : 0;
-  });
+  const [currentStep, setCurrentStep] = useState(0);
+  const [loading, setLoading] = useState(true);
 
+  // questionnaire states
   const [gender, setGender] = useState("men");
-  const [selectedGoal, setSelectedGoal] = useState<string>("");
-  const [selectDiet, setSelectedDiet] = useState<string[]>([]);
-  const [allergies, setAllergies] = useState<string[]>([]);
-  const [selectedLevel, setSelectedLevel] = useState<number>(0);
-  const [selectedDayOption, setSelectedDayOption] = useState<string>("");
-  const [focusAreas, setFocusAreas] = useState<string[]>([]);
-  const [age, setAge] = useState<number>(24);
-  const [birthYear, setBirthYear] = useState<number>(2025 - 24);
+  const [, setSelectedGoal] = useState<string>("");
+  const [, setSelectedDiet] = useState<string[]>([]);
+  const [, setAllergies] = useState<string[]>([]);
+  const [, setSelectedLevel] = useState<number>(0);
+  const [, setSelectedDayOption] = useState<string>("");
+  const [, setFocusAreas] = useState<string[]>([]);
+  const [, setAge] = useState<number>(24);
+  const [, setBirthYear] = useState<number>(2025 - 24);
   const [height, setHeight] = useState<number>(0);
   const [heightUnit, setHeightUnit] = useState<string>("cm");
 
+  // fetch questionnaire from API on mount
   useEffect(() => {
-    console.log(gender);
-    console.log(selectedGoal);
-    console.log(selectDiet);
-    console.log(allergies);
-    console.log(selectedLevel);
-    console.log(selectedDayOption);
-    console.log(focusAreas);
-    console.log(age);
-    console.log(birthYear);
-    console.log(height);
-    console.log(heightUnit);
-  }, [
-    age,
-    birthYear,
-    focusAreas,
-    gender,
-    selectedDayOption,
-    selectedGoal,
-    selectDiet,
-    selectedLevel,
-    allergies,
-  ]);
+    const fetchQuestionnaire = async () => {
+      try {
+        const res = await api.get("/questionnaire");
+        const q = res.data?.data?.questionnaire;
 
-  // Save the current step to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, String(currentStep));
-  }, [currentStep]);
+        if (q) {
+          // pre-fill states if values exist
+          if (q.gender) setGender(q.gender);
+          if (q.goal) setSelectedGoal(q.goal);
+          if (q.dietType) setSelectedDiet(q.dietType);
+          if (q.allergenFood) setAllergies(q.allergenFood);
+          if (q.fitnessLevel) setSelectedLevel(Number(q.fitnessLevel));
+          if (q.typicalDayType) setSelectedDayOption(q.typicalDayType);
+          if (q.bodyFocusArea) setFocusAreas(q.bodyFocusArea);
+          if (q.dateOfBirth) {
+            const year = new Date(q.dateOfBirth).getFullYear();
+            setBirthYear(year);
+            setAge(new Date().getFullYear() - year);
+          }
+          if (q.height) setHeight(q.height);
+          if (q.heightUnit) setHeightUnit(q.heightUnit);
+
+          // 👇 Jump to first missing step instead of 0
+          const missingStep = findMissingStep(q);
+          setCurrentStep(missingStep);
+        }
+      } catch (err) {
+        console.error("Error fetching questionnaire:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuestionnaire();
+  }, []);
+
+  // helper function → which step is missing
+  const findMissingStep = (q: any) => {
+    if (!q.gender) return 0; // GenderSelector
+    if (!q.goal) return 2; // FitnessGoalSelector
+    if (!q.dietType) return 3; // DietTypeSelector
+    if (!q.allergenFood) return 4; // AllergenSelector
+    if (!q.fitnessLevel) return 6; // FitnessLevelSelector
+    if (!q.typicalDayType) return 7; // TypicalDaySelector
+    if (!q.bodyFocusArea) return 8; // FocusAreaSelector
+    if (!q.dateOfBirth) return 10; // AgeSelector
+    if (!q.height) return 11; // HeightSelector
+    if (!q.goalWeight) return 12; // GoalWeightSelector
+    if (!q.motivationFor) return 13; // FitnessMotivationSelector
+    return 15; // Done → go to summary
+  };
+
+  // step navigation
+  const goToNext = (gender: string) => {
+    setGender(gender);
+    if (currentStep < steps.length - 1) {
+      setCurrentStep((prev) => prev + 1);
+    }
+  };
+
+  const goToPrevious = () => {
+    if (currentStep > 0) {
+      setCurrentStep((prev) => prev - 1);
+    }
+  };
 
   const steps = [
     <GenderSelector
@@ -107,7 +144,7 @@ export default function Questions() {
       onBack={() => goToPrevious()}
     />,
 
-    <FitnessLevelSelector                                       
+    <FitnessLevelSelector
       key="FitnessLevelSelector"
       onContinue={() => goToNext(gender)}
       onLevelChange={(level) => setSelectedLevel(level)}
@@ -148,7 +185,6 @@ export default function Questions() {
     <HeightSelector
       key="HeightSelector"
       onContinue={(height: number, unit: "cm" | "ft") => {
-        console.log(`Height: ${height} ${unit}`);
         setHeight(height);
         setHeightUnit(unit);
         goToNext(gender);
@@ -190,49 +226,36 @@ export default function Questions() {
     />,
   ];
 
-  const goToNext = (gender: string) => {
-    setGender(gender);
-    if (currentStep < steps.length - 1) {
-      setCurrentStep((prev) => prev + 1);
-    }
-  };
-
-  const goToPrevious = () => {
-    if (currentStep > 0) {
-      setCurrentStep((prev) => prev - 1);
-    }
-  };
+  if (loading) return <Loading />;
 
   return (
-      <div className="min-h-screen flex bg-white items-center justify-center relative overflow-hidden">
-        {(currentStep === 5 || currentStep === 9) && (
-            <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover z-0"
-            >
-              <source src={vdo} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-        )}
+    <div className="min-h-screen flex bg-white items-center justify-center relative overflow-hidden">
+      {(currentStep === 5 || currentStep === 9) && (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-0"
+        >
+          <source src={vdo} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      )}
 
-
-  <div
-        className={`absolute top-0 right-0 w-96 h-96 transform translate-x-32 -translate-y-32 rotate-6  ${currentStep === 5 || currentStep === 9 ? "md:hidden" : ""}`}
+      <div
+        className={`absolute top-0 right-0 w-96 h-96 transform translate-x-32 -translate-y-32 rotate-6 ${currentStep === 5 || currentStep === 9 ? "md:hidden" : ""}`}
       >
         <img src={ellipseImage} alt="" />
       </div>
       <div
-        className={`absolute bottom-0 left-0 w-96 h-96 transform -translate-x-24 translate-y-44 rotate-45  ${currentStep === 5 || currentStep === 9 ? "md:hidden" : ""}`}
+        className={`absolute bottom-0 left-0 w-96 h-96 transform -translate-x-24 translate-y-44 rotate-45 ${currentStep === 5 || currentStep === 9 ? "md:hidden" : ""}`}
       >
         <img src={ellipseImage} alt="" />
       </div>
 
       <div
-          className={`relative z-10 max-w-7xl w-full rounded-3xl  ${currentStep === 5 || currentStep === 9 ? "bg-white/60 backdrop-blur py-20 px-1" : "bg-white/60 backdrop-blur-sm mx-4 sm:mx-0 "}`}
-        // className={`relative z-10 max-w-7xl w-full rounded-3xl  ${currentStep === 5 || currentStep === 9 ? "bg-white/0" : "bg-white/60 backdrop-blur-sm "}`}
+        className={`relative z-10 max-w-7xl w-full rounded-3xl ${currentStep === 5 || currentStep === 9 ? "bg-white/60 backdrop-blur py-20 px-1" : "bg-white/60 backdrop-blur-sm mx-4 sm:mx-0 "}`}
       >
         {steps[currentStep]}
       </div>
