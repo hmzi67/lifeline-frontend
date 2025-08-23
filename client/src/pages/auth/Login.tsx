@@ -4,7 +4,6 @@ import AuthForm from '../../components/auth/AuthForm';
 import AuthLayout from '../../components/auth/AuthLayout';
 import SocialAuthButtons from '../../components/auth/SocialAuthButtons';
 import { useAuth } from '../../contexts/AuthContext';
-import axios from "axios";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
