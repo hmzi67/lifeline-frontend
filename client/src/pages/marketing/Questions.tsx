@@ -21,7 +21,11 @@ import vdo from "@/assets/Q-thankyou/applause.mp4";
 const LOCAL_STORAGE_KEY = "currentStepIndex";
 
 export default function Questions() {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(() => {
+    const savedStep = localStorage.getItem(LOCAL_STORAGE_KEY);
+    return savedStep ? parseInt(savedStep, 10) : 0;
+  });
+
   const [gender, setGender] = useState("men");
   const [selectedGoal, setSelectedGoal] = useState<string>("");
   const [selectDiet, setSelectedDiet] = useState<string[]>([]);
@@ -58,20 +62,9 @@ export default function Questions() {
     allergies,
   ]);
 
-  // Load saved a step from localStorage
-  useEffect(() => {
-    const savedStep = parseInt(
-      localStorage.getItem(LOCAL_STORAGE_KEY) as string,
-      10
-    );
-    if (!isNaN(savedStep)) {
-      setCurrentStep(savedStep);
-    }
-  }, []);
-
   // Save the current step to localStorage whenever it changes
   useEffect(() => {
-    return localStorage.setItem(LOCAL_STORAGE_KEY, String(currentStep));
+    localStorage.setItem(LOCAL_STORAGE_KEY, String(currentStep));
   }, [currentStep]);
 
   const steps = [
