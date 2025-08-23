@@ -4,7 +4,6 @@ import AuthForm from '../../components/auth/AuthForm';
 import AuthLayout from '../../components/auth/AuthLayout';
 import SocialAuthButtons from '../../components/auth/SocialAuthButtons';
 import { useAuth } from '../../contexts/AuthContext';
-import axios from "axios";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -33,22 +32,16 @@ const Login: React.FC = () => {
 
       navigate("/questions")
 
-    }catch (error: any) {
+    } catch (error: any) {
       setLoading(false);
-      if (axios.isAxiosError(error)) {
-        const responseErrors = error.response?.data?.errors;
-        if (Array.isArray(responseErrors)) {
-          const formattedErrors: Record<string, string> = {};
-          for (const err of responseErrors) {
-            formattedErrors[err.field] = err.message;
-          }
-          setFieldErrors(formattedErrors);
-        } else {
-          // fallback to general error
-          setFieldErrors({ general: error.response?.data?.message || 'Signup failed' });
-        }
+      if (Array.isArray(error)) {
+        const formattedErrors: Record<string, string> = {};
+        error.forEach((err: { field: string; message: string }) => {
+          formattedErrors[err.field] = err.message;
+        });
+        setFieldErrors(formattedErrors);
       } else {
-        setFieldErrors({ general: 'Unexpected error occurred.' });
+        setFieldErrors({ general: error.message || 'Signup failed' });
       }
     }
 

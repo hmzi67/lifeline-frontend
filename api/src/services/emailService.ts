@@ -113,7 +113,7 @@ export const sendPasswordResetEmail = async (
 };
 
 
-// Send a email varification email
+// Send a email verification email
 export const sendEmailVerificationEmail = async (
   email: string,
   firstName: string,
@@ -133,43 +133,31 @@ export const sendEmailVerificationEmail = async (
       to: email,
       subject: 'Email Verification Request',
       html: `
-        <!DOCTYPE html>
+       <!DOCTYPE html>
         <html lang="en">
         <head>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Email Verification Request</title>
+          <title>Email Verification Code</title>
         </head>
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-            <h1 style="color: white; margin: 0; font-size: 28px;">Email Verification Request</h1>
+            <h1 style="color: white; margin: 0; font-size: 28px;">Email Verification</h1>
           </div>
           
           <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #ddd;">
             <p style="font-size: 18px;">Hello ${firstName},</p>
-            <p>Thank you for signing up with LifeLine. Please verify your email address by clicking on the button below:</p>
-           
+            <p>Thank you for signing up with LifeLine. Please verify your email address by entering the following verification code in the app:</p>
+            
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${verificationUrl}" 
-                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                       color: white;
-                       padding: 14px 28px;
-                       text-decoration: none;
-                       border-radius: 5px;
-                       font-weight: bold;
-                       display: inline-block;">
-                Verify Email
-              </a>
+              <p style="font-size: 32px; font-weight: bold; color: #667eea; letter-spacing: 5px;">${verificationUrl}</p>
             </div>
 
-            <p>This link will expire in 1 hour for security reasons.</p>
-
-            <p>If the button doesn't work, copy and paste this link into your browser:</p>
-            <p style="word-break: break-all; color: #667eea;">${verificationUrl}</p>
+            <p>This code will expire in 10 minutes for security reasons.</p>
 
             <p style="margin-top: 30px; color: #666; font-size: 14px;">
               Best regards,<br>
-              ${fromName}
+              ${fromName} Team
             </p>
           </div>
         </body>
