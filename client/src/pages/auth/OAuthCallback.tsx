@@ -36,7 +36,7 @@ const OAuthCallback: React.FC = () => {
 
         if (token) {
             // Store the access token
-            localStorage.setItem('accessToken', token);
+            localStorage.setItem('token', token);
 
             // Redirect to dashboard or home page
             navigate('/questions');
