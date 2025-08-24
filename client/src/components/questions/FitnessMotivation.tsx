@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import {Check} from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
-import image from "@/assets/images/Q-motivation/cake.jpg";
-import image1 from "@/assets/images/Q-motivation/wedding.jpg";
-import image2 from "@/assets/images/Q-motivation/ring.jpg";
-import image3 from "@/assets/images/Q-motivation/travel.jpeg";
-import image4 from "@/assets/images/Q-motivation/fitness.jpeg";
+import image from "@/assets/images/Q-motivation/cake.webp";
+import image1 from "@/assets/images/Q-motivation/wedding.webp";
+import image2 from "@/assets/images/Q-motivation/ring.webp";
+import image3 from "@/assets/images/Q-motivation/travel.webp";
+import image4 from "@/assets/images/Q-motivation/fitness.webp";
 import GoNext from "@/components/common/GoNext.tsx";
 
 interface MotivationOption {
