@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
-import GoNext from "@/components/common/GoNext.tsx";
 import image from "@/assets/images/Q-typicalday/office.webp";
 import image1 from "@/assets/images/Q-typicalday/walking.webp";
 import image2 from "@/assets/images/Q-typicalday/working.webp";
