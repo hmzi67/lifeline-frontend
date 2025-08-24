@@ -1,3 +1,4 @@
+import api from '@/lib/axios';
 import React, { useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 
@@ -8,6 +9,19 @@ const OAuthCallback: React.FC = () => {
     useEffect(() => {
         const token = searchParams.get('token');
         const error = searchParams.get('error');
+
+        const fetchUser = async () => {
+            try {
+                const res = await api.get('/auth/me');
+                const user = res.data?.data?.user;
+                
+                // Store user in localStorage
+                localStorage.setItem('user', JSON.stringify(user));
+            } catch (err) {
+                console.error(err);
+                navigate('/auth/login?error=failed_to_fetch_user');
+            }
+        };
 
         if (error) {
             // Handle OAuth errors
@@ -36,7 +50,8 @@ const OAuthCallback: React.FC = () => {
 
         if (token) {
             // Store the access token
-            localStorage.setItem('accessToken', token);
+            localStorage.setItem('token', token);
+            fetchUser()
 
             // Redirect to dashboard or home page
             navigate('/questions');

@@ -15,7 +15,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
     title,
     subtitle,
     bottomText,
-    dividerText = 'Or continue with email',
+    dividerText = 'Or',
     social,
 }) => (
     <div className="min-h-screen flex">
