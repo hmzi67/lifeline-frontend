@@ -1,30 +1,30 @@
 import React, { useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import api from "@/lib/axios.ts";
 
 const ResetPassword: React.FC = () => {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const token = searchParams.get('token');
 
-  // States for requesting reset
+  // Step tracking
+  const [step, setStep] = useState<"request" | "verifyOtp" | "resetSuccess">("request");
+
+  // Request reset
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [, setSubmitted] = useState(false);
 
-  // States for resetting password
+  // OTP & password reset
+  const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [resetSuccess, setResetSuccess] = useState(false);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleRequestReset = async (e: React.FormEvent) => {
+  const handleRequestOtp = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Basic email validation
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       setError("Please enter a valid email address.");
       return;
@@ -34,29 +34,28 @@ const ResetPassword: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await api.post("/auth/request-password-reset", {
-        email: email,
-      });
-
+      const response = await api.post("/auth/request-password-reset", { email });
       console.log(response.data);
       setSubmitted(true);
-      setError(response?.data?.message || "Reset link sent to your email.");
+      setStep("verifyOtp");
     } catch (error: any) {
-      setError(error.response?.data?.message || "Failed to send reset email.");
+      setError(error.response?.data?.message || "Failed to send OTP.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handlePasswordReset = async (e: React.FormEvent) => {
+  const handleVerifyOtpAndReset = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation
+    if (!otp || otp.length < 4) {
+      setError("Please enter the OTP sent to your email.");
+      return;
+    }
     if (!password || password.length < 8) {
       setError("Password must be at least 8 characters long.");
       return;
     }
-
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
@@ -67,18 +66,16 @@ const ResetPassword: React.FC = () => {
 
     try {
       const response = await api.post("/auth/reset-password", {
-        token: token,
+        email,
+        otp,
         newPassword: password,
       });
-
       console.log(response.data);
-      setResetSuccess(true);
 
-      // Redirect to login after 3 seconds
+      setStep("resetSuccess");
       setTimeout(() => {
-        navigate('/login');
+        navigate("/login");
       }, 3000);
-
     } catch (error: any) {
       setError(error.response?.data?.message || "Failed to reset password.");
     } finally {
@@ -89,106 +86,101 @@ const ResetPassword: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
-        {token ? (
-          // Password Reset Form (when token is present)
+        {step === "request" && (
           <>
             <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-              Set New Password
+              Request OTP
             </h2>
-            {resetSuccess ? (
-              <div className="text-center">
-                <p className="text-green-600 mb-4">
-                  Password reset successful! Redirecting to login...
-                </p>
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+            <form onSubmit={handleRequestOtp} className="space-y-4">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Email Address
+                </label>
+                <Input
+                  id="email"
+                  type="email"
+                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                />
               </div>
-            ) : (
-              <form onSubmit={handlePasswordReset} className="space-y-4">
-                <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                    New Password
-                  </label>
-                  <Input
-                    id="password"
-                    type="password"
-                    className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter new password (min 8 characters)"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                    Confirm Password
-                  </label>
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm new password"
-                  />
-                </div>
-                {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-4 rounded-xl transition-colors disabled:opacity-50"
-                >
-                  {loading ? "Resetting..." : "Reset Password"}
-                </Button>
-              </form>
-            )}
+              {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full py-4 rounded-xl transition-colors disabled:opacity-50"
+              >
+                {loading ? "Sending OTP..." : "Send OTP"}
+              </Button>
+            </form>
           </>
-        ) : (
-          // Email Request Form (when no token)
+        )}
+
+        {step === "verifyOtp" && (
           <>
             <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-              Reset Your Password
+              Enter OTP & Reset Password
             </h2>
-            {submitted ? (
-              <div className="text-center">
-                <p className="text-green-600">
-                  {error || "Reset link sent to your email. Please check your inbox."}
-                </p>
-                <Button
-                  onClick={() => {
-                    setSubmitted(false);
-                    setEmail("");
-                    setError("");
-                  }}
-                  className="mt-4 w-full py-2 rounded-xl bg-gray-500 hover:bg-gray-600"
-                >
-                  Send Another Email
-                </Button>
+            <form onSubmit={handleVerifyOtpAndReset} className="space-y-4">
+              <div>
+                <label htmlFor="otp" className="block text-sm font-medium text-gray-700">
+                  OTP
+                </label>
+                <Input
+                  id="otp"
+                  type="text"
+                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  placeholder="Enter the OTP sent to your email"
+                />
               </div>
-            ) : (
-              <form onSubmit={handleRequestReset} className="space-y-4">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                    Email Address
-                  </label>
-                  <Input
-                    id="email"
-                    type="email"
-                    className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                  />
-                  {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-                </div>
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-4 rounded-xl transition-colors disabled:opacity-50"
-                >
-                  {loading ? "Sending..." : "Send Reset Link"}
-                </Button>
-              </form>
-            )}
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                  New Password
+                </label>
+                <Input
+                  id="password"
+                  type="password"
+                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter new password (min 8 characters)"
+                />
+              </div>
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                  Confirm Password
+                </label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm new password"
+                />
+              </div>
+              {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full py-4 rounded-xl transition-colors disabled:opacity-50"
+              >
+                {loading ? "Resetting..." : "Reset Password"}
+              </Button>
+            </form>
           </>
+        )}
+
+        {step === "resetSuccess" && (
+          <div className="text-center">
+            <p className="text-green-600 mb-4">
+              Password reset successful! Redirecting to login...
+            </p>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+          </div>
         )}
       </div>
     </div>
