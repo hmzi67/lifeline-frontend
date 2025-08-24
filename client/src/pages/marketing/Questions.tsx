@@ -150,7 +150,6 @@ export default function Questions() {
       key="TypicalDaySelector"
       onContinue={() => goToNext(gender)}
       onSelection={(optionId: string) => setSelectedDayOption(optionId)}
-      onBack={() => goToPrevious()}
     />,
 
     <FocusAreaSelector
