@@ -204,13 +204,11 @@ export default function Questions() {
     <PersonalizingPlans
       key="PersonalizingPlans"
       onContinue={() => goToNext(gender)}
-      onBack={() => goToPrevious()}
     />,
 
     <FitnessGraph
       key="FitnessGraph"
       gender={gender}
-      onBack={() => goToPrevious()}
     />,
   ];
 

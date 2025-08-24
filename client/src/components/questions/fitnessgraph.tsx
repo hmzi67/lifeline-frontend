@@ -1,4 +1,3 @@
-import GoBack from "@/components/common/GoBack.tsx";
 import MenGraph from "@/assets/images/question/men_graph.png";
 import WomenGraph from "@/assets/images/question/women_graph.png";
 import GraphImage from "@/assets/images/question/graph.png";
@@ -11,8 +10,7 @@ interface FitnessGoalCardProps {
 }
 
 export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
-  gender,
-  onBack
+  gender
 }) => {
 
   return (
@@ -57,12 +55,6 @@ export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
               />
             )}
           </div>
-        </div>
-
-
-        {/* Back Button */}
-        <div className="flex items-center justify-center gap-5 mt-12">
-          <GoBack onClick={onBack} />
         </div>
       </div>
     </div>

@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import GoBack from "@/components/common/GoBack.tsx";
-import GoNext from "@/components/common/GoNext.tsx";
-
 
 interface PersonalizePlansActions {
     onContinue?: () => void;
     onBack?: () => void;
 }
 
-const PersonalizingPlans: React.FC<PersonalizePlansActions> = ({ onContinue, onBack }) => {
+const PersonalizingPlans: React.FC<PersonalizePlansActions> = ({ onContinue }) => {
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
@@ -22,13 +19,22 @@ const PersonalizingPlans: React.FC<PersonalizePlansActions> = ({ onContinue, onB
         }
     }, [progress]);
 
+    // When progress reaches 100, wait 2s then call onContinue
+    useEffect(() => {
+        if (progress === 100) {
+            const timeout = setTimeout(() => {
+                if (onContinue) onContinue();
+            }, 2000); // 2 seconds delay
+            return () => clearTimeout(timeout);
+        }
+    }, [progress, onContinue]);
+
     return (
         <div className="flex flex-col items-center justify-center py-10">
-            
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Personalizing plans for you!</h1>
             <p className="text-sm text-gray-600 mb-6">Please wait.....</p>
 
-            <div className="w-84 h-84 mb-6">
+            <div className="w-96 h-96 mb-6">
                 <CircularProgressbar
                     value={progress}
                     text={`${progress}%`}
@@ -41,15 +47,9 @@ const PersonalizingPlans: React.FC<PersonalizePlansActions> = ({ onContinue, onB
                 />
             </div>
 
-            <p className="text-sm text-gray-600 mb-6 text-center ">
+            <p className="text-sm text-gray-600 mb-6 text-center">
                 This will just take a moment. Get ready to transform your fitness journey!
             </p>
-
-            {/* Continue Button */}
-            <div className={'flex items-center justify-center gap-5 mt-12'}>
-                <GoBack onClick={onBack} />
-                <GoNext onClick={onContinue} />
-            </div>
         </div>
     );
 };
