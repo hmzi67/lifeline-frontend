@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Check } from "lucide-react";
 import GoBack from "@/components/common/GoBack.tsx";
 import GoNext from "../common/GoNext";
@@ -8,6 +8,7 @@ import image2 from "@/assets/images/Q-goals/buildmuscles.webp";
 import image3 from "@/assets/images/Q-goals/food image.jpg";
 import image4 from "@/assets/images/Q-goals/high stress.jpg";
 import image5 from "@/assets/images/Q-goals/alarm-clock.jpg";
+import api from "@/lib/axios";
 
 interface FitnessGoal {
   id: string;
@@ -21,26 +22,55 @@ interface FitnessGoalSelectorProps {
   onBack?: () => void;
 }
 
+const fitnessGoals: FitnessGoal[] = [
+  { id: "lose-weight", label: "Lose weight", image: image },
+  { id: "gain-weight", label: "Gain Weight", image: image1 },
+  { id: "build-muscle", label: "Build Muscle", image: image2 },
+  { id: "modify-diet", label: "Modify your Diet", image: image3 },
+  { id: "manage-stress", label: "Manage Stress", image: image4 },
+  { id: "intermittent-fasting", label: "Intermittent Fasting", image: image5 },
+];
+
 const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
   handleContinue,
   onGoalChange,
   onBack,
 }) => {
-  const [selectedGoal, setSelectedGoal] = useState<string>("lose-weight");
+  const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const fitnessGoals: FitnessGoal[] = [
-    { id: "lose-weight", label: "Lose weight", image: image },
-    { id: "gain-weight", label: "Gain Weight", image: image1 },
-    { id: "build-muscle", label: "Build Muscle", image: image2 },
-    { id: "modify-diet", label: "Modify your Diet", image: image3 },
-    { id: "manage-stress", label: "Manage Stress", image: image4 },
-    { id: "intermittent-fasting", label: "Intermittent Fasting", image: image5 },
-  ];
+  // Fetch saved goal on mount
+  useEffect(() => {
+    const fetchGoal = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get("/questionnaire/goal");
+        const goalFromApi = res?.data?.data?.goal;
+        if (goalFromApi && fitnessGoals.some(goal => goal.id === goalFromApi)) {
+          setSelectedGoal(goalFromApi);
+          onGoalChange?.(goalFromApi);
+        }
+      } catch {
+        // Optionally handle errors
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchGoal();
+  }, [onGoalChange]);
 
-  const handleGoalSelect = (goalId: string) => {
+  // Save goal to backend when selection changes
+  const handleGoalSelect = async (goalId: string) => {
     setSelectedGoal(goalId);
-    if (onGoalChange) {
-      onGoalChange(goalId);
+    onGoalChange?.(goalId);
+
+    setLoading(true);
+    try {
+      await api.put("/questionnaire/goal", { goal: goalId });
+    } catch {
+      // Optionally handle errors
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -55,26 +85,23 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
             <button
               key={goal.id}
               onClick={() => handleGoalSelect(goal.id)}
+              disabled={loading}
               className={`w-full flex items-center justify-between px-3 rounded-full transition-all duration-200 ${selectedGoal === goal.id
-                  ? 'bg-primary border-primary-400 text-white shadow-lg transform scale-102'
-                  : 'bg-gray-100 text-gray-700 hover:border-primary-300 hover:shadow-md hover:scale-101'
+                ? "bg-primary border-primary-400 text-white shadow-lg transform scale-102"
+                : "bg-gray-100 text-gray-700 hover:border-primary-300 hover:shadow-md hover:scale-101"
                 }`}
             >
               <div className="flex items-center space-x-2 sm:space-x-3">
-                <div
-                  className={`h-16 flex items-center justify-center overflow-hidden ${selectedGoal === goal.id
-                      
-                    }`}
-                >
+                <div className="h-16 flex items-center justify-center overflow-hidden">
                   {goal.image ? (
-                    <img 
-                      src={goal.image} 
+                    <img
+                      src={goal.image}
                       alt={goal.label}
-                      className=" object-cover h-12 w-12 rounded-full border-2 border-white"
+                      className="object-cover h-12 w-12 rounded-full border-2 border-white"
                     />
                   ) : null}
                 </div>
-          
+
                 <span
                   className={`text-xs sm:text-lg font-medium ${selectedGoal === goal.id ? "text-white" : "text-gray-900"
                     }`}
@@ -91,13 +118,14 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
           ))}
         </div>
 
-        <div className=" pt-10 flex items-center justify-center gap-3 sm:gap-5">
+        <div className="pt-10 flex items-center justify-center gap-3 sm:gap-5">
           <GoBack onClick={onBack} />
-          <GoNext onClick={handleContinue} />
+          <GoNext
+            onClick={loading || !selectedGoal ? undefined : handleContinue}
+            loading={loading}
+          />
         </div>
-
       </div>
-
     </div>
   );
 };
