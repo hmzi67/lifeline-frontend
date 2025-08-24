@@ -118,3 +118,15 @@
   background: #3EC6C9 !important;
   border-radius: 20px;
 }
+
+@layer utilities {
+  input[type="number"].remove-spinner::-webkit-outer-spin-button,
+  input[type="number"].remove-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"].remove-spinner {
+    -moz-appearance: textfield;
+  }
+}
