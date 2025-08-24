@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import GoBack from "../common/GoBack";
 import GoNext from "../common/GoNext";
 
-
 interface HeightSelectorProps {
   onContinue?: (height: number, unit: "cm" | "ft") => void;
   onBack?: () => void;
@@ -22,7 +21,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
   const sliderRef = useRef<HTMLDivElement>(null);
 
   const ranges = {
-    cm: { min: 140, max: 200, step: 1 },
+    cm: { min: 1, max: 999, step: 1 },
     ft: { min: 48, max: 96, step: 1 },
   };
 
@@ -148,8 +147,6 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
       onContinue?.(heightCm, unit);
     } else {
       const totalInches = feet * 12 + inches;
-      // const heightInCm = Math.round(totalInches * 2.54);
-      // onContinue?.(heightInCm, unit);
       onContinue?.(totalInches, unit);
     }
   };
@@ -167,7 +164,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
           </p>
         </div>
 
-        {/* Unit Selection Buttons - Centered */}
+        {/* Unit Selection */}
         <div className="flex justify-center mb-6 sm:mb-8">
           <div className="flex bg-gray-100 rounded-2xl p-1 w-48 sm:w-64">
             <button
@@ -193,7 +190,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
           </div>
         </div>
 
-        {/* Height Display and Controls */}
+        {/* Height Inputs */}
         {unit === "ft" ? (
           <div className="mb-12 sm:mb-16">
             {/* Feet/Inches Display */}
@@ -234,18 +231,39 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
                 }}
                 className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                 style={{
-                  background: `linear-gradient(to right, #14b8a6 0%, #14b8a6 ${((feet * 12 + inches - 48) / (96 - 48)) * 100}%, #e5e7eb ${((feet * 12 + inches - 48) / (96 - 48)) * 100}%, #e5e7eb 100%)`,
+                  background: `linear-gradient(to right, #14b8a6 0%, #14b8a6 ${
+                    ((feet * 12 + inches - 48) / (96 - 48)) * 100
+                  }%, #e5e7eb ${
+                    ((feet * 12 + inches - 48) / (96 - 48)) * 100
+                  }%, #e5e7eb 100%)`,
                 }}
               />
             </div>
           </div>
         ) : (
-          <div className="mb-12 sm:mb-16 ">
-            {/* CM Display */}
-            <div className="text-center mb-8 sm:mb-12 ">
-              <div className="text-4xl sm:text-6xl lg:text-7xl font-bold text-primary-500 leading-none">
-                {heightCm}
-                <span className="text-2xl sm:text-3xl lg:text-4xl text-gray-500 ml-2">
+          <div className="mb-12 sm:mb-16">
+            <div className="text-center mb-8 sm:mb-12">
+              <div className="flex justify-center items-baseline gap-2">
+                <input
+                  type="number"
+                  className="remove-spinner text-center bg-transparent text-4xl sm:text-6xl lg:text-7xl font-bold text-primary-500 w-24 sm:w-32 focus:outline-none focus:ring-0 appearance-none"
+                  min={100}
+                  max={999}
+                  maxLength={3}
+                  minLength={1}
+                  value={heightCm}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value, 10);
+                    if (!isNaN(val)) {
+                      setHeightCm(
+                        Math.max(ranges.cm.min, Math.min(ranges.cm.max, val))
+                      );
+                      setRailPosition(val - visibleRange / 2);
+                    }
+                  }}
+                  
+                />
+                <span className="text-2xl sm:text-3xl lg:text-4xl text-gray-500">
                   cm
                 </span>
               </div>
@@ -268,7 +286,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
           </div>
         )}
 
-        {/* Continue Button */}
+        {/* Continue / Back Buttons */}
         <div className="flex items-center justify-center gap-3 sm:gap-5">
           <GoBack onClick={onBack} />
           <GoNext onClick={handleContinue} />
