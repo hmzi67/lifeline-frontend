@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import GoBack from "../common/GoBack";
 import GoNext from "@/components/common/GoNext.tsx";
 
 
@@ -13,8 +12,7 @@ interface WeightSelectorProps {
 export default function WeightSelector({
   heightValue,
   heightUnit,
-  onContinue,
-  onBack,
+  onContinue
 }: WeightSelectorProps) {
   const [unit, setUnit] = useState<"kg" | "lbs">("kg");
   const [weight, setWeight] = useState(48);
@@ -287,7 +285,6 @@ export default function WeightSelector({
           </div>
 
           <div className={"flex items-center justify-center gap-5 mt-12"}>
-            <GoBack onClick={onBack} />
             <GoNext onClick={() => onContinue?.(weight, unit)} />
           </div>
         </div>

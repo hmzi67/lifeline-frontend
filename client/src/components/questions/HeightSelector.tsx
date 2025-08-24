@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import GoBack from "../common/GoBack";
 import GoNext from "../common/GoNext";
 
 interface HeightSelectorProps {
@@ -8,8 +7,7 @@ interface HeightSelectorProps {
 }
 
 const HeightSelector: React.FC<HeightSelectorProps> = ({
-  onContinue,
-  onBack,
+  onContinue
 }) => {
   const [unit, setUnit] = useState<"cm" | "ft">("cm");
   const [heightCm, setHeightCm] = useState(165);
@@ -288,7 +286,6 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
 
         {/* Continue / Back Buttons */}
         <div className="flex items-center justify-center gap-3 sm:gap-5">
-          <GoBack onClick={onBack} />
           <GoNext onClick={handleContinue} />
         </div>
       </div>

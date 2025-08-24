@@ -180,7 +180,6 @@ export default function Questions() {
         setHeightUnit(unit);
         goToNext(gender);
       }}
-      onBack={() => goToPrevious()}
     />,
 
     <GoalWeightSelector
@@ -190,7 +189,6 @@ export default function Questions() {
         setHeightUnit(unit);
         goToNext(gender);
       }}
-      onBack={() => goToPrevious()}
       heightValue={height}
       heightUnit={heightUnit}
     />,
