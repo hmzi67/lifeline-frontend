@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Check } from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
 import GoNext from "@/components/common/GoNext.tsx";
@@ -31,17 +31,21 @@ const allergenOptions: AllergenOption[] = [
 
 const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAllergiesChange, onBack }) => {
   const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // For fetch
+  const [saving, setSaving] = useState(false);   // For save debounce
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Fetch saved allergen food on mount
+  // Fetch saved allergen food once on mount
   useEffect(() => {
+    let cancelled = false;
+
     const fetchAllergens = async () => {
       setLoading(true);
       try {
         const res = await api.get('/questionnaire/allergen-food');
+        if (cancelled) return;
         const allergenFromApi = res?.data?.data?.allergenFood;
         if (allergenFromApi) {
-          // If backend returns a comma-separated string, convert to array
           const allergens = typeof allergenFromApi === 'string'
             ? allergenFromApi === ''
               ? []
@@ -53,49 +57,65 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAller
           onAllergiesChange?.(allergens);
         }
       } catch {
-        // Optionally handle errors here
+        // Optionally handle errors e.g. console.warn
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
+
     fetchAllergens();
-  }, [onAllergiesChange]);
+
+    // Cleanup to prevent state update after unmount
+    return () => { cancelled = true; };
+  }, []); // empty deps so runs once only
 
   // Save allergens to backend
   const saveAllergens = async (allergens: string[]) => {
-    setLoading(true);
+    setSaving(true);
     try {
-      // Save as comma-separated string; adjust if your API expects array directly
-      await api.put('/questionnaire/allergen-food', { allergenFood: allergens.join(',') });
+      await api.put('/questionnaire/allergen-food', { allergenFood: allergens });
     } catch {
-      // Optionally handle errors here
+      // Optionally handle errors
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
-  // Toggle allergen selection logic
+  // Debounce save calls to batch rapid toggles
+  const scheduleSaveAllergens = (allergens: string[]) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      saveAllergens(allergens);
+    }, 500); // 500ms debounce delay
+  };
+
+  // Toggle allergen selection with debounce saving
   const toggleAllergen = (allergenId: string) => {
-    let newSelected: string[];
+    setSelectedAllergens(prev => {
+      let newSelected: string[];
 
-    if (allergenId === 'everything') {
-      newSelected = selectedAllergens.includes('everything') ? [] : ['everything'];
-    } else {
-      newSelected = selectedAllergens.filter(id => id !== 'everything');
-
-      if (newSelected.includes(allergenId)) {
-        newSelected = newSelected.filter(id => id !== allergenId);
+      if (allergenId === 'everything') {
+        newSelected = prev.includes('everything') ? [] : ['everything'];
       } else {
-        newSelected = [...newSelected, allergenId];
-      }
-    }
+        // Exclude "everything" if toggling other allergen
+        newSelected = prev.filter(id => id !== 'everything');
 
-    setSelectedAllergens(newSelected);
-    onAllergiesChange?.(newSelected);
-    saveAllergens(newSelected);
+        if (newSelected.includes(allergenId)) {
+          newSelected = newSelected.filter(id => id !== allergenId);
+        } else {
+          newSelected = [...newSelected, allergenId];
+        }
+      }
+
+      onAllergiesChange?.(newSelected);
+      scheduleSaveAllergens(newSelected);
+
+      return newSelected;
+    });
   };
 
   const handleContinue = () => {
+    // If "everything" selected, treat as no allergens
     const allergensToSend = selectedAllergens.includes('everything') ? [] : selectedAllergens;
     onContinue?.(allergensToSend);
   };
@@ -117,7 +137,7 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAller
               <button
                 key={option.id}
                 onClick={() => toggleAllergen(option.id)}
-                disabled={loading}
+                disabled={loading || saving}
                 className={`w-full flex items-center justify-between p-3 rounded-full transition-all duration-200 pr-6 ${isSelected
                     ? 'bg-primary border-primary-400 text-white shadow-lg transform scale-102'
                     : 'bg-gray-100 text-gray-700 hover:border-primary-300 hover:shadow-md hover:scale-101'
@@ -149,9 +169,9 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAller
         </div>
 
         {/* Continue Button */}
-        <div className={'flex items-center justify-center gap-5 mt-12'}>
+        <div className="flex items-center justify-center gap-5 mt-12">
           <GoBack onClick={onBack} />
-          <GoNext onClick={handleContinue} loading={loading} />
+          <GoNext onClick={handleContinue} loading={loading || saving}  />
         </div>
       </div>
     </div>

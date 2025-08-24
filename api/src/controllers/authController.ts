@@ -470,6 +470,15 @@ export const refreshToken = async (req: Request, res: Response) => {
       });
     }
 
+    // remove tokens older than 7 days
+    await prisma.refreshToken.deleteMany({
+      where: {
+        createdAt: {
+          lt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // older than 7 days
+        },
+      },
+    });
+
     // Verify refresh token
     const decoded = jwt.verify(
       refreshToken,
@@ -750,16 +759,16 @@ export const googleAuthCallback = (req: Request, res: Response) => {
   passport.authenticate(
     'google',
     {
-      failureRedirect: `${process.env.FRONTEND_URL}/auth/login?error=oauth_failed`,
+      failureRedirect: `${process.env.FRONTEND_URL}/login?error=oauth_failed`,
     },
     async (err: any, user: any) => {
       if (err) {
         console.error('Google OAuth callback error:', err);
-        return res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=oauth_error`);
+        return res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_error`);
       }
 
       if (!user) {
-        return res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=oauth_denied`);
+        return res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_denied`);
       }
 
       try {
