@@ -750,16 +750,16 @@ export const googleAuthCallback = (req: Request, res: Response) => {
   passport.authenticate(
     'google',
     {
-      failureRedirect: `${process.env.FRONTEND_URL}/auth/login?error=oauth_failed`,
+      failureRedirect: `${process.env.FRONTEND_URL}/login?error=oauth_failed`,
     },
     async (err: any, user: any) => {
       if (err) {
         console.error('Google OAuth callback error:', err);
-        return res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=oauth_error`);
+        return res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_error`);
       }
 
       if (!user) {
-        return res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=oauth_denied`);
+        return res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_denied`);
       }
 
       try {

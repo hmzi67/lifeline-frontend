@@ -17,8 +17,7 @@ passport.deserializeUser(async (id: string, done) => {
       select: {
         id: true,
         email: true,
-        firstName: true,
-        lastName: true,
+        username: true,
         role: true,
         isEmailVerified: true,
         profileImage: true,
@@ -40,67 +39,55 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: process.env.GOOGLE_CALLBACK_URL || '/api/auth/google/callback',
       },
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        // Check if user already exists
-        let user = await prisma.user.findUnique({
-          where: { email: profile.emails?.[0].value },
-        });
-
-        if (user) {
-          // User exists, update their Google ID if not set
-          if (!user.googleId) {
-            user = await prisma.user.update({
-              where: { id: user.id },
-              data: { googleId: profile.id },
-            });
-          }
-        } else {
-          // Create new user
+      async (accessToken, refreshToken, profile, done) => {
+        try {
           const email = profile.emails?.[0].value;
-          const firstName = profile.name?.givenName || '';
-          const lastName = profile.name?.familyName || '';
-          const profileImage = profile.photos?.[0].value || null;
-
           if (!email) {
             return done(new Error('No email found in Google profile'), false);
           }
 
-          // Generate a unique username from email
-          const baseUsername = email.split('@')[0].toLowerCase();
-          let username = baseUsername;
-          let counter = 1;
-          while (await prisma.user.findUnique({ where: { username } })) {
-            username = `${baseUsername}${counter}`;
-            counter++;
+          // Check if user already exists
+          let user = await prisma.user.findUnique({
+            where: { email },
+          });
+
+          if (user) {
+            // User exists, update their Google ID if not set
+            if (!user.googleId) {
+              user = await prisma.user.update({
+                where: { id: user.id },
+                data: { googleId: profile.id },
+              });
+            }
+          } else {
+            // Generate a unique username from email
+            const baseUsername = email.split('@')[0].toLowerCase();
+            let username = baseUsername;
+            let counter = 1;
+            while (await prisma.user.findUnique({ where: { username } })) {
+              username = `${baseUsername}${counter}`;
+              counter++;
+            }
+
+            user = await prisma.user.create({
+              data: {
+                username,
+                email,
+                profileImage: profile.photos?.[0].value || null,
+                googleId: profile.id,
+                isEmailVerified: true, // Google emails are verified
+              },
+            });
           }
 
-          user = await prisma.user.create({
-            data: {
-              username,
-              email,
-              firstName,
-              lastName,
-              profileImage,
-              googleId: profile.id,
-              isEmailVerified: true, // Google emails are already verified
-              preferences: {
-                create: {
-                  // Create default preferences
-                },
-              },
-            },
-          });
+          return done(null, user);
+        } catch (error) {
+          console.error('Google OAuth error:', error);
+          return done(error, false);
         }
-
-        return done(null, user);
-      } catch (error) {
-        console.error('Google OAuth error:', error);
-        return done(error, false);
       }
-    }
-  )
-);
+    )
+  );
 } else {
   console.log('⚠️  Google OAuth not configured - missing environment variables');
 }
