@@ -12,9 +12,9 @@ datasource db {
 
 // Roles Table
 model Role {
-  id          String   @id @default(cuid())
-  name        String   @db.VarChar(50)
-  description String?  @db.Text
+  id          String  @id @default(cuid())
+  name        String  @db.VarChar(50)
+  description String? @db.Text
   users       User[]
 
   @@map("roles")
@@ -22,20 +22,20 @@ model Role {
 
 // Users Table
 model User {
-  id                   String                @id @default(cuid())
-  email                String                @unique @db.VarChar(255)
-  username             String?               @unique @db.VarChar(100)
-  googleId             String?               @unique @map("google_id") @db.VarChar(255)
-  profileImage         String?               @map("profile_image") @db.Text
-  isEmailVerified      Boolean               @default(false) @map("is_email_verified")
-  subject              String?               @db.VarChar(255)
-  password             String?               @db.VarChar(255)
-  otp                  String?               @db.VarChar(20)
-  status               String?               @db.VarChar(20)
-  roleId               String?               @map("role_id")
-  
-  createdAt            DateTime              @default(now()) @map("created_at")
-  updatedAt            DateTime              @updatedAt @map("updated_at")
+  id              String  @id @default(cuid())
+  email           String  @unique @db.VarChar(255)
+  username        String? @unique @db.VarChar(100)
+  googleId        String? @unique @map("google_id") @db.VarChar(255)
+  profileImage    String? @map("profile_image") @db.Text
+  isEmailVerified Boolean @default(false) @map("is_email_verified")
+  subject         String? @db.VarChar(255)
+  password        String? @db.VarChar(255)
+  otp             String? @db.VarChar(20)
+  status          String? @db.VarChar(20)
+  roleId          String? @map("role_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   role                 Role?                 @relation(fields: [roleId], references: [id])
   authTokens           AuthToken[]
@@ -75,12 +75,12 @@ model AuthToken {
 
 // Refresh Tokens Table
 model RefreshToken {
-  id        String    @id @default(cuid())
-  userId    String    @map("user_id")
-  token     String    @unique @db.Text
-  expiresAt DateTime  @map("expires_at")
-  createdAt DateTime  @default(now()) @map("created_at")
-  user      User      @relation(fields: [userId], references: [id])
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  token     String   @unique @db.Text
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id])
 
   @@map("refresh_tokens")
 }
@@ -119,13 +119,13 @@ model Questionnaire {
   userId              String?   @map("user_id")
   gender              String?   @db.VarChar(10)
   goal                String?   @db.Text
-  dietType            String?   @map("diet_type") @db.VarChar(50)
+  dietType            String[]  @map("diet_type") @db.VarChar(50)
   isDiabetic          Boolean?  @map("is_diabetic")
-  allergenFood        String?   @map("allergen_food") @db.Text
+  allergenFood        String[]  @map("allergen_food") @db.Text
   fitnessLevel        String?   @map("fitness_level") @db.VarChar(20)
   typicalDayType      String?   @map("typical_day_type") @db.Text
   physicalLimitations String?   @map("physical_limitations") @db.Text
-  bodyFocusArea       String?   @map("body_focus_area") @db.Text
+  bodyFocusArea       String[]  @map("body_focus_area") @db.Text
   dateOfBirth         DateTime? @map("date_of_birth") @db.Date
   height              Float?
   heightUnit          String?   @map("height_unit") @db.VarChar(10)
@@ -140,12 +140,12 @@ model Questionnaire {
 
 // Diet Plans Table
 model DietPlan {
-  id              String           @id @default(cuid())
-  name            String?          @db.VarChar(100)
-  calories        Int?
-  duration        String?          @db.VarChar(50)
-  userDietPlans   UserDietPlan[]
-  challengeDiets  ChallengeDiet[]
+  id             String          @id @default(cuid())
+  name           String?         @db.VarChar(100)
+  calories       Int?
+  duration       String?         @db.VarChar(50)
+  userDietPlans  UserDietPlan[]
+  challengeDiets ChallengeDiet[]
 
   @@map("diet_plans")
 }
