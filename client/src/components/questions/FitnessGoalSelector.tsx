@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Check } from "lucide-react";
-import GoBack from "@/components/common/GoBack.tsx";
-import GoNext from "../common/GoNext";
 import image from "@/assets/images/Q-goals/Ellipse10.3.webp";
 import image1 from "@/assets/images/Q-goals/excited lady.webp";
 import image2 from "@/assets/images/Q-goals/buildmuscles.webp";
@@ -34,7 +32,6 @@ const fitnessGoals: FitnessGoal[] = [
 const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
   handleContinue,
   onGoalChange,
-  onBack,
 }) => {
   const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);

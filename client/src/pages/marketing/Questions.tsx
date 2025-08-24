@@ -121,7 +121,6 @@ export default function Questions() {
       key="FitnessGoalSelector"
       handleContinue={() => goToNext(gender)}
       onGoalChange={(goalId: string) => setSelectedGoal(goalId)}
-      onBack={() => goToPrevious()}
     />,
 
     <DietTypeSelector
