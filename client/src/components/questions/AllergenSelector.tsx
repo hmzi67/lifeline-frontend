@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
 import GoNext from "@/components/common/GoNext.tsx";
-import image from "@/assets/images/Q-foodallergy/dairy.jpeg";
-import image1 from "@/assets/images/Q-foodallergy/glutten.jpg";
-import image2 from "@/assets/images/Q-foodallergy/eggs.jpg";
-import image3 from "@/assets/images/Q-foodallergy/fish.jpg";
-import image4 from "@/assets/images/Q-foodallergy/Everything.jpg";
+import image from "@/assets/images/Q-foodallergy/dairy.webp";
+import image1 from "@/assets/images/Q-foodallergy/glutten.webp";
+import image2 from "@/assets/images/Q-foodallergy/eggs.webp";
+import image3 from "@/assets/images/Q-foodallergy/fish.webp";
+import image4 from "@/assets/images/Q-foodallergy/Everything.webp";
 import api from '@/lib/axios';
 
 interface AllergenOption {
