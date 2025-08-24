@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import GoBack from "@/components/common/GoBack.tsx";
 import GoNext from "@/components/common/GoNext.tsx";
 import menimg from "@/assets/images/question/mensolo.svg";
 import womenimg from "@/assets/images/question/womensolo.svg";
@@ -12,7 +11,7 @@ interface FocusAreaSelectorProps {
     onBack?: () => void;
 }
 
-export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({ gender, onSelectionChange, onContinue, onBack }) => {
+export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({ gender, onSelectionChange, onContinue }) => {
     const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
@@ -165,7 +164,6 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({ gender, on
 
                 {/* Footer */}
                 <div className="flex justify-center gap-6 mt-12">
-                    <GoBack onClick={onBack}  />
                     <GoNext onClick={handleContinue} loading={loading || saving} />
                 </div>
             </div>

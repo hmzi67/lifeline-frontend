@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import GoBack from "@/components/common/GoBack.tsx";
 import GoNext from "@/components/common/GoNext.tsx";
 import api from '@/lib/axios';
 
@@ -11,8 +10,7 @@ interface FitnessLevelSelectorProps {
 
 const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
   onContinue,
-  onLevelChange,
-  onBack
+  onLevelChange
 }) => {
   const [selectedLevel, setSelectedLevel] = useState<number>(3);
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -135,7 +133,6 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
 
         {/* Footer */}
         <div className="flex items-center justify-center gap-5 mt-12">
-          <GoBack onClick={onBack}  />
           <GoNext onClick={onContinue} loading={loading || saving} />
         </div>
       </div>

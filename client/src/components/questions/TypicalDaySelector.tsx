@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
-import GoBack from "@/components/common/GoBack.tsx";
 import GoNext from "@/components/common/GoNext.tsx";
 import image from "@/assets/images/Q-typicalday/office.webp";
 import image1 from "@/assets/images/Q-typicalday/walking.webp";
@@ -21,7 +20,7 @@ interface TypicalDaySelectorProps {
   onBack?: () => void;
 }
 
-const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({ onContinue, onSelection, onBack }) => {
+const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({ onContinue, onSelection }) => {
   const [selectedOption, setSelectedOption] = useState<string>('at-office');
   const [loading, setLoading] = useState<boolean>(false);
   const [saving, setSaving] = useState<boolean>(false);
@@ -117,7 +116,6 @@ const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({ onContinue, onS
         </div>
 
         <div className="flex items-center justify-center gap-5 mt-10">
-          <GoBack onClick={onBack}  />
           <GoNext onClick={handleContinue} loading={loading || saving} />
         </div>
       </div>

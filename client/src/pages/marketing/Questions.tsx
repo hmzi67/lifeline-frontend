@@ -144,7 +144,6 @@ export default function Questions() {
       key="FitnessLevelSelector"
       onContinue={() => goToNext(gender)}
       onLevelChange={(level) => setSelectedLevel(level)}
-      onBack={() => goToPrevious()}
     />,
 
     <TypicalDaySelector
@@ -159,13 +158,11 @@ export default function Questions() {
       gender={gender}
       onSelectionChange={(areas) => setFocusAreas(areas)}
       onContinue={() => goToNext(gender)}
-      onBack={() => goToPrevious()}
     />,
 
     <ThankYouCard
       key="ThankYouCard2"
       onComplete={() => goToNext(gender)}
-      onBack={() => goToPrevious()}
     />,
 
     <AgeSelector
