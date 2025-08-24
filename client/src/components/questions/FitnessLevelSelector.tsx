@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import GoNext from "@/components/common/GoNext.tsx";
 import api from '@/lib/axios';
 
 interface FitnessLevelSelectorProps {
@@ -57,9 +56,20 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
     setSaving(true);
     try {
       // Save enum string value expected by backend
-      await api.put('/questionnaire/fitness-level', {
+      const response = await api.put('/questionnaire/fitness-level', {
         fitnessLevel: levels.find(l => l.value === newLevel)?.label
       });
+
+      if (response.status == 200) {
+
+        const timer = setTimeout(() => {
+          onContinue?.()
+        }, 2000);
+
+        // cleanup timer on unmount
+        return () => clearTimeout(timer);
+      }
+
     } catch {
       // Optionally handle error
     } finally {
@@ -95,8 +105,8 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
                 <div key={level.value} className="flex flex-col items-center">
                   <div
                     className={`z-10 w-2 h-8 mb-2 tranform translate-y-[64px] duration-300 ${level.value <= selectedLevel
-                        ? 'bg-gradient-to-r from-primary-400 to-primary-400 shadow-md'
-                        : 'bg-gray-200'
+                      ? 'bg-gradient-to-r from-primary-400 to-primary-400 shadow-md'
+                      : 'bg-gray-200'
                       }`}
                   />
                   <span className="text-sm font-medium text-gray-600">{level.value}</span>
@@ -132,9 +142,9 @@ const FitnessLevelSelector: React.FC<FitnessLevelSelectorProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-center gap-5 mt-12">
+        {/* <div className="flex items-center justify-center gap-5 mt-12">
           <GoNext onClick={onContinue} loading={loading || saving} />
-        </div>
+        </div> */}
       </div>
     </div>
   );
