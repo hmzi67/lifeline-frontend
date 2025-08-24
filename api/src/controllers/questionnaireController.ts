@@ -47,7 +47,9 @@ const fieldSchemas = {
   isDiabetic: z.object({ isDiabetic: z.boolean().optional() }),
   allergenFood: z.object({ allergenFood: z.array(z.string().max(1000)).optional() }),
   fitnessLevel: z.object({
-    fitnessLevel: z.enum(['Beginner', 'Intermediate', 'Advanced']).optional(),
+    fitnessLevel: z
+      .enum(['Beginner', 'Novice', 'Somewhat Athletic', 'Athletic', 'Very Athletic'])
+      .optional(),
   }),
   typicalDayType: z.object({ typicalDayType: z.string().max(1000).optional() }),
   physicalLimitations: z.object({ physicalLimitations: z.string().max(1000).optional() }),
