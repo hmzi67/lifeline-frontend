@@ -1,7 +1,8 @@
-import GoBack from "@/components/common/GoBack.tsx";
 import MenGraph from "@/assets/images/question/men_graph.png";
 import WomenGraph from "@/assets/images/question/women_graph.png";
 import GraphImage from "@/assets/images/question/graph.png";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface FitnessGoalCardProps {
   gender: string;
@@ -11,12 +12,24 @@ interface FitnessGoalCardProps {
 }
 
 export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
-  gender,
-  onBack
+  gender
 }) => {
 
+  const navigate = useNavigate();
+  const [message, setMessage] = useState("1")
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMessage("")
+      navigate('/pricing')
+    }, 2000);
+
+    // cleanup timer on unmount
+    return () => clearTimeout(timer);
+  });
+
   return (
-    <div className="min-h-screen p-8">
+    <div className="p-6">
       <div
         className={`bg-white rounded-2xl p-12 transition-all duration-300 max-w-6xl mx-auto`}
       >
@@ -58,11 +71,17 @@ export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
             )}
           </div>
         </div>
-
-
-        {/* Back Button */}
-        <div className="flex items-center justify-center gap-5 mt-12">
-          <GoBack onClick={onBack} />
+        <div className="w-full flex items-center justify-center text-gray-700">
+          {
+          message && 
+          <>
+          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <p>Redirecting to pricing. Please wait...</p>
+          </>
+          }
         </div>
       </div>
     </div>

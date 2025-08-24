@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import GoBack from "@/components/common/GoBack.tsx";
 import GoNext from "@/components/common/GoNext.tsx";
 import api from '@/lib/axios';
 
@@ -10,7 +9,7 @@ interface AgeDateSelectorProps {
     onBack?: () => void;
 }
 
-const AgeDateSelector: React.FC<AgeDateSelectorProps> = ({ onAgeSelect, onSelection, onContinue, onBack }) => {
+const AgeDateSelector: React.FC<AgeDateSelectorProps> = ({ onAgeSelect, onSelection, onContinue }) => {
     const [selectedDate, setSelectedDate] = useState({
         month: 'January',
         day: 1,
@@ -350,7 +349,6 @@ const AgeDateSelector: React.FC<AgeDateSelectorProps> = ({ onAgeSelect, onSelect
 
                 {/* Continue Button */}
                 <div className={'flex items-center justify-center gap-5'}>
-                    <GoBack onClick={onBack} />
                     <GoNext onClick={handleContinue} loading={loading} />
                 </div>
             </div>

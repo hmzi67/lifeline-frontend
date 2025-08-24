@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Check } from 'lucide-react';
-import GoBack from "@/components/common/GoBack.tsx";
 import GoNext from "@/components/common/GoNext.tsx";
 import image from "@/assets/images/Q-diet/traditional.webp";
 import image1 from "@/assets/images/Q-diet/Mediterranean.webp";
@@ -43,7 +42,7 @@ const dietTypes: DietType[] = [
   { id: 'high-calories', name: 'High Calories', image: image11 }
 ];
 
-const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, onBack }) => {
+const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange }) => {
   const [selectedDiets, setSelectedDiets] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
@@ -170,8 +169,7 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
 
       {/* Footer Buttons */}
       <div className="flex-shrink-0 p-4 sm:p-6 ">
-        <div className="flex items-center justify-center gap-3 sm:gap-4 max-w-4xl mx-auto">
-          <GoBack onClick={onBack} />
+        <div className="flex items-center justify-center max-w-4xl mx-auto">
           <GoNext onClick={onContinue} loading={loading} />
         </div>
       </div>

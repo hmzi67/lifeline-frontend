@@ -127,34 +127,29 @@ export default function Questions() {
       key="DietTypeSelector"
       onContinue={() => goToNext(gender)}
       onDietChange={(diet) => setSelectedDiet(diet)}
-      onBack={() => goToPrevious()}
     />,
 
     <AllergenSelector
       key="AllergenSelector"
       onContinue={() => goToNext(gender)}
       onAllergiesChange={(allergens: string[]) => setAllergies(allergens)}
-      onBack={() => goToPrevious()}
     />,
 
     <ThankYouCard
       key="ThankYouCard1"
       onComplete={() => goToNext(gender)}
-      onBack={() => goToPrevious()}
     />,
 
     <FitnessLevelSelector
       key="FitnessLevelSelector"
       onContinue={() => goToNext(gender)}
       onLevelChange={(level) => setSelectedLevel(level)}
-      onBack={() => goToPrevious()}
     />,
 
     <TypicalDaySelector
       key="TypicalDaySelector"
       onContinue={() => goToNext(gender)}
       onSelection={(optionId: string) => setSelectedDayOption(optionId)}
-      onBack={() => goToPrevious()}
     />,
 
     <FocusAreaSelector
@@ -162,13 +157,11 @@ export default function Questions() {
       gender={gender}
       onSelectionChange={(areas) => setFocusAreas(areas)}
       onContinue={() => goToNext(gender)}
-      onBack={() => goToPrevious()}
     />,
 
     <ThankYouCard
       key="ThankYouCard2"
       onComplete={() => goToNext(gender)}
-      onBack={() => goToPrevious()}
     />,
 
     <AgeSelector
@@ -178,7 +171,6 @@ export default function Questions() {
         setBirthYear(selectedBirthYear);
       }}
       onContinue={() => goToNext(gender)}
-      onBack={() => goToPrevious()}
     />,
 
     <HeightSelector
@@ -188,7 +180,6 @@ export default function Questions() {
         setHeightUnit(unit);
         goToNext(gender);
       }}
-      onBack={() => goToPrevious()}
     />,
 
     <GoalWeightSelector
@@ -198,7 +189,6 @@ export default function Questions() {
         setHeightUnit(unit);
         goToNext(gender);
       }}
-      onBack={() => goToPrevious()}
       heightValue={height}
       heightUnit={heightUnit}
     />,
@@ -209,19 +199,16 @@ export default function Questions() {
         console.log(selectedMotivation);
         goToNext(gender);
       }}
-      onBack={() => goToPrevious()}
     />,
 
     <PersonalizingPlans
       key="PersonalizingPlans"
       onContinue={() => goToNext(gender)}
-      onBack={() => goToPrevious()}
     />,
 
     <FitnessGraph
       key="FitnessGraph"
       gender={gender}
-      onBack={() => goToPrevious()}
     />,
   ];
 

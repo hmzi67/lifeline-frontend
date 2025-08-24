@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
+<<<<<<< HEAD
 import GoBack from "@/components/common/GoBack.tsx";
+=======
+>>>>>>> e41f9c89785b91cdb1b71ad9940cd34204361b0c
 import image from "@/assets/images/Q-typicalday/office.webp";
 import image1 from "@/assets/images/Q-typicalday/walking.webp";
 import image2 from "@/assets/images/Q-typicalday/working.webp";
@@ -20,7 +23,7 @@ interface TypicalDaySelectorProps {
   onBack?: () => void;
 }
 
-const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({ onContinue, onSelection, onBack }) => {
+const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({ onContinue, onSelection }) => {
   const [selectedOption, setSelectedOption] = useState<string>('at-office');
   const [loading, setLoading] = useState<boolean>(false);
   const [saving, setSaving] = useState<boolean>(false);
@@ -60,7 +63,15 @@ const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({ onContinue, onS
 
     setSaving(true);
     try {
-      await api.put('/questionnaire/typical-day-type', { typicalDayType: optionId });
+      const response = await api.put('/questionnaire/typical-day-type', { typicalDayType: optionId });
+      if (response.status == 200) {
+        const timer = setTimeout(() => {
+          handleContinue();
+        }, 1000);
+
+        // cleanup timer on unmount
+        return () => clearTimeout(timer);
+      }
     } catch {
       // Optionally handle errors here
     } finally {
@@ -88,8 +99,8 @@ const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({ onContinue, onS
                 onClick={() => handleOptionSelect(option.id)}
                 disabled={loading || saving}
                 className={`w-full flex items-center justify-between p-4 rounded-full transition-all duration-200 pr-6 ${isSelected
-                    ? 'bg-primary border-primary-400 text-white shadow-lg transform scale-102'
-                    : 'bg-gray-100 text-gray-700 hover:border-primary-300 hover:shadow-md hover:scale-101'
+                  ? 'bg-primary border-primary-400 text-white shadow-lg transform scale-102'
+                  : 'bg-gray-100 text-gray-700 hover:border-primary-300 hover:shadow-md hover:scale-101'
                   }`}
               >
                 <div className="flex items-center space-x-3">
@@ -113,11 +124,6 @@ const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({ onContinue, onS
               </button>
             );
           })}
-        </div>
-
-        <div className="flex items-center justify-center gap-5 mt-10">
-          <GoBack onClick={onBack}  />
-          <GoNext onClick={handleContinue} loading={loading || saving} />
         </div>
       </div>
     </div>

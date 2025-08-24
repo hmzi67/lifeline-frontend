@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import GoBack from "@/components/common/GoBack.tsx";
-import GoNext from "@/components/common/GoNext.tsx";
 
 interface PlanPreparationProps {
     planType?: 'diet' | 'exercise';
@@ -10,26 +8,38 @@ interface PlanPreparationProps {
 
 const ThankYouCard: React.FC<PlanPreparationProps> = ({
     planType = 'diet',
-    onComplete,
-    onBack
+    onComplete
 }) => {
     const [currentPlan] = useState<'diet' | 'exercise'>(planType);
-    const [isLoading, setIsLoading] = useState(true);
+    const [, setIsLoading] = useState(true);
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
         const interval = setInterval(() => {
             setProgress(prev => {
                 if (prev >= 100) {
-                    clearInterval(interval);
-                    setIsLoading(false);
                     return 100;
                 }
                 return prev + 2;
             });
         }, 100);
+
         return () => clearInterval(interval);
     }, []);
+
+    // 👉 Trigger onComplete once when progress reaches 100
+    useEffect(() => {
+        if (progress >= 100) {
+            setIsLoading(false);
+
+            const timer = setTimeout(() => {
+                onComplete?.();
+            }, 2000);
+
+            // cleanup timer on unmount
+            return () => clearTimeout(timer);
+        }
+    }, [progress, onComplete]);
 
     const planConfig = {
         diet: {
@@ -75,18 +85,6 @@ const ThankYouCard: React.FC<PlanPreparationProps> = ({
                     {Math.round(progress)}% Complete
                 </p>
             </div>
-            {isLoading ? (
-                <div className="flex space-x-1 sm:space-x-2 animate-pulse">
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                </div>
-            ) : (
-                <div className="flex items-center justify-center gap-3 sm:gap-5 mt-8 sm:mt-12">
-                    <GoBack onClick={onBack} />
-                    <GoNext onClick={onComplete} />
-                </div>
-            )}
         </div>
     );
 };
