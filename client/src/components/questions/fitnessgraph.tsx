@@ -21,7 +21,7 @@ export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       setMessage("")
-      navigate('/pricing')
+      navigate('/plan')
     }, 2000);
 
     // cleanup timer on unmount

@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
-<<<<<<< HEAD
-import GoBack from "@/components/common/GoBack.tsx";
-=======
->>>>>>> e41f9c89785b91cdb1b71ad9940cd34204361b0c
 import image from "@/assets/images/Q-typicalday/office.webp";
 import image1 from "@/assets/images/Q-typicalday/walking.webp";
 import image2 from "@/assets/images/Q-typicalday/working.webp";
