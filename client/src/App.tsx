@@ -9,6 +9,7 @@ import ResetPassword from "@/pages/auth/ResetPassword.tsx";
 import OAuthCallback from "@/pages/auth/OAuthCallback.tsx";
 import { AuthProvider } from './contexts/AuthContext';
 import FitnessAdminPanel from './pages/admin/Admin';
+import Plan from './pages/marketing/Plan';
 
 
 // Lazy-loaded page components
@@ -18,7 +19,6 @@ const Blog = lazy(() => import('./pages/content/Blog'));
 const BlogReading = lazy(() => import('./pages/content/BlogReading'));
 const Login = lazy(() => import('./pages/auth/Login'));
 const Signup = lazy(() => import('./pages/auth/Signup'));
-const Dashboard = lazy(() => import('./pages/dashboard/Dashboard'));
 const Goals = lazy(() => import('./pages/fitness/Goals'));
 const Analytics = lazy(() => import('./pages/fitness/Analytics'));
 const Pricing = lazy(() => import('./pages/marketing/Pricing'));
@@ -63,24 +63,10 @@ function App() {
               <Route path="/auth/callback" element={<OAuthCallback />} />
 
               {/* Protected routes - only accessible when logged in */}
-              <Route path="/dashboard" element={
-                      <Dashboard />
-              } />
-              <Route path="/goals" element={
-                
-                  <Goals />
-                
-              } />
-              <Route path="/analytics" element={
-                
-                  <Analytics />
-                
-              } />
-              <Route path="/checkout" element={
-
-                  <Checkout />
-
-              } />
+              <Route path="/goals" element={<Goals />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path='/plan' element={<Plan />} />
 
               {/* 404 route */}
               <Route path="*" element={<Error type="error2" />} />

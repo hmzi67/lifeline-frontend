@@ -8,6 +8,7 @@ interface PricingCardProps {
   hasCoupon?: boolean;
   isSelected: boolean;
   onSelect: () => void;
+  onContinue: () => void;
 }
 
 export const PricingCard: React.FC<PricingCardProps> = ({
@@ -17,7 +18,8 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   features,
   hasCoupon = true,
   isSelected,
-  onSelect
+  onSelect,
+  onContinue
 }) => {
   const [showCouponField, setShowCouponField] = useState(false);
   const [couponCode, setCouponCode] = useState('');
@@ -188,7 +190,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
       </div>
 
       <button 
-        onClick={(e) => e.stopPropagation()}
+        onClick={onContinue}
         className={`
           w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:transform hover:scale-105 mt-auto
           ${isSelected
@@ -204,29 +206,29 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 };
 
 // Parent component to manage the selection state
-interface PricingCardsContainerProps {
-  cards: Array<{
-    title: string;
-    price: string;
-    originalPrice: string;
-    features: string[];
-    hasCoupon?: boolean;
-  }>;
-}
+// interface PricingCardsContainerProps {
+//   cards: Array<{
+//     title: string;
+//     price: string;
+//     originalPrice: string;
+//     features: string[];
+//     hasCoupon?: boolean;
+//   }>;
+// }
 
-export const PricingCardsContainer: React.FC<PricingCardsContainerProps> = ({ cards }) => {
-  const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null);
+// export const PricingCardsContainer: React.FC<PricingCardsContainerProps> = ({ cards }) => {
+//   const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null);
 
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-      {cards.map((card, index) => (
-        <PricingCard
-          key={index}
-          {...card}
-          isSelected={selectedCardIndex === index}
-          onSelect={() => setSelectedCardIndex(index)}
-        />
-      ))}
-    </div>
-  );
-};
+//   return (
+//     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+//       {cards.map((card, index) => (
+//         <PricingCard
+//           key={index}
+//           {...card}
+//           isSelected={selectedCardIndex === index}
+//           onSelect={() => setSelectedCardIndex(index)}
+//         />
+//       ))}
+//     </div>
+//   );
+// };

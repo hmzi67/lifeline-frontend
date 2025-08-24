@@ -74,6 +74,7 @@ const Pricing: React.FC = () => {
                 hasCoupon={card.hasCoupon}
                 isSelected={selectedCardIndex === index}
                 onSelect={() => setSelectedCardIndex(index)}
+                onContinue={() => console.log('clicked')}
               />
             ))}
           </div>
