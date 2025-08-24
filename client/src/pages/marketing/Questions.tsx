@@ -171,7 +171,6 @@ export default function Questions() {
         setBirthYear(selectedBirthYear);
       }}
       onContinue={() => goToNext(gender)}
-      onBack={() => goToPrevious()}
     />,
 
     <HeightSelector
