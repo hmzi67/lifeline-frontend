@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
 import menimg from "@/assets/images/question/man-gender.jpg";
 import womenimg from "@/assets/images/question/women-gender.jpeg";
-import GoNext from '../common/GoNext';
-import api from '@/lib/axios'; // Adjust path as necessary
+import api from '@/lib/axios'; 
 
 interface GenderOption {
     id: 'male' | 'female';
@@ -22,7 +21,7 @@ const normalizeGender = (gender: 'male' | 'female'): 'Male' | 'Female' => {
 
 const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onContinue }) => {
     const [selectedGender, setSelectedGender] = useState<'male' | 'female' | null>(null);
-    const [loading, setLoading] = useState(false);
+    const [, setLoading] = useState(false);
 
     // Fetch previously-selected gender on mount
     useEffect(() => {
@@ -128,13 +127,6 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                     </p>
                     <p>Please review before continuing</p>
                 </div>
-
-                {/* Continue Button */}
-                {/* {selectedGender && (
-                    <div className="text-center">
-                        <GoNext onClick={handleContinue} loading={loading} />
-                    </div>
-                )} */}
             </div>
         </div>
     );
