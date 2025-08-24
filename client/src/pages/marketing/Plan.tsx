@@ -1,6 +1,4 @@
-import GoBack from "@/components/common/GoBack";
 import { PricingCard } from "@/components/marketing/PricingCard";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useState } from "react";
 
 export default function Plan() {
