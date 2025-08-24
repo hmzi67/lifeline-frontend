@@ -17,13 +17,13 @@ const EmployeeWellbeingLanding: React.FC = () => {
         {/* Main Content */}
         <div className="relative z-10 flex-col lg:flex-row items-center justify-between px-8 sm:py-10 py-0 max-w-7xl mx-auto hidden md:flex ">
           {/* Left Content */}
-          <div className="lg:w-1/2 text-white sm:mb-12 mb-0 lg:mb-0">
-            <h1 className="text-5xl lg:text-5xl font-semibold leading-tight mt-10">
+          <div className="lg:w-1/2 text-white sm:mb-12 mb-0 lg:mb-0 pt-20">
+            <h1 className="text-5xl lg:text-4xl font-semibold leading-tight mt-10">
               RETHINK{' '}
               <span className="text-primary">EMPLOYEE</span>
               <br/>
             </h1>
-            <h1 className="text-5xl lg:text-9xl leading-tight text mb-6">
+            <h1 className="text-4xl lg:text-8xl leading-tight text mb-6">
               WELLBEING
             </h1>
             <p className="text-xl text-gray-300 mb-8 max-w-lg leading-relaxed">

@@ -23,7 +23,7 @@ export const ReasonsSection: React.FC = () => {
                         {/* BE HEALTHY - Left Aligned */}
                         <div className="text-left relative">
                             <div className="relative">
-                                <div className="absolute -top-4 -left-6 text-6xl font-bold text-primary-200 opacity-50 z-0 md:-top-8 md:-left-12 md:text-8xl lg:text-9xl">
+                                <div className="absolute -top-4 -left-6 text-6xl font-bold text-primary-200 opacity-50 z-0 md:-top-16 md:-left-12 md:text-8xl lg:text-9xl">
                                     01
                                 </div>
                                 <div className="relative z-10">
@@ -43,7 +43,7 @@ export const ReasonsSection: React.FC = () => {
                         {/* FEEL FREE - Left Aligned */}
                         <div className="text-left relative">
                             <div className="relative">
-                                <div className="absolute -top-4 -left-6 text-6xl font-bold text-primary-200 opacity-50 z-0 md:-top-8 md:-left-12 md:text-8xl lg:text-9xl">
+                                <div className="absolute -top-4 -left-6 text-6xl font-bold text-primary-200 opacity-50 z-0 md:-top-16 md:-left-12 md:text-8xl lg:text-9xl">
                                     02
                                 </div>
                                 <div className="relative z-10">
@@ -77,7 +77,7 @@ export const ReasonsSection: React.FC = () => {
                         {/* BE ONE OF US - Right Aligned */}
                         <div className="text-left md:text-right relative">
                             <div className="relative">
-                                <div className="absolute -top-4 -left-6 md:-right-6 md:left-auto text-6xl font-bold text-primary-200 opacity-50 z-0 md:-top-8 md:text-8xl lg:text-9xl">
+                                <div className="absolute -top-4 -left-6 md:-right-6 md:left-auto text-6xl font-bold text-primary-200 opacity-50 z-0 md:-top-16 md:text-8xl lg:text-9xl">
                                     03
                                 </div>
                                 <div className="relative z-10">
@@ -97,7 +97,7 @@ export const ReasonsSection: React.FC = () => {
                         {/* BE STRONG - Right Aligned */}
                         <div className="text-left md:text-right relative">
                           <div className="relative">
-                              <div className="absolute -top-4 -left-6 md:-right-6 text-6xl font-bold text-primary-200 opacity-50 z-0 md:-top-8 md:text-8xl lg:text-9xl">
+                              <div className="absolute -top-4 -left-6 md:-right-6 text-6xl font-bold text-primary-200 opacity-50 z-0 md:-top-16 md:text-8xl lg:text-9xl">
                                   04
                               </div>
                               <div className="relative z-10">

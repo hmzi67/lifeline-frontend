@@ -49,7 +49,7 @@ export const FAQSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 xl:gap-24">
           {/* Left Section */}
-          <div className="space-y-6 lg:space-y-8 flex flex-col justify-center">
+          <div className="space-y-6 lg:space-y-8 flex flex-col">
             <div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
                 <span className="text-primary-400">FAQs</span>
