@@ -3,6 +3,11 @@ import {
   getUserQuestionnaire,
   createOrUpdateQuestionnaire,
   deleteQuestionnaire,
+  // NEW: Merged field endpoints
+  getHeightData,
+  getWeightData,
+  updateHeightData,
+  updateWeightData,
   // Individual field GET endpoints
   getGender,
   getGoal,
@@ -47,7 +52,15 @@ router.post('/', createOrUpdateQuestionnaire);
 router.put('/', createOrUpdateQuestionnaire);
 router.delete('/', deleteQuestionnaire);
 
-// Individual field GET endpoints
+// NEW: Merged field endpoints (recommended to use these)
+router.get('/height-data', getHeightData);
+router.get('/weight-data', getWeightData);
+router.put('/height-data', updateHeightData);
+router.patch('/height-data', updateHeightData);
+router.put('/weight-data', updateWeightData);
+router.patch('/weight-data', updateWeightData);
+
+// Individual field GET endpoints (kept for backward compatibility)
 router.get('/gender', getGender);
 router.get('/goal', getGoal);
 router.get('/diet-type', getDietType);
@@ -65,7 +78,7 @@ router.get('/weight-unit', getWeightUnit);
 router.get('/goal-weight', getGoalWeight);
 router.get('/motivation-for', getMotivationFor);
 
-// Individual field UPDATE endpoints
+// Individual field UPDATE endpoints (kept for backward compatibility)
 router.put('/gender', updateGender);
 router.patch('/gender', updateGender);
 router.put('/goal', updateGoal);
