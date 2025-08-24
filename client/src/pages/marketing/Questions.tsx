@@ -127,14 +127,12 @@ export default function Questions() {
       key="DietTypeSelector"
       onContinue={() => goToNext(gender)}
       onDietChange={(diet) => setSelectedDiet(diet)}
-      onBack={() => goToPrevious()}
     />,
 
     <AllergenSelector
       key="AllergenSelector"
       onContinue={() => goToNext(gender)}
       onAllergiesChange={(allergens: string[]) => setAllergies(allergens)}
-      onBack={() => goToPrevious()}
     />,
 
     <ThankYouCard

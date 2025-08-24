@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Check } from 'lucide-react';
-import GoBack from "@/components/common/GoBack.tsx";
 import GoNext from "@/components/common/GoNext.tsx";
 import image from "@/assets/images/Q-foodallergy/dairy.webp";
 import image1 from "@/assets/images/Q-foodallergy/glutten.webp";
@@ -29,7 +28,7 @@ const allergenOptions: AllergenOption[] = [
   { id: 'everything', name: 'I eat everything', image: image4 },
 ];
 
-const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAllergiesChange, onBack }) => {
+const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAllergiesChange }) => {
   const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
   const [loading, setLoading] = useState(false); // For fetch
   const [saving, setSaving] = useState(false);   // For save debounce
@@ -170,7 +169,6 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAller
 
         {/* Continue Button */}
         <div className="flex items-center justify-center gap-5 mt-12">
-          <GoBack onClick={onBack} />
           <GoNext onClick={handleContinue} loading={loading || saving}  />
         </div>
       </div>
