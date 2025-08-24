@@ -199,7 +199,6 @@ export default function Questions() {
         console.log(selectedMotivation);
         goToNext(gender);
       }}
-      onBack={() => goToPrevious()}
     />,
 
     <PersonalizingPlans

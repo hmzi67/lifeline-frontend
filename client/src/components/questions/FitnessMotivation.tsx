@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
-import GoBack from "@/components/common/GoBack.tsx";
-import GoNext from "@/components/common/GoNext.tsx";
 import image from "@/assets/images/Q-motivation/cake.webp";
 import image1 from "@/assets/images/Q-motivation/wedding.webp";
 import image2 from "@/assets/images/Q-motivation/ring.webp";
@@ -20,7 +18,7 @@ interface MotivationActions {
     onBack?: () => void;
 }
 
-const FitnessMotivationSelector: React.FC<MotivationActions> = ({ onContinue, onBack }) => {
+const FitnessMotivationSelector: React.FC<MotivationActions> = ({ onContinue }) => {
     const [selectedMotivation, setSelectedMotivation] = useState<string>('birthday');
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -60,7 +58,15 @@ const FitnessMotivationSelector: React.FC<MotivationActions> = ({ onContinue, on
         setSelectedMotivation(optionId);
         setSaving(true);
         try {
-            await api.put('/questionnaire/motivation-for', { motivationFor: optionId });
+            const response = await api.put('/questionnaire/motivation-for', { motivationFor: optionId });
+            if (response.status == 200) {
+                const timer = setTimeout(() => {
+                    handleContinue();
+                }, 1000);
+
+                // cleanup timer on unmount
+                return () => clearTimeout(timer);
+            }
         } catch {
             // handle error as needed
         } finally {
@@ -90,8 +96,8 @@ const FitnessMotivationSelector: React.FC<MotivationActions> = ({ onContinue, on
                                 onClick={() => handleOptionSelect(option.id)}
                                 disabled={loading || saving}
                                 className={`w-full p-3 rounded-full border-2 transition-all duration-300 flex items-center space-x-4 pr-6 ${isSelected
-                                        ? 'bg-primary border-primary-400 text-white shadow-lg transform scale-102'
-                                        : 'bg-gray-100 text-gray-700 hover:border-primary-300 hover:shadow-md hover:scale-101'
+                                    ? 'bg-primary border-primary-400 text-white shadow-lg transform scale-102'
+                                    : 'bg-gray-100 text-gray-700 hover:border-primary-300 hover:shadow-md hover:scale-101'
                                     }`}
                             >
                                 <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl ${isSelected ? 'bg-white bg-opacity-20' : 'bg-gray-50'
@@ -119,10 +125,9 @@ const FitnessMotivationSelector: React.FC<MotivationActions> = ({ onContinue, on
                     })}
                 </div>
 
-                <div className="flex items-center justify-center gap-5 my-5">
-                    <GoBack onClick={onBack}  />
+                {/* <div className="flex items-center justify-center gap-5 my-5">
                     <GoNext onClick={handleContinue} loading={loading || saving} />
-                </div>
+                </div> */}
             </div>
         </div>
     );
