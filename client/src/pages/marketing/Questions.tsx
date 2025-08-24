@@ -138,7 +138,6 @@ export default function Questions() {
     <ThankYouCard
       key="ThankYouCard1"
       onComplete={() => goToNext(gender)}
-      onBack={() => goToPrevious()}
     />,
 
     <FitnessLevelSelector
