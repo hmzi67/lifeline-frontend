@@ -54,40 +54,31 @@ export const sendPasswordResetEmail = async (
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>Password Reset</title>
         </head>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-            <h1 style="color: white; margin: 0; font-size: 28px;">Password Reset Request</h1>
-          </div>
-          
-          <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #ddd;">
-            <p style="font-size: 18px;">Hello ${firstName},</p>
-            <p>We received a request to reset your password. If you didn't make this request, you can safely ignore this email.</p>
-            <p>To reset your password, click the button below:</p>
-
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="${resetUrl}" 
-                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                       color: white;
-                       padding: 14px 28px;
-                       text-decoration: none;
-                       border-radius: 5px;
-                       font-weight: bold;
-                       display: inline-block;">
-                Reset Password
-              </a>
+          <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+              <h1 style="color: white; margin: 0; font-size: 28px;">Password Reset OTP</h1>
             </div>
+            
+            <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #ddd;">
+              <p style="font-size: 18px;">Hello ${firstName},</p>
+              <p>We received a request to reset your password. If you didn’t make this request, you can safely ignore this email.</p>
+              <p>Use the following One-Time Password (OTP) to reset your password:</p>
 
-            <p>This link will expire in 1 hour for security reasons.</p>
+              <div style="text-align: center; margin: 30px 0;">
+                <p style="font-size: 32px; font-weight: bold; letter-spacing: 4px; color: #667eea; margin: 0;">
+                  ${resetUrl}
+                </p>
+              </div>
 
-            <p>If the button doesn't work, copy and paste this link into your browser:</p>
-            <p style="word-break: break-all; color: #667eea;">${resetUrl}</p>
+              <p>This OTP will expire in <strong>10 minutes</strong> for security reasons.</p>
+              <p>Please enter this code in the password reset page of our application.</p>
 
-            <p style="margin-top: 30px; color: #666; font-size: 14px;">
-              Best regards,<br>
-              ${fromName} Team
-            </p>
-          </div>
-        </body>
+              <p style="margin-top: 30px; color: #666; font-size: 14px;">
+                Best regards,<br>
+                ${fromName} Team
+              </p>
+            </div>
+          </body>
         </html>
       `,
       text: `
