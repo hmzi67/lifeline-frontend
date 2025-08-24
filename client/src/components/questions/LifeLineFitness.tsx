@@ -1,6 +1,4 @@
-import React from 'react';
-import GoBack from "@/components/common/GoBack.tsx";
-import GoNext from '../common/GoNext';
+import React, { useEffect } from 'react';
 import womenimg from "@/assets/images/question/womengroup2.svg";
 import menimg from "@/assets/images/question/mengroup.svg";
 
@@ -23,6 +21,17 @@ const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue, o
             image: menimg
         }
     };
+
+    useEffect(() => {
+
+        const timer = setTimeout(() => {
+            handleContinue();
+        }, 2000);
+
+        // cleanup timer on unmount
+        return () => clearTimeout(timer);
+
+    });
 
     const handleContinue = () => {
         onContinue?.();
@@ -48,10 +57,7 @@ const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue, o
                         </div>
                     </div>
                 </div>
-                            <div className="flex items-center justify-center gap-2 sm:gap-3 mt-2 mb-6">
-                <GoBack onClick={onBack} />
-               <GoNext onClick={handleContinue}/>
-            </div>
+
             </div>
         </div>
     );
