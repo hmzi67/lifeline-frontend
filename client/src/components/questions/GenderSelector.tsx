@@ -54,7 +54,11 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
         onGenderSelect?.(gender);
         setLoading(true);
         try {
-            await api.put('/questionnaire/gender', { gender: normalizeGender(gender) });
+            const response = await api.put('/questionnaire/gender', { gender: normalizeGender(gender) });
+
+            if (response.status == 200) {
+                handleContinue(gender);
+            }
         } catch {
             // Optionally handle API errors here
         } finally {
@@ -62,9 +66,10 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
         }
     };
 
-    const handleContinue = () => {
-        if (selectedGender) {
-            onContinue?.(selectedGender);
+    const handleContinue = (gender?: 'male' | 'female') => {
+        const g = gender ?? selectedGender;
+        if (g) {
+            onContinue?.(g);
         }
     };
 
@@ -125,11 +130,11 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                 </div>
 
                 {/* Continue Button */}
-                {selectedGender && (
+                {/* {selectedGender && (
                     <div className="text-center">
                         <GoNext onClick={handleContinue} loading={loading} />
                     </div>
-                )}
+                )} */}
             </div>
         </div>
     );
