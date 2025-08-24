@@ -470,6 +470,15 @@ export const refreshToken = async (req: Request, res: Response) => {
       });
     }
 
+    // remove tokens older than 7 days
+    await prisma.refreshToken.deleteMany({
+      where: {
+        createdAt: {
+          lt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // older than 7 days
+        },
+      },
+    });
+
     // Verify refresh token
     const decoded = jwt.verify(
       refreshToken,
