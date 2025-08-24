@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
+import GoNext from "@/components/common/GoNext.tsx";
 import image from "@/assets/images/Q-diet/traditional.jpg";
 import image1 from "@/assets/images/Q-diet/Mediterranean.jpeg";
 import image2 from "@/assets/images/Q-diet/vegetarian.jpg";
@@ -13,7 +14,7 @@ import image8 from "@/assets/images/Q-diet/vegan.jpg";
 import image9 from "@/assets/images/Q-diet/calories cutting.jpg";
 import image10 from "@/assets/images/Q-diet/paleo.jpg";
 import image11 from "@/assets/images/Q-diet/high calories.jpg";
-import GoNext from "@/components/common/GoNext.tsx";
+import api from '@/lib/axios';
 
 interface DietType {
   id: string;
@@ -43,21 +44,60 @@ const dietTypes: DietType[] = [
 ];
 
 const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, onBack }) => {
-  const [selectedDiets, setSelectedDiets] = useState<string[]>(['traditional']);
+  const [selectedDiets, setSelectedDiets] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleSelectDiet = (dietId: string) => {
-    setSelectedDiets(prevSelectedDiets => {
-      let newSelectedDiets;
-      if (prevSelectedDiets.includes(dietId)) {
-        // Remove the diet if it's already selected
-        newSelectedDiets = prevSelectedDiets.filter(id => id !== dietId);
-      } else {
-        // Add the diet if it's not selected
-        newSelectedDiets = [...prevSelectedDiets, dietId];
+  // Fetch saved diet types on mount
+  useEffect(() => {
+    const fetchDietTypes = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get('/questionnaire/diet-type');
+        const dietFromApi = res?.data?.data?.dietType;
+        if (dietFromApi) {
+          // API might return string (single) or array? Adjust based on your API.
+          // Assuming API returns a string (single diet type):
+          // If multiple diet types allowed, adjust accordingly.
+          const diets = Array.isArray(dietFromApi) ? dietFromApi : [dietFromApi];
+          setSelectedDiets(diets);
+          onDietChange?.(diets);
+        }
+      } catch {
+        // Optionally handle error
+      } finally {
+        setLoading(false);
       }
-      onDietChange?.(newSelectedDiets);
-      return newSelectedDiets;
+    };
+    fetchDietTypes();
+  }, [onDietChange]);
+
+  // Save updated diets to backend
+  const handleSelectDiet = async (dietId: string) => {
+    setSelectedDiets(prevSelected => {
+      let newSelected: string[];
+      if (prevSelected.includes(dietId)) {
+        newSelected = prevSelected.filter(id => id !== dietId);
+      } else {
+        newSelected = [...prevSelected, dietId];
+      }
+      onDietChange?.(newSelected);
+      saveDietTypes(newSelected);
+      return newSelected;
     });
+  };
+
+  const saveDietTypes = async (diets: string[]) => {
+    setLoading(true);
+    try {
+      // Assuming backend expects a string, join array here if needed.
+      // Adjust if backend supports array directly.
+      // e.g. await api.put('/questionnaire/diet-type', { dietType: diets.join(',') });
+      await api.put('/questionnaire/diet-type', { dietType: diets.join(',') });
+    } catch {
+      // Optionally handle error
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -68,7 +108,7 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
           <h1 className="text-2xl m-4 sm:m-0 sm:text-3xl font-bold text-gray-900 text-center ">
             Choose your diet type
           </h1>
-        </div> 
+        </div>
       </div>
 
       {/* Scrollable Content Area */}
@@ -82,19 +122,18 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
                   <button
                     key={diet.id}
                     onClick={() => handleSelectDiet(diet.id)}
-                    className={`relative w-full flex items-center justify-between p-3 sm:p-2 rounded-full transition-all duration-200 border-2 pr-4 sm:pr-6 ${
-                      isSelected
+                    disabled={loading}
+                    className={`relative w-full flex items-center justify-between p-3 sm:p-2 rounded-full transition-all duration-200 border-2 pr-4 sm:pr-6 ${isSelected
                         ? 'bg-primary border-primary text-white shadow-lg transform scale-102'
                         : 'bg-gray-100 text-gray-700 hover:border-primary hover:shadow-md hover:scale-101'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center space-x-3 sm:space-x-4">
-                      <div className={`rounded-full flex items-center justify-center ${
-                        isSelected ? 'bg-white/20' : 'bg-gray-200'
-                      }`}>
+                      <div className={`rounded-full flex items-center justify-center ${isSelected ? 'bg-white/20' : 'bg-gray-200'
+                        }`}>
                         {diet.image ? (
-                          <img 
-                            src={diet.image} 
+                          <img
+                            src={diet.image}
                             alt={diet.name}
                             className="object-cover h-12 w-12 rounded-full border-2 border-white"
                           />
@@ -119,7 +158,7 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange, on
       <div className="flex-shrink-0 p-4 sm:p-6 ">
         <div className="flex items-center justify-center gap-3 sm:gap-4 max-w-4xl mx-auto">
           <GoBack onClick={onBack} />
-          <GoNext onClick={onContinue} />
+          <GoNext onClick={onContinue} loading={loading} />
         </div>
       </div>
     </div>
