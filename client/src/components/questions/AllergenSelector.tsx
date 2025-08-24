@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
+import GoNext from "@/components/common/GoNext.tsx";
 import image from "@/assets/images/Q-foodallergy/dairy.jpeg";
 import image1 from "@/assets/images/Q-foodallergy/glutten.jpg";
 import image2 from "@/assets/images/Q-foodallergy/eggs.jpg";
 import image3 from "@/assets/images/Q-foodallergy/fish.jpg";
 import image4 from "@/assets/images/Q-foodallergy/Everything.jpg";
-import GoNext from "@/components/common/GoNext.tsx";
-
+import api from '@/lib/axios';
 
 interface AllergenOption {
   id: string;
@@ -21,17 +21,60 @@ interface AllergenSelectorProps {
   onBack?: () => void;
 }
 
-const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAllergiesChange,onBack}) => {
-  const [selectedAllergens, setSelectedAllergens] = useState<string[]>(['dairy']);
+const allergenOptions: AllergenOption[] = [
+  { id: 'dairy', name: 'Dairy', image: image },
+  { id: 'gluten', name: 'Gluten', image: image1 },
+  { id: 'eggs', name: 'Eggs', image: image2 },
+  { id: 'fish', name: 'Fish', image: image3 },
+  { id: 'everything', name: 'I eat everything', image: image4 },
+];
 
-  const allergenOptions: AllergenOption[] = [
-    { id: 'dairy', name: 'Dairy', image: image },
-    { id: 'gluten', name: 'Gluten', image: image1 },
-    { id: 'eggs', name: 'Eggs', image: image2 },
-    { id: 'fish', name: 'Fish', image: image3},
-    { id: 'everything', name: 'I eat everything', image: image4 },
-  ];
+const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAllergiesChange, onBack }) => {
+  const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
+  // Fetch saved allergen food on mount
+  useEffect(() => {
+    const fetchAllergens = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get('/questionnaire/allergen-food');
+        const allergenFromApi = res?.data?.data?.allergenFood;
+        if (allergenFromApi) {
+          // If backend returns a comma-separated string, convert to array
+          const allergens = typeof allergenFromApi === 'string'
+            ? allergenFromApi === ''
+              ? []
+              : allergenFromApi.split(',').map((a: string) => a.trim())
+            : Array.isArray(allergenFromApi)
+              ? allergenFromApi
+              : [];
+          setSelectedAllergens(allergens);
+          onAllergiesChange?.(allergens);
+        }
+      } catch {
+        // Optionally handle errors here
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAllergens();
+  }, [onAllergiesChange]);
+
+  // Save allergens to backend
+  const saveAllergens = async (allergens: string[]) => {
+    setLoading(true);
+    try {
+      // Save as comma-separated string; adjust if your API expects array directly
+      await api.put('/questionnaire/allergen-food', { allergenFood: allergens.join(',') });
+    } catch {
+      // Optionally handle errors here
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Toggle allergen selection logic
   const toggleAllergen = (allergenId: string) => {
     let newSelected: string[];
 
@@ -48,7 +91,8 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAller
     }
 
     setSelectedAllergens(newSelected);
-    onAllergiesChange?.(newSelected); // Notify parent
+    onAllergiesChange?.(newSelected);
+    saveAllergens(newSelected);
   };
 
   const handleContinue = () => {
@@ -57,62 +101,61 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAller
   };
 
   return (
-  <div className="py-4">
-    <div className="max-w-md mx-auto">
-      {/* Header */}
-      <h1 className="text-3xl font-bold text-gray-900 text-center mb-8">
-        Do you have any allergen food?
-      </h1>
+    <div className="py-4">
+      <div className="max-w-md mx-auto">
+        {/* Header */}
+        <h1 className="text-3xl font-bold text-gray-900 text-center mb-8">
+          Do you have any allergen food?
+        </h1>
 
-      {/* Allergen Options */}
-      <div className="space-y-4 mb-3 p-3 sm:p-0">
-        {allergenOptions.map((option) => {
-          const isSelected = selectedAllergens.includes(option.id);
+        {/* Allergen Options */}
+        <div className="space-y-4 mb-3 p-3 sm:p-0">
+          {allergenOptions.map((option) => {
+            const isSelected = selectedAllergens.includes(option.id);
 
-          return (
-            <button
-              key={option.id}
-              onClick={() => toggleAllergen(option.id)}
-              className={`w-full flex items-center justify-between p-3 rounded-full transition-all duration-200 pr-6 ${
-                isSelected
-                   ? 'bg-primary border-primary-400 text-white shadow-lg transform scale-102'
-                   : 'bg-gray-100 text-gray-700 hover:border-primary-300 hover:shadow-md hover:scale-101'
-              }`}
-            >
-              <div className="flex items-center space-x-4">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl ${
-                  isSelected ? 'bg-white bg-opacity-20' : 'bg-white'
-                }`}>
-                  {option.image ? (
-                   <img 
-                     src={option.image} 
-                     className=" object-cover h-12 w-12 rounded-full border-2 border-white"
-                   />
-                 ) : null}
+            return (
+              <button
+                key={option.id}
+                onClick={() => toggleAllergen(option.id)}
+                disabled={loading}
+                className={`w-full flex items-center justify-between p-3 rounded-full transition-all duration-200 pr-6 ${isSelected
+                    ? 'bg-primary border-primary-400 text-white shadow-lg transform scale-102'
+                    : 'bg-gray-100 text-gray-700 hover:border-primary-300 hover:shadow-md hover:scale-101'
+                  }`}
+              >
+                <div className="flex items-center space-x-4">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl ${isSelected ? 'bg-white bg-opacity-20' : 'bg-white'
+                    }`}>
+                    {option.image ? (
+                      <img
+                        src={option.image}
+                        alt={option.name}
+                        className="object-cover h-12 w-12 rounded-full border-2 border-white"
+                      />
+                    ) : null}
+                  </div>
+                  <span className={`text-xs sm:text-lg font-medium ${isSelected ? 'text-white' : 'text-gray-700'
+                    }`}>{option.name}</span>
                 </div>
-                <span className={`text-xs sm:text-lg font-medium ${
-                  isSelected ? 'text-white' : 'text-gray-700'
-                }`}>{option.name}</span>
-              </div>
 
-              {isSelected && (
-                <div className="w-4 h-4 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center">
-                  <Check className="w-4 h-4 sm:w-5 sm:h-5 text-primary-400" />
-                </div>
-              )}
-            </button>
-          );
-        })}
-      </div>
+                {isSelected && (
+                  <div className="w-4 h-4 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center">
+                    <Check className="w-4 h-4 sm:w-5 sm:h-5 text-primary-400" />
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
 
-      {/* Continue Button */}
-      <div className={'flex items-center justify-center gap-5 mt-12'}>
-        <GoBack onClick={onBack} />
-        <GoNext onClick={handleContinue} />
+        {/* Continue Button */}
+        <div className={'flex items-center justify-center gap-5 mt-12'}>
+          <GoBack onClick={onBack} />
+          <GoNext onClick={handleContinue} loading={loading} />
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
 };
 
 export default AllergenSelector;
