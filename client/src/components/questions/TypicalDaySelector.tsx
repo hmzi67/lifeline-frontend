@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
 import GoBack from "@/components/common/GoBack.tsx";
-import image from "@/assets/images/Q-typicalday/office.jpeg";
-import image1 from "@/assets/images/Q-typicalday/walking.jpeg";
-import image2 from "@/assets/images/Q-typicalday/working.jpeg";
-import image3 from "@/assets/images/Q-typicalday/At home.jpeg";
-import image4 from "@/assets/images/Q-typicalday/park.jpg";
+import image from "@/assets/images/Q-typicalday/office.webp";
+import image1 from "@/assets/images/Q-typicalday/walking.webp";
+import image2 from "@/assets/images/Q-typicalday/working.webp";
+import image3 from "@/assets/images/Q-typicalday/At home.webp";
+import image4 from "@/assets/images/Q-typicalday/park.webp";
 import GoNext from "@/components/common/GoNext.tsx";
 
 interface DayOption {
@@ -65,12 +65,12 @@ const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({ onContinue, onS
                     }`}
                 >
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-lg">
+                    <div className="h-10 bg-white rounded-full flex items-center justify-center text-lg">
                      {option.image ? (
                     <img 
                       src={option.image} 
                       alt={option.label}
-                      className=" object-cover h-[43px] w-16 rounded-full  border-2 border-white"
+                      className=" object-cover h-12 w-12 rounded-full  border-2 border-white"
                     />
                   ) : null}
                     </div>

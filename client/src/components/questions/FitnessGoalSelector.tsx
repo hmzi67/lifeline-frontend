@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Check } from "lucide-react";
 import GoBack from "@/components/common/GoBack.tsx";
 import GoNext from "../common/GoNext";
-import image from "@/assets/images/Q-goals/Ellipse10.3.png";
-import image1 from "@/assets/images/Q-goals/excited lady.avif";
+import image from "@/assets/images/Q-goals/Ellipse10.3.webp";
+import image1 from "@/assets/images/Q-goals/excited lady.webp";
 import image2 from "@/assets/images/Q-goals/buildmuscles.webp";
-import image3 from "@/assets/images/Q-goals/food image.jpg";
-import image4 from "@/assets/images/Q-goals/high stress.jpg";
-import image5 from "@/assets/images/Q-goals/alarm-clock.jpg";
+import image3 from "@/assets/images/Q-goals/food image.webp";
+import image4 from "@/assets/images/Q-goals/high stress.webp";
+import image5 from "@/assets/images/Q-goals/alarm-clock.webp";
 import api from "@/lib/axios";
 
 interface FitnessGoal {

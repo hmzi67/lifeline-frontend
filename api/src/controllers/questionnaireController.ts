@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import jwt from 'jsonwebtoken';
 
-// Extended Request interface for JWT payload
 interface AuthRequest extends Request {
   user?: {
     id: string;
@@ -12,7 +11,6 @@ interface AuthRequest extends Request {
   };
 }
 
-// JWT Payload interface
 interface JWTPayload {
   userId: string;
   email: string;
@@ -21,37 +19,39 @@ interface JWTPayload {
 
 const prisma = new PrismaClient();
 
-// Complete questionnaire schema with all validations
+// Validation schemas with arrays for multi-value fields
 const questionnaireSchema = z.object({
   gender: z.enum(['Male', 'Female', 'Other']).optional(),
-  goal: z.string().max(1000, 'Goal must be less than 1000 characters').optional(),
-  dietType: z.string().max(50, 'Diet type must be less than 50 characters').optional(),
+  goal: z.string().max(1000).optional(),
+  dietType: z.array(z.string().max(50)).optional(),
   isDiabetic: z.boolean().optional(),
-  allergenFood: z.string().max(1000, 'Allergen food must be less than 1000 characters').optional(),
+  allergenFood: z.array(z.string().max(1000)).optional(),
   fitnessLevel: z.enum(['Beginner', 'Intermediate', 'Advanced']).optional(),
-  typicalDayType: z.string().max(1000, 'Typical day type must be less than 1000 characters').optional(),
-  physicalLimitations: z.string().max(1000, 'Physical limitations must be less than 1000 characters').optional(),
-  bodyFocusArea: z.string().max(1000, 'Body focus area must be less than 1000 characters').optional(),
+  typicalDayType: z.string().max(1000).optional(),
+  physicalLimitations: z.string().max(1000).optional(),
+  bodyFocusArea: z.array(z.string().max(1000)).optional(),
   dateOfBirth: z.string().datetime().optional().or(z.date().optional()),
-  height: z.number().positive('Height must be positive').optional(),
+  height: z.number().positive().optional(),
   heightUnit: z.enum(['cm', 'ft', 'in']).optional(),
-  weight: z.number().positive('Weight must be positive').optional(),
+  weight: z.number().positive().optional(),
   weightUnit: z.enum(['kg', 'lbs']).optional(),
-  goalWeight: z.number().positive('Goal weight must be positive').optional(),
-  motivationFor: z.string().max(1000, 'Motivation must be less than 1000 characters').optional(),
+  goalWeight: z.number().positive().optional(),
+  motivationFor: z.string().max(1000).optional(),
 });
 
-// Individual field schemas for granular validation
+// Individual field schemas for validation
 const fieldSchemas = {
   gender: z.object({ gender: z.enum(['Male', 'Female', 'Other']).optional() }),
   goal: z.object({ goal: z.string().max(1000).optional() }),
-  dietType: z.object({ dietType: z.string().max(50).optional() }),
+  dietType: z.object({ dietType: z.array(z.string().max(50)).optional() }),
   isDiabetic: z.object({ isDiabetic: z.boolean().optional() }),
-  allergenFood: z.object({ allergenFood: z.string().max(1000).optional() }),
-  fitnessLevel: z.object({ fitnessLevel: z.enum(['Beginner', 'Intermediate', 'Advanced']).optional() }),
+  allergenFood: z.object({ allergenFood: z.array(z.string().max(1000)).optional() }),
+  fitnessLevel: z.object({
+    fitnessLevel: z.enum(['Beginner', 'Intermediate', 'Advanced']).optional(),
+  }),
   typicalDayType: z.object({ typicalDayType: z.string().max(1000).optional() }),
   physicalLimitations: z.object({ physicalLimitations: z.string().max(1000).optional() }),
-  bodyFocusArea: z.object({ bodyFocusArea: z.string().max(1000).optional() }),
+  bodyFocusArea: z.object({ bodyFocusArea: z.array(z.string().max(1000)).optional() }),
   dateOfBirth: z.object({ dateOfBirth: z.string().datetime().optional().or(z.date().optional()) }),
   height: z.object({ height: z.number().positive().optional() }),
   heightUnit: z.object({ heightUnit: z.enum(['cm', 'ft', 'in']).optional() }),
@@ -61,25 +61,24 @@ const fieldSchemas = {
   motivationFor: z.object({ motivationFor: z.string().max(1000).optional() }),
 };
 
-// Helper function to get user from token
-const getUserFromToken = (req: Request): { userId: string; email: string; roleId?: string } | null => {
+// Type union of allowed field names
+type QuestionnaireField = keyof typeof fieldSchemas;
+
+const getUserFromToken = (
+  req: Request
+): { userId: string; email: string; roleId?: string } | null => {
   const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return null;
-  }
-
+  if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
   const token = authHeader.substring(7);
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as JWTPayload;
     return { userId: decoded.userId, email: decoded.email, roleId: decoded.roleId };
-  } catch (error) {
+  } catch {
     return null;
   }
 };
 
-// Helper function for consistent error handling
 const handleError = (res: Response, error: any, operation: string) => {
   if (error instanceof z.ZodError) {
     return res.status(400).json({
@@ -91,221 +90,207 @@ const handleError = (res: Response, error: any, operation: string) => {
       })),
     });
   }
-
   console.error(`${operation} error:`, error);
-  res.status(500).json({
-    success: false,
-    message: 'Internal server error',
-  });
+  return res.status(500).json({ success: false, message: 'Internal server error' });
 };
 
-// Helper function for date conversion
 const convertDateOfBirth = (dateOfBirth: any) => {
   if (!dateOfBirth) return undefined;
   return typeof dateOfBirth === 'string' ? new Date(dateOfBirth) : dateOfBirth;
 };
 
-// Improved upsert function that handles the unique constraint properly
+const normalizeMultiValueField = (field: any): string[] | undefined => {
+  if (Array.isArray(field)) return field;
+  if (typeof field === 'string')
+    return field.trim() === '' ? [] : field.split(',').map(s => s.trim());
+  return undefined;
+};
+
 const upsertQuestionnaire = async (userId: string, data: any) => {
-  // Convert dateOfBirth if present
   const processedData = {
     ...data,
     dateOfBirth: convertDateOfBirth(data.dateOfBirth),
+    dietType: normalizeMultiValueField(data.dietType),
+    allergenFood: normalizeMultiValueField(data.allergenFood),
+    bodyFocusArea: normalizeMultiValueField(data.bodyFocusArea),
   };
 
-  // Since userId is not unique in questionnaires table, we need to find first then upsert
-  const existingQuestionnaire = await prisma.questionnaire.findFirst({
-    where: { userId },
-  });
+  const existing = await prisma.questionnaire.findFirst({ where: { userId } });
 
-  if (existingQuestionnaire) {
-    return await prisma.questionnaire.update({
-      where: { id: existingQuestionnaire.id },
-      data: processedData,
-    });
+  if (existing) {
+    return prisma.questionnaire.update({ where: { id: existing.id }, data: processedData });
   } else {
-    return await prisma.questionnaire.create({
-      data: {
-        userId,
-        ...processedData,
-      },
-    });
+    return prisma.questionnaire.create({ data: { userId, ...processedData } });
   }
 };
 
-// Generic function for getting specific fields
-const getQuestionnaireField = async (req: Request, res: Response, fieldName: string) => {
+const getQuestionnaireField = async (
+  req: Request,
+  res: Response,
+  fieldName: QuestionnaireField
+) => {
   try {
     const user = getUserFromToken(req);
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Unauthorized access',
-      });
-    }
+    if (!user) return res.status(401).json({ success: false, message: 'Unauthorized access' });
 
     const questionnaire = await prisma.questionnaire.findFirst({
       where: { userId: user.userId },
       select: { [fieldName]: true },
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      data: { [fieldName]: questionnaire?.[fieldName as keyof typeof questionnaire] || null },
+      data: { [fieldName]: questionnaire?.[fieldName] || null },
     });
   } catch (error) {
-    handleError(res, error, `Get ${fieldName}`);
+    return handleError(res, error, `Get ${fieldName}`);
   }
 };
 
-// Generic function for updating specific fields
-const updateQuestionnaireField = async (req: Request, res: Response, fieldName: string) => {
+const updateQuestionnaireField = async (
+  req: Request,
+  res: Response,
+  fieldName: QuestionnaireField
+) => {
   try {
     const user = getUserFromToken(req);
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Unauthorized access',
-      });
-    }
+    if (!user) return res.status(401).json({ success: false, message: 'Unauthorized access' });
 
-    const schema = fieldSchemas[fieldName as keyof typeof fieldSchemas];
-    if (!schema) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid field name',
-      });
-    }
+    const schema = fieldSchemas[fieldName];
+    if (!schema) return res.status(400).json({ success: false, message: 'Invalid field name' });
 
     const validatedData = schema.parse(req.body);
+    // Normalize arrays if multi-value field
+    if (['dietType', 'allergenFood', 'bodyFocusArea'].includes(fieldName)) {
+      // Cast validatedData to Record<string, any> to allow dynamic key access
+      (validatedData as Record<string, any>)[fieldName] = normalizeMultiValueField(
+        (validatedData as Record<string, any>)[fieldName]
+      );
+    }
+
     const questionnaire = await upsertQuestionnaire(user.userId, validatedData);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: `${fieldName} updated successfully`,
-      data: { [fieldName]: questionnaire[fieldName as keyof typeof questionnaire] },
+      data: { [fieldName]: questionnaire[fieldName] },
     });
   } catch (error) {
-    handleError(res, error, `Update ${fieldName}`);
+    return handleError(res, error, `Update ${fieldName}`);
   }
 };
 
-// Main CRUD operations
+// Main CRUD Controllers
 export const getUserQuestionnaire = async (req: Request, res: Response) => {
   try {
     const user = getUserFromToken(req);
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Unauthorized access',
-      });
-    }
+    if (!user) return res.status(401).json({ success: false, message: 'Unauthorized access' });
 
-    const questionnaire = await prisma.questionnaire.findFirst({
-      where: { userId: user.userId },
-    });
+    const questionnaire = await prisma.questionnaire.findFirst({ where: { userId: user.userId } });
 
-    if (!questionnaire) {
-      return res.status(404).json({
-        success: false,
-        message: 'Questionnaire not found',
-      });
-    }
+    if (!questionnaire)
+      return res.status(404).json({ success: false, message: 'Questionnaire not found' });
 
-    res.status(200).json({
-      success: true,
-      data: { questionnaire },
-    });
+    return res.status(200).json({ success: true, data: { questionnaire } });
   } catch (error) {
-    handleError(res, error, 'Get questionnaire');
+    return handleError(res, error, 'Get questionnaire');
   }
 };
 
 export const createOrUpdateQuestionnaire = async (req: Request, res: Response) => {
   try {
     const user = getUserFromToken(req);
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Unauthorized access',
-      });
-    }
+    if (!user) return res.status(401).json({ success: false, message: 'Unauthorized access' });
 
     const validatedData = questionnaireSchema.parse(req.body);
     const questionnaire = await upsertQuestionnaire(user.userId, validatedData);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Questionnaire saved successfully',
       data: { questionnaire },
     });
   } catch (error) {
-    handleError(res, error, 'Create/Update questionnaire');
+    return handleError(res, error, 'Create/Update questionnaire');
   }
 };
 
 export const deleteQuestionnaire = async (req: Request, res: Response) => {
   try {
     const user = getUserFromToken(req);
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Unauthorized access',
-      });
-    }
+    if (!user) return res.status(401).json({ success: false, message: 'Unauthorized access' });
 
-    const deletedQuestionnaire = await prisma.questionnaire.deleteMany({
-      where: { userId: user.userId },
-    });
+    const deleted = await prisma.questionnaire.deleteMany({ where: { userId: user.userId } });
 
-    if (deletedQuestionnaire.count === 0) {
-      return res.status(404).json({
-        success: false,
-        message: 'Questionnaire not found',
-      });
-    }
+    if (deleted.count === 0)
+      return res.status(404).json({ success: false, message: 'Questionnaire not found' });
 
-    res.status(200).json({
-      success: true,
-      message: 'Questionnaire deleted successfully',
-    });
+    return res.status(200).json({ success: true, message: 'Questionnaire deleted successfully' });
   } catch (error) {
-    handleError(res, error, 'Delete questionnaire');
+    return handleError(res, error, 'Delete questionnaire');
   }
 };
 
-// Individual field GET endpoints
+// Individual GET Endpoints
 export const getGender = (req: Request, res: Response) => getQuestionnaireField(req, res, 'gender');
 export const getGoal = (req: Request, res: Response) => getQuestionnaireField(req, res, 'goal');
-export const getDietType = (req: Request, res: Response) => getQuestionnaireField(req, res, 'dietType');
-export const getIsDiabetic = (req: Request, res: Response) => getQuestionnaireField(req, res, 'isDiabetic');
-export const getAllergenFood = (req: Request, res: Response) => getQuestionnaireField(req, res, 'allergenFood');
-export const getFitnessLevel = (req: Request, res: Response) => getQuestionnaireField(req, res, 'fitnessLevel');
-export const getTypicalDayType = (req: Request, res: Response) => getQuestionnaireField(req, res, 'typicalDayType');
-export const getPhysicalLimitations = (req: Request, res: Response) => getQuestionnaireField(req, res, 'physicalLimitations');
-export const getBodyFocusArea = (req: Request, res: Response) => getQuestionnaireField(req, res, 'bodyFocusArea');
-export const getDateOfBirth = (req: Request, res: Response) => getQuestionnaireField(req, res, 'dateOfBirth');
+export const getDietType = (req: Request, res: Response) =>
+  getQuestionnaireField(req, res, 'dietType');
+export const getIsDiabetic = (req: Request, res: Response) =>
+  getQuestionnaireField(req, res, 'isDiabetic');
+export const getAllergenFood = (req: Request, res: Response) =>
+  getQuestionnaireField(req, res, 'allergenFood');
+export const getFitnessLevel = (req: Request, res: Response) =>
+  getQuestionnaireField(req, res, 'fitnessLevel');
+export const getTypicalDayType = (req: Request, res: Response) =>
+  getQuestionnaireField(req, res, 'typicalDayType');
+export const getPhysicalLimitations = (req: Request, res: Response) =>
+  getQuestionnaireField(req, res, 'physicalLimitations');
+export const getBodyFocusArea = (req: Request, res: Response) =>
+  getQuestionnaireField(req, res, 'bodyFocusArea');
+export const getDateOfBirth = (req: Request, res: Response) =>
+  getQuestionnaireField(req, res, 'dateOfBirth');
 export const getHeight = (req: Request, res: Response) => getQuestionnaireField(req, res, 'height');
-export const getHeightUnit = (req: Request, res: Response) => getQuestionnaireField(req, res, 'heightUnit');
+export const getHeightUnit = (req: Request, res: Response) =>
+  getQuestionnaireField(req, res, 'heightUnit');
 export const getWeight = (req: Request, res: Response) => getQuestionnaireField(req, res, 'weight');
-export const getWeightUnit = (req: Request, res: Response) => getQuestionnaireField(req, res, 'weightUnit');
-export const getGoalWeight = (req: Request, res: Response) => getQuestionnaireField(req, res, 'goalWeight');
-export const getMotivationFor = (req: Request, res: Response) => getQuestionnaireField(req, res, 'motivationFor');
+export const getWeightUnit = (req: Request, res: Response) =>
+  getQuestionnaireField(req, res, 'weightUnit');
+export const getGoalWeight = (req: Request, res: Response) =>
+  getQuestionnaireField(req, res, 'goalWeight');
+export const getMotivationFor = (req: Request, res: Response) =>
+  getQuestionnaireField(req, res, 'motivationFor');
 
-// Individual field UPDATE endpoints
-export const updateGender = (req: Request, res: Response) => updateQuestionnaireField(req, res, 'gender');
-export const updateGoal = (req: Request, res: Response) => updateQuestionnaireField(req, res, 'goal');
-export const updateDietType = (req: Request, res: Response) => updateQuestionnaireField(req, res, 'dietType');
-export const updateIsDiabetic = (req: Request, res: Response) => updateQuestionnaireField(req, res, 'isDiabetic');
-export const updateAllergenFood = (req: Request, res: Response) => updateQuestionnaireField(req, res, 'allergenFood');
-export const updateFitnessLevel = (req: Request, res: Response) => updateQuestionnaireField(req, res, 'fitnessLevel');
-export const updateTypicalDayType = (req: Request, res: Response) => updateQuestionnaireField(req, res, 'typicalDayType');
-export const updatePhysicalLimitations = (req: Request, res: Response) => updateQuestionnaireField(req, res, 'physicalLimitations');
-export const updateBodyFocusArea = (req: Request, res: Response) => updateQuestionnaireField(req, res, 'bodyFocusArea');
-export const updateDateOfBirth = (req: Request, res: Response) => updateQuestionnaireField(req, res, 'dateOfBirth');
-export const updateHeight = (req: Request, res: Response) => updateQuestionnaireField(req, res, 'height');
-export const updateHeightUnit = (req: Request, res: Response) => updateQuestionnaireField(req, res, 'heightUnit');
-export const updateWeight = (req: Request, res: Response) => updateQuestionnaireField(req, res, 'weight');
-export const updateWeightUnit = (req: Request, res: Response) => updateQuestionnaireField(req, res, 'weightUnit');
-export const updateGoalWeight = (req: Request, res: Response) => updateQuestionnaireField(req, res, 'goalWeight');
-export const updateMotivationFor = (req: Request, res: Response) => updateQuestionnaireField(req, res, 'motivationFor');
+// Individual UPDATE Endpoints
+export const updateGender = (req: Request, res: Response) =>
+  updateQuestionnaireField(req, res, 'gender');
+export const updateGoal = (req: Request, res: Response) =>
+  updateQuestionnaireField(req, res, 'goal');
+export const updateDietType = (req: Request, res: Response) =>
+  updateQuestionnaireField(req, res, 'dietType');
+export const updateIsDiabetic = (req: Request, res: Response) =>
+  updateQuestionnaireField(req, res, 'isDiabetic');
+export const updateAllergenFood = (req: Request, res: Response) =>
+  updateQuestionnaireField(req, res, 'allergenFood');
+export const updateFitnessLevel = (req: Request, res: Response) =>
+  updateQuestionnaireField(req, res, 'fitnessLevel');
+export const updateTypicalDayType = (req: Request, res: Response) =>
+  updateQuestionnaireField(req, res, 'typicalDayType');
+export const updatePhysicalLimitations = (req: Request, res: Response) =>
+  updateQuestionnaireField(req, res, 'physicalLimitations');
+export const updateBodyFocusArea = (req: Request, res: Response) =>
+  updateQuestionnaireField(req, res, 'bodyFocusArea');
+export const updateDateOfBirth = (req: Request, res: Response) =>
+  updateQuestionnaireField(req, res, 'dateOfBirth');
+export const updateHeight = (req: Request, res: Response) =>
+  updateQuestionnaireField(req, res, 'height');
+export const updateHeightUnit = (req: Request, res: Response) =>
+  updateQuestionnaireField(req, res, 'heightUnit');
+export const updateWeight = (req: Request, res: Response) =>
+  updateQuestionnaireField(req, res, 'weight');
+export const updateWeightUnit = (req: Request, res: Response) =>
+  updateQuestionnaireField(req, res, 'weightUnit');
+export const updateGoalWeight = (req: Request, res: Response) =>
+  updateQuestionnaireField(req, res, 'goalWeight');
+export const updateMotivationFor = (req: Request, res: Response) =>
+  updateQuestionnaireField(req, res, 'motivationFor');
