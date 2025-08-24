@@ -18,6 +18,7 @@ import GoalWeightSelector from "@/components/questions/GoalWeightSelector.tsx";
 import vdo from "@/assets/Q-thankyou/applause.mp4";
 import api from "@/lib/axios";
 import Loading from "@/components/common/Loading";
+import GoBack from "@/components/common/GoBack";
 
 export default function Questions() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -252,6 +253,18 @@ export default function Questions() {
         className={`absolute bottom-0 left-0 w-96 h-96 transform -translate-x-24 translate-y-44 rotate-45 ${currentStep === 5 || currentStep === 9 ? "md:hidden" : ""}`}
       >
         <img src={ellipseImage} alt="" />
+      </div>
+
+      <div className="absolute top-0 w-full flex items-center justify-between">
+        <div>
+          <GoBack onClick={() => goToPrevious()} />
+        </div>
+        <div>
+          <img
+            src="/logo.svg"
+          />
+        </div>
+        <div></div>
       </div>
 
       <div
