@@ -255,16 +255,17 @@ export default function Questions() {
         <img src={ellipseImage} alt="" />
       </div>
 
-      <div className="absolute top-0 w-full flex items-center justify-between">
-        <div>
+      {/* Header */}
+      <div className="absolute top-0 w-full flex items-center justify-center py-3">
+        <img
+          src="/logo.svg"
+          className="w-20"
+        />
+
+        <div className={`absolute left-12 ${currentStep == 0 ? 'hidden' : 'block'}`}>
           <GoBack onClick={() => goToPrevious()} />
         </div>
-        <div>
-          <img
-            src="/logo.svg"
-          />
-        </div>
-        <div></div>
+
       </div>
 
       <div
