@@ -32,9 +32,6 @@ const Signup: React.FC = () => {
     // Basic validation
     const errors: Record<string, string> = {};
     if (!formData.name.trim()) errors.name = 'Name is required';
-    // if (!formData.email.trim()) errors.email = 'Email is required';
-    // if (!formData.password.trim()) errors.password = 'Password is required';
-    // if (formData.password.length < 8) errors.password = 'Password must be at least 6 characters';
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
