@@ -8,7 +8,7 @@ interface LifeLineFitnessProps {
     onBack?: () => void;
 }
 
-const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue, onBack }) => {
+const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue }) => {
     const content = {
         women: {
             title: "Over 10 Million women have used this",

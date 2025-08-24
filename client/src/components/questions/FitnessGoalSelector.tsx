@@ -66,7 +66,10 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
 
     setLoading(true);
     try {
-      await api.put("/questionnaire/goal", { goal: goalId });
+      const response = await api.put("/questionnaire/goal", { goal: goalId });
+      if (response.status == 200) {
+        handleContinue?.()
+      }
     } catch {
       // Optionally handle errors
     } finally {
@@ -116,14 +119,6 @@ const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
               )}
             </button>
           ))}
-        </div>
-
-        <div className="pt-10 flex items-center justify-center gap-3 sm:gap-5">
-          <GoBack onClick={onBack} />
-          <GoNext
-            onClick={loading || !selectedGoal ? undefined : handleContinue}
-            loading={loading}
-          />
         </div>
       </div>
     </div>

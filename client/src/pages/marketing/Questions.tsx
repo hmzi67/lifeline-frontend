@@ -115,7 +115,6 @@ export default function Questions() {
       key="LifeLineFitness"
       gender={gender}
       onContinue={() => goToNext(gender)}
-      onBack={() => goToPrevious()}
     />,
 
     <FitnessGoalSelector
