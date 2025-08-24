@@ -99,7 +99,7 @@ const AgeDateSelector: React.FC<AgeDateSelectorProps> = ({ onAgeSelect, onSelect
 
             // Save the date of birth to database
             const monthIndex = months.indexOf(selectedDate.month);
-            const dob = new Date(selectedDate.year, monthIndex, selectedDate.day);
+            const dob = new Date(selectedDate.year, monthIndex, selectedDate.day + 1);
 
             await api.put("/questionnaire/date-of-birth", {
                 dateOfBirth: dob.toISOString()
