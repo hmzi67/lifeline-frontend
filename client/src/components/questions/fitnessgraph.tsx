@@ -22,7 +22,7 @@ export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
     const timer = setTimeout(() => {
       setMessage("")
       navigate('/plan')
-    }, 2000);
+    }, 7000);
 
     // cleanup timer on unmount
     return () => clearTimeout(timer);

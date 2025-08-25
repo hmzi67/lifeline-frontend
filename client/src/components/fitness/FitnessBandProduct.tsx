@@ -65,33 +65,33 @@ export const FitnessBandProduct = () => {
     <div className="h-full p-4 md:p-4 lg:p-2">
       <div className="max-w-7xl mx-auto">
         <div className="space-y-4 sm:hidden mb-4">
-          <div className="text-3xl md:text-4xl lg:text-8xl font-bold text-gray-900 leading-tight lg:leading-relaxed pt-10">
+          <div className="text-3xl md:text-4xl lg:text-8xl font-bold text-gray-900 leading-tight pt-6">
             Track It, <span className="text-primary">Hack It</span><br />
             Transform Your <span className="text-primary">Body</span>
           </div>
           <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-md">
-            Lorem Ipsum is simply dummy text of the printing Lorem Ipsum is simply dummy.
+          Your friendly companion for a healthier, more balanced you. No pressure, just progress at your own pace.
           </p>
         </div>
         <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-6 items-center">
           {/* Left Content */}
           <div className="space-y-6 md:space-y-8 lg:space-y-4 order-2 lg:order-1">
             <div className="space-y-4 lg:space-y-3 hidden sm:block">
-              <h1 className="text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 leading-tight pt-12">
+              <h1 className="text-3xl md:text-5xl lg:text-5xl font-bold text-gray-900 leading-relaxed pt-12">
                 Track It, <span className="text-primary">Hack It</span><br />
                 Transform Your <span className="text-primary">Body</span>
               </h1>
-              <p className="text-gray-600 text-base md:text-lg lg:text-base leading-relaxed max-w-md">
-                Lorem Ipsum is simply dummy text of the printing Lorem Ipsum is simply dummy.
+              <p className="text-gray-600 text-base md:text-lg lg:text-xl leading-relaxed max-w-md">
+            Your friendly companion for a healthier, more balanced you. No pressure, just progress at your own pace.
               </p>
             </div>
 
             {/* Discount Badge */}
             <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-r bg-primary text-white px-3 py-1 md:px-4 md:py-2 lg:px-3 lg:py-1 rounded-full font-semibold text-sm md:text-base lg:text-sm">
+              <div className="bg-gradient-to-r bg-primary text-white px-3 py-1 md:px-4 md:py-2 lg:px-5 lg:py-2 rounded-full font-semibold text-sm md:text-base lg:text-lg">
                 Up to 92% off
               </div>
-              <span className="text-gray-500 text-xs md:text-sm flex items-center gap-1">
+              <span className="text-gray-500 text-xs md:text-lg flex items-center gap-1">
                 <Clock className="w-3 h-3 md:w-4 md:h-4" />
                 19 Hours ago
               </span>
@@ -106,7 +106,7 @@ export const FitnessBandProduct = () => {
             <div className="flex items-center gap-2">
               <div className="flex text-yellow-400">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="w-4 h-4 md:w-5 md:h-5 lg:w-4 lg:h-4 fill-current" />
+                  <Star key={i} className="w-4 h-4 md:w-5 md:h-5 lg:w-5 lg:h-5 fill-current" />
                 ))}
               </div>
               <span className="text-gray-600 font-medium text-sm md:text-base lg:text-sm">(142)</span>
@@ -114,22 +114,22 @@ export const FitnessBandProduct = () => {
 
             {/* Product Titles */}
             <div>
-              <h2 className="text-xl md:text-2xl lg:text-xl font-bold text-gray-900 mb-2 lg:mb-1">
+              <h2 className="text-xl md:text-2xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-1">
                 LifeLine's Customized Fitness
               </h2>
-              <h3 className="text-lg md:text-xl lg:text-lg font-semibold text-gray-700">
+              <h3 className="text-lg md:text-xl lg:text-xl font-semibold text-gray-700">
                 Band to Track your Progress
               </h3>
             </div>
 
             {/* Price */}
             <div className="flex items-baseline gap-2 md:gap-3">
-              <span className="text-2xl md:text-3xl lg:text-2xl font-bold text-primary">$99.0</span>
-              <span className="text-base md:text-lg lg:text-base text-red-400 line-through">$149.99</span>
+              <span className="text-2xl md:text-3xl lg:text-3xl font-bold text-primary">$99.0</span>
+              <span className="text-base md:text-lg lg:text-lg text-red-400 line-through">$149.99</span>
             </div>
 
             {/* Product Details */}
-            <div className="grid grid-cols-2 w-96 gap-2 md:gap-4 lg:gap-2 py-4 md:py-2 lg:py-3 text-sm md:text-base lg:text-sm">
+            <div className="grid grid-cols-2 w-full gap-2 md:gap-4 lg:gap-2 py-4 md:py-2 lg:py-3 text-sm md:text-base lg:text-lg leading-relaxed">
               <span className="text-gray-600 font-medium">Brand</span>
               <p className="text-gray-900 font-semibold">NexSUS Tech Company</p>
               <span className="text-gray-600 font-medium">Size</span>
@@ -143,9 +143,9 @@ export const FitnessBandProduct = () => {
             {/* Action Buttons */}
             <div className="flex items-center gap-4 md:gap-6 lg:gap-4">
               {[
-                { icon: <ThumbsUp className="w-4 h-4 md:w-5 md:h-5 lg:w-4 lg:h-4" />, label: "1.8k Like" },
-                { icon: <ThumbsDown className="w-4 h-4 md:w-5 md:h-5 lg:w-4 lg:h-4" />, label: "Dislike" },
-                { icon: <Share2 className="w-4 h-4 md:w-5 md:h-5 lg:w-4 lg:h-4" />, label: "Share" }
+                { icon: <ThumbsUp className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />, label: "1.8k Like" },
+                { icon: <ThumbsDown className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />, label: "Dislike" },
+                { icon: <Share2 className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />, label: "Share" }
               ].map(({ icon, label }, i) => (
                 <button key={i} className="flex items-center gap-2 text-gray-600 hover:text-primary text-sm md:text-base lg:text-sm transition-colors">
                   {icon}<span className="font-medium">{label}</span>
@@ -154,7 +154,7 @@ export const FitnessBandProduct = () => {
             </div>
 
             {/* Buy Now */}
-            <button className="w-72 justify-start sm:justify-center bg-gradient-to-r bg-primary hover:bg-primary-600 text-white font-semibold py-3 md:py-4 lg:py-3 px-8 md:px-12 lg:px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm md:text-base lg:text-sm">
+            <button className="w-[80%] justify-start sm:justify-center bg-gradient-to-r bg-primary hover:bg-primary-600 text-white font-semibold py-3 md:py-4 lg:py-3 px-8 md:px-12 lg:px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm md:text-base lg:text-sm">
               Buy Now
             </button>
           </div>
