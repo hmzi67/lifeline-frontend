@@ -59,15 +59,6 @@ const Signup: React.FC = () => {
     }
   };
 
-  const handleSocialAuth = (provider: string) => {
-    console.log(`Authenticate with ${provider}`);
-    alert(`${provider} authentication would be implemented here`);
-  };
-
-  const handleSignInClick = () => {
-    alert('Navigate to sign in page');
-  };
-
   return (
     <div className="min-h-screen relative overflow-hidden ">
       {/* Background Image with Overlay */}
@@ -109,10 +100,10 @@ const Signup: React.FC = () => {
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   className="w-full pl-12 pr-4 py-4 bg-white/5  border border-white/20 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-400/50 focus:border-primary-400/50 transition-all duration-200"
                 />
-                {fieldErrors.name && (
+              </div>
+               {fieldErrors.name && (
                   <p className="mt-1 text-sm text-red-400">{fieldErrors.name}</p>
                 )}
-              </div>
 
               {/* Email Input */}
               <div className="relative">
@@ -126,10 +117,10 @@ const Signup: React.FC = () => {
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-400/50 focus:border-primary-400/50 transition-all duration-200"
                 />
-                {fieldErrors.email && (
+              </div>
+              {fieldErrors.email && (
                   <p className="mt-1 text-sm text-red-400">{fieldErrors.email}</p>
                 )}
-              </div>
 
               {/* Password Input */}
               <div className="relative">
@@ -154,10 +145,10 @@ const Signup: React.FC = () => {
                     <Eye className="h-5 w-5" />
                   )}
                 </button>
-                {fieldErrors.password && (
+              </div>
+               {fieldErrors.password && (
                   <p className="mt-1 text-sm text-red-400">{fieldErrors.password}</p>
                 )}
-              </div>
 
               {/* General Error */}
               {fieldErrors.general && (
