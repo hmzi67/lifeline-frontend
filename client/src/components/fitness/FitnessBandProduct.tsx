@@ -70,7 +70,7 @@ export const FitnessBandProduct = () => {
             Transform Your <span className="text-primary">Body</span>
           </div>
           <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-md">
-          Your friendly companion for a healthier, more balanced you. No pressure, just progress at your own pace.
+          Your friendly companion for healthier, more balanced you. No pressure, just progress.
           </p>
         </div>
         <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-6 items-center">
@@ -81,13 +81,13 @@ export const FitnessBandProduct = () => {
                 Track It, <span className="text-primary">Hack It</span><br />
                 Transform Your <span className="text-primary">Body</span>
               </h1>
-              <p className="text-gray-600 text-base md:text-lg lg:text-xl leading-relaxed max-w-md">
-            Your friendly companion for a healthier, more balanced you. No pressure, just progress at your own pace.
+              <p className="text-gray-600 text-base md:text-lg lg:text-xl leading-relaxed max-w-md py-2">
+             Your friendly companion for healthier, more balanced you. No pressure, just progress.
               </p>
             </div>
 
             {/* Discount Badge */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 py-1">
               <div className="bg-gradient-to-r bg-primary text-white px-3 py-1 md:px-4 md:py-2 lg:px-5 lg:py-2 rounded-full font-semibold text-sm md:text-base lg:text-lg">
                 Up to 92% off
               </div>
