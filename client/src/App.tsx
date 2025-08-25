@@ -69,7 +69,7 @@ function App() {
               <Route path='/plan' element={<Plan />} />
 
               {/* 404 route */}
-              <Route path="*" element={<Error type="error2" />} />
+              <Route path="*" element={<Error type="error3" />} />
             </Routes>
           </Suspense>
         </Layout>
