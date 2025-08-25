@@ -65,10 +65,10 @@ export const FitnessBandProduct = () => {
     <div className="h-full p-4 md:p-4 lg:p-2">
       <div className="max-w-7xl mx-auto">
         <div className="space-y-4 sm:hidden mb-4">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight pt-5">
+          <div className="text-3xl md:text-4xl lg:text-8xl font-bold text-gray-900 leading-tight lg:leading-relaxed pt-10">
             Track It, <span className="text-primary">Hack It</span><br />
             Transform Your <span className="text-primary">Body</span>
-          </h1>
+          </div>
           <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-md">
             Lorem Ipsum is simply dummy text of the printing Lorem Ipsum is simply dummy.
           </p>
@@ -162,14 +162,14 @@ export const FitnessBandProduct = () => {
           {/* Right Image Section */}
           <div className="relative order-1 lg:order-2">
             <div className="relative z-10 flex justify-center items-center pt-10">
-              <img src={Phone} alt="Phone" className="w-full max-w-56 md:max-w-xs lg:max-w-60" loading="lazy" />
+              <img src={Phone} alt="Phone" className="w-full max-w-64 md:max-w-sm lg:max-w-80" loading="lazy" />
 
               {/* Fitness Band */}
               <div className="absolute -right-4 md:-right-8 lg:-right-6 top-1/2 transform -translate-y-1/2 z-20">
                 <img
                   src={currentBand.image}
                   alt={currentBand.name}
-                  className="w-48 h-48 md:w-56 md:h-56 lg:w-72 lg:h-64 mt-48 md:mt-64 lg:mt-80 object-contain transition-all duration-300"
+                  className="w-56 h-64 md:w-64 md:h-72 lg:w-80 lg:h-96 mt-48 md:mt-64 lg:mt-80 object-contain transition-all duration-300"
                   loading="lazy"
                 />
               </div>
