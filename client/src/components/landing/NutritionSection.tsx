@@ -83,7 +83,7 @@ export const NutritionSection: React.FC = () => {
   const desktopCount = useCountUp(2345, 2000, desktopRef);
 
   return (
-    <section className="py-8 md:py-20">
+    <section className="pb-0 pt-8 md:pb-0 md:pt-20">
       <div className="container mx-auto px-4 md:px-6">
         {/* Mobile Layout */}
         <div className="block md:hidden">
