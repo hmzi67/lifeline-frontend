@@ -140,6 +140,36 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
     setUnit(newUnit);
   };
 
+  // Handle feet input change
+  const handleFeetChange = (value: string) => {
+    const feetVal = parseInt(value, 10);
+    if (!isNaN(feetVal) && feetVal >= 4 && feetVal <= 8) {
+      setFeet(feetVal);
+      // Update slider position based on new total inches
+      const totalInches = feetVal * 12 + inches;
+      if (totalInches >= 48 && totalInches <= 96) {
+        // No need to update slider here as the range slider will handle it
+      }
+    } else if (value === "") {
+      setFeet(4);
+    }
+  };
+
+  // Handle inches input change
+  const handleInchesChange = (value: string) => {
+    const inchesVal = parseInt(value, 10);
+    if (!isNaN(inchesVal) && inchesVal >= 0 && inchesVal <= 11) {
+      setInches(inchesVal);
+      // Update slider position based on new total inches
+      const totalInches = feet * 12 + inchesVal;
+      if (totalInches >= 48 && totalInches <= 96) {
+        // No need to update slider here as the range slider will handle it
+      }
+    } else if (value === "") {
+      setInches(0);
+    }
+  };
+
   const handleContinue = () => {
     if (unit === "cm") {
       onContinue?.(heightCm, unit);
@@ -191,22 +221,40 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
         {/* Height Inputs */}
         {unit === "ft" ? (
           <div className="mb-12 sm:mb-16">
-            {/* Feet/Inches Display */}
+            {/* Feet/Inches Display - Now Editable */}
             <div className="bg-white rounded-3xl p-6 sm:p-8 lg:p-12 shadow-xl mb-8 sm:mb-12 mx-2 sm:mx-4 lg:mx-8">
               <div className="flex justify-center items-center">
                 <div className="text-center">
-                  <span className="text-4xl sm:text-6xl lg:text-8xl font-bold text-primary-500">
-                    {feet}
-                  </span>
+                  <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    value={feet}
+                    onChange={(e) => handleFeetChange(e.target.value)}
+                    className="text-4xl sm:text-6xl lg:text-8xl font-bold text-primary-500 bg-transparent text-center focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-opacity-50 rounded-lg w-20 sm:w-28 lg:w-36 remove-spinner"
+                    style={{
+                      appearance: 'textfield',
+                      MozAppearance: 'textfield'
+                    }}
+                  />
                   <span className="text-lg sm:text-2xl lg:text-3xl font-medium text-primary-500 ml-1">
                     ft
                   </span>
                 </div>
                 <div className="mx-4 sm:mx-6 lg:mx-8 w-0.5 h-12 sm:h-16 lg:h-20 bg-gray-300"></div>
                 <div className="text-center">
-                  <span className="text-3xl sm:text-4xl lg:text-6xl font-bold text-primary-500">
-                    {inches}
-                  </span>
+                  <input
+                    type="number"
+                    min="0"
+                    max="11"
+                    value={inches}
+                    onChange={(e) => handleInchesChange(e.target.value)}
+                    className="text-3xl sm:text-4xl lg:text-6xl font-bold text-primary-500 bg-transparent text-center focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-opacity-50 rounded-lg w-16 sm:w-20 lg:w-28 remove-spinner"
+                    style={{
+                      appearance: 'textfield',
+                      MozAppearance: 'textfield'
+                    }}
+                  />
                   <span className="text-lg sm:text-2xl lg:text-3xl font-medium text-primary-500 ml-1">
                     in
                   </span>
@@ -259,7 +307,6 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
                       setRailPosition(val - visibleRange / 2);
                     }
                   }}
-                  
                 />
                 <span className="text-2xl sm:text-3xl lg:text-4xl text-gray-500">
                   cm
