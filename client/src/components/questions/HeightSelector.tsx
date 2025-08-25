@@ -142,31 +142,27 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
 
   // Handle feet input change
   const handleFeetChange = (value: string) => {
+    if (value === "") {
+      setFeet(0); // Allow empty state
+      return;
+    }
+    
     const feetVal = parseInt(value, 10);
     if (!isNaN(feetVal) && feetVal >= 4 && feetVal <= 8) {
       setFeet(feetVal);
-      // Update slider position based on new total inches
-      const totalInches = feetVal * 12 + inches;
-      if (totalInches >= 48 && totalInches <= 96) {
-        // No need to update slider here as the range slider will handle it
-      }
-    } else if (value === "") {
-      setFeet(4);
     }
   };
 
   // Handle inches input change
   const handleInchesChange = (value: string) => {
+    if (value === "") {
+      setInches(0); // Allow empty state
+      return;
+    }
+    
     const inchesVal = parseInt(value, 10);
     if (!isNaN(inchesVal) && inchesVal >= 0 && inchesVal <= 11) {
       setInches(inchesVal);
-      // Update slider position based on new total inches
-      const totalInches = feet * 12 + inchesVal;
-      if (totalInches >= 48 && totalInches <= 96) {
-        // No need to update slider here as the range slider will handle it
-      }
-    } else if (value === "") {
-      setInches(0);
     }
   };
 
@@ -227,10 +223,11 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
                 <div className="text-center">
                   <input
                     type="number"
-                    min="0"
-                    max="10"
-                    value={feet}
+                    min="4"
+                    max="8"
+                    value={feet === 0 ? "" : feet}
                     onChange={(e) => handleFeetChange(e.target.value)}
+                    placeholder="4"
                     className="text-4xl sm:text-6xl lg:text-8xl font-bold text-primary-500 bg-transparent text-center focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-opacity-50 rounded-lg w-20 sm:w-28 lg:w-36 remove-spinner"
                     style={{
                       appearance: 'textfield',
@@ -247,8 +244,9 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
                     type="number"
                     min="0"
                     max="11"
-                    value={inches}
+                    value={inches === 0 ? "" : inches}
                     onChange={(e) => handleInchesChange(e.target.value)}
+                    placeholder="0"
                     className="text-3xl sm:text-4xl lg:text-6xl font-bold text-primary-500 bg-transparent text-center focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-opacity-50 rounded-lg w-16 sm:w-20 lg:w-28 remove-spinner"
                     style={{
                       appearance: 'textfield',
