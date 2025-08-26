@@ -152,7 +152,7 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange }) 
                           />
                         )}
                       </div>
-                      <span className="text-xs sm:text-lg font-medium text-gray-700 text-left">{diet.name}</span>
+                      <span className={`text-xs sm:text-lg font-medium text-gray-700 text-left ${isSelected ? 'text-white' : ''}`}>{diet.name}</span>
                     </div>
                     {isSelected && (
                       <div className="w-4 h-4 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0">

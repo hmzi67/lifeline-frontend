@@ -61,7 +61,7 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
     (req as AuthenticatedRequest).user = {
       id: user.id,
       email: user.email,
-      role: user.role,
+      role: user.role ? user.role.name : '', // Ensure role is a string
       isEmailVerified: user.isEmailVerified,
     };
 
