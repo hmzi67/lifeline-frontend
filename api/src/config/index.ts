@@ -6,7 +6,6 @@ dotenv.config();
 
 // Environment validation schema
 const envSchema = z.object({
-
   PORT: z.string().transform(Number).default('3000'),
   HOST: z.string().default('localhost'),
   DATABASE_URL: z.string().min(1),
@@ -14,7 +13,7 @@ const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().default('7d'),
   JWT_REFRESH_SECRET: z.string().min(32),
   JWT_REFRESH_EXPIRES_IN: z.string().default('30d'),
-  CORS_ORIGIN: z.string().default('http://localhost:5173'),
+  CORS_ORIGIN: z.string().default('https://www.makelifeline.com'),
   EMAIL_HOST: z.string().optional(),
   EMAIL_PORT: z.string().transform(Number).optional(),
   EMAIL_USER: z.string().optional(),
