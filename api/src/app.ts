@@ -34,7 +34,7 @@ import appSetttingsRoutes from './routes/appSettingRoutes.js';
 const app = express();
 
 app.use(cors);
-
+app.set('trust proxy', 1);
 // Security middlewares (should be first)
 app.use(helmet);
 

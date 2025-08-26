@@ -13,7 +13,7 @@ const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().default('7d'),
   JWT_REFRESH_SECRET: z.string().min(32),
   JWT_REFRESH_EXPIRES_IN: z.string().default('30d'),
-  CORS_ORIGIN: z.string().default('https://www.makelifeline.com'),
+  CORS_ORIGIN: z.string().default('http://localhost:5173'),
   EMAIL_HOST: z.string().optional(),
   EMAIL_PORT: z.string().transform(Number).optional(),
   EMAIL_USER: z.string().optional(),

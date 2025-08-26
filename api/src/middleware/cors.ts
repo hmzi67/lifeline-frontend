@@ -5,6 +5,7 @@ const corsOptions = {
     const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [
       'http://localhost:5173',
       'https://www.makelifeline.com',
+      'https://makelifeline.com',
     ];
 
     if (!origin || allowedOrigins.includes(origin)) {
