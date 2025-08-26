@@ -109,7 +109,7 @@ const TypicalDaySelector: React.FC<TypicalDaySelectorProps> = ({ onContinue, onS
                       />
                     ) : null}
                   </div>
-                  <span className="text-xs sm:text-lg font-medium text-gray-700">{option.label}</span>
+                  <span className={`text-xs sm:text-lg font-medium text-gray-700 ${isSelected ? 'text-white' : ''}`}>{option.label}</span>
                 </div>
 
                 {isSelected && (

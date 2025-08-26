@@ -112,7 +112,7 @@ const FitnessMotivationSelector: React.FC<MotivationActions> = ({ onContinue }) 
                                 </div>
 
                                 <div className="flex-1 text-left">
-                                    <span className="text-xs sm:text-lg font-medium text-gray-700">{option.label}</span>
+                                    <span className={`text-xs sm:text-lg font-medium text-gray-700 ${isSelected ? 'text-white' : ''}`}>{option.label}</span>
                                 </div>
 
                                 {isSelected && (
@@ -124,10 +124,6 @@ const FitnessMotivationSelector: React.FC<MotivationActions> = ({ onContinue }) 
                         );
                     })}
                 </div>
-
-                {/* <div className="flex items-center justify-center gap-5 my-5">
-                    <GoNext onClick={handleContinue} loading={loading || saving} />
-                </div> */}
             </div>
         </div>
     );

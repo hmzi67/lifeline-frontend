@@ -34,7 +34,7 @@ const PersonalizingPlans: React.FC<PersonalizePlansActions> = ({ onContinue }) =
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Personalizing plans for you!</h1>
             <p className="text-sm text-gray-600 mb-6">Please wait.....</p>
 
-            <div className="w-96 h-96 mb-6">
+            <div className="w-80 h-80 mb-6">
                 <CircularProgressbar
                     value={progress}
                     text={`${progress}%`}
