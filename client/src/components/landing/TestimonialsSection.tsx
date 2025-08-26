@@ -25,7 +25,7 @@ export const TestimonialsSection: React.FC = () => {
         {
             name: "Maria Lopez",
             avatar: "https://picsum.photos/60/60?random=1",
-            rating: 5,
+            rating: 4,
             text: "I check my heart rate during workouts with the band. It keeps me from overdoing it, which I really appreciate",
         },
         {
@@ -37,7 +37,7 @@ export const TestimonialsSection: React.FC = () => {
         {
             name: "James Carter",
             avatar: "https://picsum.photos/60/60?random=3",
-            rating: 5,
+            rating: 4,
             text: "It’s become part of my routine. Steps, sleep, heart rate—all in one place without me having to worry about it.",
         },
     ];
