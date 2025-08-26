@@ -62,12 +62,12 @@ export const MeditationSection: React.FC = () => {
                     <div className="max-w-2xl mt-20 md:mt-40">
                         {/* Small subtitle */}
                         <p className="text-white text-xl md:text-2xl mb-4 font-medium">
-                            More power efficiency
+                           Breathe and relax
                         </p>
                         {/* Main heading */}
                         <h1 className="text-2xl md:text-3xl lg:text-5xl font-bold text-white mb-6 md:mb-12 leading-relaxed">
-                            Where Sustainability<br />
-                            Meets Meditation
+                            Balance Your Mind & Body <br /> with Guided Meditation and<br /> Mindfulness
+                           
                         </h1>
                         {/* CTA Button */}
                         <Button

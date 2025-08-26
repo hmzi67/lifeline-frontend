@@ -50,7 +50,7 @@ const Login: React.FC = () => {
   return (
     <AuthLayout
       title="Sign in to your account"
-      subtitle="Welcome back! select method to login"
+      subtitle="Welcome back! Let's continue your wellness journey."
       bottomText={
         <p className="text-gray-600">
           Don't have an account?{' '}

@@ -17,28 +17,28 @@ interface Testimonial {
 export const TestimonialsSection: React.FC = () => {
     const testimonials: Testimonial[] = [
         {
-            name: "Chloe Williams",
+            name: "Lina Williams",
             avatar: "/sample.png",
             rating: 5,
-            text: "I love how NObese offers exercises that match my fitness level. It's great for someone like me who's just starting out. I feel like I'm really making progress!",
+            text: "I didn’t realize how little I moved until I started using this band. Now I actually look forward to checking my steps.",
         },
         {
             name: "Maria Lopez",
             avatar: "https://picsum.photos/60/60?random=1",
             rating: 5,
-            text: "I've tried a lot of workout apps, but this one is different. The exercises are easy to follow, and the flexibility to adjust the intensity really helps me stay motivated!",
+            text: "I check my heart rate during workouts with the band. It keeps me from overdoing it, which I really appreciate",
         },
         {
-            name: "Luca Rossi",
+            name: "Daniel Reyes",
             avatar: "https://picsum.photos/60/60?random=2",
             rating: 5,
-            text: "I'm not new to working out, but I needed a routine that fit my busy schedule. NObese gave me just that. Quick, effective exercises that I can do anytime!",
+            text: "The sleep tracker is surprisingly accurate! I woke up and saw exactly why I felt tired. Super helpful.",
         },
         {
-            name: "Emily Chen",
+            name: "James Carter",
             avatar: "https://picsum.photos/60/60?random=3",
             rating: 5,
-            text: "As a wellness coach, I recommend this app to all my clients. The holistic approach to health is exactly what people need.",
+            text: "It’s become part of my routine. Steps, sleep, heart rate—all in one place without me having to worry about it.",
         },
     ];
 
@@ -46,7 +46,7 @@ export const TestimonialsSection: React.FC = () => {
         <section className="py-12 px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
                 <h4 className="text-lg sm:text-xl text-primary mb-4">Hear from our satisfied users!</h4>
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">You can experience the change too!</h2>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Health Made Simple, Progress Made Real</h2>
                 <p className="text-base sm:text-lg text-gray-600 max-w-xl sm:max-w-3xl mx-auto">
                     Join thousands of satisfied users who have transformed their lives with our comprehensive wellness platform.
                 </p>

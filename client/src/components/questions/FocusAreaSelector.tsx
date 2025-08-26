@@ -90,7 +90,7 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({ gender, on
                 {/* Header */}
                 <div className="text-center mb-8 sm:mb-12">
                     <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-4">
-                        Choose Your Focus Area
+                       Choose your focus area
                     </h1>
                     <p className="text-lg text-gray-600">
                         Tell us which part of your body you'd like to focus on during your workouts

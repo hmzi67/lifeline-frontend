@@ -43,7 +43,7 @@ function App() {
               {/* Public routes - accessible to everyone */}
               <Route path="/" element={<Landing />} />
               <Route path="/admin" element={<FitnessAdminPanel />} />
-              <Route path="/business" element={<Business />} />
+              <Route path="/about-us" element={<Business />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:id" element={<BlogReading />} />
               <Route path="/pricing" element={<Pricing />} />

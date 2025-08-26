@@ -83,8 +83,8 @@ export const Herosection: React.FC = () => {
         <div className="relative z-10 h-[40vh] lg:h-[100vh] flex items-center justify-center">
           <div className="container mx-auto lg:px-12 mb-0 lg:mb-96">
             <div className="max-w-2xl">
-              <h1 className="text-2xl lg:text-5xl uppercase font-bold text-white mb-6 leading-[2.5] mt-20 pt-20">
-                join lifeline's <span className='text-primary font-semibold'>affiliate</span><br /> <span className='text-primary font-semibold'> Business</span> program
+              <h1 className="text-2xl lg:text-5xl font-bold text-white mb-6 leading-relaxed mt-20 pt-20">
+                Join LifeLine <span className='text-primary font-bold'>Affiliate</span><br /><span className='text-primary font-bold'>Business</span> Program
               </h1>
               <p className="text-white text-lg lg:text-2xl mb-6 lg:mb-8">
                 Cultivate a healthy, thriving, and unstoppable workforce with BetterMe's health transformation ecosystem

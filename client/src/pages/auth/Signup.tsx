@@ -78,10 +78,10 @@ const Signup: React.FC = () => {
               </div>
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">
-              Sign up to create account
+              Sign up to create an account
             </h1>
             <p className="text-gray-300 text-sm">
-              Welcome back! select method to login
+             Welcome back! Let's continue your wellness journey.
             </p>
           </div>
 
@@ -175,7 +175,7 @@ const Signup: React.FC = () => {
             {/* Divider */}
             <div className="my-6 flex items-center">
               <div className="flex-1 h-px bg-white/20"></div>
-              <span className="px-4 text-gray-300 text-sm">Or continue with email</span>
+              <span className="px-4 text-gray-300 text-sm">Or continue with</span>
               <div className="flex-1 h-px bg-white/20"></div>
             </div>
 

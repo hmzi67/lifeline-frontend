@@ -31,15 +31,15 @@ const dietTypes: DietType[] = [
   { id: 'traditional', name: 'Traditional', image },
   { id: 'mediterranean', name: 'Mediterranean', image: image1 },
   { id: 'vegetarian', name: 'Vegetarian', image: image2 },
-  { id: 'diabetes-type-1', name: 'Diabetes type 1', image: image3 },
+  { id: 'diabetes-type-1', name: 'Type 2 Diabetes', image: image3 },
   { id: 'keto', name: 'Keto', image: image4 },
-  { id: 'diabetes-type-2', name: 'Diabetes type 2', image: image5 },
+  { id: 'diabetes-type-2', name: 'Type 2 Diabetes', image: image5 },
   { id: 'pedestrian', name: 'Pedestrian', image: image6 },
   { id: 'high-protein', name: 'High-Protein', image: image7 },
-  { id: 'vegan', name: 'Vegan (Plant diet)', image: image8 },
+  { id: 'vegan', name: 'Vegan (Plant-based diet)', image: image8 },
   { id: 'calorie-cutting', name: 'Calorie-Cutting', image: image9 },
   { id: 'paleo', name: 'Paleo', image: image10 },
-  { id: 'high-calories', name: 'High Calories', image: image11 }
+  { id: 'high-calories', name: 'High-Calories', image: image11 }
 ];
 
 const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange }) => {

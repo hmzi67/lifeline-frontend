@@ -66,11 +66,11 @@ export const FitnessBandProduct = () => {
       <div className="max-w-7xl mx-auto">
         <div className="space-y-4 sm:hidden mb-4">
           <div className="text-3xl md:text-4xl lg:text-8xl font-bold text-gray-900 leading-tight pt-6">
-            Track It, <span className="text-primary">Hack It</span><br />
+            Track It, <span className="text-primary">Improve It.</span><br />
             Transform Your <span className="text-primary">Body</span>
           </div>
           <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-md">
-          Your friendly companion for healthier, more balanced you. No pressure, just progress.
+          Stay on top of your health by tracking your steps, heart rate, and sleep. Improving every day!
           </p>
         </div>
         <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-6 items-center">
@@ -78,11 +78,11 @@ export const FitnessBandProduct = () => {
           <div className="space-y-6 md:space-y-8 lg:space-y-4 order-2 lg:order-1">
             <div className="space-y-4 lg:space-y-3 hidden sm:block">
               <h1 className="text-3xl md:text-5xl lg:text-5xl font-bold text-gray-900 leading-relaxed pt-12">
-                Track It, <span className="text-primary">Hack It</span><br />
+                Track It, <span className="text-primary">Improve It</span><br />
                 Transform Your <span className="text-primary">Body</span>
               </h1>
               <p className="text-gray-600 text-base md:text-lg lg:text-xl leading-relaxed max-w-md py-2">
-             Your friendly companion for healthier, more balanced you. No pressure, just progress.
+            Stay on top of your health by tracking your steps, heart rate, and sleep. Improving every day!
               </p>
             </div>
 
@@ -118,7 +118,7 @@ export const FitnessBandProduct = () => {
                 LifeLine's Customized Fitness
               </h2>
               <h3 className="text-lg md:text-xl lg:text-xl font-semibold text-gray-700">
-                Band to Track your Progress
+                Band to Track Your Progress
               </h3>
             </div>
 

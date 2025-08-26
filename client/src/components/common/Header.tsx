@@ -21,7 +21,7 @@ export default function Header() {
   // Routes that should have a transparent header
   const transparentRoutes = [
     '/',
-    '/business',
+    '/about-us',
     '/affiliate',
     '/pricing',
   ];
@@ -40,7 +40,7 @@ export default function Header() {
 
   const navigation = [
     { name: 'Home', href: '/' },
-    { name: 'For Business', href: '/business' },
+    { name: 'About Us', href: '/about-us' },
     { name: 'Fitness Band', href: '/analytics' },
     { name: 'Pricing', href: '/pricing' },
     { name: 'Blogs', href: '/blog' },

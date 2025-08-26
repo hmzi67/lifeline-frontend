@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import uniqueFeaturesImage from '../../assets/images/business/UF-1.svg'
-import uniqueFeaturesImage2 from '../../assets/images/business/UF-2.jpeg'
+import uniqueFeaturesImage2 from '../../assets/images/business/UF-2.png'
 import uniqueFeaturesImage3 from '../../assets/images/business/UF-3.svg'
 
 const UniqueFeatures: React.FC = () => {
@@ -10,11 +10,10 @@ const UniqueFeatures: React.FC = () => {
       {/* Hero Section */}
       <div className="text-center mb-20">
         <h1 className="text-5xl font-bold text-gray-900 mb-6">
-          More <span className="text-primary">Unique</span> Features
+          All-in-one <span className="text-primary">Wellness</span> Solution
         </h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-          Motivate users with benefits and positive reinforcement, and offer 
-          modifications and progress tracking.
+          One app with endless wellness possibilities for your team
         </p>
       </div>
 

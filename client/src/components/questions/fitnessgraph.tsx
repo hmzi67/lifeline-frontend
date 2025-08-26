@@ -42,7 +42,7 @@ export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
                 user, your wish is our command
               </h1>
               <p className="text-gray-600 text-xl">
-                Empowering Dreams, Visualize Success!
+             Empowering Dreams, Visualizing Success!
               </p>
               <p className='font-bold text-2xl text-primary mt-4'>
                 Active goal graph

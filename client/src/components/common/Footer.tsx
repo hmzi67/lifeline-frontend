@@ -7,7 +7,7 @@ import {
 
 export default function Footer() {
   const footerLinks = [
-    { name: 'About us', href: '/about' },
+    { name: 'About Us', href: '/about' },
     { name: 'Careers', href: '/careers' },
     { name: 'Contact Us', href: '/contact' },
     { name: 'Blogs', href: '/blogs' }
@@ -89,7 +89,7 @@ export default function Footer() {
             {/* Copyright */}
             <div className="text-center order-1 md:order-2">
               <p className="text-white text-sm sm:text-base">
-                All copyrights reserved 2025
+               © 2025 All rights reserved.
               </p>
             </div>
 

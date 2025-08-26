@@ -50,14 +50,13 @@ const Contact: React.FC = () => {
                   <span className="text-primary-400">Have Questions?</span>
                 </h2>
                 <h3 className="text-3xl font-bold text-gray-900">
-                  Lets <span className="text-primary-500">Get In</span> Touch
+                  Let's <span className="text-primary-500">Get In</span> Touch
                 </h3>
               </div>
 
               <p className="text-gray-600 mb-12 leading-relaxed">
-                Lorem Ipsum is a dummy data simply used for type writing and type 
-                setting of data. It is one of the mostly used dummy data since 
-                years Lorem Ipsum used almost lorem is dummy text.
+             We’re here to help you every step of the way. Whether you need support, 
+             have feedback, or just want to know more, our team is ready to listen. Reach out anytime!
               </p>
 
               <div className="space-y-8">

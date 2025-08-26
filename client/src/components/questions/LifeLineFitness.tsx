@@ -11,12 +11,12 @@ interface LifeLineFitnessProps {
 const LifeLineFitness: React.FC<LifeLineFitnessProps> = ({ gender, onContinue }) => {
     const content = {
         women: {
-            title: "Over 10 Million women have used this",
-            subtitle: "LifeLine will help you in this fitness journey with a science-based approach.",
+            title: "Over 10 million women have used this app!",
+            subtitle: "LifeLine will support you on your fitness journey with a science-based approach.",
             image: womenimg
         },
         men: {
-            title: "Over 8 Million men have used this",
+            title: "Over 10 million men have used this app!",
             subtitle: "LifeLine will help you in this fitness journey with a science-based approach.",
             image: menimg
         }
