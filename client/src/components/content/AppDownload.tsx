@@ -1,6 +1,8 @@
 // Responsive AppDownload Component
 import AppBgImage2 from '../../assets/images/landing/appbgimg12.png';
+import AppDownloadBg from '@/assets/images/landing/AppDownloadBg.jpeg'
 import mobileimg from '../../assets/images/landing/appDownloadImg.webp';
+import AppDownloadBgMobile from '@/assets/images/landing/AppDonwloadBgMobile.png';
 
 export const AppDownload = ({ isLandingPage = false }) => {
     return (
@@ -10,13 +12,13 @@ export const AppDownload = ({ isLandingPage = false }) => {
                 <div className="max-w-sm mx-auto space-y-6">
                     {/* Mobile Image on Top */}
                     <div className="flex justify-center">
-                        <img 
-                            src={mobileimg} 
-                            alt="Mobile App Preview" 
+                        <img
+                            src={isLandingPage ? mobileimg : AppDownloadBgMobile}
+                            alt="Mobile App Preview"
                             className="w-full max-w-[280px] h-auto drop-shadow-lg"
                         />
                     </div>
-                    
+
                     {/* Mobile Content */}
                     <div className="text-white text-center space-y-4">
                         <h1 className="text-xl font-bold leading-tight">
@@ -46,58 +48,58 @@ export const AppDownload = ({ isLandingPage = false }) => {
                             href="#"
                             className="bg-black backdrop-blur-sm hover:bg-black/80 rounded-xl py-3 px-6 flex items-center space-x-3 justify-center cursor-pointer transition-all duration-300 shadow-lg border border-white/10"
                         >
-                           <svg 
-    className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 flex-shrink-0"
-      version="1.1" 
-      id="Layer_1" 
-      xmlns="http://www.w3.org/2000/svg" 
-      xmlnsXlink="http://www.w3.org/1999/xlink"
-      viewBox="0 0 511.999 511.999" 
-      xmlSpace="preserve"
-    >
-      <g>
-        <path 
-          style={{ fill: "#32BBFF" }} 
-          d="M382.369,175.623C322.891,142.356,227.427,88.937,79.355,6.028
+                            <svg
+                                className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 flex-shrink-0"
+                                version="1.1"
+                                id="Layer_1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlnsXlink="http://www.w3.org/1999/xlink"
+                                viewBox="0 0 511.999 511.999"
+                                xmlSpace="preserve"
+                            >
+                                <g>
+                                    <path
+                                        style={{ fill: "#32BBFF" }}
+                                        d="M382.369,175.623C322.891,142.356,227.427,88.937,79.355,6.028
             C69.372-0.565,57.886-1.429,47.962,1.93l254.05,254.05L382.369,175.623z"
-        />
-        <path 
-          style={{ fill: "#32BBFF" }} 
-          d="M47.962,1.93c-1.86,0.63-3.67,1.39-5.401,2.308C31.602,10.166,23.549,21.573,23.549,36v439.96
+                                    />
+                                    <path
+                                        style={{ fill: "#32BBFF" }}
+                                        d="M47.962,1.93c-1.86,0.63-3.67,1.39-5.401,2.308C31.602,10.166,23.549,21.573,23.549,36v439.96
             c0,14.427,8.052,25.834,19.012,31.761c1.728,0.917,3.537,1.68,5.395,2.314L302.012,255.98L47.962,1.93z"
-        />
-        <path 
-          style={{ fill: "#32BBFF" }} 
-          d="M302.012,255.98L47.956,510.035c9.927,3.384,21.413,2.586,31.399-4.103
+                                    />
+                                    <path
+                                        style={{ fill: "#32BBFF" }}
+                                        d="M302.012,255.98L47.956,510.035c9.927,3.384,21.413,2.586,31.399-4.103
             c143.598-80.41,237.986-133.196,298.152-166.746c1.675-0.941,3.316-1.861,4.938-2.772L302.012,255.98z"
-        />
-      </g>
-      <path 
-        style={{ fill: "#2C9FD9" }} 
-        d="M23.549,255.98v219.98c0,14.427,8.052,25.834,19.012,31.761c1.728,0.917,3.537,1.68,5.395,2.314
+                                    />
+                                </g>
+                                <path
+                                    style={{ fill: "#2C9FD9" }}
+                                    d="M23.549,255.98v219.98c0,14.427,8.052,25.834,19.012,31.761c1.728,0.917,3.537,1.68,5.395,2.314
           L302.012,255.98H23.549z"
-      />
-      <path 
-        style={{ fill: "#29CC5E" }} 
-        d="M79.355,6.028C67.5-1.8,53.52-1.577,42.561,4.239l255.595,255.596l84.212-84.212
+                                />
+                                <path
+                                    style={{ fill: "#29CC5E" }}
+                                    d="M79.355,6.028C67.5-1.8,53.52-1.577,42.561,4.239l255.595,255.596l84.212-84.212
           C322.891,142.356,227.427,88.937,79.355,6.028z"
-      />
-      <path 
-        style={{ fill: "#D93F21" }} 
-        d="M298.158,252.126L42.561,507.721c10.96,5.815,24.939,6.151,36.794-1.789
+                                />
+                                <path
+                                    style={{ fill: "#D93F21" }}
+                                    d="M298.158,252.126L42.561,507.721c10.96,5.815,24.939,6.151,36.794-1.789
           c143.598-80.41,237.986-133.196,298.152-166.746c1.675-0.941,3.316-1.861,4.938-2.772L298.158,252.126z"
-      />
-      <path 
-        style={{ fill: "#FFD500" }} 
-        d="M488.45,255.98c0-12.19-6.151-24.492-18.342-31.314c0,0-22.799-12.721-92.682-51.809l-83.123,83.123
+                                />
+                                <path
+                                    style={{ fill: "#FFD500" }}
+                                    d="M488.45,255.98c0-12.19-6.151-24.492-18.342-31.314c0,0-22.799-12.721-92.682-51.809l-83.123,83.123
           l83.204,83.205c69.116-38.807,92.6-51.892,92.6-51.892C482.299,280.472,488.45,268.17,488.45,255.98z"
-      />
-      <path 
-        style={{ fill: "#FFAA00" }} 
-        d="M470.108,287.294c12.191-6.822,18.342-19.124,18.342-31.314H294.303l83.204,83.205
+                                />
+                                <path
+                                    style={{ fill: "#FFAA00" }}
+                                    d="M470.108,287.294c12.191-6.822,18.342-19.124,18.342-31.314H294.303l83.204,83.205
           C446.624,300.379,470.108,287.294,470.108,287.294z"
-      />
-    </svg>
+                                />
+                            </svg>
                             <div className="text-white">
                                 <div className="text-xs opacity-80">GET IT ON</div>
                                 <div className="text-base font-semibold">Google Play</div>
@@ -124,9 +126,9 @@ export const AppDownload = ({ isLandingPage = false }) => {
             {/* Desktop/Tablet Layout - Hidden on mobile */}
             <div className="hidden md:block my-8 md:my-16 lg:my-24 py-8 md:py-12 lg:py-16 relative overflow-hidden min-h-[500px] md:min-h-[600px] lg:min-h-[700px]">
                 {/* Background Image - Only for desktop/tablet */}
-                <img 
-                    src={AppBgImage2} 
-                    alt="Background" 
+                <img
+                    src={isLandingPage ? AppBgImage2 : AppDownloadBg}
+                    alt="Background"
                     className="absolute inset-0 w-full h-full object-cover object-center"
                 />
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 w-full relative z-10 flex items-center h-full">
@@ -163,58 +165,58 @@ export const AppDownload = ({ isLandingPage = false }) => {
                                     href="#"
                                     className="bg-black backdrop-blur-sm hover:bg-black/80 flex-1 rounded-xl px-3 sm:px-4 md:px-6 py-2.5 md:py-3 flex items-center space-x-2 md:space-x-3 justify-center cursor-pointer transition-all duration-300 shadow-lg border border-white/10 hover:border-white/20 group"
                                 >
-                                   <svg 
-    className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 flex-shrink-0"
-      version="1.1" 
-      id="Layer_1" 
-      xmlns="http://www.w3.org/2000/svg" 
-      xmlnsXlink="http://www.w3.org/1999/xlink"
-      viewBox="0 0 511.999 511.999" 
-      xmlSpace="preserve"
-    >
-      <g>
-        <path 
-          style={{ fill: "#32BBFF" }} 
-          d="M382.369,175.623C322.891,142.356,227.427,88.937,79.355,6.028
+                                    <svg
+                                        className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 flex-shrink-0"
+                                        version="1.1"
+                                        id="Layer_1"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlnsXlink="http://www.w3.org/1999/xlink"
+                                        viewBox="0 0 511.999 511.999"
+                                        xmlSpace="preserve"
+                                    >
+                                        <g>
+                                            <path
+                                                style={{ fill: "#32BBFF" }}
+                                                d="M382.369,175.623C322.891,142.356,227.427,88.937,79.355,6.028
             C69.372-0.565,57.886-1.429,47.962,1.93l254.05,254.05L382.369,175.623z"
-        />
-        <path 
-          style={{ fill: "#32BBFF" }} 
-          d="M47.962,1.93c-1.86,0.63-3.67,1.39-5.401,2.308C31.602,10.166,23.549,21.573,23.549,36v439.96
+                                            />
+                                            <path
+                                                style={{ fill: "#32BBFF" }}
+                                                d="M47.962,1.93c-1.86,0.63-3.67,1.39-5.401,2.308C31.602,10.166,23.549,21.573,23.549,36v439.96
             c0,14.427,8.052,25.834,19.012,31.761c1.728,0.917,3.537,1.68,5.395,2.314L302.012,255.98L47.962,1.93z"
-        />
-        <path 
-          style={{ fill: "#32BBFF" }} 
-          d="M302.012,255.98L47.956,510.035c9.927,3.384,21.413,2.586,31.399-4.103
+                                            />
+                                            <path
+                                                style={{ fill: "#32BBFF" }}
+                                                d="M302.012,255.98L47.956,510.035c9.927,3.384,21.413,2.586,31.399-4.103
             c143.598-80.41,237.986-133.196,298.152-166.746c1.675-0.941,3.316-1.861,4.938-2.772L302.012,255.98z"
-        />
-      </g>
-      <path 
-        style={{ fill: "#2C9FD9" }} 
-        d="M23.549,255.98v219.98c0,14.427,8.052,25.834,19.012,31.761c1.728,0.917,3.537,1.68,5.395,2.314
+                                            />
+                                        </g>
+                                        <path
+                                            style={{ fill: "#2C9FD9" }}
+                                            d="M23.549,255.98v219.98c0,14.427,8.052,25.834,19.012,31.761c1.728,0.917,3.537,1.68,5.395,2.314
           L302.012,255.98H23.549z"
-      />
-      <path 
-        style={{ fill: "#29CC5E" }} 
-        d="M79.355,6.028C67.5-1.8,53.52-1.577,42.561,4.239l255.595,255.596l84.212-84.212
+                                        />
+                                        <path
+                                            style={{ fill: "#29CC5E" }}
+                                            d="M79.355,6.028C67.5-1.8,53.52-1.577,42.561,4.239l255.595,255.596l84.212-84.212
           C322.891,142.356,227.427,88.937,79.355,6.028z"
-      />
-      <path 
-        style={{ fill: "#D93F21" }} 
-        d="M298.158,252.126L42.561,507.721c10.96,5.815,24.939,6.151,36.794-1.789
+                                        />
+                                        <path
+                                            style={{ fill: "#D93F21" }}
+                                            d="M298.158,252.126L42.561,507.721c10.96,5.815,24.939,6.151,36.794-1.789
           c143.598-80.41,237.986-133.196,298.152-166.746c1.675-0.941,3.316-1.861,4.938-2.772L298.158,252.126z"
-      />
-      <path 
-        style={{ fill: "#FFD500" }} 
-        d="M488.45,255.98c0-12.19-6.151-24.492-18.342-31.314c0,0-22.799-12.721-92.682-51.809l-83.123,83.123
+                                        />
+                                        <path
+                                            style={{ fill: "#FFD500" }}
+                                            d="M488.45,255.98c0-12.19-6.151-24.492-18.342-31.314c0,0-22.799-12.721-92.682-51.809l-83.123,83.123
           l83.204,83.205c69.116-38.807,92.6-51.892,92.6-51.892C482.299,280.472,488.45,268.17,488.45,255.98z"
-      />
-      <path 
-        style={{ fill: "#FFAA00" }} 
-        d="M470.108,287.294c12.191-6.822,18.342-19.124,18.342-31.314H294.303l83.204,83.205
+                                        />
+                                        <path
+                                            style={{ fill: "#FFAA00" }}
+                                            d="M470.108,287.294c12.191-6.822,18.342-19.124,18.342-31.314H294.303l83.204,83.205
           C446.624,300.379,470.108,287.294,470.108,287.294z"
-      />
-    </svg>
+                                        />
+                                    </svg>
                                     <div className="text-white min-w-0">
                                         <div className="text-xs opacity-80">GET IT ON</div>
                                         <div className="text-sm sm:text-base md:text-lg font-semibold">Google Play</div>
