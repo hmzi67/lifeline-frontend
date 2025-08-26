@@ -11,8 +11,6 @@ import {
     Edit,
     Eye,
     Trash2,
-    ChevronDown,
-    ChevronUp,
     UserCheck,
     UserX,
     ArrowUpDown
@@ -39,7 +37,6 @@ import {
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
@@ -88,7 +85,7 @@ const UsersComponent: React.FC = () => {
         }
     };
 
-    const getStatusBadge = (user: UserProfile) => {
+    const getStatusBadge = (_selectedUser: UserProfile) => {
         // Mock status - you can implement real logic based on your data
         const isActive = Math.random() > 0.3;
         return isActive ? (
