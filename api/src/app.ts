@@ -2,12 +2,11 @@ import express from 'express';
 import 'express-async-errors';
 import session from 'express-session';
 import passport from './config/passport.js';
-import cors from 'cors';
 import {
   errorHandler,
   requestLogger,
   rateLimiter,
-  // cors,
+  cors,
   helmet,
   compression,
   notFound,
@@ -32,30 +31,13 @@ import meditationRoutes from './routes/meditationRoutes.js';
 import userDailyRoutes from './routes/userDailyRoutineRoutes.js';
 import appSetttingsRoutes from './routes/appSettingRoutes.js';
 
-const corsOptions = {
-  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-    const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [
-      'http://localhost:5173',
-      'https://www.makelifeline.com',
-    ];
-
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  optionsSuccessStatus: 200,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
-};
-
 const app = express();
-app.use(cors(corsOptions));
+
+app.use(cors);
 
 // Security middlewares (should be first)
 app.use(helmet);
+
 // Request processing middlewares
 app.use(compression);
 app.use(express.json({ limit: '10mb' }));

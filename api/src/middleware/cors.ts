@@ -2,7 +2,7 @@ import cors from 'cors';
 
 const corsOptions = {
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-    const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [
+    const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [
       'http://localhost:5173',
       'https://www.makelifeline.com',
     ];
