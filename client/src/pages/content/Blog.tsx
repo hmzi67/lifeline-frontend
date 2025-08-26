@@ -103,7 +103,7 @@ export const Blog = () => {
 
                         {/* Load More Button */}
                         <div className="text-center">
-                            <button className="bg-primary text-white px-8 py-3 rounded-full hover:bg-primary-600 transition-colors duration-200 font-medium">
+                            <button className="bg-primary text-white px-8 py-3 rounded hover:bg-primary-600 transition-colors duration-200 font-medium">
                                 Explore more
                             </button>
                         </div>

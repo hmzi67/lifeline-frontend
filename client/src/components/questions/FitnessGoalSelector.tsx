@@ -21,10 +21,10 @@ interface FitnessGoalSelectorProps {
 }
 
 const fitnessGoals: FitnessGoal[] = [
-  { id: "lose-weight", label: "Lose weight", image: image },
+  { id: "lose-weight", label: "Lose Weight", image: image },
   { id: "gain-weight", label: "Gain Weight", image: image1 },
   { id: "build-muscle", label: "Build Muscle", image: image2 },
-  { id: "modify-diet", label: "Modify your Diet", image: image3 },
+  { id: "modify-diet", label: "Improve Your Diet", image: image3 },
   { id: "manage-stress", label: "Manage Stress", image: image4 },
   { id: "intermittent-fasting", label: "Intermittent Fasting", image: image5 },
 ];

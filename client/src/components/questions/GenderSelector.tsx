@@ -121,11 +121,10 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({ onGenderSelect, onConti
                 {/* Footer */}
                 <div className="text-center text-xs sm:text-base text-gray-500 space-y-2 mb-6">
                     <p>
-                        By selecting your gender and continuing you agree to our{' '}
+                        By selecting your gender and continuing, you agree to our Terms of Service and Privacy Policy. <br /> Please review them before proceeding.
                         <a href="#" className="text-primary-500 hover:text-primary-600 underline">Terms of Service</a> |{' '}
                         <a href="#" className="text-primary-500 hover:text-primary-600 underline">Privacy Policy</a>
                     </p>
-                    <p>Please review before continuing</p>
                 </div>
             </div>
         </div>

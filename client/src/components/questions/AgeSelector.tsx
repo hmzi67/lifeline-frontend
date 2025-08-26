@@ -309,7 +309,7 @@ const AgeDateSelector: React.FC<AgeDateSelectorProps> = ({ onAgeSelect, onSelect
                 </h1>
 
                 <p className="text-gray-500 text-base mb-8">
-                    Age help us to understand your metabolism
+                 Age helps us understand your metabolism
                 </p>
 
                 {/* Age Display Circle */}
@@ -344,7 +344,7 @@ const AgeDateSelector: React.FC<AgeDateSelectorProps> = ({ onAgeSelect, onSelect
                 </div>
 
                 <p className="text-red-500 text-sm mb-8">
-                    *At this time our application allows age between 18 to 75 years
+                    *Currently, only users between 18 and 75 years old can use the app
                 </p>
 
                 {/* Continue Button */}

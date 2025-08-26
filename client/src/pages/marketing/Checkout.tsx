@@ -239,7 +239,7 @@ const Checkout: React.FC = () => {
 
                         {calculations.discountAmount > 0 && (
                             <div className="mt-6 text-primary-500 font-medium">
-                                Congratulations! you've got free delivery
+                                Congratulations! You've got free delivery.
                             </div>
                         )}
                     </div>
@@ -309,7 +309,7 @@ const Checkout: React.FC = () => {
 
                         {/* Payment Method Selection */}
                         <div className="mb-6">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Select Payment Mode</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Select Payment Method</h3>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div
@@ -360,8 +360,7 @@ const Checkout: React.FC = () => {
                                     className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 mt-1"
                                 />
                                 <span className="text-sm text-gray-600">
-                  I agree to terms and conditions lorem dolor amenity ipsum is a dummy data simply used for type
-                  writhing and type setting of text.
+                 By proceeding, I confirm that I have read and agree to the Terms & Conditions and Privacy Policy.
                 </span>
                             </label>
                         </div>
@@ -378,8 +377,8 @@ const Checkout: React.FC = () => {
                             Checkout
                         </button>
 
-                        <p className="text-center text-sm text-gray-500 mt-3">
-                            This will take you to third party payment gateway
+                        <p className="text-center text-sm text-gray-500 mt-3 italic">
+                            You’ll be redirected to a secure third-party payment gateway.
                         </p>
                     </div>
                 </div>

@@ -15,28 +15,24 @@ export const FAQSection: React.FC = () => {
   const faqItems: FAQItem[] = [
     {
       id: 1,
-      question: "What is the main purpose to design lifeline?",
-      answer: "The LifeLine app is designed to support you in managing anxiety through features like mood tracking, medication reminders, meditation with soothing sounds, food scanning, sleep tracking. It aims to provide tools and insights to help you better understand and manage your anxiety."
+      question: "How can LifeLine help me?",
+      answer: "The app has personalized diet plans, effective workout routines, guided meditations and progress tracking. Everything is designed to make healthy living easier for you."
     },
     {
       id: 2,
-      question: "How do the medication reminders work?",
-      answer: "The medication reminders feature allows you to set custom schedules for your medications. You can configure multiple reminders throughout the day, set specific dosages, and receive push notifications to ensure you never miss a dose. The app also tracks your medication adherence over time."
+      question: "Does LifeLine sync with other apps or devices?",
+      answer: "Yes, LifeLine can sync with other health apps so all your health data stays in one place."
     },
     {
       id: 3,
-      question: "How does the CBT feature benefit me?",
-      answer: "The Cognitive Behavioral Therapy (CBT) feature provides guided exercises and techniques to help you identify and challenge negative thought patterns. It includes mood tracking, thought records, behavioral activation exercises, and personalized coping strategies to support your mental health journey."
+      question: "Do I need to follow a strict diet or workout plan?",
+      answer: "Not at all. LifeLine adapts to your preferences and routine, making healthy living simple and flexible not restrictive."
     },
+   
     {
       id: 4,
-      question: "What meditation features does the app offer?",
-      answer: "The app offers a comprehensive meditation library with guided sessions for anxiety, stress relief, and relaxation. Features include soothing background sounds, customizable session lengths, breathing exercises, mindfulness practices, and progress tracking to help you build a consistent meditation habit."
-    },
-    {
-      id: 5,
-      question: "What features we offer?",
-      answer: "The app offers a comprehensive meditation library with guided sessions for anxiety, stress relief, and relaxation. Features include soothing background sounds, customizable session lengths, breathing exercises, mindfulness practices, and progress tracking to help you build a consistent meditation habit."
+      question: "Is my personal data safe with LifeLine?",
+      answer: "Absolutely. Your information is encrypted and kept private. We never share your data with third parties."
     }
   ];
 

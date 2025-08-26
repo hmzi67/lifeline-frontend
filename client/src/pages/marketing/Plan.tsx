@@ -72,7 +72,7 @@ export default function Plan() {
                 Select Payment Method
               </h1>
               <p className="text-lg text-gray-600">
-                LifeLine will help you in this fitness journey with science based approach this
+                LifeLine will support you on your fitness journey with a science-based approach.
               </p>
             </div>
             <div className="space-y-6">

@@ -59,7 +59,7 @@ const Pricing: React.FC = () => {
               Choose the Payment Plan
             </h1>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              LifeLine will help you in this fitness journey with science based approach this
+             LifeLine will support you on your fitness journey with a science-based approach.
             </p>
           </div>
 

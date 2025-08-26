@@ -124,7 +124,7 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAller
       <div className="max-w-md mx-auto">
         {/* Header */}
         <h1 className="text-3xl font-bold text-gray-900 text-center mb-8">
-          Do you have any allergen food?
+         Do you have any food allergies?
         </h1>
 
         {/* Allergen Options */}

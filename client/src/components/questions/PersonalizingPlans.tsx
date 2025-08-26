@@ -48,7 +48,7 @@ const PersonalizingPlans: React.FC<PersonalizePlansActions> = ({ onContinue }) =
             </div>
 
             <p className="text-sm text-gray-600 mb-6 text-center">
-                This will just take a moment. Get ready to transform your fitness journey!
+                This will take just a moment. Get ready to transform your fitness journey!
             </p>
         </div>
     );
