@@ -71,7 +71,7 @@ export const MeditationSection: React.FC = () => {
                            
                         </h1>
                         {/* CTA Button */}
-                        <Link to="./signup">
+                        <Link to="/signup">
                             <Button
                                 size="lg"
                                 className="bg-white hover:bg-gray-100 text-gray-900 font-semibold px-6 py-4 md:px-10 md:py-6 text-base md:text-lg rounded-full transition-all duration-300 transform hover:scale-105"

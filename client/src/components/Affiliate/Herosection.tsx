@@ -91,7 +91,7 @@ export const Herosection: React.FC = () => {
                 Cultivate a healthy, thriving, and unstoppable workforce with BetterMe's health transformation ecosystem
               </p>
               <div className="flex gap-4">
-                <Link to='./signup'>
+                <Link to='/signup'>
                   <Button
                     size="lg"
                     className="bg-primary hover:bg-primary-600 text-white font-semibold px-6 py-4 lg:px-8 lg:py-6 text-base lg:text-lg transition-all duration-300 transform hover:scale-105"

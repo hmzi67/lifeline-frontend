@@ -128,7 +128,7 @@ export const SleepSection: React.FC = () => {
                         </div>
                         {/* Buttons */}
                         <div className="flex gap-2 sm:gap-4 mb-6 sm:mb-6 lg:mb-0">
-                            <Link to="./signup">
+                            <Link to="/signup">
                                 <button className="px-5 py-1 sm:px-7 sm:py-2 lg:px-8 lg:py-3 bg-primary hover:bg-primary-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base lg:text-lg">
                                     Try Now
                                 </button>

@@ -47,7 +47,7 @@ export const ProgressSection: React.FC = () => {
                             </ul>
 
                             <div className="mt-10 flex items-center gap-6">
-                                <Link to="./signup">
+                                <Link to="/signup">
                                     <Button className="bg-teal-400 hover:bg-primary-500 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition-all duration-300">
                                         Buy Now
                                     </Button>

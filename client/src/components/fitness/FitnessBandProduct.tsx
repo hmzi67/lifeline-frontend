@@ -155,8 +155,8 @@ export const FitnessBandProduct = () => {
             </div>
 
             {/* Buy Now */}
-            <Link to='./signup'>
-              <button className="w-[80%] justify-start sm:justify-center bg-gradient-to-r bg-primary hover:bg-primary-600 text-white font-semibold py-3 md:py-4 lg:py-3 px-8 md:px-12 lg:px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm md:text-base lg:text-sm">
+            <Link to='/signup'>
+              <button className="w-[80%] mt-6 justify-start sm:justify-center bg-gradient-to-r bg-primary hover:bg-primary-600 text-white font-semibold py-3 md:py-4 lg:py-3 px-8 md:px-12 lg:px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm md:text-base lg:text-sm">
                 Buy Now
               </button>
             </Link>

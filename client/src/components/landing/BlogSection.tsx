@@ -110,7 +110,7 @@ export const BlogSection: React.FC = () => {
 
                 {/* Read More Button */}
                 <div className="flex justify-end lg:justify-end">
-                    <Link to="./blog">
+                    <Link to="/blog">
                         <Button
                             size="lg"
                             variant="outline"

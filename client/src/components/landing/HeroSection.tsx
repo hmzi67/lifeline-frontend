@@ -65,7 +65,7 @@ export const HeroSection: React.FC = () => {
               aerobic physical activity each week or vigorous-intensity aerobic
             </p>
             <div className="animate-bounce-subtle">
-              <Link to="./signup">
+              <Link to="/signup">
                 <Button
                   size="lg"
                   className="bg-primary hover:bg-primary-600 text-white font-semibold px-4 py-2 md:px-8 md:py-4 text-base md:text-lg rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
