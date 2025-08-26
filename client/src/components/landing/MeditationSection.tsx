@@ -5,6 +5,7 @@ import { PlayIcon } from 'lucide-react';
 import meditationImage1 from "@/assets/images/landing/meditation-1.webp";
 import meditationImage2 from "@/assets/images/landing/meditation-2.webp";
 import meditationImage3 from "@/assets/images/landing/meditation-3.webp";
+import { Link } from 'react-router-dom';
 
 export const MeditationSection: React.FC = () => {
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -70,12 +71,15 @@ export const MeditationSection: React.FC = () => {
                            
                         </h1>
                         {/* CTA Button */}
-                        <Button
-                            size="lg"
-                            className="bg-white hover:bg-gray-100 text-gray-900 font-semibold px-6 py-4 md:px-10 md:py-6 text-base md:text-lg rounded-full transition-all duration-300 transform hover:scale-105"
-                        >
-                            Start doing today
-                        </Button>
+                        <Link to="./signup">
+                            <Button
+                                size="lg"
+                                className="bg-white hover:bg-gray-100 text-gray-900 font-semibold px-6 py-4 md:px-10 md:py-6 text-base md:text-lg rounded-full transition-all duration-300 transform hover:scale-105"
+                            >
+                                Start doing today
+                            </Button>
+                        </Link>
+                        
                     </div>
                 </div>
             </div>

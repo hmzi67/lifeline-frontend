@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Check, Download, X, Play } from 'lucide-react';
 import sleepimg from '@/assets/images/landing/sleeping img.png';
+import { Link } from 'react-router-dom';
 
 export const SleepSection: React.FC = () => {
     const [isVideoOpen, setIsVideoOpen] = useState(false);
@@ -127,9 +128,11 @@ export const SleepSection: React.FC = () => {
                         </div>
                         {/* Buttons */}
                         <div className="flex gap-2 sm:gap-4 mb-6 sm:mb-6 lg:mb-0">
-                            <button className="px-5 py-1 sm:px-7 sm:py-2 lg:px-8 lg:py-3 bg-primary hover:bg-primary-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base lg:text-lg">
-                                Try Now
-                            </button>
+                            <Link to="./signup">
+                                <button className="px-5 py-1 sm:px-7 sm:py-2 lg:px-8 lg:py-3 bg-primary hover:bg-primary-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base lg:text-lg">
+                                    Try Now
+                                </button>
+                            </Link>
                             <button className="px-5 py-1 sm:px-7 sm:py-2 lg:px-8 lg:py-3 bg-white/10 hover:bg-white/20 font-semibold rounded-full transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-white/20 flex items-center justify-center gap-1 sm:gap-2 text-sm sm:text-base lg:text-lg">
                                 <Download className="w-3 h-3 sm:w-4 sm:h-4" />
                                 Contact us

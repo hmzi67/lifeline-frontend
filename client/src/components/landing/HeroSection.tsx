@@ -3,6 +3,7 @@ import { Button } from '../ui/button';
 import hero1 from "@/assets/images/landing/hero-1.webp";
 import hero2 from "@/assets/images/landing/hero-2.webp";
 import hero3 from "@/assets/images/landing/hero-3.webp";
+import { Link } from 'react-router-dom';
 
 export const HeroSection: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -21,59 +22,64 @@ export const HeroSection: React.FC = () => {
   }, [nextImage]);
 
   return (
-      <section className="relative min-h-[50vh] lg:min-h-screen overflow-hidden">
-        {/* Background Images Container */}
-        <div className="absolute inset-0 w-full h-full">
-          <div className="w-full h-full aspect-[1/1] lg:aspect-[16/9] relative">
-            {/* Single background image with smooth transition */}
-            <div
-                className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out"
-                style={{
-                  backgroundImage: `url(${images[currentImageIndex]})`
-                }}
-            />
+    <section className="relative min-h-[50vh] lg:min-h-screen overflow-hidden">
+      {/* Background Images Container */}
+      <div className="absolute inset-0 w-full h-full">
+        <div className="w-full h-full aspect-[1/1] lg:aspect-[16/9] relative">
+          {/* Single background image with smooth transition */}
+          <div
+            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out"
+            style={{
+              backgroundImage: `url(${images[currentImageIndex]})`
+            }}
+          />
 
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-black/40" />
-          </div>
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black/40" />
         </div>
+      </div>
 
-        {/* Decorative elements with improved positioning */}
-        <div className="absolute top-2 left-2 text-white/30 text-lg font-light md:text-3xl md:top-10 md:left-10 select-none pointer-events-none">
-          +
-        </div>
-        <div className="absolute top-1/2 right-2 text-white/20 text-xl font-light md:text-4xl md:right-20 select-none pointer-events-none animate-pulse">
-          +
-        </div>
-        <div className="absolute bottom-10 right-4 text-white/25 text-lg font-light md:text-3xl md:bottom-20 md:right-1/3 select-none pointer-events-none">
-          +
-        </div>
+      {/* Decorative elements with improved positioning */}
+      <div className="absolute top-2 left-2 text-white/30 text-lg font-light md:text-3xl md:top-10 md:left-10 select-none pointer-events-none">
+        +
+      </div>
+      <div className="absolute top-1/2 right-2 text-white/20 text-xl font-light md:text-4xl md:right-20 select-none pointer-events-none animate-pulse">
+        +
+      </div>
+      <div className="absolute bottom-10 right-4 text-white/25 text-lg font-light md:text-3xl md:bottom-20 md:right-1/3 select-none pointer-events-none">
+        +
+      </div>
 
-        {/* Main Content */}
-        <div className="relative z-10 min-h-[50vh] lg:min-h-screen flex items-center">
-          <div className="container mx-auto px-4 md:px-6 lg:px-12">
-            <div className="max-w-2xl animate-fade-in">
-              <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-bold leading-tight text-white mb-4 md:mb-8 drop-shadow-lg">
-                YOUR FITNESS{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 animate-gradient">
+      {/* Main Content */}
+      <div className="relative z-10 min-h-[50vh] lg:min-h-screen flex items-center">
+        <div className="container mx-auto px-4 md:px-6 lg:px-12">
+          <div className="max-w-2xl animate-fade-in">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-bold leading-tight text-white mb-4 md:mb-8 drop-shadow-lg">
+              YOUR FITNESS{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 animate-gradient">
                 PARTNER!
               </span>
-              </h1>
-              <p className="text-sm md:text-lg lg:text-xl text-white/90 leading-relaxed mb-6 md:mb-12 max-w-xl drop-shadow-md">
-                Their guidelines recommend 150 minutes of moderate-intensity
-                aerobic physical activity each week or vigorous-intensity aerobic
-              </p>
-              <div className="animate-bounce-subtle">
+            </h1>
+            <p className="text-sm md:text-lg lg:text-xl text-white/90 leading-relaxed mb-6 md:mb-12 max-w-xl drop-shadow-md">
+              Their guidelines recommend 150 minutes of moderate-intensity
+              aerobic physical activity each week or vigorous-intensity aerobic
+            </p>
+            <div className="animate-bounce-subtle">
+              <Link to="./signup">
                 <Button
-                    size="lg"
-                    className="bg-primary hover:bg-primary-600 text-white font-semibold px-4 py-2 md:px-8 md:py-4 text-base md:text-lg rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
+                  size="lg"
+                  className="bg-primary hover:bg-primary-600 text-white font-semibold px-4 py-2 md:px-8 md:py-4 text-base md:text-lg rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
                 >
                   Get Started
                 </Button>
-              </div>
+
+              </Link>
+
+
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
   );
 };

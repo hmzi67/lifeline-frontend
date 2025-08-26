@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '../ui/button';
 import { ArrowRightIcon, Circle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // Done For responsive design and better user experience
 
@@ -109,14 +110,17 @@ export const BlogSection: React.FC = () => {
 
                 {/* Read More Button */}
                 <div className="flex justify-end lg:justify-end">
-                    <Button
-                        size="lg"
-                        variant="outline"
-                        className="border-2 border-primary text-primary hover:bg-teal-400 hover:text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-full transition-all duration-300 flex items-center gap-2"
-                    >
-                        Read More
-                        <ArrowRightIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </Button>
+                    <Link to="./blog">
+                        <Button
+                            size="lg"
+                            variant="outline"
+                            className="border-2 border-primary text-primary hover:bg-teal-400 hover:text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-full transition-all duration-300 flex items-center gap-2"
+                        >
+                            Read More
+                            <ArrowRightIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                        </Button>
+                    </Link>
+                        
                 </div>
             </div>
         </section>

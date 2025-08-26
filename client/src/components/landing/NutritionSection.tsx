@@ -8,6 +8,7 @@ import React, {
 import { Button } from '../ui/button';
 import { Check } from 'lucide-react';
 import nutritionImage from "@/assets/images/landing/nutrition-1.webp";
+import { Link } from "react-router-dom";
 
 // Optimized count-up hook with custom ref
 const useCountUp = (end: number, duration: number = 2000, elementRef: RefObject<HTMLElement | null>) => {
@@ -138,12 +139,15 @@ export const NutritionSection: React.FC = () => {
           </div>
 
           <div className="flex gap-3 justify-start">
-            <Button
-              size="sm"
-              className="bg-primary hover:bg-primary-600 text-white font-semibold rounded-full px-6 py-2 text-sm transition-all duration-300 transform hover:scale-105"
-            >
-              Try Now
-            </Button>
+            <Link to="./signup">
+              <Button
+                size="sm"
+                className="bg-primary hover:bg-primary-600 text-white font-semibold rounded-full px-6 py-2 text-sm transition-all duration-300 transform hover:scale-105"
+              >
+                Try Now
+              </Button>
+            </Link>
+            
             <Button
               size="sm"
               variant="ghost"

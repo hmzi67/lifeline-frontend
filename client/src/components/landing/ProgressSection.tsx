@@ -2,6 +2,7 @@ import React from 'react';
 import { Check } from "lucide-react";
 import progressTrackerImage from "../../assets/images/landing/trackerSectionBoth.png"
 import { Button } from '../ui/button';
+import { Link } from 'react-router-dom';
 
 // Fixed mobile layout to match the design image
 
@@ -46,9 +47,11 @@ export const ProgressSection: React.FC = () => {
                             </ul>
 
                             <div className="mt-10 flex items-center gap-6">
-                                <Button className="bg-teal-400 hover:bg-primary-500 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition-all duration-300">
-                                    Buy Now
-                                </Button>
+                                <Link to="./signup">
+                                    <Button className="bg-teal-400 hover:bg-primary-500 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition-all duration-300">
+                                        Buy Now
+                                    </Button>
+                                </Link>
                                 <button className="text-lg font-semibold text-gray-700 hover:text-primary-400 transition-colors duration-300">
                                     Download App
                                 </button>

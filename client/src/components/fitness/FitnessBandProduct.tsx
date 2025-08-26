@@ -6,6 +6,7 @@ import Band1 from "../../assets/images/fitness/band-1.webp";
 import Band2 from "../../assets/images/fitness/band-2.webp";
 import Band3 from "../../assets/images/fitness/band-3.webp";
 import Band4 from "../../assets/images/fitness/band-4.webp";
+import { Link } from 'react-router-dom';
 
 interface BandVariant {
   id: string;
@@ -70,7 +71,7 @@ export const FitnessBandProduct = () => {
             Transform Your <span className="text-primary">Body</span>
           </div>
           <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-md">
-          Stay on top of your health by tracking your steps, heart rate, and sleep. Improving every day!
+            Stay on top of your health by tracking your steps, heart rate, and sleep. Improving every day!
           </p>
         </div>
         <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-6 items-center">
@@ -82,7 +83,7 @@ export const FitnessBandProduct = () => {
                 Transform Your <span className="text-primary">Body</span>
               </h1>
               <p className="text-gray-600 text-base md:text-lg lg:text-xl leading-relaxed max-w-md py-2">
-            Stay on top of your health by tracking your steps, heart rate, and sleep. Improving every day!
+                Stay on top of your health by tracking your steps, heart rate, and sleep. Improving every day!
               </p>
             </div>
 
@@ -154,9 +155,11 @@ export const FitnessBandProduct = () => {
             </div>
 
             {/* Buy Now */}
-            <button className="w-[80%] justify-start sm:justify-center bg-gradient-to-r bg-primary hover:bg-primary-600 text-white font-semibold py-3 md:py-4 lg:py-3 px-8 md:px-12 lg:px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm md:text-base lg:text-sm">
-              Buy Now
-            </button>
+            <Link to='./signup'>
+              <button className="w-[80%] justify-start sm:justify-center bg-gradient-to-r bg-primary hover:bg-primary-600 text-white font-semibold py-3 md:py-4 lg:py-3 px-8 md:px-12 lg:px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm md:text-base lg:text-sm">
+                Buy Now
+              </button>
+            </Link>
           </div>
 
           {/* Right Image Section */}
