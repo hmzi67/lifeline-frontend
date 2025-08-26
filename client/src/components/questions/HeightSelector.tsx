@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import GoNext from "../common/GoNext";
+import api from '../../lib/axios'; // Adjust the path as needed
 
 interface HeightSelectorProps {
   onContinue?: (height: number, unit: "cm" | "ft") => void;
@@ -16,11 +17,61 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
   const [railPosition, setRailPosition] = useState(145);
   const [isDraggingRail, setIsDraggingRail] = useState(false);
   const [lastTouchX, setLastTouchX] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
+  // Fetch height data when component mounts
+  useEffect(() => {
+    const fetchHeightData = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get('/questionnaire/height-data');
+        
+        if (response.data.success && response.data.data?.heightData) {
+          const { height, heightUnit } = response.data.data.heightData;
+          
+          if (height !== null && heightUnit) {
+            if (heightUnit === 'cm') {
+              setUnit('cm');
+              setHeightCm(Math.round(height));
+              setRailPosition(Math.round(height) - 10); // Adjust for visible range
+            } else if (heightUnit === 'ft') {
+              setUnit('ft');
+              const totalInches = Math.round(height);
+              setFeet(Math.floor(totalInches / 12));
+              setInches(totalInches % 12);
+            }
+          }
+        }
+      } catch (err: any) {
+        console.error('Error fetching height data:', err);
+        setError('Failed to load height data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHeightData();
+  }, []);
+
+  // Save height data when values change
+  const saveHeightData = async (height: number, unit: 'cm' | 'ft') => {
+    try {     
+      await api.put('/questionnaire/height-data', {
+        height: parseFloat(height.toFixed(2)),
+        heightUnit: unit
+      });
+      setError(null); // Clear any previous errors
+    } catch (err: any) {
+      console.error('Error saving height data:', err);
+      setError('Failed to save height data');
+    }
+  };
+
   const ranges = {
-    cm: { min: 1, max: 999, step: 1 },
-    ft: { min: 48, max: 96, step: 1 },
+    cm: { min: 100, max: 250, step: 1 }, // Adjusted min/max for realistic values
+    ft: { min: 48, max: 96, step: 1 },   // 4ft to 8ft
   };
 
   const currentRange = ranges[unit];
@@ -81,10 +132,24 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
 
     const handleMouseUp = () => {
       setIsDraggingRail(false);
+      // Save data when user finishes dragging
+      if (unit === 'cm') {
+        saveHeightData(heightCm, unit);
+      } else {
+        const totalInches = feet * 12 + inches;
+        saveHeightData(totalInches, unit);
+      }
     };
 
     const handleTouchEnd = () => {
       setIsDraggingRail(false);
+      // Save data when user finishes touch interaction
+      if (unit === 'cm') {
+        saveHeightData(heightCm, unit);
+      } else {
+        const totalInches = feet * 12 + inches;
+        saveHeightData(totalInches, unit);
+      }
     };
 
     if (isDraggingRail) {
@@ -102,7 +167,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
       document.removeEventListener("touchmove", handleTouchMove);
       document.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [isDraggingRail, railPosition, visibleRange, currentRange, lastTouchX]);
+  }, [isDraggingRail, railPosition, visibleRange, currentRange, lastTouchX, unit, heightCm, feet, inches]);
 
   const generateTicks = () => {
     const ticks = [];
@@ -138,6 +203,15 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
 
   const handleUnitChange = (newUnit: "cm" | "ft") => {
     setUnit(newUnit);
+    // Save when unit changes
+    setTimeout(() => {
+      if (newUnit === 'cm') {
+        saveHeightData(heightCm, newUnit);
+      } else {
+        const totalInches = feet * 12 + inches;
+        saveHeightData(totalInches, newUnit);
+      }
+    }, 0);
   };
 
   // Handle feet input change
@@ -166,14 +240,61 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
     }
   };
 
-  const handleContinue = () => {
-    if (unit === "cm") {
-      onContinue?.(heightCm, unit);
-    } else {
+  // Save data when feet or inches change
+  useEffect(() => {
+    if (unit === 'ft') {
       const totalInches = feet * 12 + inches;
-      onContinue?.(totalInches, unit);
+      // Only save if we have valid values
+      if (feet > 0 || inches > 0) {
+        saveHeightData(totalInches, unit);
+      }
     }
+  }, [feet, inches, unit]);
+
+  const handleContinue = () => {
+    let heightValue: number;
+    let heightUnit: "cm" | "ft" = unit;
+    
+    if (unit === "cm") {
+      heightValue = heightCm;
+    } else {
+      heightValue = feet * 12 + inches;
+    }
+    
+    // Save before continuing
+    saveHeightData(heightValue, unit);
+    onContinue?.(heightValue, heightUnit);
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-500 mb-4"></div>
+          <p className="text-gray-600">Loading height data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <div className="text-center bg-red-50 p-6 rounded-lg max-w-md">
+          <div className="text-red-500 text-xl mb-2">Error</div>
+          <p className="text-gray-700 mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-center py-24 sm:p-6 ">
@@ -291,18 +412,17 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
                 <input
                   type="number"
                   className="remove-spinner text-center bg-transparent text-4xl sm:text-6xl lg:text-7xl font-bold text-primary-500 w-24 sm:w-32 focus:outline-none focus:ring-0 appearance-none"
-                  min={100}
-                  max={999}
-                  maxLength={3}
-                  minLength={1}
+                  min={currentRange.min}
+                  max={currentRange.max}
                   value={heightCm}
                   onChange={(e) => {
                     const val = parseInt(e.target.value, 10);
                     if (!isNaN(val)) {
-                      setHeightCm(
-                        Math.max(ranges.cm.min, Math.min(ranges.cm.max, val))
-                      );
-                      setRailPosition(val - visibleRange / 2);
+                      const clampedVal = Math.max(currentRange.min, Math.min(currentRange.max, val));
+                      setHeightCm(clampedVal);
+                      setRailPosition(clampedVal - visibleRange / 2);
+                      // Save when user types
+                      saveHeightData(clampedVal, unit);
                     }
                   }}
                 />

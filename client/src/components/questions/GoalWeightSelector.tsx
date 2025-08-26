@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import GoNext from "@/components/common/GoNext.tsx";
+import api from '../../lib/axios'; // Adjust path as needed
 
 interface WeightSelectorProps {
   onContinue?: (weight: number, unit: "kg" | "lbs") => void;
@@ -19,6 +20,8 @@ export default function WeightSelector({
   const [railPosition, setRailPosition] = useState(38);
   const [isDraggingRail, setIsDraggingRail] = useState(false);
   const [lastTouchX, setLastTouchX] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -29,14 +32,68 @@ export default function WeightSelector({
   };
 
   const currentRange = ranges[unit];
-  const visibleRange = 20; // Show 20 units at a time
+  const visibleRange = 20;
 
-  // Keep input synced when weight changes externally (rail, unit change)
+  // Fetch weight data on component mount
+  useEffect(() => {
+    const fetchWeightData = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get('/questionnaire/weight-data');
+        
+        if (response.data.success && response.data.data?.weightData) {
+          const { weight, weightUnit } = response.data.data.weightData;
+          
+          if (weight !== null && weightUnit) {
+            const numericWeight = Math.round(weight);
+            setWeight(numericWeight);
+            setWeightInput(String(numericWeight));
+            
+            if (weightUnit === 'lbs') {
+              setUnit('lbs');
+            }
+            
+            // Set rail position
+            const newRailPosition = numericWeight - visibleRange / 2;
+            const range = ranges[weightUnit as "kg" | "lbs"] || ranges.kg;
+            const clampedPosition = Math.max(
+              range.min,
+              Math.min(range.max - visibleRange, newRailPosition)
+            );
+            setRailPosition(clampedPosition);
+          }
+        }
+      } catch (err: any) {
+        console.error('Error fetching weight data:', err);
+        setError('Failed to load weight data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWeightData();
+  }, []);
+
+  // Save weight data
+  const saveWeightData = async (weight: number, unit: 'kg' | 'lbs') => {
+    try {
+      await api.put('/questionnaire/weight-data', {
+        weight: parseFloat(weight.toFixed(2)),
+        weightUnit: unit
+      });
+      setError(null);
+    } catch (err: any) {
+      console.error('Error saving weight data:', err);
+      setError('Failed to save weight data');
+    }
+  };
+
+  // Keep input synced when weight changes externally
   useEffect(() => {
     setWeightInput(String(weight));
   }, [weight]);
 
-  // Calculate weight based on rail position (center of slider = selected weight)
+  // Calculate weight based on rail position
   useEffect(() => {
     const centerWeight = railPosition + visibleRange / 2;
     const clampedWeight = Math.max(
@@ -48,7 +105,7 @@ export default function WeightSelector({
 
   // Calculate BMI
   const calculateBMI = (weight: number, unit: "kg" | "lbs") => {
-    const heightInCm = heightUnit === "ft" ? heightValue * 30.48 : heightValue; // fix conversion
+    const heightInCm = heightUnit === "ft" ? heightValue * 30.48 : heightValue;
     const heightInM = heightInCm / 100;
     const weightInKg = unit === "lbs" ? weight * 0.453592 : weight;
     return weightInKg / (heightInM * heightInM);
@@ -101,7 +158,11 @@ export default function WeightSelector({
       e.preventDefault();
     };
 
-    const stopDragging = () => setIsDraggingRail(false);
+    const stopDragging = () => {
+      setIsDraggingRail(false);
+      // Save when user finishes dragging
+      saveWeightData(weight, unit);
+    };
 
     if (isDraggingRail) {
       document.addEventListener("mousemove", handleMouseMove);
@@ -117,7 +178,7 @@ export default function WeightSelector({
       document.removeEventListener("touchmove", handleTouchMove);
       document.removeEventListener("touchend", stopDragging);
     };
-  }, [isDraggingRail, railPosition, visibleRange, currentRange, lastTouchX]);
+  }, [isDraggingRail, railPosition, visibleRange, currentRange, lastTouchX, weight, unit]);
 
   // Generate tick marks
   const generateTicks = () => {
@@ -164,6 +225,7 @@ export default function WeightSelector({
         : Math.round(weight / 2.20462);
     setUnit(newUnit);
     setWeight(convertedWeight);
+    setWeightInput(String(convertedWeight));
     const newRailPosition = convertedWeight - visibleRange / 2;
     const newRange = ranges[newUnit];
     const maxPosition = newRange.max - visibleRange;
@@ -171,7 +233,77 @@ export default function WeightSelector({
     setRailPosition(
       Math.max(minPosition, Math.min(maxPosition, newRailPosition))
     );
+    
+    // Save when unit changes
+    setTimeout(() => {
+      saveWeightData(convertedWeight, newUnit);
+    }, 0);
   };
+
+  // Handle manual input change
+  const handleWeightInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setWeightInput(e.target.value);
+  };
+
+  // Handle input blur (when user finishes typing)
+  const handleWeightInputBlur = () => {
+    const val = Number(weightInput);
+    if (!isNaN(val) && weightInput.trim() !== "") {
+      const clamped = Math.max(
+        currentRange.min,
+        Math.min(currentRange.max, val)
+      );
+      setWeight(clamped);
+      setWeightInput(String(clamped));
+      const newRailPosition = clamped - visibleRange / 2;
+      const maxPosition = currentRange.max - visibleRange;
+      const minPosition = currentRange.min;
+      setRailPosition(
+        Math.max(minPosition, Math.min(maxPosition, newRailPosition))
+      );
+      
+      // Save when user finishes typing
+      saveWeightData(clamped, unit);
+    } else {
+      setWeightInput(String(weight));
+    }
+  };
+
+  // Handle continue button
+  const handleContinue = () => {
+    saveWeightData(weight, unit);
+    onContinue?.(weight, unit);
+  };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-500 mb-4"></div>
+          <p className="text-gray-600">Loading weight data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <div className="text-center bg-red-50 p-6 rounded-lg max-w-md">
+          <div className="text-red-500 text-xl mb-2">Error</div>
+          <p className="text-gray-700 mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-center p-4">
@@ -217,26 +349,8 @@ export default function WeightSelector({
               <input
                 type="text"
                 value={weightInput}
-                onChange={(e) => setWeightInput(e.target.value)}
-                onBlur={() => {
-                  const val = Number(weightInput);
-                  if (!isNaN(val) && weightInput.trim() !== "") {
-                    const clamped = Math.max(
-                      currentRange.min,
-                      Math.min(currentRange.max, val)
-                    );
-                    setWeight(clamped);
-                    setWeightInput(String(clamped));
-                    const newRailPosition = clamped - visibleRange / 2;
-                    const maxPosition = currentRange.max - visibleRange;
-                    const minPosition = currentRange.min;
-                    setRailPosition(
-                      Math.max(minPosition, Math.min(maxPosition, newRailPosition))
-                    );
-                  } else {
-                    setWeightInput(String(weight));
-                  }
-                }}
+                onChange={handleWeightInputChange}
+                onBlur={handleWeightInputBlur}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     (e.target as HTMLInputElement).blur();
@@ -271,7 +385,7 @@ export default function WeightSelector({
           </div>
 
           <div className="flex items-center justify-center gap-5 mt-12">
-            <GoNext onClick={() => onContinue?.(weight, unit)} />
+            <GoNext onClick={handleContinue} />
           </div>
         </div>
       </div>
