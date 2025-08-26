@@ -8,7 +8,7 @@ import {
   removeUserDietPlan,
   removeUserFromDietPlan,
   getUsersByDietPlanId
-} from '../controllers/userDietPlanController';
+} from '../controllers/userDietPlanController.js';
 
 const router = Router();
 

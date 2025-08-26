@@ -7,7 +7,7 @@ import {
   deleteSleepLog,
   getSleepStats,
   getSleepQuality,
-} from '../controllers/sleepLogController';
+} from '../controllers/sleepLogController.js';
 
 const sleepRoutes = Router();
 

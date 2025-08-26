@@ -5,7 +5,7 @@ import {
   createChallenge,
   updateChallenge,
   deleteChallenge,
-} from '../controllers/challengeController';
+} from '../controllers/challengeController.js';
 
 
 const challengeRoute = express.Router();

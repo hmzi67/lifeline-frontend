@@ -15,14 +15,14 @@ import {
 import authRoute from './routes/authRoute.js';
 import { healthCheck } from './config/database.js';
 import userRoute from './routes/userRoutes.js';
-import questionnaireRoutes from './routes/questionnaireRoutes';
-import subscriptionPaymentRoutes from './routes/subscriptionPaymentRoutes';
+import questionnaireRoutes from './routes/questionnaireRoutes.js';
+import subscriptionPaymentRoutes from './routes/subscriptionPaymentRoutes.js';
 import dietPlanRoutes from './routes/dietPlanRoutes.js';
 import userDietPlanRoutes from './routes/userDietPlanRoutes.js';
 import exerciseRoutes from './routes/exerciseRoutes.js';
-import userExerciseRoutes from '@routes/userExerciseRoutes';
+import userExerciseRoutes from './routes/userExerciseRoutes.js';
 import challengeRoutes from './routes/challengeRoutes.js';
-import challengeExerciseRouter from '@routes/challengeExerciseRoutes';
+import challengeExerciseRouter from './routes/challengeExerciseRoutes.js';
 import fastingRoutes from './routes/fastingLogRoutes.js';
 import sleepRoutes from './routes/sleepLogRoutes.js';
 import waterIntakeRoutes from './routes/waterIntakeRoutes.js';

@@ -7,25 +7,25 @@ import {
   getAllUsers,
   getUserStats,
   getUserWithRelations,
-} from '../controllers/userController';
+} from '../controllers/userController.js';
 
 const userRoute = Router();
 
 // Regular user routes
-userRoute.get('/profile',  getCurrentUser);
-userRoute.put('/profile/:id',  updateUser);
+userRoute.get('/profile', getCurrentUser);
+userRoute.put('/profile/:id', updateUser);
 userRoute.delete('/profile/:id', deleteUser);
 
 // Admin-only routes
-userRoute.get('/admin/users',  getAllUsers);
-userRoute.get('/admin/stats',  getUserStats);
-userRoute.get('/admin/users/:id',  getUserWithRelations);
+userRoute.get('/admin/users', getAllUsers);
+userRoute.get('/admin/stats', getUserStats);
+userRoute.get('/admin/users/:id', getUserWithRelations);
 
 // Admin can update any user
-userRoute.put('/admin/users/:id',  updateUser);
+userRoute.put('/admin/users/:id', updateUser);
 
 // Admin can delete any user
-userRoute.delete('/admin/users/:id',  deleteUser);
+userRoute.delete('/admin/users/:id', deleteUser);
 
 export default userRoute;
 

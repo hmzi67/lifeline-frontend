@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { AppSettingController } from '../controllers/appSettingController';
+import { AppSettingController } from '../controllers/appSettingController.js';
 
 const router = Router();
 

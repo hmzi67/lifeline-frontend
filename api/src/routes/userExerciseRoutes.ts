@@ -9,7 +9,7 @@ import {
   removeUserFromExercise,
   getUsersByExerciseId,
   getUserExercisesByPurpose
-} from '../controllers/userExerciseController';
+} from '../controllers/userExerciseController.js';
 
 const router = Router();
 

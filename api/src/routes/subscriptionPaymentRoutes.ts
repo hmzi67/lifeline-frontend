@@ -6,7 +6,7 @@ import {
   updateSubscriptionPayment,
   deleteSubscriptionPayment,
   getPaymentsByUserId
-} from '../controllers/subscriptionPaymentController';
+} from '../controllers/subscriptionPaymentController.js';
 
 const router = Router();
 

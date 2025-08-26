@@ -42,7 +42,7 @@ import {
   updateWeightUnit,
   updateGoalWeight,
   updateMotivationFor,
-} from '../controllers/questionnaireController';
+} from '../controllers/questionnaireController.js';
 
 const router = Router();
 

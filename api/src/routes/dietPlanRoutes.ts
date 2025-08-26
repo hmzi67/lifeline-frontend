@@ -6,7 +6,7 @@ import {
   updateDietPlan,
   deleteDietPlan,
   searchDietPlans
-} from '../controllers/dietPlanController';
+} from '../controllers/dietPlanController.js';
 
 const router = Router();
 

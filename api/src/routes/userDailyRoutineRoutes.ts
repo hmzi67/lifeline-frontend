@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { UserDailyRoutineController } from '../controllers/userDailyRoutineController';
+import { UserDailyRoutineController } from '../controllers/userDailyRoutineController.js';
 
 const router = Router();
 

@@ -7,7 +7,7 @@ import {
   deleteExercise,
   searchExercises,
   getExercisesByPurpose
-} from '../controllers/exerciseController';
+} from '../controllers/exerciseController.js';
 
 const router = Router();
 

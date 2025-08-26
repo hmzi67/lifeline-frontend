@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction, Router } from "express";
-import waterIntakeController from "../controllers/waterIntakeController";
+import waterIntakeController from "../controllers/waterIntakeController.js";
 
 const waterIntakeRoutes: Router = express.Router();
 

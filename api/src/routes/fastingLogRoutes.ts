@@ -6,7 +6,7 @@ import {
   updateFastingLog,
   deleteFastingLog,
   getFastingStats,
-} from '../controllers/fastingLogController';
+} from '../controllers/fastingLogController.js';
 
 const fastingRoutes = Router();
 

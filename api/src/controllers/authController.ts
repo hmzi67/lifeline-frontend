@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import passport from 'passport';
-import { sendEmailVerificationEmail, sendPasswordResetEmail } from '../services/emailService';
+import { sendEmailVerificationEmail, sendPasswordResetEmail } from '../services/emailService.js';
 
 
 // JWT Payload interfaces
