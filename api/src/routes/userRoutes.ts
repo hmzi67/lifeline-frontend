@@ -7,7 +7,7 @@ import {
   getAllUsers,
   getUserStats,
   getUserWithRelations,
-} from '@controllers/userController';
+} from '../controllers/userController';
 
 const userRoute = Router();
 

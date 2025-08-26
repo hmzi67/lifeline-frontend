@@ -6,7 +6,7 @@ import {
   addExerciseToChallenge,
   removeExerciseFromChallenge,
   addMultipleExercisesToChallenge,
-} from '@controllers/challengeExerciseController';
+} from '../controllers/challengeExerciseController';
 
 
 const challengeExerciseRouter = express.Router();

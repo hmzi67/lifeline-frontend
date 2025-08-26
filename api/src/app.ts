@@ -15,14 +15,14 @@ import {
 import authRoute from './routes/authRoute.js';
 import { healthCheck } from './config/database.js';
 import userRoute from './routes/userRoutes.js';
-import questionnaireRoutes from '@routes/questionnaireRoutes';
+import questionnaireRoutes from './routes/questionnaireRoutes';
 import subscriptionPaymentRoutes from './routes/subscriptionPaymentRoutes';
 import dietPlanRoutes from './routes/dietPlanRoutes.js';
 import userDietPlanRoutes from './routes/userDietPlanRoutes.js';
 import exerciseRoutes from './routes/exerciseRoutes.js';
-import userExerciseRoutes from "@routes/userExerciseRoutes";
+import userExerciseRoutes from '@routes/userExerciseRoutes';
 import challengeRoutes from './routes/challengeRoutes.js';
-import challengeExerciseRouter from "@routes/challengeExerciseRoutes";
+import challengeExerciseRouter from '@routes/challengeExerciseRoutes';
 import fastingRoutes from './routes/fastingLogRoutes.js';
 import sleepRoutes from './routes/sleepLogRoutes.js';
 import waterIntakeRoutes from './routes/waterIntakeRoutes.js';
@@ -93,16 +93,16 @@ app.use('/api/user-exercises', userExerciseRoutes);
 
 // Challenge routes
 app.use('/api/challenges', challengeRoutes);
-app.use('/api/challenge-exercises', challengeExerciseRouter);   // exercises for a challenge to user
+app.use('/api/challenge-exercises', challengeExerciseRouter); // exercises for a challenge to user
 
 // fasting routes
 app.use('/api/fasting-logs', fastingRoutes);
 
 // sleeping routes
-app.use('/api/sleep-logs', sleepRoutes)
+app.use('/api/sleep-logs', sleepRoutes);
 
 // Water intake routes
-app.use('/api/water-intake', waterIntakeRoutes)
+app.use('/api/water-intake', waterIntakeRoutes);
 
 // Medication routes
 app.use('/api/medications', medicationRoutes);
@@ -111,10 +111,10 @@ app.use('/api/medications', medicationRoutes);
 app.use('/api/meditations', meditationRoutes);
 
 // app settings routes
-app.use('/api/app-settings', appSetttingsRoutes)
+app.use('/api/app-settings', appSetttingsRoutes);
 
 // user daily routines routes
-app.use('/api/user-daily-routines', userDailyRoutes)
+app.use('/api/user-daily-routines', userDailyRoutes);
 
 // Example protected route
 // app.get('/api/protected', authenticate, (req, res) => {
