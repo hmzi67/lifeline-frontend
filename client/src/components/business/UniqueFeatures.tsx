@@ -9,7 +9,7 @@ const UniqueFeatures: React.FC = () => {
     <section className=" py-8 px-4 max-w-7xl mx-auto">
       {/* Hero Section */}
       <div className="text-center mb-20">
-        <h1 className="text-5xl font-bold text-gray-900 mb-6">
+        <h1 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-6">
           All-in-one <span className="text-primary">Wellness</span> Solution
         </h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">

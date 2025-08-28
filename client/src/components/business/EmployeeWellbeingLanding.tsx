@@ -44,12 +44,12 @@ const EmployeeWellbeingLanding: React.FC = () => {
       <div className="relative z-10 flex-col lg:flex-row items-center justify-between px-8 max-w-7xl mx-auto flex md:hidden ">
         {/* Left Content */}
         <div className="lg:w-1/2 sm:mb-12 mb-0  lg:mb-0 sm:-translate-y-0 -translate-y-16">
-          <h1 className="text-5xl lg:text-5xl font-semibold leading-tight mt-10">
+          <h1 className="text-4xl lg:text-5xl font-semibold leading-tight mt-10 text-gray-900">
             YOUR{' '}
             <span className="text-primary">FITNESS</span>
             <br/>
           </h1>
-          <h1 className="text-5xl lg:text-9xl leading-tight text mb-6">
+          <h1 className="text-4xl lg:text-9xl leading-tight font-semibold text mb-6 text-gray-900">
             PARTNER
           </h1>
           <p className="text-base sm:text-xl  mb-8 max-w-lg leading-relaxed">
@@ -57,7 +57,7 @@ const EmployeeWellbeingLanding: React.FC = () => {
           </p>
 
           <Link to="./signup">
-            <button className="bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-600 transition-all duration-300 transform hover:scale-105">
+            <button className="bg-primary text-white px-6 py-2 rounded-lg text-lg font-semibold hover:bg-primary-600 transition-all duration-300 transform hover:scale-105">
               Get Started
             </button>
           </Link>

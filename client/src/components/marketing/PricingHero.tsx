@@ -22,16 +22,16 @@ const PricingHero: React.FC = () => {
         <div className="relative z-10 min-h-[50vh] lg:min-h-screen flex items-center">
           <div className={'container mx-auto px-4 md:px-6 lg:px-12'}>
             <div className="text-center mx-auto">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+              <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
                 The 15 Secrets That You Should Know
                 <br />
                 About Running Club
               </h1>
 
-              <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed">
+                <p className="hidden sm:block text-base md:text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed">
                 Cultivate a healthy, thriving, and unstoppable workforce with BetterMe's
                 health transformation ecosystem
-              </p>
+                </p>
             </div>
 
           </div>
