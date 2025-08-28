@@ -106,11 +106,6 @@ export default function Questions() {
   };
 
   const steps = [
-<FitnessGraph
-      key="FitnessGraph"
-      gender={gender}
-    />,
-
     <GenderSelector
       key="GenderSelector"
       onContinue={(gender) => goToNext(gender)}
