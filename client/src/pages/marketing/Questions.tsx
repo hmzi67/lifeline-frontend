@@ -265,9 +265,9 @@ export default function Questions() {
       </div>
 
       {/* Testing button TODO: Remove after use */}
-      <div className="flex items-center justify-center">
+      {/* <div className="flex items-center justify-center">
         <button className="p-3 m-3 rounded-full bg-black text-white z-10" onClick={() => goToNext(gender)}>next</button>
-      </div>
+      </div> */}
 
     </>
   );
