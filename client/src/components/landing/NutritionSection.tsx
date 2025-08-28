@@ -90,7 +90,7 @@ export const NutritionSection: React.FC = () => {
         <div className="block md:hidden">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900 leading-tight">
-              <span className="text-primary">Treating</span> Your Nutrition Like It's<br />
+              <span className="text-primary">Treating</span> Your Nutrition Like It's <br className="hidden sm:block" />
               Your Secret <span className="text-primary">Weapon</span>
             </h2>
           </div>
@@ -103,8 +103,8 @@ export const NutritionSection: React.FC = () => {
               className="w-full h-auto"
             />
 
-            <div className="absolute left-5 top-[90%] bg-white/90 backdrop-blur-sm rounded p-4 max-w-[200px] shadow-lg">
-              <h3 className="text-xs font-semibold text-black leading-tight mb-3">
+            <div className="absolute left-3 top-[90%] bg-white/90 backdrop-blur-sm rounded p-4 shadow-lg">
+              <h3 className="text-xs font-semibold text-gray-900 leading-tight mb-3">
                 "That's The Thing About<br />
                 Weight Loss:<br />
                 Eat For The Body You Want,<br />
@@ -116,7 +116,7 @@ export const NutritionSection: React.FC = () => {
               </p>
             </div>
 
-            <div className="absolute right-7 top-full transform -translate-y-1/2">
+            <div className="absolute right-3 top-full transform -translate-y-1/2">
               <div ref={mobileRef} className="bg-primary px-2 text-white rounded-md text-center min-w-[100px]">
                 <div className="text-3xl font-bold">
                   +{mobileCount.toLocaleString()}
@@ -147,7 +147,7 @@ export const NutritionSection: React.FC = () => {
                 Try Now
               </Button>
             </Link>
-            
+
             <Button
               size="sm"
               variant="ghost"
