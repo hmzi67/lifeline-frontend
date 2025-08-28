@@ -15,10 +15,11 @@ import PersonalizingPlans from "@/components/questions/PersonalizingPlans.tsx";
 import { FitnessGraph } from "@/components/questions/fitnessgraph.tsx";
 import ellipseImage from "@/assets/images/question/Ellipse 4.svg";
 import GoalWeightSelector from "@/components/questions/GoalWeightSelector.tsx";
-import vdo from "@/assets/Q-thankyou/applause.mp4";
 import api from "@/lib/axios";
 import Loading from "@/components/common/Loading";
 import GoBack from "@/components/common/GoBack";
+import DietImage from "@/assets/Q-thankyou/Diet Applause.png";
+import ExerciseImage from "@/assets/Q-thankyou/Exercise Applause.png"
 
 export default function Questions() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -216,56 +217,58 @@ export default function Questions() {
 
   return (
     <>
-    
-    <div className="min-h-screen flex bg-white items-center justify-center relative overflow-hidden">
-      {(currentStep === 5 || currentStep === 9) && (
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover z-0"
+
+      <div className="min-h-screen flex bg-white items-center justify-center relative overflow-hidden">
+        {(currentStep === 5) && (
+
+          <img
+            src={ExerciseImage}
+            className="absolute inset-0 w-full h-full object-cover z-0"
+          />
+        )}
+
+        {(currentStep === 9) && (
+          <img
+            src={DietImage}
+            className="absolute inset-0 w-full h-full object-cover z-0"
+          />
+        )}
+
+        <div
+          className={`absolute top-0 right-0 w-96 h-96 transform translate-x-32 -translate-y-32 rotate-6 ${currentStep === 5 || currentStep === 9 ? "md:hidden" : ""}`}
         >
-          <source src={vdo} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      )}
+          <img src={ellipseImage} alt="" />
+        </div>
+        <div
+          className={`absolute bottom-0 left-0 w-96 h-96 transform -translate-x-24 translate-y-44 rotate-45 ${currentStep === 5 || currentStep === 9 ? "md:hidden" : ""}`}
+        >
+          <img src={ellipseImage} alt="" />
+        </div>
 
-      <div
-        className={`absolute top-0 right-0 w-96 h-96 transform translate-x-32 -translate-y-32 rotate-6 ${currentStep === 5 || currentStep === 9 ? "md:hidden" : ""}`}
-      >
-        <img src={ellipseImage} alt="" />
-      </div>
-      <div
-        className={`absolute bottom-0 left-0 w-96 h-96 transform -translate-x-24 translate-y-44 rotate-45 ${currentStep === 5 || currentStep === 9 ? "md:hidden" : ""}`}
-      >
-        <img src={ellipseImage} alt="" />
-      </div>
+        {/* Header */}
+        <div className="absolute top-0 w-full flex items-center justify-center py-3">
+          <img
+            src="/logo.svg"
+            className="w-20"
+          />
 
-      {/* Header */}
-      <div className="absolute top-0 w-full flex items-center justify-center py-3">
-        <img
-          src="/logo.svg"
-          className="w-20"
-        />
+          <div className={`absolute left-12 ${currentStep == 0 ? 'hidden' : 'block'}`}>
+            <GoBack onClick={() => goToPrevious()} />
+          </div>
+        </div>
 
-        <div className={`absolute left-12 ${currentStep == 0 ? 'hidden' : 'block'}`}>
-          <GoBack onClick={() => goToPrevious()} />
+        <div
+          className={`mt-16 sm:mt-0 relative z-10 max-w-7xl w-full rounded-3xl ${currentStep === 5 || currentStep === 9 ? "bg-white/60 backdrop-blur py-20 px-1" : "bg-white/60 backdrop-blur-sm mx-4 sm:mx-0 "}`}
+        >
+          {steps[currentStep]}
         </div>
       </div>
 
-      <div
-        className={`mt-16 sm:mt-0 relative z-10 max-w-7xl w-full rounded-3xl ${currentStep === 5 || currentStep === 9 ? "bg-white/60 backdrop-blur py-20 px-1" : "bg-white/60 backdrop-blur-sm mx-4 sm:mx-0 "}`}
-      >
-        {steps[currentStep]}
+      {/* Testing button TODO: Remove after use */}
+      <div className="flex items-center justify-center">
+        <button className="p-3 m-3 rounded-full bg-black text-white z-10" onClick={() => goToNext(gender)}>next</button>
       </div>
-    </div>
-    
-    {/* Testing button TODO: Remove after use */}
-    <div className="flex items-center justify-center">
-      <button className="p-3 m-3 rounded-full bg-black text-white z-10" onClick={() => goToNext(gender)}>next</button>
-    </div>
-    
+
     </>
   );
 }
