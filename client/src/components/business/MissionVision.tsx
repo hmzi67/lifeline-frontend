@@ -30,7 +30,7 @@ const MissionVision = () => {
         <div className="bg-white rounded-lg shadow-sm border hover:shadow-xl transition-shadow duration-300 overflow-hidden">
           <div className="p-4 sm:p-6">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2 sm:mb-4">Our Vision</h2>
-            <p className="text-gray-600 mb-4 sm:mb-6 leading-relaxed text-xl">
+            <p className="text-gray-600 mb-4 sm:mb-6 leading-relaxed text-sm lg:text-xl md:text-xl">
               "Our Vision Is To Remove Barriers Of Cost, 
               Time, And Access So That Holistic Wellbeing 
               Becomes A Universal Standard—Available To Everyone,
@@ -50,7 +50,7 @@ const MissionVision = () => {
         <div className="bg-white rounded-lg shadow-sm border hover:shadow-xl transition-shadow duration-300 overflow-hidden">
           <div className="p-4 sm:p-6">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2 sm:mb-4">Our Mission</h2>
-            <p className="text-gray-600 mb-4 sm:mb-6 leading-relaxed text-xl">
+            <p className="text-gray-600 mb-4 sm:mb-6 leading-relaxed text-sm lg:text-xl md:text-xl">
               "Our Mission Is To Simplify Wellness By Offering An All-In-One Platform
                That Makes Healthier Living Accessible, Affordable, And Easy To Integrate Into Daily Routines."
             </p>
