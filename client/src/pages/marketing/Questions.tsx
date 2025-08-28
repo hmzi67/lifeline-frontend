@@ -215,6 +215,8 @@ export default function Questions() {
   if (loading) return <Loading />;
 
   return (
+    <>
+    
     <div className="min-h-screen flex bg-white items-center justify-center relative overflow-hidden">
       {(currentStep === 5 || currentStep === 9) && (
         <video
@@ -250,14 +252,20 @@ export default function Questions() {
         <div className={`absolute left-12 ${currentStep == 0 ? 'hidden' : 'block'}`}>
           <GoBack onClick={() => goToPrevious()} />
         </div>
-
       </div>
 
       <div
-        className={`relative z-10 max-w-7xl w-full rounded-3xl ${currentStep === 5 || currentStep === 9 ? "bg-white/60 backdrop-blur py-20 px-1" : "bg-white/60 backdrop-blur-sm mx-4 sm:mx-0 "}`}
+        className={`mt-16 sm:mt-0 relative z-10 max-w-7xl w-full rounded-3xl ${currentStep === 5 || currentStep === 9 ? "bg-white/60 backdrop-blur py-20 px-1" : "bg-white/60 backdrop-blur-sm mx-4 sm:mx-0 "}`}
       >
         {steps[currentStep]}
       </div>
     </div>
+    
+    {/* Testing button TODO: Remove after use */}
+    <div className="flex items-center justify-center">
+      <button className="p-3 m-3 rounded-full bg-black text-white z-10" onClick={() => goToNext(gender)}>next</button>
+    </div>
+    
+    </>
   );
 }
