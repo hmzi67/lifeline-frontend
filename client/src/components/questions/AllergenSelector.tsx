@@ -137,14 +137,13 @@ const AllergenSelector: React.FC<AllergenSelectorProps> = ({ onContinue, onAller
                 key={option.id}
                 onClick={() => toggleAllergen(option.id)}
                 disabled={loading || saving}
-                className={`w-full flex items-center justify-between p-3 rounded-full transition-all duration-200 pr-6 ${isSelected
+                className={`w-full flex items-center justify-between px-3 rounded-full transition-all duration-200 ${isSelected
                     ? 'bg-primary border-primary-400 text-white shadow-lg transform scale-102'
                     : 'bg-gray-100 text-gray-700 hover:border-primary-300 hover:shadow-md hover:scale-101'
                   }`}
               >
-                <div className="flex items-center space-x-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl ${isSelected ? 'bg-white bg-opacity-20' : 'bg-white'
-                    }`}>
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <div className={`h-16 rounded-full flex items-center justify-center text-xl `}>
                     {option.image ? (
                       <img
                         src={option.image}
