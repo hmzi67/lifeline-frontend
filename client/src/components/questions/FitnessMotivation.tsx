@@ -95,26 +95,26 @@ const FitnessMotivationSelector: React.FC<MotivationActions> = ({ onContinue }) 
                                 key={option.id}
                                 onClick={() => handleOptionSelect(option.id)}
                                 disabled={loading || saving}
-                                className={`w-full p-3 rounded-full border-2 transition-all duration-300 flex items-center space-x-4 pr-6 ${isSelected
+                                className={`w-full flex items-center justify-between px-3 rounded-full transition-all duration-200 ${isSelected
                                     ? 'bg-primary border-primary-400 text-white shadow-lg transform scale-102'
                                     : 'bg-gray-100 text-gray-700 hover:border-primary-300 hover:shadow-md hover:scale-101'
                                     }`}
                             >
-                                <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl ${isSelected ? 'bg-white bg-opacity-20' : 'bg-gray-50'
-                                    }`}>
-                                    {option.image && (
-                                        <img
-                                            src={option.image}
-                                            alt={option.label}
-                                            className="object-cover h-12 w-12 rounded-full border-2 border-white"
-                                        />
-                                    )}
-                                </div>
+                                <div className='flex items-center space-x-2 sm:space-x-3'>
+                                    <div className={`h-16 rounded-full flex items-center justify-center text-2xl`}>
+                                        {option.image && (
+                                            <img
+                                                src={option.image}
+                                                alt={option.label}
+                                                className="object-cover h-12 w-12 rounded-full border-2 border-white"
+                                            />
+                                        )}
+                                    </div>
 
-                                <div className="flex-1 text-left">
-                                    <span className={`text-xs sm:text-lg font-medium text-gray-700 ${isSelected ? 'text-white' : ''}`}>{option.label}</span>
+                                    <div className="flex-1 text-left">
+                                        <span className={`text-xs sm:text-lg font-medium text-gray-700 ${isSelected ? 'text-white' : ''}`}>{option.label}</span>
+                                    </div>
                                 </div>
-
                                 {isSelected && (
                                     <div className="w-4 h-4 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center">
                                         <Check className="w-4 h-4 sm:w-5 sm:h-5 text-primary-400" />

@@ -136,14 +136,13 @@ const DietTypeSelector: React.FC<DietTypeProp> = ({ onContinue, onDietChange }) 
                     key={diet.id}
                     onClick={() => handleSelectDiet(diet.id)}
                     disabled={loading}
-                    className={`relative w-full flex items-center justify-between p-3 sm:p-2 rounded-full transition-all duration-200 border-2 pr-4 sm:pr-6 ${isSelected
+                    className={`w-full flex items-center justify-between px-3 rounded-full transition-all duration-200 ${isSelected
                         ? 'bg-primary border-primary text-white shadow-lg transform scale-102'
                         : 'bg-gray-100 text-gray-700 hover:border-primary hover:shadow-md hover:scale-101'
                       }`}
                   >
-                    <div className="flex items-center space-x-3 sm:space-x-4">
-                      <div className={`rounded-full flex items-center justify-center ${isSelected ? 'bg-white/20' : 'bg-gray-200'
-                        }`}>
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                      <div className={`h-16 rounded-full flex items-center justify-center`}>
                         {diet.image && (
                           <img
                             src={diet.image}
