@@ -20,6 +20,54 @@ model Role {
   @@map("roles")
 }
 
+// Blog Categories Table
+model BlogCategory {
+  id        String  @id @default(cuid())
+  name      String  @unique @db.VarChar(100)
+  slug      String  @unique @db.VarChar(100)
+  blogs     Blog[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("blog_categories")
+}
+
+// Blogs Table
+model Blog {
+  id          String        @id @default(cuid())
+  title       String        @db.VarChar(255)
+  slug        String        @unique @db.VarChar(255)
+  content     String        @db.Text
+  excerpt     String?       @db.Text
+  coverImage  String?       @map("cover_image") @db.Text
+  status      String        @default("draft") @db.VarChar(20)
+  authorId    String?       @map("author_id")
+  categoryId  String?       @map("category_id")
+  author      User?         @relation(fields: [authorId], references: [id])
+  category    BlogCategory? @relation(fields: [categoryId], references: [id])
+  comments    BlogComment[]
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  @@map("blogs")
+}
+
+// Blog Comments Table
+model BlogComment {
+  id        String   @id @default(cuid())
+  blogId    String   @map("blog_id")
+  userId    String?  @map("user_id")
+  content   String   @db.Text
+  parentId  String?  @map("parent_id") // for nested replies
+  blog      Blog     @relation(fields: [blogId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id])
+  parent    BlogComment? @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   BlogComment[] @relation("CommentReplies")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("blog_comments")
+}
+
 // Users Table
 model User {
   id              String  @id @default(cuid())
@@ -55,6 +103,8 @@ model User {
   userDailyRoutines    UserDailyRoutine[]
 
   @@map("users")
+  Blog Blog[]
+  BlogComment BlogComment[]
 }
 
 // Auth Tokens Table
