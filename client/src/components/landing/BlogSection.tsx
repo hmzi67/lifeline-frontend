@@ -150,9 +150,9 @@ export const BlogSection: React.FC = () => {
                                 {blogsData.map((blog) => (
                                     <Link to={`/blog/${blog.slug}`} key={blog.id}>
                                         <article className="group cursor-pointer">
-                                            <div className="flex gap-4 sm:gap-6">
+                                            <div className="flex gap-4 sm:gap-6 space-y-6">
                                                 <div className="flex-shrink-0">
-                                                    <div className="relative overflow-hidden rounded-xl">
+                                                    <div className="relative overflow-hidden rounded-xl mt-6">
                                                         <img
                                                             src={blog.coverImage || "/sample.png"}
                                                             alt={blog.title}
@@ -162,13 +162,16 @@ export const BlogSection: React.FC = () => {
                                                 </div>
 
                                                 <div className="flex-1 min-w-0">
-                                                    <div className="mb-2">
+                                                    <div className="mb-2 flex items-center  gap-1">
                                                         <span className="text-sm text-gray-500">{new Date(blog.createdAt).toLocaleDateString()}</span>
+                                                        <span className="text-sm text-gray-500">|</span>
+                                                        <span className="text-sm text-gray-500">{blog.author?.username}</span>
                                                     </div>
 
                                                     <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 leading-tight group-hover:text-primary transition-colors duration-200">
                                                         {blog.title}
                                                     </h3>
+                                                    <p className='text-gray-600'>{blog.excerpt}</p>
                                                 </div>
                                             </div>
                                         </article>
