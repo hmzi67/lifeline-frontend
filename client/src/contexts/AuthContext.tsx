@@ -90,11 +90,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             });
 
             if (response.data.success) {
-              if (rememberMe) {
+                //   if (rememberMe) {
                 const { user, accessToken } = response.data.data;
                 setToken(accessToken);
                 updateUser(user);
-              }
+                //   }
             } else {
                 throw new Error(response.data.message || 'Login failed');
             }
