@@ -1,31 +1,78 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
-import { ArrowRightIcon, Circle } from 'lucide-react';
+import { ArrowRightIcon, Circle, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import api from '@/lib/axios';
 
-// Done For responsive design and better user experience
+
+export interface Blog {
+    id: string;
+    title: string;
+    slug: string;
+    content: string;
+    excerpt: string | null;
+    coverImage: string | null;
+    status: "DRAFT" | "PUBLISHED" | string; // add more statuses if needed
+    authorId: string | null;
+    categoryId: string;
+    createdAt: string; // ISO string
+    updatedAt: string; // ISO string
+    author: Author | null;
+    category: Category;
+    _count: {
+        comments: number;
+    };
+}
+
+interface Author {
+    id: string;
+    email: string;
+    username: string;
+    googleId?: string | null;
+    profileImage?: string | null;
+    isEmailVerified: boolean;
+    subject?: string | null;
+    password: string;
+    otp?: string | null;
+    status: string;
+    roleId?: string | null;
+    createdAt: string;
+    updatedAt: string;
+}
+
+interface Category {
+    id: string;
+    name: string;
+    slug: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+
 
 export const BlogSection: React.FC = () => {
-    const blogPosts = [
-        {
-            title: "We Give you the Best fitness Platform",
-            image: "/sample.png",
-            readTime: "Few seconds ago",
-            date: "Few seconds ago"
-        },
-        {
-            title: "We Give you the Best fitness Platform",
-            image: "/sample.png",
-            readTime: "Few seconds ago",
-            date: "Few seconds ago"
-        },
-        {
-            title: "We Give you the Best fitness Platform",
-            image: "/sample.png",
-            readTime: "Few seconds ago",
-            date: "Few seconds ago"
+    const [blogsData, setBlogsData] = useState<Blog[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+
+    useEffect(() => {
+        const fetchBlogs = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const response = await api.get("/blogs?limit=3&status=PUBLISHED")
+                setBlogsData(response.data.data);
+
+            } catch (err) {
+                console.error("Failed to fetch blogs:", err);
+                setError("Could not load recent articles. Please try again later.");
+            } finally {
+                setLoading(false);
+            }
         }
-    ];
+        fetchBlogs();
+    }, []);
 
     return (
         <section className="py-12 sm:py-16 lg:py-20 bg-white">
@@ -41,72 +88,96 @@ export const BlogSection: React.FC = () => {
                     </p>
                 </div>
 
-                {/* Desktop Layout - 3 Column Grid */}
-                <div className="hidden lg:block">
-                    <div className="grid lg:grid-cols-3 gap-6 xl:gap-8 max-w-7xl mx-auto mb-12">
-                        {blogPosts.map((post, index) => (
-                            <article key={index} className="group cursor-pointer">
-                                <div className="bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg">
-                                    <div className="relative overflow-hidden">
-                                        <img
-                                            src={post.image}
-                                            alt={post.title}
-                                            className="w-full h-48 xl:h-56 object-cover group-hover:scale-105 transition-transform duration-300"
-                                        />
-                                    </div>
-
-                                    <div className="p-6">
-                                        <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
-                                            <div className="flex items-center gap-2">
-                                                <Circle size={8} className='fill-primary-400 text-primary-400' />
-                                                <span>{post.date}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-px h-4 bg-gray-300"></div>
-                                                <span>{post.readTime}</span>
-                                            </div>
-                                        </div>
-
-                                        <h3 className="text-xl xl:text-2xl font-semibold text-gray-900 leading-tight group-hover:text-primary transition-colors duration-200">
-                                            {post.title}
-                                        </h3>
-                                    </div>
-                                </div>
-                            </article>
-                        ))}
+                {loading && (
+                    <div className="text-center text-gray-500">
+                        <p>Loading articles...</p>
                     </div>
-                </div>
+                )}
 
-                {/* Mobile/Tablet Layout - Vertical List */}
-                <div className="block lg:hidden">
-                    <div className="space-y-6 mb-12">
-                        {blogPosts.map((post, index) => (
-                            <article key={index} className="group cursor-pointer">
-                                <div className="flex gap-4 sm:gap-6">
-                                    <div className="flex-shrink-0">
-                                        <div className="relative overflow-hidden rounded-xl">
-                                            <img
-                                                src={post.image}
-                                                alt={post.title}
-                                                className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 object-cover group-hover:scale-105 transition-transform duration-300"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="flex-1 min-w-0">
-                                        <div className="mb-2">
-                                            <span className="text-sm text-gray-500">{post.date}</span>
-                                        </div>
-
-                                        <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 leading-tight group-hover:text-primary transition-colors duration-200">
-                                            {post.title}
-                                        </h3>
-                                    </div>
-                                </div>
-                            </article>
-                        ))}
+                {error && (
+                    <div className="text-center text-red-500 bg-red-100 p-4 rounded-lg">
+                        <p>{error}</p>
                     </div>
-                </div>
+                )}
+
+                {!loading && !error && blogsData.length > 0 && (
+                    <>
+                        {/* Desktop Layout - 3 Column Grid */}
+                        <div className="hidden lg:block">
+                            <div className="grid lg:grid-cols-3 gap-6 xl:gap-8 max-w-7xl mx-auto mb-12">
+                                {blogsData.map((blog) => (
+                                    <Link to={`/blog/${blog.slug}`} key={blog.id}>
+                                        <article className="group cursor-pointer">
+                                            <div className="bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg">
+                                                <div className="relative overflow-hidden">
+                                                    <img
+                                                        src={blog.coverImage || "/sample.png"}
+                                                        alt={blog.title}
+                                                        className="w-full h-48 xl:h-56 object-cover rounded-2xl group-hover:scale-105 transition-transform duration-300"
+                                                    />
+                                                </div>
+
+                                                <div className="p-6">
+                                                    <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                                                        <div className="flex items-center gap-2">
+                                                            <>
+                                                                <Circle size={8} className='fill-primary-400 text-primary-400' />
+                                                                <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
+                                                            </>
+                                                            |
+                                                            <>
+                                                                <User className='w-3 fill-primary-400 text-primary-400' />
+                                                                <span>{blog.author?.username}</span>
+                                                            </>
+                                                        </div>
+                                                    </div>
+
+                                                    <h3 className="text-xl xl:text-2xl font-semibold text-gray-900 leading-tight group-hover:text-primary transition-colors duration-200">
+                                                        {blog.title}
+                                                    </h3>
+                                                    <p className='text-gray-600'>{blog.excerpt}</p>
+                                                </div>
+                                            </div>
+                                        </article>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Mobile/Tablet Layout - Vertical List */}
+                        <div className="block lg:hidden">
+                            <div className="space-y-6 mb-12">
+                                {blogsData.map((blog) => (
+                                    <Link to={`/blog/${blog.slug}`} key={blog.id}>
+                                        <article className="group cursor-pointer">
+                                            <div className="flex gap-4 sm:gap-6">
+                                                <div className="flex-shrink-0">
+                                                    <div className="relative overflow-hidden rounded-xl">
+                                                        <img
+                                                            src={blog.coverImage || "/sample.png"}
+                                                            alt={blog.title}
+                                                            className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 object-cover group-hover:scale-105 transition-transform duration-300"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="mb-2">
+                                                        <span className="text-sm text-gray-500">{new Date(blog.createdAt).toLocaleDateString()}</span>
+                                                    </div>
+
+                                                    <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 leading-tight group-hover:text-primary transition-colors duration-200">
+                                                        {blog.title}
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        </article>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </>
+                )}
 
                 {/* Read More Button */}
                 <div className="flex justify-end lg:justify-end">
@@ -120,7 +191,7 @@ export const BlogSection: React.FC = () => {
                             <ArrowRightIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                         </Button>
                     </Link>
-                        
+
                 </div>
             </div>
         </section>
