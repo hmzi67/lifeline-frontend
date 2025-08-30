@@ -43,7 +43,7 @@ const Signup: React.FC = () => {
     try {
       await signup(formData.name, formData.email, formData.password);
 
-      navigate("/questions")
+      navigate("/login")
 
     } catch (error: any) {
       setLoading(false);
@@ -81,7 +81,7 @@ const Signup: React.FC = () => {
               Sign up to create an account
             </h1>
             <p className="text-gray-300 text-sm">
-             Welcome back! Let's continue your wellness journey.
+              Welcome back! Let's continue your wellness journey.
             </p>
           </div>
 
@@ -101,9 +101,9 @@ const Signup: React.FC = () => {
                   className="w-full pl-12 pr-4 py-4 bg-white/5  border border-white/20 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-400/50 focus:border-primary-400/50 transition-all duration-200"
                 />
               </div>
-               {fieldErrors.name && (
-                  <p className="mt-1 text-sm text-red-400">{fieldErrors.name}</p>
-                )}
+              {fieldErrors.name && (
+                <p className="mt-1 text-sm text-red-400">{fieldErrors.name}</p>
+              )}
 
               {/* Email Input */}
               <div className="relative">
@@ -119,8 +119,8 @@ const Signup: React.FC = () => {
                 />
               </div>
               {fieldErrors.email && (
-                  <p className="mt-1 text-sm text-red-400">{fieldErrors.email}</p>
-                )}
+                <p className="mt-1 text-sm text-red-400">{fieldErrors.email}</p>
+              )}
 
               {/* Password Input */}
               <div className="relative">
@@ -146,9 +146,9 @@ const Signup: React.FC = () => {
                   )}
                 </button>
               </div>
-               {fieldErrors.password && (
-                  <p className="mt-1 text-sm text-red-400">{fieldErrors.password}</p>
-                )}
+              {fieldErrors.password && (
+                <p className="mt-1 text-sm text-red-400">{fieldErrors.password}</p>
+              )}
 
               {/* General Error */}
               {fieldErrors.general && (
