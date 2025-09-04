@@ -18,7 +18,7 @@ export const CategoryFilter = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                // Replace with your actual API base URL
+                // Replace it with your actual API base URL
                 const response = await api.get(`blogs/categories`);
                 if (response.status != 200) {
                     throw new Error('Failed to fetch categories');
