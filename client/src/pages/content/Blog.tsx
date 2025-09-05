@@ -40,22 +40,34 @@ interface BlogPost {
   };
 }
 
-const API_BASE_URL = 'http://localhost:3000/api/blogs';
-
 // Main Blog Page Component
 export const Blog = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
 
-  // Fetch all blogs
+  // Fetch blogs with pagination
   useEffect(() => {
-    const fetchBlogs = async () => {
+    const fetchBlogs = async (pageNum: number) => {
+      if (pageNum === 1) {
+        setLoading(true);
+      } else {
+        setIsFetchingMore(true);
+      }
+
       try {
-        const response = await api.get(API_BASE_URL)
+        const response = await api.get('/blogs', {
+          params: { page: pageNum, limit: 8 }
+        });
 
         if (response.data.success) {
-          setPosts(response.data.data);
+          const newPosts = response.data.data;
+          const pagination = response.data.pagination;
+          setPosts(prevPosts => pageNum === 1 ? newPosts : [...prevPosts, ...newPosts]);
+          setHasMore(pagination.page < pagination.pages);
         } else {
           setError('Failed to fetch blogs');
         }
@@ -64,11 +76,12 @@ export const Blog = () => {
         console.error(err);
       } finally {
         setLoading(false);
+        setIsFetchingMore(false);
       }
     };
 
-    fetchBlogs().then(r => console.log(r));
-  }, []);
+    fetchBlogs(page);
+  }, [page]);
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading blogs...</div>;
@@ -77,6 +90,10 @@ export const Blog = () => {
   if (error) {
     return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
   }
+
+  const handleExploreMore = () => {
+    setPage(prevPage => prevPage + 1);
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -102,15 +119,16 @@ export const Blog = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               {/* Left: 2 stacked posts */}
               <div className="space-y-6">
-                {posts.slice(0, 2).map((post) => (
-                  <BlogCard
-                    key={post.id}
-                    title={post.title}
-                    excerpt={post.excerpt}
-                    imageUrl={post.coverImage || '/sample.png'}
-                    readMoreLink={`/blog/${post.slug}`}
-                  />
-                ))}
+                {posts.length > 0 && posts.slice(0, 2).map((post) => (
+                  post && (
+                    <BlogCard
+                      key={post.id}
+                      title={post.title}
+                      excerpt={post.excerpt}
+                      imageUrl={post.coverImage || '/sample.png'}
+                      readMoreLink={`/blog/${post.slug}`}
+                    />
+                  )))}
               </div>
 
               {/* Middle: Featured big post */}
@@ -129,30 +147,34 @@ export const Blog = () => {
 
             {/* Grid of posts */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {posts.slice(3, 12).map((post) => (
-                <BlogCard
-                  key={post.id}
-                  title={post.title}
-                  excerpt={post.excerpt}
-                  imageUrl={post.coverImage || '/sample.png'}
-                  readMoreLink={`/blog/${post.slug}`}
-                />
-              ))}
+              {posts.length > 3 && posts.slice(3).map((post) => (
+                post && (
+                  <BlogCard
+                    key={post.id}
+                    title={post.title}
+                    excerpt={post.excerpt}
+                    imageUrl={post.coverImage || '/sample.png'}
+                    readMoreLink={`/blog/${post.slug}`}
+                  />
+                )))}
             </div>
 
             {/* Explore More */}
-            <div className="text-center">
-              <button className="bg-primary text-white px-8 py-3 rounded hover:bg-primary-600 transition-colors duration-200 font-medium">
-                Explore more
-              </button>
-            </div>
+            {hasMore && (
+              <div className="text-center">
+                <button onClick={handleExploreMore} disabled={isFetchingMore}
+                        className="bg-primary text-white px-8 py-3 rounded hover:bg-primary-600 transition-colors duration-200 font-medium disabled:bg-gray-400">
+                  {isFetchingMore ? 'Loading...' : 'Explore more'}
+                </button>
+              </div>
+            )}
           </div>
 
           {/* SIDEBAR */}
           <div className="lg:w-80 space-y-6">
             {/* Right: List of recent posts */}
             <div className="space-y-4">
-              {posts.slice(3, 8).map((post) => (
+              {posts.slice(0, 5).map((post) => (
                 <div key={post.id} className="flex items-center gap-3 border-b pb-2">
                   <p className="text-sm font-medium text-gray-800">{post.title}</p>
                   <img
