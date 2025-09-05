@@ -9,15 +9,13 @@ import {
   Heading2,
   Image as ImageIcon,
   Italic,
+  LayoutGrid,
   Link as LinkIcon,
   List,
   ListOrdered,
   Minus,
-  Moon,
   Quote,
   Rocket,
-  Sun,
-  Tags,
   Trash2,
   Type,
   Underline,
@@ -114,19 +112,27 @@ interface Post {
   excerpt: string;
   content: string;
   tags: string[];
+  categoryId: string;
   cover: string;
   status: "draft" | "published";
 }
 
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 // ---------- Main Component ----------
 export default function BlogEditor() {
-  const [dark, setDark] = useLocalStorage<boolean>("be-dark", false);
+  const [dark] = useLocalStorage<boolean>("be-dark", false);
   const [post, setPost] = useLocalStorage<Post>("be-post", {
     title: "",
     slug: "",
     excerpt: "",
     content: "",
     tags: [],
+    categoryId: "",
     cover: "",
     status: "draft", // draft | published
   });
@@ -134,11 +140,26 @@ export default function BlogEditor() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
-  const [tagInput, setTagInput] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
   }, [dark]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/blogs/categories");
+        const data = await response.json();
+        if (data.success) {
+          setCategories(data.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   // Keep the slug in sync with title unless user edited it manually once
   const [slugTouched, setSlugTouched] = useState(false);
@@ -160,21 +181,6 @@ export default function BlogEditor() {
   const readingTime = useMemo(
     () => estimateReadingTime(post.content || ""),
     [post.content],
-  );
-
-  const handleAddTag = useCallback(() => {
-    const t = tagInput.trim();
-    if (!t) return;
-    if (post.tags.includes(t)) return setTagInput("");
-    setPost((p) => ({ ...p, tags: [...p.tags, t] }));
-    setTagInput("");
-  }, [tagInput, post.tags, setPost]);
-
-  const handleRemoveTag = useCallback(
-    (tagToRemove: string) => {
-      setPost((p) => ({ ...p, tags: p.tags.filter((t) => t !== tagToRemove) }));
-    },
-    [setPost],
   );
 
   const insertImageAtCursor = useCallback((dataUrl: string | ArrayBuffer | null) => {
@@ -227,6 +233,7 @@ export default function BlogEditor() {
       `title: "${post.title.replace(/"/g, '\\"')}"`,
       `slug: "${post.slug}"`,
       `status: "${post.status}"`,
+      `categoryId: "${post.categoryId}"`,
       post.tags.length
         ? `tags: [${post.tags.map((t) => `"${t.replace(/"/g, '\\"')}"`).join(", ")}]`
         : "tags: []",
@@ -262,6 +269,7 @@ export default function BlogEditor() {
       excerpt: "",
       content: "",
       tags: [],
+      categoryId: "",
       cover: "",
       status: "draft",
     });
@@ -333,14 +341,14 @@ export default function BlogEditor() {
   ];
 
   return (
-    <div className="min-h-screen bg-neutral-50 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
-      <div className="mx-auto max-w-7xl px-4 pb-20">
+    <div className="min-h-screen  text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
+      <div className="mx-auto px-4 pb-20">
         {/* Header */}
-        <div className="sticky top-0 z-20 -mx-4 mb-6 border-b bg-white/80 backdrop-blur dark:bg-neutral-900/70">
-          <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between gap-2">
+        <div className="sticky top-0 z-20 mb-6 border rounded-2xl bg-white dark:bg-neutral-900/70">
+          <div className="mx-auto px-4 py-3 flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 text-sm opacity-70">
               <Rocket className="" size={18} />
-              <span>React Blog Editor</span>
+              <span>Blog Editor</span>
               <span className="mx-2">•</span>
               <span className="capitalize">{post.status}</span>
               <span className="mx-2">•</span>
@@ -350,13 +358,6 @@ export default function BlogEditor() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <button
-                onClick={() => setDark(!dark)}
-                className="rounded-xl border px-3 py-2 text-sm hover:shadow-sm"
-                title="Toggle theme"
-              >
-                {dark ? <Sun size={16} /> : <Moon size={16} />}
-              </button>
               <button
                 onClick={publishToggle}
                 className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm hover:shadow-sm"
@@ -426,6 +427,26 @@ export default function BlogEditor() {
           </div>
         </div>
 
+        {/* Category */}
+        <div className="mt-4">
+            <label className="text-xs uppercase tracking-wider opacity-60">
+              Category
+            </label>
+            <div className="relative mt-2 flex items-center gap-2 rounded-2xl border bg-white p-3 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
+              <LayoutGrid size={18} className="opacity-70" />
+              <select
+                className="w-full appearance-none bg-transparent text-base outline-none"
+                value={post.categoryId}
+                onChange={(e) => setPost({ ...post, categoryId: e.target.value })}
+              >
+                <option value="">Select a category</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>{category.name}</option>
+                ))}
+              </select>
+            </div>
+        </div>
+
         {/* Cover & Excerpt */}
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           <div className="md:col-span-2 space-y-3">
@@ -484,43 +505,10 @@ export default function BlogEditor() {
           </div>
         </div>
 
-        {/* Tags */}
-        <div className="mt-6">
-          <label className="text-xs uppercase tracking-wider opacity-60">
-            Tags
-          </label>
-          <div className="mt-2 flex flex-wrap items-center gap-2 rounded-2xl border bg-white p-3 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
-            <Tags size={18} className="opacity-70" />
-            {post.tags.map((t) => (
-              <span
-                key={t}
-                className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs"
-              >
-                {t}
-                <button
-                  onClick={() => handleRemoveTag(t)}
-                  className="opacity-60 hover:opacity-100"
-                >
-                  ×
-                </button>
-              </span>
-            ))}
-            <input
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
-              onKeyDown={(e) =>
-                e.key === "Enter" ? (e.preventDefault(), handleAddTag()) : undefined
-              }
-              className="ml-auto flex-1 bg-transparent outline-none"
-              placeholder="Add a tag and press Enter"
-            />
-          </div>
-        </div>
-
         {/* Editor */}
         <div className="mt-6 grid gap-4 lg:grid-cols-2">
           <div className="space-y-3">
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2 bg-white rounded-2xl p-3 shadow-sm dark:bg-neutral-900 border dark:border-neutral-800">
               {toolbar.map((t, i) => (
                 <ToolbarButton key={i} title={t.tip} onClick={t.fn}>
                   {t.icon}
@@ -539,10 +527,6 @@ export default function BlogEditor() {
                 className="hidden"
                 onChange={(e) => handleUploadInlineImage(e.target.files?.[0])}
               />
-              <div className="ml-auto flex items-center gap-2">
-                <span className="text-xs opacity-60">{readingTime}</span>
-                <span className="text-xs opacity-60">• {wordCount} words</span>
-              </div>
             </div>
 
             <textarea
