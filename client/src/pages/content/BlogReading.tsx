@@ -5,9 +5,10 @@ import { CommentSection } from "@/components/content/CommentSection.tsx";
 import { AppDownload } from "@/components/content/AppDownload.tsx";
 import { TestimonialsSection } from "@/components/landing";
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from "react";
 import api from '@/lib/axios';
-
+import { marked } from "marked";
+import DOMPurify from "dompurify";
 
 interface Blog {
   id: string;
@@ -16,11 +17,11 @@ interface Blog {
   content: string;
   excerpt: string | null;
   coverImage: string | null;
-  status: "DRAFT" | "PUBLISHED" | string; // add more statuses if needed
+  status: "DRAFT" | "PUBLISHED" | string;
   authorId: string | null;
   categoryId: string;
-  createdAt: string; // ISO string
-  updatedAt: string; // ISO string
+  createdAt: string;
+  updatedAt: string;
   author: Author | null;
   category: Category;
   _count: {
@@ -52,35 +53,42 @@ interface Category {
   updatedAt: string;
 }
 
-
-
-// Main component
 export const BlogReading = () => {
   const [blogData, setBlogData] = useState<Blog>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const id = useParams()
+  const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
     const fetchBlogDetails = async () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await api.get(`/blogs/slug/${id.id}`)
+        const response = await api.get(`/blogs/slug/${id}`);
         setBlogData(response.data.data);
-
       } catch (err) {
-        console.error("Failed to fetch blogs:", err);
-        setError("Could not load recent articles. Please try again later.");
+        console.error("Failed to fetch blog:", err);
+        setError("Could not load the blog. Please try again later.");
       } finally {
         setLoading(false);
       }
+    };
+
+    if (id) {
+      fetchBlogDetails();
     }
+  }, [id]);
 
-    fetchBlogDetails()
-  });
+  const sanitizedContent = useMemo(() => {
+    if (!blogData?.content) return "";
+    const rawHtml = marked.parse(blogData.content);
+    return DOMPurify.sanitize(rawHtml);
+  }, [blogData?.content]);
 
+  if (loading) return <div className="text-center py-12">Loading...</div>;
+  if (error) return <div className="text-center py-12 text-red-500">{error}</div>;
+  if (!blogData) return <div className="text-center py-12">Blog not found</div>;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -90,26 +98,23 @@ export const BlogReading = () => {
         <div
           className="relative bg-cover bg-center h-96"
           style={{
-            backgroundImage: `url(${blogData?.coverImage})`
+            backgroundImage: `url(${blogData?.coverImage || 'https://via.placeholder.com/800x400?text=No+Cover+Image'})`
           }}
-
         >
           <div className="absolute inset-0 bg-black opacity-60"></div>
           <div className="relative container mx-auto px-4 h-full flex items-center justify-center">
             <div className="text-center">
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                {/* The 15 Secrets That You Should Know<br />
-                About Running Club */}
                 {blogData?.title}
               </h1>
               <div className="flex items-center justify-center space-x-6 text-sm">
                 <div className="flex items-center space-x-2">
                   <User className="w-4 h-4" />
-                  <span>{blogData?.author?.username}</span>
+                  <span>{blogData?.author?.username || "Unknown Author"}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-4 h-4" />
-                  <span>{blogData?.updatedAt}</span>
+                  <span>{new Date(blogData?.updatedAt).toLocaleDateString()}</span>
                 </div>
               </div>
             </div>
@@ -123,40 +128,15 @@ export const BlogReading = () => {
           {/* Main Article */}
           <div className="lg:col-span-2">
             <article className="bg-white rounded-lg shadow-sm p-8 mb-8">
-              <div className="prose prose-lg max-w-none">
-                <p className="text-gray-600 leading-relaxed mb-6">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.
-                </p>
-
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Five Quick Tips Regarding Running Club</h2>
-
-                <p className="text-gray-600 leading-relaxed mb-4">
-                  Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus.
-                </p>
-
-                <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-600">
-                  <li>Quisque rutrum. Aenean imperdiet</li>
-                  <li>Etiam ultricies nisi vel augue</li>
-                  <li>Curabitur ullamcorper ultricies nisi</li>
-                  <li>Nam eget dui. Etiam rhoncus</li>
-                  <li>Maecenas tempus, tellus eget condimentum rhoncus</li>
-                </ul>
-
-                <p className="text-gray-600 leading-relaxed mb-6">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
-                </p>
-
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Et Magnis Dis Parturient Montes</h2>
-
-                <p className="text-gray-600 leading-relaxed">
-                  Nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.
-                </p>
-              </div>
+              {/* Render sanitized Markdown content here */}
+              <div
+                className="prose prose-lg max-w-none"
+                dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+              />
             </article>
 
             {/* Comment Section */}
             <CommentSection />
-
           </div>
 
           {/* Sidebar */}
@@ -196,8 +176,16 @@ export const BlogReading = () => {
       </div>
 
       <AppDownload />
-
       <TestimonialsSection />
+
+      <style>{`
+        /* Ensure typography if Tailwind plugin isn't present */
+        .prose h1 { font-size: 1.875rem; line-height: 2.25rem; margin-top: 1rem; margin-bottom: .75rem; font-weight: 800; }
+        .prose h2 { font-size: 1.5rem; line-height: 2rem; margin-top: 1rem; margin-bottom: .5rem; font-weight: 700; }
+        .prose p { margin: .75rem 0; }
+        .prose img { border-radius: .75rem; }
+        .dark .prose :where(a){ color: #a3e635; }
+      `}</style>
     </div>
   );
 };
