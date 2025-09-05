@@ -23,6 +23,13 @@ import {
 } from "lucide-react";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 // ---------- Utility helpers ----------
 const slugify = (str: string) =>
@@ -86,25 +93,6 @@ const wrapSelection = (
   textarea.dispatchEvent(new Event("input", { bubbles: true }));
   textarea.focus();
 };
-
-const ToolbarButton = ({
-  title,
-  onClick,
-  children,
-}: {
-  title: string;
-  onClick: () => void;
-  children: React.ReactNode;
-}) => (
-  <button
-    type="button"
-    title={title}
-    onClick={onClick}
-    className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm hover:shadow-sm active:scale-[.98] transition"
-  >
-    {children}
-  </button>
-);
 
 interface Post {
   title: string;
@@ -341,11 +329,11 @@ export default function BlogEditor() {
   ];
 
   return (
-    <div className="min-h-screen  text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
+    <div className="min-h-screen text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
       <div className="mx-auto px-4 pb-20">
         {/* Header */}
-        <div className="sticky top-0 z-20 mb-6 border rounded-2xl bg-white dark:bg-neutral-900/70">
-          <div className="mx-auto px-4 py-3 flex items-center justify-between gap-2">
+        <div className="sticky top-0 z-20 mb-6 rounded-2xl border bg-white dark:bg-neutral-900/70">
+          <div className="mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2 text-sm opacity-70">
               <Rocket className="" size={18} />
               <span>Blog Editor</span>
@@ -358,35 +346,41 @@ export default function BlogEditor() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <button
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={publishToggle}
-                className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm hover:shadow-sm"
                 title="Toggle publish"
               >
-                <Eye size={16} />
+                <Eye size={16} className="mr-2" />
                 {post.status === "published" ? "Unpublish" : "Publish"}
-              </button>
-              <button
-                onClick={exportMarkdown}
-                className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm hover:shadow-sm"
-                title="Export Markdown"
-              >
-                <FileDown size={16} /> MD
-              </button>
-              <button
-                onClick={exportJSON}
-                className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm hover:shadow-sm"
-                title="Export JSON"
-              >
-                <FileDown size={16} /> JSON
-              </button>
-              <button
+              </Button>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" title="Export options">
+                    <FileDown size={16} className="mr-2" />
+                    Export
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={exportMarkdown}>
+                    Export as Markdown
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={exportJSON}>
+                    Export as JSON
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={clearAll}
-                className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm hover:shadow-sm"
                 title="Clear draft"
               >
                 <Trash2 size={16} />
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -429,26 +423,26 @@ export default function BlogEditor() {
 
         {/* Category */}
         <div className="mt-4">
-            <label className="text-xs uppercase tracking-wider opacity-60">
-              Category
-            </label>
-            <div className="relative mt-2 flex items-center gap-2 rounded-2xl border bg-white p-3 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
-              <LayoutGrid size={18} className="opacity-70" />
-              <select
-                className="w-full appearance-none bg-transparent text-base outline-none"
-                value={post.categoryId}
-                onChange={(e) => setPost({ ...post, categoryId: e.target.value })}
-              >
-                <option value="">Select a category</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>{category.name}</option>
-                ))}
-              </select>
-            </div>
+          <label className="text-xs uppercase tracking-wider opacity-60">
+            Category
+          </label>
+          <div className="relative mt-2 flex items-center gap-2 rounded-2xl border bg-white p-3 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
+            <LayoutGrid size={18} className="opacity-70" />
+            <select
+              className="w-full appearance-none bg-transparent text-base outline-none"
+              value={post.categoryId}
+              onChange={(e) => setPost({ ...post, categoryId: e.target.value })}
+            >
+              <option value="">Select a category</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>{category.name}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Cover & Excerpt */}
-        <div className="mt-4 grid gap-4 md:grid-cols-3">
+        <div className="mt-4 grid gap-4">
           <div className="md:col-span-2 space-y-3">
             <label className="text-xs uppercase tracking-wider opacity-60">
               Excerpt
@@ -460,66 +454,76 @@ export default function BlogEditor() {
               onChange={(e) => setPost({ ...post, excerpt: e.target.value })}
             />
           </div>
-
-          <div className="space-y-2">
-            <label className="text-xs uppercase tracking-wider opacity-60">
-              Cover Image
-            </label>
-            {post.cover ? (
-              <div className="relative rounded-2xl border bg-white p-2 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
-                <img
-                  src={post.cover}
-                  alt="Cover"
-                  className="h-40 w-full rounded-xl object-cover"
-                />
-                <div className="mt-2 flex gap-2">
-                  <button
-                    className="flex-1 rounded-xl border px-3 py-2 text-sm"
-                    onClick={() => coverInputRef.current?.click()}
-                  >
-                    Change
-                  </button>
-                  <button
-                    className="flex-1 rounded-xl border px-3 py-2 text-sm"
-                    onClick={() => setPost({ ...post, cover: "" })}
-                  >
-                    Remove
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <button
-                onClick={() => coverInputRef.current?.click()}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed p-6 text-sm hover:shadow-sm dark:border-neutral-800"
-              >
-                <ImageIcon size={18} /> Add cover image
-              </button>
-            )}
-            <input
-              ref={coverInputRef}
-              type="file"
-              className="hidden"
-              accept="image/*"
-              onChange={(e) => handleUploadCover(e.target.files?.[0])}
-            />
-          </div>
         </div>
 
         {/* Editor */}
         <div className="mt-6 grid gap-4 lg:grid-cols-2">
           <div className="space-y-3">
+            <div className="space-y-2">
+              {post.cover ? (
+                <div className="relative rounded-2xl border bg-white p-2 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
+                  <img
+                    src={post.cover}
+                    alt="Cover"
+                    className="h-40 w-full rounded-xl object-cover"
+                  />
+                  <div className="mt-2 flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => coverInputRef.current?.click()}
+                    >
+                      Change
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => setPost({ ...post, cover: "" })}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => coverInputRef.current?.click()}
+                >
+                  <ImageIcon size={18} className="mr-2" /> Add cover image
+                </Button>
+              )}
+              <input
+                ref={coverInputRef}
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={(e) => handleUploadCover(e.target.files?.[0])}
+              />
+            </div>
+
             <div className="flex flex-wrap items-center gap-2 bg-white rounded-2xl p-3 shadow-sm dark:bg-neutral-900 border dark:border-neutral-800">
               {toolbar.map((t, i) => (
-                <ToolbarButton key={i} title={t.tip} onClick={t.fn}>
+                <Button
+                  key={i}
+                  variant="outline"
+                  size="icon"
+                  title={t.tip}
+                  onClick={t.fn}
+                >
                   {t.icon}
-                </ToolbarButton>
+                </Button>
               ))}
-              <ToolbarButton
+              <Button
+                variant="outline"
+                size="icon"
                 title="Upload inline image"
                 onClick={() => fileInputRef.current?.click()}
               >
                 <Upload size={16} />
-              </ToolbarButton>
+              </Button>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -556,27 +560,6 @@ export default function BlogEditor() {
               {post.excerpt && <p className="opacity-70">{post.excerpt}</p>}
               <div dangerouslySetInnerHTML={{ __html: html }} />
             </article>
-          </div>
-        </div>
-
-        {/* Footer actions */}
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-          <div className="text-xs opacity-60">
-            Auto saves to localStorage as you type.
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={exportMarkdown}
-              className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm hover:shadow-sm"
-            >
-              <FileDown size={16} /> Export .md
-            </button>
-            <button
-              onClick={exportJSON}
-              className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm hover:shadow-sm"
-            >
-              <FileDown size={16} /> Export .json
-            </button>
           </div>
         </div>
       </div>
