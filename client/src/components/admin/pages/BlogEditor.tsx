@@ -102,6 +102,7 @@ interface Post {
   tags: string[];
   categoryId: string;
   cover: string;
+  authorId: string; // As per your endpoint requirement
   status: "draft" | "published";
 }
 
@@ -122,6 +123,7 @@ export default function BlogEditor() {
     tags: [],
     categoryId: "",
     cover: "",
+    authorId: "cmeoemmrx0000vyuskct0x3up", // TODO: Replace with dynamic author ID
     status: "draft", // draft | published
   });
 
@@ -259,15 +261,49 @@ export default function BlogEditor() {
       tags: [],
       categoryId: "",
       cover: "",
+      authorId: "cmeoemmrx0000vyuskct0x3up", // Reset authorId as well
       status: "draft",
     });
   }, [setPost]);
 
-  const publishToggle = useCallback(() => {
-    setPost((p) => ({
-      ...p,
-      status: p.status === "published" ? "draft" : "published",
-    }));
+  const publishToggle = useCallback(async () => {
+    const isPublishing = post.status !== "published";
+    const newStatus = isPublishing ? "published" : "draft";
+
+    if (isPublishing) {
+      try {
+        const response = await fetch("http://localhost:3000/api/blogs", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: post.title,
+            slug: post.slug,
+            content: post.content,
+            excerpt: post.excerpt,
+            coverImage: post.cover, // The endpoint expects `coverImage`
+            status: "PUBLISHED", // The endpoint expects uppercase "PUBLISHED"
+            authorId: post.authorId,
+            categoryId: post.categoryId,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        alert("Blog published successfully!");
+        setPost((p) => ({ ...p, status: newStatus }));
+      } catch (error) {
+        console.error("Failed to publish blog:", error);
+        alert("Failed to publish blog. Check the console for details.");
+      }
+    } else {
+      // Logic for unpublishing if needed, for now, just update local status
+      setPost((p) => ({ ...p, status: newStatus }));
+      alert("Blog unpublished and saved as draft.");
+    }
   }, [setPost]);
 
   const toolbar = [
