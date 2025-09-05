@@ -328,6 +328,12 @@ export default function BlogEditor() {
     },
   ];
 
+  // Get category name for display
+  const getCategoryName = (id: string) => {
+    const category = categories.find(cat => cat.id === id);
+    return category ? category.name : "Select a category";
+  };
+
   return (
     <div className="min-h-screen text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
       <div className="mx-auto px-4 pb-20">
@@ -394,7 +400,7 @@ export default function BlogEditor() {
             <div className="flex items-center gap-2 rounded-2xl border bg-white p-3 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
               <Type size={18} className="opacity-70" />
               <input
-                className="w-full bg-transparent text-lg outline-none"
+                className="w-full bg-transparent text-base outline-none"
                 placeholder="Write an irresistible title…"
                 value={post.title}
                 onChange={(e) => setPost({ ...post, title: e.target.value })}
@@ -426,18 +432,33 @@ export default function BlogEditor() {
           <label className="text-xs uppercase tracking-wider opacity-60">
             Category
           </label>
-          <div className="relative mt-2 flex items-center gap-2 rounded-2xl border bg-white p-3 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
-            <LayoutGrid size={18} className="opacity-70" />
-            <select
-              className="w-full appearance-none bg-transparent text-base outline-none"
-              value={post.categoryId}
-              onChange={(e) => setPost({ ...post, categoryId: e.target.value })}
-            >
-              <option value="">Select a category</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>{category.name}</option>
-              ))}
-            </select>
+          <div className="mt-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full justify-between rounded-2xl py-6"
+                >
+                  <span className="flex items-center">
+                    <LayoutGrid size={18} className="mr-2 opacity-70" />
+                    {getCategoryName(post.categoryId)}
+                  </span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
+                <DropdownMenuItem onSelect={() => setPost({ ...post, categoryId: "" })}>
+                  Select a category
+                </DropdownMenuItem>
+                {categories.map((category) => (
+                  <DropdownMenuItem
+                    key={category.id}
+                    onSelect={() => setPost({ ...post, categoryId: category.id })}
+                  >
+                    {category.name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
