@@ -2,8 +2,15 @@ import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { useState, type FormEvent } from "react";
 import api from "@/lib/axios.ts";
 import { Button } from "@/components/ui/button.tsx";
-import { Home, MailCheck, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Home, MailCheck, Loader2, Mail, Shield } from "lucide-react";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 export default function Verify() {
   const [searchParams] = useSearchParams();
@@ -32,6 +39,12 @@ export default function Verify() {
       return;
     }
 
+    if (otp.length !== 6) {
+      setError("Please enter a complete 6-digit OTP.");
+      setLoading(false);
+      return;
+    }
+
     try {
       await api.post("auth/verify", { email, otp });
       setSuccess(true);
@@ -41,7 +54,7 @@ export default function Verify() {
     } catch (err: any) {
       setError(
         err.response?.data?.message ||
-          "Verification failed. Please check your details and try again."
+        "Verification failed. Please check your details and try again."
       );
     } finally {
       setLoading(false);
@@ -73,87 +86,202 @@ export default function Verify() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-cyan-100 to-blue-100 px-4">
-      <div className="w-full max-w-md text-center py-10 px-6 rounded-3xl shadow-2xl bg-white border border-gray-200 animate-fade-in">
-        {success ? (
-          <div className="text-green-600 text-xl font-semibold space-y-6">
-            <MailCheck className="w-14 h-14 mx-auto" />
-            <p>Email verified successfully!</p>
-            <p className="text-sm text-gray-500">
-              You will be redirected to the login page shortly.
-            </p>
-            <Link to="/login">
-              <Button className="w-full mt-2 rounded-full text-lg font-semibold px-10 py-3 flex items-center justify-center gap-2">
-                <Home className="w-5 h-5" />
-                Go to Login
-              </Button>
-            </Link>
-          </div>
-        ) : (
-          <>
-            <MailCheck className="w-14 h-14 mx-auto mb-4 text-blue-500" />
-            <h2 className="text-2xl font-bold mb-2 text-gray-800">
-              Verify Your Email
-            </h2>
-            <p className="text-gray-500 mb-6">
-              Enter the OTP sent to your email address.
-            </p>
-            <form
-              onSubmit={handleVerify}
-              className="flex flex-col gap-4 items-center text-gray-700"
-            >
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="your@email.com"
-              required
-              className="w-full rounded-xl"
-            />
-            <Input
-              type="text"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              placeholder="Enter your 6-digit OTP"
-              required
-              maxLength={6}
-              className="w-full rounded-xl text-center tracking-[0.5em]"
-            />
-            {error && (
-              <p className="text-sm font-medium text-red-600">{error}</p>
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <Card className="shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
+          <CardHeader className="space-y-6 text-center pb-8">
+            {success ? (
+              <div className="space-y-4">
+                <div className="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+                  <MailCheck className="w-10 h-10 text-green-600" />
+                </div>
+                <div className="space-y-2">
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    Email Verified Successfully!
+                  </h1>
+                  <p className="text-gray-500 text-sm">
+                    Your account has been verified. You will be redirected to the login page shortly.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="mx-auto w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center">
+                  <Shield className="w-10 h-10 text-primary-600" />
+                </div>
+                <div className="space-y-2">
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    Verify Your Email
+                  </h1>
+                  <p className="text-gray-500 text-sm">
+                    We've sent a 6-digit verification code to your email address.
+                  </p>
+                </div>
+              </div>
             )}
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-full text-lg font-semibold px-10 py-3 mt-2"
-            >
-              {loading ? <Loader2 className="animate-spin" /> : "Verify Account"}
-            </Button>
-            </form>
-            <div className="mt-4 text-sm">
-              <p className="text-gray-600">
-                Didn't receive the code?{" "}
+          </CardHeader>
+
+          <CardContent className="space-y-6">
+            {success ? (
+              <div className="space-y-4">
+                <div className="w-full h-2 bg-green-100 rounded-full overflow-hidden">
+                  <div className="w-full h-full bg-green-500 rounded-full animate-pulse"></div>
+                </div>
+                <Link to="/login" className="block">
+                  <Button
+                    size="lg"
+                    className="w-full bg-primary-500 hover:bg-primary-600 text-white rounded-xl font-semibold transition-all duration-200 transform hover:scale-[1.02]"
+                  >
+                    <Home className="w-5 h-5 mr-2" />
+                    Continue to Login
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <form onSubmit={handleVerify} className="space-y-6">
+                {/* Email Input */}
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-primary-500" />
+                    Email Address
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email address"
+                    required
+                    className="h-12 rounded-xl border-gray-200 focus:border-primary-400 focus:ring-primary-400/20 transition-all duration-200"
+                  />
+                </div>
+
+                {/* OTP Input */}
+                <div className="space-y-4">
+                  <Label htmlFor="otp" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-primary-500" />
+                    Verification Code
+                  </Label>
+                  <div className="flex flex-col items-center space-y-4">
+                    <InputOTP
+                      maxLength={6}
+                      value={otp}
+                      onChange={(value) => setOtp(value)}
+                      className="gap-3"
+                    >
+                      <InputOTPGroup className="gap-2">
+                        <InputOTPSlot
+                          index={0}
+                          className="w-12 h-12 text-lg font-bold border-2 border-gray-200 rounded-xl focus:border-primary-400 focus:ring-primary-400/20 transition-all duration-200"
+                        />
+                        <InputOTPSlot
+                          index={1}
+                          className="w-12 h-12 text-lg font-bold border-2 border-gray-200 rounded-xl focus:border-primary-400 focus:ring-primary-400/20 transition-all duration-200"
+                        />
+                        <InputOTPSlot
+                          index={2}
+                          className="w-12 h-12 text-lg font-bold border-2 border-gray-200 rounded-xl focus:border-primary-400 focus:ring-primary-400/20 transition-all duration-200"
+                        />
+                      </InputOTPGroup>
+                      <InputOTPGroup className="gap-2">
+                        <InputOTPSlot
+                          index={3}
+                          className="w-12 h-12 text-lg font-bold border-2 border-gray-200 rounded-xl focus:border-primary-400 focus:ring-primary-400/20 transition-all duration-200"
+                        />
+                        <InputOTPSlot
+                          index={4}
+                          className="w-12 h-12 text-lg font-bold border-2 border-gray-200 rounded-xl focus:border-primary-400 focus:ring-primary-400/20 transition-all duration-200"
+                        />
+                        <InputOTPSlot
+                          index={5}
+                          className="w-12 h-12 text-lg font-bold border-2 border-gray-200 rounded-xl focus:border-primary-400 focus:ring-primary-400/20 transition-all duration-200"
+                        />
+                      </InputOTPGroup>
+                    </InputOTP>
+                    <p className="text-xs text-gray-500 text-center">
+                      Enter the 6-digit code sent to your email
+                    </p>
+                  </div>
+                </div>
+
+                {/* Error Message */}
+                {error && (
+                  <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+                    <p className="text-sm font-medium text-red-600 text-center">{error}</p>
+                  </div>
+                )}
+
+                {/* Submit Button */}
                 <Button
-                  variant="link"
-                  onClick={handleResend}
-                  disabled={resendLoading}
-                  className="p-0 h-auto font-medium text-blue-600"
+                  type="submit"
+                  size="lg"
+                  disabled={loading || otp.length !== 6}
+                  className="w-full bg-primary-500 hover:bg-primary-600 disabled:bg-gray-300 disabled:text-gray-500 text-white rounded-xl font-semibold transition-all duration-200 transform hover:scale-[1.02] disabled:scale-100"
                 >
-                  {resendLoading ? "Sending..." : "Resend OTP"}
+                  {loading ? (
+                    <>
+                      <Loader2 className="animate-spin w-5 h-5 mr-2" />
+                      Verifying Account...
+                    </>
+                  ) : (
+                    <>
+                      <Shield className="w-5 h-5 mr-2" />
+                      Verify Account
+                    </>
+                  )}
                 </Button>
-              </p>
-              {resendMessage && (
-                <p
-                  className={`text-sm mt-2 font-medium ${
-                    resendSuccess ? "text-green-600" : "text-red-600"
-                  }`}
-                >
-                  {resendMessage}
-                </p>
-              )}
-            </div>
-          </>
-        )}
+
+                {/* Resend Section */}
+                <div className="pt-4 border-t border-gray-100">
+                  <div className="text-center space-y-3">
+                    <p className="text-sm text-gray-600">
+                      Didn't receive the verification code?
+                    </p>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={handleResend}
+                      disabled={resendLoading}
+                      className="text-primary-600 hover:text-primary-700 hover:bg-primary-50 font-semibold transition-all duration-200"
+                    >
+                      {resendLoading ? (
+                        <>
+                          <Loader2 className="animate-spin w-4 h-4 mr-2" />
+                          Sending new code...
+                        </>
+                      ) : (
+                        <>
+                          <Mail className="w-4 h-4 mr-2" />
+                          Resend Verification Code
+                        </>
+                      )}
+                    </Button>
+
+                    {/* Resend Message */}
+                    {resendMessage && (
+                      <div className={`p-3 rounded-xl ${resendSuccess
+                          ? "bg-green-50 border border-green-200"
+                          : "bg-red-50 border border-red-200"
+                        }`}>
+                        <p className={`text-sm font-medium text-center ${resendSuccess ? "text-green-600" : "text-red-600"
+                          }`}>
+                          {resendMessage}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </form>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Footer */}
+        <div className="text-center mt-6">
+          <p className="text-xs text-gray-500">
+            Need help? <Link to="/support" className="text-primary-600 hover:text-primary-700 font-medium">Contact Support</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

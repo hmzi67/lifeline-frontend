@@ -30,6 +30,7 @@ import medicationRoutes from './routes/medicationRoutes.js';
 import meditationRoutes from './routes/meditationRoutes.js';
 import userDailyRoutes from './routes/userDailyRoutineRoutes.js';
 import appSetttingsRoutes from './routes/appSettingRoutes.js';
+import blogsRoutes from './routes/blogRoutes.js';
 
 const app = express();
 
@@ -116,6 +117,9 @@ app.use('/api/app-settings', appSetttingsRoutes);
 
 // user daily routines routes
 app.use('/api/user-daily-routines', userDailyRoutes);
+
+// adding blogs routes
+app.use('/api/blogs', blogsRoutes);
 
 // Example protected route
 // app.get('/api/protected', authenticate, (req, res) => {

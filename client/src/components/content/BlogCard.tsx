@@ -12,7 +12,7 @@ interface BlogCardProps {
 export const BlogCard: React.FC<BlogCardProps> = ({title, excerpt, imageUrl, readMoreLink, size = 'medium'}) => {
     if (size === 'featured') {
         return (
-            <div className="bg-white rounded-lg overflow-hidden shadow-sm">
+            <div className="bg-white rounded-lg overflow-hidden">
             <div className="h-80 bg-gray-200 relative overflow-hidden">
             <img
                 src={imageUrl}
@@ -39,7 +39,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({title, excerpt, imageUrl, rea
     }
 
     return (
-        <div className="bg-white rounded-lg overflow-hidden shadow-sm">
+        <div className="bg-white rounded-lg overflow-hidden">
         <div className="h-48 bg-gray-200 relative overflow-hidden">
         <img
             src={imageUrl}
