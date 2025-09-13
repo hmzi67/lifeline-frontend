@@ -1,5 +1,5 @@
 import React from 'react';
-import PricingHeroBgImage from "../../assets/images/pricing/pricingHeroBg.png";
+import PricingHeroBgImage from "../../assets/images/pricing/pricingHeroBg.webp";
 
 const PricingHero: React.FC = () => {
   return (

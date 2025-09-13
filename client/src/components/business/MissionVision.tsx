@@ -1,5 +1,5 @@
-import MenImage from '../../assets/images/missionvision/men.svg';
-import WomenImage from '../../assets/images/missionvision/women.svg';
+import MenImage from '../../assets/images/missionvision/men.webp';
+import WomenImage from '../../assets/images/missionvision/women.webp';
 
 const MissionVision = () => {
   return (
