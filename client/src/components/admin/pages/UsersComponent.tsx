@@ -13,7 +13,9 @@ import {
     Trash2,
     UserCheck,
     UserX,
-    ArrowUpDown
+    ArrowUpDown,
+    Lock,
+    UserPlus
 } from 'lucide-react';
 import {
     useReactTable,
@@ -27,6 +29,7 @@ import {
     type ColumnFiltersState,
 } from '@tanstack/react-table';
 import { useUserStore } from '@/store/useUserStore';
+import type { CreateUserData } from '@/services/userService';
 import {
     Card,
     CardContent,
@@ -51,26 +54,114 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import type { UserProfile } from '@/types/user.types';
 
 const columnHelper = createColumnHelper<UserProfile>();
 
 const UsersComponent: React.FC = () => {
-    const { users, loading, error, fetchUsers } = useUserStore();
+    const { users, loading, error, fetchUsers, createUser, updateUser, deleteUser } = useUserStore();
     const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [globalFilter, setGlobalFilter] = useState('');
+    const [isCreatingUser, setIsCreatingUser] = useState(false);
+    const [isUpdatingUser, setIsUpdatingUser] = useState(false);
+    const [isDeletingUser, setIsDeletingUser] = useState(false);
 
-    useEffect(() => {
+    // Form state for adding user
+    const [newUser, setNewUser] = useState<CreateUserData>({
+        email: '',
+        username: '',
+        password: ''
+    });
+
+    // Form state for editing user
+    const [editUser, setEditUser] = useState<Partial<CreateUserData>>({
+        email: '',
+        username: ''
+    }); useEffect(() => {
         fetchUsers();
     }, []);
 
     const handleUserClick = (user: UserProfile) => {
         setSelectedUser(user);
         setIsDialogOpen(true);
+    };
+
+    const handleCreateUser = async () => {
+        if (!newUser.email || !newUser.username || !newUser.password) {
+            return; // Basic validation
+        }
+
+        setIsCreatingUser(true);
+        try {
+            await createUser(newUser);
+            setIsAddDialogOpen(false);
+            setNewUser({
+                email: '',
+                username: '',
+                password: ''
+            });
+        } catch (error) {
+            console.error('Failed to create user:', error);
+        } finally {
+            setIsCreatingUser(false);
+        }
+    };
+
+    const handleEditUser = (user: UserProfile) => {
+        setSelectedUser(user);
+        setEditUser({
+            email: user.email || '',
+            username: user.username || ''
+        });
+        setIsEditDialogOpen(true);
+    };
+
+    const handleUpdateUser = async () => {
+        if (!selectedUser || !editUser.email || !editUser.username) {
+            return; // Basic validation
+        }
+
+        setIsUpdatingUser(true);
+        try {
+            await updateUser(selectedUser.id!, editUser);
+            setIsEditDialogOpen(false);
+            setEditUser({ email: '', username: '' });
+            setSelectedUser(null);
+        } catch (error) {
+            console.error('Failed to update user:', error);
+        } finally {
+            setIsUpdatingUser(false);
+        }
+    };
+
+    const handleDeleteUser = async (userId: string) => {
+        if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+            return;
+        }
+
+        setIsDeletingUser(true);
+        try {
+            await deleteUser(userId);
+        } catch (error) {
+            console.error('Failed to delete user:', error);
+        } finally {
+            setIsDeletingUser(false);
+        }
+    };
+
+    const handleInputChange = (field: string, value: string) => {
+        setNewUser(prev => ({ ...prev, [field]: value }));
+    };
+
+    const handleEditInputChange = (field: string, value: string) => {
+        setEditUser(prev => ({ ...prev, [field]: value }));
     };
 
     const formatDate = (dateString: string) => {
@@ -206,14 +297,21 @@ const UsersComponent: React.FC = () => {
                                     <Eye className="w-4 h-4 mr-2" />
                                     View Details
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                                <DropdownMenuItem onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleEditUser(user);
+                                }}>
                                     <Edit className="w-4 h-4 mr-2" />
                                     Edit User
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
-                                    onClick={(e) => e.stopPropagation()}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDeleteUser(user.id!);
+                                    }}
                                     className="text-red-600 focus:text-red-600"
+                                    disabled={isDeletingUser}
                                 >
                                     <Trash2 className="w-4 h-4 mr-2" />
                                     Delete User
@@ -279,7 +377,7 @@ const UsersComponent: React.FC = () => {
                                 </CardDescription>
                             </div>
                         </div>
-                        <Button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600">
+                        <Button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600" onClick={() => setIsAddDialogOpen(true)}>
                             <Plus className="w-4 h-4 mr-2" />
                             Add User
                         </Button>
@@ -479,13 +577,207 @@ const UsersComponent: React.FC = () => {
                         <Separator />
 
                         <div className="flex gap-2 pt-2">
-                            <Button variant="outline" size="sm" className="flex-1">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="flex-1"
+                                onClick={() => {
+                                    setIsDialogOpen(false);
+                                    if (selectedUser) {
+                                        handleEditUser(selectedUser);
+                                    }
+                                }}
+                            >
                                 <Edit className="w-4 h-4 mr-2" />
                                 Edit User
                             </Button>
                             <Button variant="outline" size="sm" className="flex-1">
                                 <Eye className="w-4 h-4 mr-2" />
                                 View Activity
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Add User Dialog */}
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                <DialogContent className="max-w-md">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-3">
+                            <div className="p-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg">
+                                <UserPlus className="w-6 h-6 text-blue-600" />
+                            </div>
+                            <div>
+                                <div className="text-xl font-semibold">Add New User</div>
+                                <div className="text-sm text-gray-500 font-normal">Create a new user account</div>
+                            </div>
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    <div className="space-y-4">
+                        <Separator />
+
+                        <div className="space-y-4">
+                            <div>
+                                <Label className="text-sm font-medium text-gray-700">
+                                    <Mail className="w-4 h-4" />
+                                    Email *
+                                </Label>
+                                <Input
+                                    type="email"
+                                    placeholder="Enter email address"
+                                    value={newUser.email}
+                                    onChange={(e) => handleInputChange('email', e.target.value)}
+                                    className="mt-1"
+                                />
+                            </div>
+
+                            <div>
+                                <Label className="text-sm font-medium text-gray-700">
+                                    <User className="w-4 h-4" />
+                                    Username *
+                                </Label>
+                                <Input
+                                    type="text"
+                                    placeholder="Enter username"
+                                    value={newUser.username}
+                                    onChange={(e) => handleInputChange('username', e.target.value)}
+                                    className="mt-1"
+                                />
+                            </div>
+
+                            <div>
+                                <Label className="text-sm font-medium text-gray-700">
+                                    <Lock className="w-4 h-4" />
+                                    Password *
+                                </Label>
+                                <Input
+                                    type="password"
+                                    placeholder="Enter password"
+                                    value={newUser.password}
+                                    onChange={(e) => handleInputChange('password', e.target.value)}
+                                    className="mt-1"
+                                />
+                            </div>
+                        </div>
+
+                        <Separator />
+
+                        <div className="flex gap-2 pt-2">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="flex-1"
+                                onClick={() => setIsAddDialogOpen(false)}
+                                disabled={isCreatingUser}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                size="sm"
+                                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                                onClick={handleCreateUser}
+                                disabled={isCreatingUser || !newUser.email || !newUser.username || !newUser.password}
+                            >
+                                {isCreatingUser ? (
+                                    <div className="flex items-center gap-2">
+                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                        Creating...
+                                    </div>
+                                ) : (
+                                    <>
+                                        <Plus className="w-4 h-4 mr-2" />
+                                        Create User
+                                    </>
+                                )}
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Edit User Dialog */}
+            <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+                <DialogContent className="max-w-md">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-3">
+                            <div className="p-2 bg-gradient-to-r from-green-100 to-blue-100 rounded-lg">
+                                <Edit className="w-6 h-6 text-green-600" />
+                            </div>
+                            <div>
+                                <div className="text-xl font-semibold">Edit User</div>
+                                <div className="text-sm text-gray-500 font-normal">Update user information</div>
+                            </div>
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    <div className="space-y-4">
+                        <Separator />
+
+                        <div className="space-y-4">
+                            <div>
+                                <Label className="text-sm font-medium text-gray-700">
+                                    <Mail className="w-4 h-4" />
+                                    Email *
+                                </Label>
+                                <Input
+                                    type="email"
+                                    placeholder="Enter email address"
+                                    value={editUser.email || ''}
+                                    onChange={(e) => handleEditInputChange('email', e.target.value)}
+                                    className="mt-1"
+                                />
+                            </div>
+
+                            <div>
+                                <Label className="text-sm font-medium text-gray-700">
+                                    <User className="w-4 h-4" />
+                                    Username *
+                                </Label>
+                                <Input
+                                    type="text"
+                                    placeholder="Enter username"
+                                    value={editUser.username || ''}
+                                    onChange={(e) => handleEditInputChange('username', e.target.value)}
+                                    className="mt-1"
+                                />
+                            </div>
+
+                            <div className="text-sm text-gray-500 italic">
+                                Note: Password cannot be changed through this form for security reasons.
+                            </div>
+                        </div>
+
+                        <Separator />
+
+                        <div className="flex gap-2 pt-2">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="flex-1"
+                                onClick={() => setIsEditDialogOpen(false)}
+                                disabled={isUpdatingUser}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                size="sm"
+                                className="flex-1 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600"
+                                onClick={handleUpdateUser}
+                                disabled={isUpdatingUser || !editUser.email || !editUser.username}
+                            >
+                                {isUpdatingUser ? (
+                                    <div className="flex items-center gap-2">
+                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                        Updating...
+                                    </div>
+                                ) : (
+                                    <>
+                                        <Edit className="w-4 h-4 mr-2" />
+                                        Update User
+                                    </>
+                                )}
                             </Button>
                         </div>
                     </div>

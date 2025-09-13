@@ -7,6 +7,7 @@ import {
   getAllUsers,
   getUserStats,
   getUserWithRelations,
+  createUser,
 } from '../controllers/userController.js';
 
 const userRoute = Router();
@@ -23,6 +24,7 @@ userRoute.get('/admin/users/:id', getUserWithRelations);
 
 // Admin can update any user
 userRoute.put('/admin/users/:id', updateUser);
+userRoute.post('/admin/users', createUser);
 
 // Admin can delete any user
 userRoute.delete('/admin/users/:id', deleteUser);
