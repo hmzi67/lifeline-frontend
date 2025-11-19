@@ -1,7 +1,7 @@
 import React from 'react';
-import ci1 from "@/assets/images/affiliatehero/cardimg1.svg";
-import ci2 from "@/assets/images/affiliatehero/cardimg2.svg";
-import ci3 from "@/assets/images/affiliatehero/cardimg3.svg";
+import ci1 from "@/assets/images/affiliatehero/cardimg1.webp";
+import ci2 from "@/assets/images/affiliatehero/cardimg2.webp";
+import ci3 from "@/assets/images/affiliatehero/cardimg3.webp";
 
 interface StepCardProps {
   title: string;

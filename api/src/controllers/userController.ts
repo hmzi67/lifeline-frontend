@@ -357,6 +357,103 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 };
 
+// Admin: create user
+export const createUser = async (req: Request, res: Response) => {
+  try {
+    const allowedFields = [
+      'email',
+      'username',
+      'profileImage',
+      'subject',
+      'password',
+      'status',
+      'roleId',
+    ];
+
+    let data: any = {};
+    for (const key of allowedFields) {
+      if (req.body[key] !== undefined && req.body[key] !== null && req.body[key] !== '') {
+        data[key] = req.body[key];
+      }
+    }
+
+    // Hash password if provided
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
+
+    // Validate roleId if provided
+    if (data.roleId) {
+      const roleExists = await prisma.role.findUnique({
+        where: { id: data.roleId },
+      });
+      if (!roleExists) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid role ID provided',
+        });
+      }
+    }
+
+    const user = await prisma.user.create({
+      data,
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        googleId: true,
+        profileImage: true,
+        isEmailVerified: true,
+        subject: true,
+        status: true,
+        roleId: true,
+        createdAt: true,
+        updatedAt: true,
+        role: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+          },
+        },
+      },
+    });
+
+    res.status(201).json({
+      success: true,
+      data: { user },
+      message: 'User created successfully',
+    });
+  } catch (e: any) {
+    console.error('Create user error:', e);
+    if (e.code === 'P2002') {
+      // Handle unique constraint violation
+      const target = e.meta?.target;
+      if (target?.includes('email')) {
+        res.status(400).json({
+          success: false,
+          message: 'Email already exists',
+        });
+      } else if (target?.includes('username')) {
+        res.status(400).json({
+          success: false,
+          message: 'Username already exists',
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: 'Username or email already exists',
+        });
+      }
+    } else {
+      res.status(400).json({
+        success: false,
+        message: 'Failed to create user',
+      });
+    }
+  }
+};
+
 // delete user
 export const deleteUser = async (req: Request, res: Response) => {
   const { id } = req.params;

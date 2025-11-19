@@ -1,8 +1,8 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import uniqueFeaturesImage from '../../assets/images/business/UF-1.svg'
-import uniqueFeaturesImage2 from '../../assets/images/business/UF-2.png'
-import uniqueFeaturesImage3 from '../../assets/images/business/UF-3.svg'
+import uniqueFeaturesImage from '../../assets/images/business/UF-1.jpg'
+import uniqueFeaturesImage2 from '../../assets/images/business/UF-2.jpg'
+import uniqueFeaturesImage3 from '../../assets/images/business/UF-3.jpg'
 
 const UniqueFeatures: React.FC = () => {
   return (
@@ -65,7 +65,7 @@ const UniqueFeatures: React.FC = () => {
 
           {/* Desktop Image - hidden on mobile */}
           <div className="flex-1 relative hidden lg:block order-2">
-            <img src={uniqueFeaturesImage} alt="" />
+            <img src={uniqueFeaturesImage} alt=""/>
           </div>
         </div>
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from '../ui/button';
-import heroimg1 from "@/assets/images/affiliatehero/affilatehero.svg";
-import heroimg2 from "@/assets/images/affiliatehero/heroimg 2.svg";
+import heroimg1 from "@/assets/images/affiliatehero/affilatehero.webp";
+
 import { Link } from 'react-router-dom';
 
 
@@ -84,7 +84,7 @@ export const Herosection: React.FC = () => {
         <div className="relative z-10 h-[40vh] lg:h-[100vh] flex items-center justify-center">
           <div className="container mx-auto lg:px-12 mb-0 lg:mb-96">
             <div className="max-w-2xl">
-              <h1 className="text-2xl lg:text-5xl font-bold text-white mb-6 leading-relaxed mt-20 pt-20">
+              <h1 className="text-2xl lg:text-5xl font-bold text-white mb-6 leading-relaxed sm:mt-20 mt-1 pt-1 sm:pt-20 ">
                 Join LifeLine <span className='text-primary font-bold'>Affiliate</span><br /><span className='text-primary font-bold'>Business</span> Program
               </h1>
               <p className="text-white text-lg lg:text-2xl mb-6 lg:mb-8">
@@ -110,11 +110,6 @@ export const Herosection: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Floating Cards with Invisible Slider - Bottom Right */}
-        <div className="absolute bottom-0 right-8 w-[750px] overflow-hidden z-10 hidden lg:block">
-          <img src={heroimg2} alt="" />
         </div>
 
         {/* Decorative Elements */}

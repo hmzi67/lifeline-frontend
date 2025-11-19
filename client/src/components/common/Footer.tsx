@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom';
 import {
   FacebookIcon,
   TwitterIcon,
-  LinkedinIcon
+  LinkedinIcon,
+  InstagramIcon
 } from 'lucide-react';
 
 export default function Footer() {
@@ -14,9 +15,9 @@ export default function Footer() {
   ];
 
   const socialLinks = [
-    { name: 'LinkedIn', icon: LinkedinIcon, href: '#' },
-    { name: 'Facebook', icon: FacebookIcon, href: '#' },
-    { name: 'Twitter', icon: TwitterIcon, href: '#' }
+    { name: 'LinkedIn', icon: LinkedinIcon, href: 'https://www.linkedin.com/company/lifelineappofficial/' },
+    { name: 'Facebook', icon: FacebookIcon, href: 'https://web.facebook.com/lifelineappofficial/' },
+    { name: 'Instagram', icon: InstagramIcon, href: 'https://www.instagram.com/lifelineappofficial/' }
   ];
 
   return (
