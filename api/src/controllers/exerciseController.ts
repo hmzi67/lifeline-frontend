@@ -16,6 +16,8 @@ interface CreateExerciseBody {
   image?: string;
   duration?: string;
   videoUrl?: string;
+  difficulty?: string;
+  caloriesBurnEstimate?: number;
 }
 
 interface UpdateExerciseBody {
@@ -25,6 +27,8 @@ interface UpdateExerciseBody {
   image?: string;
   duration?: string;
   videoUrl?: string;
+  difficulty?: string;
+  caloriesBurnEstimate?: number;
 }
 
 // Get all exercises
@@ -131,7 +135,7 @@ export const getExerciseById = async (req: Request, res: Response): Promise<void
 // Create new exercise
 export const createExercise = async (req: Request<{}, {}, CreateExerciseBody>, res: Response): Promise<void> => {
   try {
-    const { name, purpose, description, image, duration, videoUrl } = req.body;
+    const { name, purpose, description, image, duration, videoUrl, difficulty, caloriesBurnEstimate } = req.body;
 
     // Validation
     if (!name) {
@@ -149,7 +153,9 @@ export const createExercise = async (req: Request<{}, {}, CreateExerciseBody>, r
         description: description || null,
         image: image || null,
         duration: duration || null,
-        videoUrl: videoUrl || null
+        videoUrl: videoUrl || null,
+        difficulty: difficulty || null,
+        caloriesBurnEstimate: caloriesBurnEstimate || null
       }
     });
 
@@ -172,7 +178,7 @@ export const createExercise = async (req: Request<{}, {}, CreateExerciseBody>, r
 export const updateExercise = async (req: Request<{ id: string }, {}, UpdateExerciseBody>, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const { name, purpose, description, image, duration, videoUrl } = req.body;
+    const { name, purpose, description, image, duration, videoUrl, difficulty, caloriesBurnEstimate } = req.body;
 
     // Check if exercise exists
     const existingExercise = await prisma.exercise.findUnique({
@@ -194,6 +200,8 @@ export const updateExercise = async (req: Request<{ id: string }, {}, UpdateExer
     if (image !== undefined) updateData.image = image;
     if (duration !== undefined) updateData.duration = duration;
     if (videoUrl !== undefined) updateData.videoUrl = videoUrl;
+    if (difficulty !== undefined) updateData.difficulty = difficulty;
+    if (caloriesBurnEstimate !== undefined) updateData.caloriesBurnEstimate = caloriesBurnEstimate;
 
     const updatedExercise = await prisma.exercise.update({
       where: { id },

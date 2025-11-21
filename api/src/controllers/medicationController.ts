@@ -31,7 +31,7 @@ export const createMedication = async (req: Request, res: Response) => {
       });
     }
 
-    const { name, quantity, dose, frequency, reminderTime, icon } = req.body;
+    const { name, quantity, dose, frequency, reminderTime, icon, appearanceColor, appearanceIcon } = req.body;
 
     if (!name || !dose || !frequency) {
       return res.status(400).json({
@@ -49,6 +49,8 @@ export const createMedication = async (req: Request, res: Response) => {
         frequency,
         reminderTime: reminderTime ? new Date(reminderTime) : null,
         icon: icon || null,
+        appearanceColor: appearanceColor || null,
+        appearanceIcon: appearanceIcon || null,
         addedAt: new Date()
       }
     });

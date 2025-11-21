@@ -31,6 +31,20 @@ import meditationRoutes from './routes/meditationRoutes.js';
 import userDailyRoutes from './routes/userDailyRoutineRoutes.js';
 import appSetttingsRoutes from './routes/appSettingRoutes.js';
 import blogsRoutes from './routes/blogRoutes.js';
+import mealTypeRoutes from './routes/mealTypeRoutes.js';
+import dietPlanDayRoutes from './routes/dietPlanDayRoutes.js';
+import dietPlanMealRoutes from './routes/dietPlanMealRoutes.js';
+import exercisePlanRoutes from './routes/exercisePlanRoutes.js';
+import exercisePlanWeekRoutes from './routes/exercisePlanWeekRoutes.js';
+import exercisePlanScheduleRoutes from './routes/exercisePlanScheduleRoutes.js';
+import exerciseDetailRoutes from './routes/exerciseDetailRoutes.js';
+import userActiveDietPlanRoutes from './routes/userActiveDietPlanRoutes.js';
+import userActiveExercisePlanRoutes from './routes/userActiveExercisePlanRoutes.js';
+import meditationSessionRoutes from './routes/meditationSessionRoutes.js';
+import userFavoriteMeditationRoutes from './routes/userFavoriteMeditationRoutes.js';
+import userWaterGoalRoutes from './routes/userWaterGoalRoutes.js';
+import medicationReminderRoutes from './routes/medicationReminderRoutes.js';
+import cheatDayRoutes from './routes/cheatDayRoutes.js';
 
 const app = express();
 
@@ -120,6 +134,34 @@ app.use('/api/user-daily-routines', userDailyRoutes);
 
 // adding blogs routes
 app.use('/api/blogs', blogsRoutes);
+
+// Diet plan structure routes
+app.use('/api/meal-types', mealTypeRoutes);
+app.use('/api/diet-plan-days', dietPlanDayRoutes);
+app.use('/api/diet-plan-meals', dietPlanMealRoutes);
+
+// Exercise plan structure routes
+app.use('/api/exercise-plans', exercisePlanRoutes);
+app.use('/api/exercise-plan-weeks', exercisePlanWeekRoutes);
+app.use('/api/exercise-plan-schedules', exercisePlanScheduleRoutes);
+app.use('/api/exercise-details', exerciseDetailRoutes);
+
+// Active plan routes
+app.use('/api/active-diet-plans', userActiveDietPlanRoutes);
+app.use('/api/active-exercise-plans', userActiveExercisePlanRoutes);
+
+// Meditation session routes
+app.use('/api/meditation-sessions', meditationSessionRoutes);
+app.use('/api/favorite-meditations', userFavoriteMeditationRoutes);
+
+// Water goal routes
+app.use('/api/water-goals', userWaterGoalRoutes);
+
+// Medication reminder routes
+app.use('/api/medication-reminders', medicationReminderRoutes);
+
+// Cheat day routes
+app.use('/api/cheat-days', cheatDayRoutes);
 
 // Example protected route
 // app.get('/api/protected', authenticate, (req, res) => {

@@ -13,12 +13,16 @@ interface CreateDietPlanBody {
   name: string;
   calories?: number;
   duration?: string;
+  description?: string;
+  image?: string;
 }
 
 interface UpdateDietPlanBody {
   name?: string;
   calories?: number;
   duration?: string;
+  description?: string;
+  image?: string;
 }
 
 // Get all diet plans
@@ -125,7 +129,7 @@ export const getDietPlanById = async (req: Request, res: Response): Promise<void
 // Create new diet plan
 export const createDietPlan = async (req: Request<{}, {}, CreateDietPlanBody>, res: Response): Promise<void> => {
   try {
-    const { name, calories, duration } = req.body;
+    const { name, calories, duration, description, image } = req.body;
 
     // Validation
     if (!name) {
@@ -140,7 +144,9 @@ export const createDietPlan = async (req: Request<{}, {}, CreateDietPlanBody>, r
       data: {
         name,
         calories: calories || null,
-        duration: duration || null
+        duration: duration || null,
+        description: description || null,
+        image: image || null
       }
     });
 
@@ -163,7 +169,7 @@ export const createDietPlan = async (req: Request<{}, {}, CreateDietPlanBody>, r
 export const updateDietPlan = async (req: Request<{ id: string }, {}, UpdateDietPlanBody>, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const { name, calories, duration } = req.body;
+    const { name, calories, duration, description, image } = req.body;
 
     // Check if diet plan exists
     const existingDietPlan = await prisma.dietPlan.findUnique({
@@ -182,6 +188,8 @@ export const updateDietPlan = async (req: Request<{ id: string }, {}, UpdateDiet
     if (name !== undefined) updateData.name = name;
     if (calories !== undefined) updateData.calories = calories;
     if (duration !== undefined) updateData.duration = duration;
+    if (description !== undefined) updateData.description = description;
+    if (image !== undefined) updateData.image = image;
 
     const updatedDietPlan = await prisma.dietPlan.update({
       where: { id },
