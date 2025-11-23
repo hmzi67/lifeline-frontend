@@ -165,6 +165,7 @@ export const signup = async (req: Request, res: Response) => {
         data: {
           user,
           accessToken,
+          refreshToken,
         },
       });
     }
@@ -175,6 +176,7 @@ export const signup = async (req: Request, res: Response) => {
       data: {
         user,
         accessToken,
+        refreshToken,
       },
     });
   } catch (error) {
@@ -408,6 +410,7 @@ export const login = async (req: Request, res: Response) => {
       data: {
         user: userWithoutSensitiveData,
         accessToken,
+        refreshToken,
       },
     });
   } catch (error) {
@@ -433,7 +436,8 @@ export const login = async (req: Request, res: Response) => {
 // Logout function
 export const logout = async (req: Request, res: Response) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
+    // Accept refresh token from request body (for React Native) or cookie (for web)
+    const refreshToken = req.body.refreshToken || req.cookies.refreshToken;
 
     if (refreshToken) {
       // Remove refresh token from database
@@ -461,7 +465,8 @@ export const logout = async (req: Request, res: Response) => {
 // Refresh token function
 export const refreshToken = async (req: Request, res: Response) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
+    // Accept refresh token from request body (for React Native) or cookie (for web)
+    const refreshToken = req.body.refreshToken || req.cookies.refreshToken;
 
     if (!refreshToken) {
       return res.status(401).json({
@@ -796,8 +801,8 @@ export const googleAuthCallback = (req: Request, res: Response) => {
           maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
 
-        // Redirect to frontend with access token
-        const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?token=${accessToken}`;
+        // Redirect to frontend with access token and refresh token
+        const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?token=${accessToken}&refreshToken=${refreshToken}`;
         res.redirect(redirectUrl);
       } catch (error) {
         console.error('Error generating tokens for Google OAuth:', error);
