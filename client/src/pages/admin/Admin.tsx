@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { BookOpen } from 'lucide-react';
 import { Sidebar, Header } from '@/components/admin/layout';
-import { UsersComponent, DietComponent, ExerciseComponent, GenericComponent } from '@/components/admin/pages';
+import { UsersComponent, DietComponent, ExerciseComponent, GenericComponent, BlogComponent } from '@/components/admin/pages';
 
 import { navigationItems, getStatsData } from '@/components/admin/constants';
 import { DashboardComponent } from '@/components/admin/dashboard';
 import { useAnimation } from '@/hooks/useAnimation';
-import BlogEditor from "@/components/admin/pages/BlogEditor.tsx";
 
 const FitnessActivityDashboard: React.FC = () => {
     const [activeNav, setActiveNav] = useState<string>('dashboard');
@@ -35,7 +34,7 @@ const FitnessActivityDashboard: React.FC = () => {
             case 'coupon':
                 return <GenericComponent title="Coupons" icon={BookOpen} description="Discount codes and promotions" />;
             case 'blog':
-                return <BlogEditor /> // <GenericComponent title="Blog" icon={BookOpen} description="Articles and blog posts" />;
+                return <BlogComponent />;
             case 'foodPlans':
                 return <GenericComponent title="Food Plans" icon={BookOpen} description="Meal planning and nutrition guides" />;
             case 'packages':

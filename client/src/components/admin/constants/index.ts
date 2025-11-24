@@ -4,13 +4,7 @@ import {
     Package,
     Dumbbell,
     BookOpen,
-    Ticket,
     FileText,
-    ClipboardList,
-    Layers,
-    ListTodo,
-    Box,
-    LogOut,
     DollarSign,
     ShoppingCart,
     CreditCard
@@ -23,17 +17,7 @@ export const navigationItems: NavigationItem[] = [
     { id: 'diet', label: 'Diet', icon: Package },
     { id: 'exercise', label: 'Exercise', icon: Dumbbell },
     { id: 'mindMeditation', label: 'Mind / Meditation', icon: BookOpen },
-    { id: 'cbt', label: 'CBT', icon: BookOpen },
-    { id: 'story', label: 'Story', icon: BookOpen },
-    { id: 'coupon', label: 'Coupon', icon: Ticket },
     { id: 'blog', label: 'Blog', icon: FileText },
-    { id: 'foodPlans', label: 'Food Plans', icon: ClipboardList },
-    { id: 'packages', label: 'Packages', icon: Layers },
-    { id: 'todos', label: 'Todos', icon: ListTodo },
-    { id: 'category', label: 'Category', icon: Layers },
-    { id: 'plans', label: 'Plans', icon: ClipboardList },
-    { id: 'deleteFood', label: 'Delete Food', icon: Box },
-    { id: 'leftUsers', label: 'Left Users', icon: LogOut },
 ];
 
 export const getStatsData = (animatedValues: Record<string, number>): StatData[] => [
