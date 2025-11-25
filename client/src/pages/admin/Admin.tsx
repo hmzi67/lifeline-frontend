@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BookOpen } from 'lucide-react';
 import { Sidebar, Header } from '@/components/admin/layout';
-import { UsersComponent, DietComponent, ExerciseComponent, GenericComponent, BlogComponent } from '@/components/admin/pages';
+import { UsersComponent, DietComponent, ExerciseComponent, GenericComponent, BlogComponent, MeditationComponent } from '@/components/admin/pages';
 
 import { navigationItems, getStatsData } from '@/components/admin/constants';
 import { DashboardComponent } from '@/components/admin/dashboard';
@@ -26,7 +26,7 @@ const FitnessActivityDashboard: React.FC = () => {
             case 'exercise':
                 return <ExerciseComponent />;
             case 'mindMeditation':
-                return <GenericComponent title="Mind / Meditation" icon={BookOpen} description="Mindfulness and meditation practices" />;
+                return <MeditationComponent />;
             case 'cbt':
                 return <GenericComponent title="CBT (Cognitive Behavioral Therapy)" icon={BookOpen} description="Therapeutic exercises and resources" />;
             case 'story':
