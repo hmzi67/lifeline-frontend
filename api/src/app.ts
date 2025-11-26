@@ -45,6 +45,7 @@ import userFavoriteMeditationRoutes from './routes/userFavoriteMeditationRoutes.
 import userWaterGoalRoutes from './routes/userWaterGoalRoutes.js';
 import medicationReminderRoutes from './routes/medicationReminderRoutes.js';
 import cheatDayRoutes from './routes/cheatDayRoutes.js';
+import roleRoutes from './routes/roleRoutes.js';
 
 const app = express();
 
@@ -162,6 +163,9 @@ app.use('/api/medication-reminders', medicationReminderRoutes);
 
 // Cheat day routes
 app.use('/api/cheat-days', cheatDayRoutes);
+
+// Role routes
+app.use('/api/roles', roleRoutes);
 
 // Example protected route
 // app.get('/api/protected', authenticate, (req, res) => {

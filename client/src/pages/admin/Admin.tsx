@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { BookOpen } from 'lucide-react';
 import { Sidebar, Header } from '@/components/admin/layout';
-import { UsersComponent, DietComponent, ExerciseComponent, GenericComponent, BlogComponent, MeditationComponent } from '@/components/admin/pages';
+import { UsersComponent, DietComponent, ExerciseComponent, BlogComponent, MeditationComponent, RoleComponent, BlogCategoryComponent, MealTypeComponent, ChallengeComponent } from '@/components/admin/pages';
 
 import { navigationItems, getStatsData } from '@/components/admin/constants';
 import { DashboardComponent } from '@/components/admin/dashboard';
@@ -21,34 +20,22 @@ const FitnessActivityDashboard: React.FC = () => {
                 return <DashboardComponent statsData={statsData} animatedValues={animatedValues} />;
             case 'users':
                 return <UsersComponent />;
+            case 'roles':
+                return <RoleComponent />;
             case 'diet':
                 return <DietComponent />;
+            case 'mealTypes':
+                return <MealTypeComponent />;
             case 'exercise':
                 return <ExerciseComponent />;
+            case 'challenges':
+                return <ChallengeComponent />;
             case 'mindMeditation':
                 return <MeditationComponent />;
-            case 'cbt':
-                return <GenericComponent title="CBT (Cognitive Behavioral Therapy)" icon={BookOpen} description="Therapeutic exercises and resources" />;
-            case 'story':
-                return <GenericComponent title="Stories" icon={BookOpen} description="Motivational stories and content" />;
-            case 'coupon':
-                return <GenericComponent title="Coupons" icon={BookOpen} description="Discount codes and promotions" />;
+            case 'blogCategories':
+                return <BlogCategoryComponent />;
             case 'blog':
                 return <BlogComponent />;
-            case 'foodPlans':
-                return <GenericComponent title="Food Plans" icon={BookOpen} description="Meal planning and nutrition guides" />;
-            case 'packages':
-                return <GenericComponent title="Packages" icon={BookOpen} description="Subscription packages and plans" />;
-            case 'todos':
-                return <GenericComponent title="Todos" icon={BookOpen} description="Task management and reminders" />;
-            case 'category':
-                return <GenericComponent title="Categories" icon={BookOpen} description="Content categorization and organization" />;
-            case 'plans':
-                return <GenericComponent title="Plans" icon={BookOpen} description="Workout and diet plans" />;
-            case 'deleteFood':
-                return <GenericComponent title="Delete Food" icon={BookOpen} description="Remove food items from database" />;
-            case 'leftUsers':
-                return <GenericComponent title="Left Users" icon={BookOpen} description="Users who have left the platform" />;
             default:
                 return <DashboardComponent statsData={statsData} animatedValues={animatedValues} />;
         }

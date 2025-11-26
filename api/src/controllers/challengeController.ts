@@ -86,7 +86,7 @@ const handleError = (err: unknown, res: Response): void => {
   sendResponse(res, 500, { error: 'Internal Server Error' }, 'Internal Server Error');
 };
 
-const idSchema = z.string().uuid('Invalid ID format');
+const idSchema = z.string().cuid('Invalid ID format');
 const validateId = (id: string): string => {
   try {
     return idSchema.parse(id);

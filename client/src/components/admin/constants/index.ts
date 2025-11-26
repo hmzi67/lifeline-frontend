@@ -7,17 +7,25 @@ import {
     FileText,
     DollarSign,
     ShoppingCart,
-    CreditCard
+    CreditCard,
+    Shield,
+    FolderOpen,
+    Utensils,
+    Target
 } from 'lucide-react';
 import type { NavigationItem, StatData } from '@/types';
 
 export const navigationItems: NavigationItem[] = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
     { id: 'users', label: 'Users', icon: Users },
-    { id: 'diet', label: 'Diet', icon: Package },
-    { id: 'exercise', label: 'Exercise', icon: Dumbbell },
-    { id: 'mindMeditation', label: 'Mind / Meditation', icon: BookOpen },
-    { id: 'blog', label: 'Blog', icon: FileText },
+    { id: 'roles', label: 'Roles', icon: Shield },
+    { id: 'diet', label: 'Diet Plans', icon: Package },
+    { id: 'mealTypes', label: 'Meal Types', icon: Utensils },
+    { id: 'exercise', label: 'Exercises', icon: Dumbbell },
+    { id: 'challenges', label: 'Challenges', icon: Target },
+    { id: 'mindMeditation', label: 'Meditation', icon: BookOpen },
+    { id: 'blogCategories', label: 'Blog Categories', icon: FolderOpen },
+    { id: 'blog', label: 'Blogs', icon: FileText },
 ];
 
 export const getStatsData = (animatedValues: Record<string, number>): StatData[] => [
