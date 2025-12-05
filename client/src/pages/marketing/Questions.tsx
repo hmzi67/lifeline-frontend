@@ -19,7 +19,8 @@ import api from "@/lib/axios";
 import Loading from "@/components/common/Loading";
 import GoBack from "@/components/common/GoBack";
 import DietImage from "@/assets/Q-thankyou/Diet Applause.png";
-import ExerciseImage from "@/assets/Q-thankyou/Exercise Applause.png"
+import ExerciseMenVideo from "@/assets/Q-thankyou/men-exercise.mp4"
+import ExerciseWomenVideo from "@/assets/Q-thankyou/women-exercise.mp4"
 
 export default function Questions() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -219,11 +220,13 @@ export default function Questions() {
     <>
 
       <div className="min-h-screen flex bg-white items-center justify-center relative overflow-hidden">
-        {(currentStep === 5) && (
-
-          <img
-            src={ExerciseImage}
+        {(currentStep === 5) && ( 
+          <video
+            src={gender === "men" ? ExerciseMenVideo :  ExerciseWomenVideo}
             className="absolute inset-0 w-full h-full object-cover z-0"
+            autoPlay
+            loop
+            muted
           />
         )}
 
