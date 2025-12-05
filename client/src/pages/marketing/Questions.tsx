@@ -222,7 +222,7 @@ export default function Questions() {
       <div className="min-h-screen flex bg-white items-center justify-center relative overflow-hidden">
         {(currentStep === 5) && ( 
           <video
-            src={gender === "men" ? ExerciseMenVideo :  ExerciseWomenVideo}
+            src={gender === "male" ? ExerciseMenVideo :  ExerciseWomenVideo}
             className="absolute inset-0 w-full h-full object-cover z-0"
             autoPlay
             loop
