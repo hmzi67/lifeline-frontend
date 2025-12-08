@@ -3,4 +3,5 @@ export const config = {
   environment: import.meta.env.MODE,
   isProduction: import.meta.env.PROD,
   isDevelopment: import.meta.env.DEV,
+  stripePublishableKey: import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "",
 };

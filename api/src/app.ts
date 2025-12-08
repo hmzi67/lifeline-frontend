@@ -17,6 +17,7 @@ import { healthCheck } from './config/database.js';
 import userRoute from './routes/userRoutes.js';
 import questionnaireRoutes from './routes/questionnaireRoutes.js';
 import subscriptionPaymentRoutes from './routes/subscriptionPaymentRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
 import dietPlanRoutes from './routes/dietPlanRoutes.js';
 import userDietPlanRoutes from './routes/userDietPlanRoutes.js';
 import exerciseRoutes from './routes/exerciseRoutes.js';
@@ -99,6 +100,9 @@ app.use('/api/questionnaire', questionnaireRoutes);
 
 // subscription payment routes
 app.use('/api/subscription-payments', subscriptionPaymentRoutes);
+
+// payment routes (Stripe)
+app.use('/api/payments', paymentRoutes);
 
 // diet plan routes
 app.use('/api/diet-plans', dietPlanRoutes);
