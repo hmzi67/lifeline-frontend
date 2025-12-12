@@ -133,10 +133,12 @@ export const SleepSection: React.FC = () => {
                                     Try Now
                                 </button>
                             </Link>
+                              <Link to="/contact">
                             <button className="px-5 py-1 sm:px-7 sm:py-2 lg:px-8 lg:py-3 bg-white/10 hover:bg-white/20 font-semibold rounded-full transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-white/20 flex items-center justify-center gap-1 sm:gap-2 text-sm sm:text-base lg:text-lg">
                                 <Download className="w-3 h-3 sm:w-4 sm:h-4" />
                                 Contact us
                             </button>
+                            </Link>
                         </div>
 
                         {/* Mobile Stats - Only shown on mobile screens, placed after buttons */}

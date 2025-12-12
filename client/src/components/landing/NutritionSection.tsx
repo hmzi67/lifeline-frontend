@@ -214,12 +214,16 @@ export const NutritionSection: React.FC = () => {
             </div>
 
             <div className="flex gap-3">
+              <Link to="/signup">
               <Button
                 size="lg"
                 className="bg-primary hover:bg-primary-600 text-white font-semibold px-8 py-4 text-lg transition-all duration-300 transform hover:scale-105"
               >
                 Try Now
               </Button>
+              </Link>
+              
+              <Link to="/contact">
               <Button
                 size="lg"
                 variant="ghost"
@@ -227,6 +231,7 @@ export const NutritionSection: React.FC = () => {
               >
                 Contact us
               </Button>
+              </Link>
             </div>
           </div>
         </div>

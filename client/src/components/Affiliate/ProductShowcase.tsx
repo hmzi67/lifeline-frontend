@@ -25,7 +25,7 @@ const ProductShowcase = () => {
           </div>
             <div className="mt-4 text-center">
               <h3 className="text-2xl font-bold text-gray-800 mb-2 ">Better Sleep</h3>
-              <p className="text-gray-600 text-x">
+              <p className="text-gray-600 text-x mx-12">
                 Unlock our library of meditations, sleep sounds, and more.
               </p>
             </div>
@@ -38,7 +38,7 @@ const ProductShowcase = () => {
           </div>
             <div className="mt-4 text-center">
               <h3 className="text-2xl font-bold text-gray-800 mb-2 ">Better Sleep</h3>
-              <p className="text-gray-600 text-x">
+              <p className="text-gray-600 text-x mx-12">
                 Unlock our library of meditations, sleep sounds, and more.
               </p>
             </div>
@@ -51,7 +51,7 @@ const ProductShowcase = () => {
           </div>
             <div className="mt-4 text-center">
               <h3 className="text-2xl font-bold text-gray-800 mb-2 ">Better Sleep</h3>
-              <p className="text-gray-600 text-x">
+              <p className="text-gray-600 text-x mx-12">
                 Unlock our library of meditations, sleep sounds, and more.
               </p>
             </div>

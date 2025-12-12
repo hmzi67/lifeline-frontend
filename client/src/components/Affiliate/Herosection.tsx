@@ -99,7 +99,7 @@ export const Herosection: React.FC = () => {
                     Start Earning
                   </Button>
                 </Link>
-                 
+                 <Link to="/contact">
                 <Button
                   size="lg"
                   variant="ghost"
@@ -107,6 +107,7 @@ export const Herosection: React.FC = () => {
                 >
                   Contact us
                 </Button>
+                </Link>
               </div>
             </div>
           </div>
