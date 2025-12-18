@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import {
   FacebookIcon,
-  TwitterIcon,
   LinkedinIcon,
   InstagramIcon
 } from 'lucide-react';
@@ -90,7 +89,7 @@ export default function Footer() {
             {/* Copyright */}
             <div className="text-center order-1 md:order-2">
               <p className="text-white text-sm sm:text-base">
-               © 2025 All rights reserved.
+                © 2025 All rights reserved.
               </p>
             </div>
 

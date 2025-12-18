@@ -29,7 +29,6 @@ const ResetPassword: React.FC = () => {
 
   // Request reset
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
 
   // OTP & password reset
   const [otp, setOtp] = useState("");
@@ -55,7 +54,6 @@ const ResetPassword: React.FC = () => {
     try {
       const response = await api.post("/auth/request-password-reset", { email });
       console.log(response.data);
-      setSubmitted(true);
       setStep("verifyOtp");
     } catch (error: any) {
       setError(error.response?.data?.message || "Failed to send OTP.");
@@ -133,7 +131,7 @@ const ResetPassword: React.FC = () => {
             <div className={`w-3 h-3 rounded-full ${step === "request" ? "bg-primary-500" : "bg-primary-300"
               }`} />
             <div className={`w-3 h-3 rounded-full ${step === "verifyOtp" ? "bg-primary-500" :
-                step === "resetSuccess" ? "bg-primary-300" : "bg-gray-200"
+              step === "resetSuccess" ? "bg-primary-300" : "bg-gray-200"
               }`} />
             <div className={`w-3 h-3 rounded-full ${step === "resetSuccess" ? "bg-primary-500" : "bg-gray-200"
               }`} />
@@ -338,12 +336,12 @@ const ResetPassword: React.FC = () => {
                           <div
                             key={i}
                             className={`h-1 flex-1 rounded-full ${i < passwordStrength.strength
-                                ? passwordStrength.strength <= 2
-                                  ? "bg-red-400"
-                                  : passwordStrength.strength <= 3
-                                    ? "bg-yellow-400"
-                                    : "bg-green-400"
-                                : "bg-gray-200"
+                              ? passwordStrength.strength <= 2
+                                ? "bg-red-400"
+                                : passwordStrength.strength <= 3
+                                  ? "bg-yellow-400"
+                                  : "bg-green-400"
+                              : "bg-gray-200"
                               }`}
                           />
                         ))}

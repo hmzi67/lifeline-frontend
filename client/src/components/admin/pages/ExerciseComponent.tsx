@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dumbbell, Plus, Loader2, AlertCircle, Timer, Flame, Edit, Trash2, ImageIcon, FileText, Video, Target } from 'lucide-react';
+import { Dumbbell, Plus, Loader2, AlertCircle, Timer, Flame, Edit, Trash2, ImageIcon, Video, Target } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -629,8 +629,8 @@ const ExerciseComponent: React.FC = () => {
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 {exercise.difficulty ? (
                                                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${exercise.difficulty === 'Beginner' ? 'bg-green-100 text-green-800' :
-                                                            exercise.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-800' :
-                                                                'bg-red-100 text-red-800'
+                                                        exercise.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-800' :
+                                                            'bg-red-100 text-red-800'
                                                         }`}>
                                                         {exercise.difficulty}
                                                     </span>

@@ -82,7 +82,7 @@ export const BlogReading = () => {
 
   const sanitizedContent = useMemo(() => {
     if (!blogData?.content) return "";
-    const rawHtml = marked.parse(blogData.content);
+    const rawHtml = marked.parse(blogData.content, { async: false }) as string;
     return DOMPurify.sanitize(rawHtml);
   }, [blogData?.content]);
 

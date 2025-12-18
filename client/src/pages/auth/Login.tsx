@@ -28,7 +28,7 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      await login(email, password, rememberMe);
+      await login(email, password);
 
       navigate("/questions")
 
