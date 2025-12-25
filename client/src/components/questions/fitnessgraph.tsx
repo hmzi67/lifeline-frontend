@@ -29,9 +29,9 @@ export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
   }, []);
 
   return (
-    <div className="p-4 sm:p-6">
+    <div className="">
       <div
-        className={`bg-white rounded-2xl p-4 sm:p-8 md:p-12 transition-all duration-300 max-w-6xl mx-auto`}
+        className={`rounded-2xl p-0 transition-all duration-300 max-w-6xl mx-auto`}
       >
         {/* Header */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
@@ -51,7 +51,7 @@ export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
             <img
               src={GraphImage}
               alt="Active goal graph"
-              className='h-auto max-h-96 w-full object-contain'
+              className='h-auto max-h-80 w-full object-contain'
             />
           </div>
 
@@ -61,13 +61,13 @@ export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
               <img
                 src={WomenGraph}
                 alt="Female Fitness Model"
-                className="w-56 h-auto object-contain"
+                className="w-48 h-auto object-contain"
               />
             ) : (
               <img
                 src={MenGraph}
                 alt="Male Fitness Model"
-                className="w-56 h-auto object-contain"
+                className="w-48 h-auto object-contain"
               />
             )}
           </div>
