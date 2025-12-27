@@ -3,6 +3,7 @@ export interface AuthUser {
   email: string;
   firstName: string;
   lastName: string;
+  username: string;
 }
 
 export interface LoginCredentials {

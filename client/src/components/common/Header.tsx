@@ -118,24 +118,15 @@ export default function Header() {
                       <DropdownMenuItem asChild>
                         <p>
                           <Hand className={'w-4 h-4 mr-2'} />
-                          hi, {user?.firstName}</p>
+                          hi, {user?.username && user.username.length > 5 ? user.username.slice(0, 8) + " ..." : user?.username}</p>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link
-                            to="/dashboard"
+                            to="/questions"
                             className="flex items-center cursor-pointer w-full"
                         >
                           <User className="w-4 h-4 mr-2" />
-                          Dashboard
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link
-                            to="/goals"
-                            className="flex items-center cursor-pointer w-full"
-                        >
-                          <Settings className="w-4 h-4 mr-2" />
-                          Goals
+                          Update Information
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
