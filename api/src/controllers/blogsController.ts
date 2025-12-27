@@ -144,7 +144,8 @@ export const getAllBlogs = async (req: Request, res: Response) => {
       }
     });
   } catch (error: any) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error('Error fetching blogs:', error);
+    res.status(500).json({ success: false, error: error.message || 'Failed to fetch blogs' });
   }
 };
 

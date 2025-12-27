@@ -59,8 +59,15 @@ export const BlogSection: React.FC = () => {
       try {
         const response = await api.get("/blogs?limit=3&status=PUBLISHED")
         setBlogsData(response.data.data);
-      } catch (err) {
-        console.error("Failed to fetch blogs:", err);
+      } catch (err: any) {
+        // Properly extract the actual error message
+        const errorMessage = err.response?.data?.error || err.response?.data?.message || err.message || "Unknown error";
+        console.error("Failed to fetch blogs:", {
+          status: err.response?.status,
+          statusText: err.response?.statusText,
+          error: errorMessage,
+          data: err.response?.data
+        });
         setError("Could not load recent articles. Please try again later.");
       } finally {
         setLoading(false);
