@@ -8,6 +8,7 @@
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
+    "postinstall": "npm run build && prisma generate",
     "build:prod": "tsc && node dist/server.js",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -71,7 +72,9 @@
     "prettier": "^3.3.3",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "tsx": "^4.19.1",
+    "tsx": "^4.19.1"
+  },
+  "optionalDependencies": {
     "typescript": "^5.8.3"
   },
   "keywords": [
