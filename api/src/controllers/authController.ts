@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import passport from 'passport';
+import { OAuth2Client } from 'google-auth-library';
 import { sendEmailVerificationEmail, sendPasswordResetEmail } from '../services/emailService.js';
 
 
@@ -810,6 +811,148 @@ export const googleAuthCallback = (req: Request, res: Response) => {
       }
     }
   )(req, res);
+};
+
+// Google Mobile Authentication - For mobile apps using ID tokens
+export const googleMobileAuth = async (req: Request, res: Response) => {
+  try {
+    const { idToken } = req.body;
+
+    if (!idToken) {
+      return res.status(400).json({
+        success: false,
+        message: 'ID token is required',
+      });
+    }
+
+    // Verify the ID token with Google
+    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+    
+    let ticket;
+    try {
+      ticket = await client.verifyIdToken({
+        idToken,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+    } catch (error) {
+      console.error('Google ID token verification failed:', error);
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid or expired Google ID token',
+      });
+    }
+
+    const payload = ticket.getPayload();
+    
+    if (!payload || !payload.email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid token payload - email not found',
+      });
+    }
+
+    const { email, sub: googleId, name, picture } = payload;
+
+    // Check if user already exists
+    let user = await prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        googleId: true,
+        profileImage: true,
+        roleId: true,
+        isEmailVerified: true,
+        status: true,
+      },
+    });
+
+    if (user) {
+      // User exists, update their Google ID if not set
+      if (!user.googleId) {
+        user = await prisma.user.update({
+          where: { id: user.id },
+          data: { googleId },
+          select: {
+            id: true,
+            email: true,
+            username: true,
+            googleId: true,
+            profileImage: true,
+            roleId: true,
+            isEmailVerified: true,
+            status: true,
+          },
+        });
+      }
+    } else {
+      // Generate a unique username from email
+      const baseUsername = email.split('@')[0].toLowerCase().replace(/[^a-zA-Z0-9]/g, '');
+      let username = baseUsername;
+      let counter = 1;
+      
+      while (await prisma.user.findUnique({ where: { username } })) {
+        username = `${baseUsername}${counter}`;
+        counter++;
+      }
+
+      // Create new user
+      user = await prisma.user.create({
+        data: {
+          username,
+          email,
+          profileImage: picture || null,
+          googleId,
+          isEmailVerified: true, // Google emails are verified
+          status: 'active',
+        },
+        select: {
+          id: true,
+          email: true,
+          username: true,
+          googleId: true,
+          profileImage: true,
+          roleId: true,
+          isEmailVerified: true,
+          status: true,
+        },
+      });
+    }
+
+    // Generate JWT tokens for the app
+    const { accessToken, refreshToken } = generateTokens(
+      user.id,
+      user.email,
+      user.roleId || undefined
+    );
+
+    // Save refresh token to database
+    await prisma.refreshToken.create({
+      data: {
+        token: refreshToken,
+        userId: user.id,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+      },
+    });
+
+    // Return tokens and user info to mobile app
+    return res.status(200).json({
+      success: true,
+      message: 'Google authentication successful',
+      data: {
+        user,
+        accessToken,
+        refreshToken,
+      },
+    });
+  } catch (error) {
+    console.error('Google mobile auth error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error during authentication',
+    });
+  }
 };
 
 // Apple OAuth functions - To be implemented

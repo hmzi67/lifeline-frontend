@@ -9,6 +9,7 @@ import {
   resetPassword,
   googleAuth,
   googleAuthCallback,
+  googleMobileAuth,
   appleAuth,
   appleAuthCallback, verify, resendVerificationEmail,
 } from '../controllers/authController.js';
@@ -33,6 +34,7 @@ authRoute.post('/verify', verify)
 // OAuth routes
 authRoute.get('/google', googleAuth);
 authRoute.get('/google/callback', googleAuthCallback);
+authRoute.post('/google/mobile', googleMobileAuth); // Mobile Google authentication
 authRoute.get('/apple', appleAuth);
 authRoute.post('/apple/callback', appleAuthCallback);
 
