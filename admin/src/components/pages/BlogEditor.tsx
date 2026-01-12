@@ -139,7 +139,7 @@ export default function BlogEditor() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/blogs/categories");
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/blogs/categories`);
         const data = await response.json();
         if (data.success) {
           setCategories(data.data);
@@ -272,7 +272,7 @@ export default function BlogEditor() {
 
     if (isPublishing) {
       try {
-        const response = await fetch("http://localhost:3000/api/blogs", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/blogs`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
