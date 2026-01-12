@@ -8,7 +8,6 @@ import Verify from "@/pages/auth/Verify.tsx";
 import ResetPassword from "@/pages/auth/ResetPassword.tsx";
 import OAuthCallback from "@/pages/auth/OAuthCallback.tsx";
 import { AuthProvider } from './contexts/AuthContext';
-import FitnessAdminPanel from './pages/admin/Admin';
 import Plan from './pages/marketing/Plan';
 
 
@@ -42,7 +41,6 @@ function App() {
             <Routes>
               {/* Public routes - accessible to everyone */}
               <Route path="/" element={<Landing />} />
-              <Route path="/admin" element={<FitnessAdminPanel />} />
               <Route path="/business" element={<Business />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:id" element={<BlogReading />} />

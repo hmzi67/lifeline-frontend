@@ -3,9 +3,11 @@ import cors from 'cors';
 const corsOptions = {
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [
-      'http://localhost:5173',
+      'http://localhost:5173',   // Main client dev
+      'http://localhost:5174',   // Admin panel dev
       'https://www.makelifeline.com',
       'https://makelifeline.com',
+      'https://admin.makelifeline.com',  // Admin subdomain
     ];
 
     if (!origin || allowedOrigins.includes(origin)) {
