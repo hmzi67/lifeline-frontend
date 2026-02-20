@@ -47,6 +47,7 @@ import userWaterGoalRoutes from './routes/userWaterGoalRoutes.js';
 import medicationReminderRoutes from './routes/medicationReminderRoutes.js';
 import cheatDayRoutes from './routes/cheatDayRoutes.js';
 import roleRoutes from './routes/roleRoutes.js';
+import progressRoutes from './routes/progressRoutes.js';
 
 const app = express();
 
@@ -170,6 +171,9 @@ app.use('/api/cheat-days', cheatDayRoutes);
 
 // Role routes
 app.use('/api/roles', roleRoutes);
+
+// Progress / Stats routes (aggregation endpoints)
+app.use('/api/progress', progressRoutes);
 
 // Example protected route
 // app.get('/api/protected', authenticate, (req, res) => {

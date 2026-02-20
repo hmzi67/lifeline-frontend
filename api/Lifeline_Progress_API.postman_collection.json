@@ -1,0 +1,1036 @@
+{
+  "info": {
+    "name": "Lifeline - Progress & Stats API",
+    "description": "Postman collection for all the missing Progress/Stats API endpoints in the Lifeline application.\n\nIncludes:\n1. Calories Intake Aggregation\n2. Exercise Active Days (Weekly Summary)\n3. Medication Stats\n4. User Challenge Progress\n5. Full Progress Summary\n6. App Settings CRUD\n\n**Setup:** Run the 'Login' request first to get a token, then set it in the collection variable `accessToken`.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "lifeline-api"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "testEmail",
+      "value": "test@example.com",
+      "type": "string"
+    },
+    {
+      "key": "testPassword",
+      "value": "password123",
+      "type": "string"
+    },
+    {
+      "key": "appSettingId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth (Setup)",
+      "description": "Run these first to get an access token for testing.",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response.success && response.data && response.data.accessToken) {",
+                  "    pm.collectionVariables.set('accessToken', response.data.accessToken);",
+                  "    console.log('Access token saved!');",
+                  "}",
+                  "",
+                  "pm.test('Login successful', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    pm.expect(response.success).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{testEmail}}\",\n  \"password\": \"{{testPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login to get an access token. The token is automatically saved to the collection variable `accessToken`."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Progress APIs",
+      "description": "All missing progress/stats aggregation endpoints.",
+      "item": [
+        {
+          "name": "1. Full Progress Summary",
+          "item": [
+            {
+              "name": "Get Progress Summary",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test('Status code is 200', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Response has correct structure', function() {",
+                      "    pm.expect(response.success).to.be.true;",
+                      "    pm.expect(response.data).to.have.property('caloriesIntake');",
+                      "    pm.expect(response.data).to.have.property('exerciseActiveDays');",
+                      "    pm.expect(response.data).to.have.property('medicationStats');",
+                      "    pm.expect(response.data).to.have.property('challengeProgress');",
+                      "    pm.expect(response.data).to.have.property('waterIntake');",
+                      "});",
+                      "",
+                      "pm.test('Calories intake has required fields', function() {",
+                      "    const cal = response.data.caloriesIntake;",
+                      "    pm.expect(cal).to.have.property('today');",
+                      "    pm.expect(cal).to.have.property('target');",
+                      "    pm.expect(cal).to.have.property('percentage');",
+                      "});",
+                      "",
+                      "pm.test('Exercise active days has required fields', function() {",
+                      "    const ex = response.data.exerciseActiveDays;",
+                      "    pm.expect(ex).to.have.property('activeDays');",
+                      "    pm.expect(ex).to.have.property('totalDays');",
+                      "    pm.expect(ex).to.have.property('percentage');",
+                      "});",
+                      "",
+                      "pm.test('Medication stats has required fields', function() {",
+                      "    const med = response.data.medicationStats;",
+                      "    pm.expect(med).to.have.property('totalMedications');",
+                      "    pm.expect(med).to.have.property('adherencePercent');",
+                      "});",
+                      "",
+                      "pm.test('Challenge progress has required fields', function() {",
+                      "    const ch = response.data.challengeProgress;",
+                      "    pm.expect(ch).to.have.property('totalJoined');",
+                      "    pm.expect(ch).to.have.property('completed');",
+                      "    pm.expect(ch).to.have.property('inProgress');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/progress/summary",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["progress", "summary"]
+                },
+                "description": "Get all progress data in one aggregated response. This is the main endpoint for the Progress Screen.\n\nReturns:\n- Calories intake (today's total, target, percentage)\n- Exercise active days (last 7 days)\n- Medication stats (adherence %)\n- Challenge progress (completed, in-progress)\n- Water intake (today's total vs goal)\n- Sleep (last log)\n- Fasting (last log)"
+              },
+              "response": [
+                {
+                  "name": "Success Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "url": {
+                      "raw": "{{baseUrl}}/progress/summary",
+                      "host": ["{{baseUrl}}"],
+                      "path": ["progress", "summary"]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"success\": true,\n  \"data\": {\n    \"caloriesIntake\": {\n      \"today\": 256,\n      \"target\": 2000,\n      \"percentage\": 13\n    },\n    \"exerciseActiveDays\": {\n      \"activeDays\": 3,\n      \"totalDays\": 7,\n      \"percentage\": 43,\n      \"exercisesCompletedThisWeek\": 5\n    },\n    \"medicationStats\": {\n      \"totalMedications\": 3,\n      \"activeMedications\": 2,\n      \"adherencePercent\": 67\n    },\n    \"challengeProgress\": {\n      \"totalJoined\": 4,\n      \"completed\": 2,\n      \"inProgress\": 2\n    },\n    \"waterIntake\": {\n      \"today\": 1500,\n      \"goal\": 2000,\n      \"unit\": \"ml\",\n      \"percentage\": 75\n    },\n    \"sleep\": {\n      \"lastDate\": \"2026-02-09T00:00:00.000Z\",\n      \"duration\": 420,\n      \"quality\": \"good\"\n    },\n    \"fasting\": {\n      \"lastDate\": \"2026-02-09T00:00:00.000Z\",\n      \"duration\": 960\n    }\n  },\n  \"message\": \"Progress summary retrieved successfully\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "2. Calories Intake",
+          "item": [
+            {
+              "name": "Get Today's Calories Intake",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test('Status code is 200', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Response has calories data', function() {",
+                      "    pm.expect(response.success).to.be.true;",
+                      "    pm.expect(response.data).to.have.property('totalCalories');",
+                      "    pm.expect(response.data).to.have.property('planCalorieTarget');",
+                      "    pm.expect(response.data).to.have.property('mealBreakdown');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/progress/calories-intake",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["progress", "calories-intake"]
+                },
+                "description": "Get today's calories intake from the user's active diet plan.\n\nReturns total calories, meal breakdown, and plan target."
+              },
+              "response": [
+                {
+                  "name": "Success - With Active Plan",
+                  "originalRequest": {
+                    "method": "GET",
+                    "url": {
+                      "raw": "{{baseUrl}}/progress/calories-intake",
+                      "host": ["{{baseUrl}}"],
+                      "path": ["progress", "calories-intake"]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"success\": true,\n  \"data\": {\n    \"totalCalories\": 256,\n    \"planCalorieTarget\": 2000,\n    \"currentDay\": 3,\n    \"mealBreakdown\": [\n      {\n        \"mealType\": \"Breakfast\",\n        \"mealName\": \"Oatmeal with Berries\",\n        \"calories\": 80,\n        \"portionSize\": \"1 bowl\"\n      },\n      {\n        \"mealType\": \"Lunch\",\n        \"mealName\": \"Grilled Chicken Salad\",\n        \"calories\": 120,\n        \"portionSize\": \"1 plate\"\n      },\n      {\n        \"mealType\": \"Snack\",\n        \"mealName\": \"Apple\",\n        \"calories\": 56,\n        \"portionSize\": \"1 medium\"\n      }\n    ],\n    \"dailyBreakdown\": [\n      {\n        \"day\": 3,\n        \"calories\": 256,\n        \"meals\": []\n      }\n    ],\n    \"activePlan\": {\n      \"id\": \"clx123...\",\n      \"name\": \"Keto Diet Plan\",\n      \"dietId\": \"clx456...\",\n      \"startedAt\": \"2026-02-01T00:00:00.000Z\"\n    }\n  },\n  \"message\": \"Calories intake retrieved successfully\"\n}"
+                },
+                {
+                  "name": "Success - No Active Plan",
+                  "originalRequest": {
+                    "method": "GET",
+                    "url": {
+                      "raw": "{{baseUrl}}/progress/calories-intake",
+                      "host": ["{{baseUrl}}"],
+                      "path": ["progress", "calories-intake"]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"success\": true,\n  \"data\": {\n    \"totalCalories\": 0,\n    \"dailyBreakdown\": [],\n    \"activePlan\": null,\n    \"message\": \"No active diet plan found\"\n  }\n}"
+                }
+              ]
+            },
+            {
+              "name": "Get Calories Intake for Specific Date",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test('Status code is 200', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Response is successful', function() {",
+                      "    pm.expect(response.success).to.be.true;",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/progress/calories-intake?date=2026-02-10",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["progress", "calories-intake"],
+                  "query": [
+                    {
+                      "key": "date",
+                      "value": "2026-02-10",
+                      "description": "Specific date (YYYY-MM-DD)"
+                    }
+                  ]
+                },
+                "description": "Get calories intake for a specific date."
+              },
+              "response": []
+            },
+            {
+              "name": "Get Calories Intake for Date Range",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test('Status code is 200', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Response has daily breakdown', function() {",
+                      "    pm.expect(response.data).to.have.property('dailyBreakdown');",
+                      "    pm.expect(response.data.dailyBreakdown).to.be.an('array');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/progress/calories-intake?startDate=2026-02-03&endDate=2026-02-10",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["progress", "calories-intake"],
+                  "query": [
+                    {
+                      "key": "startDate",
+                      "value": "2026-02-03",
+                      "description": "Start date (YYYY-MM-DD)"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "2026-02-10",
+                      "description": "End date (YYYY-MM-DD)"
+                    }
+                  ]
+                },
+                "description": "Get calories intake aggregated across a date range."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "3. Exercise Active Days",
+          "item": [
+            {
+              "name": "Get Exercise Active Days (Current Week)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test('Status code is 200', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Response has correct structure', function() {",
+                      "    pm.expect(response.success).to.be.true;",
+                      "    pm.expect(response.data).to.have.property('weekStart');",
+                      "    pm.expect(response.data).to.have.property('weekEnd');",
+                      "    pm.expect(response.data).to.have.property('activeDaysCount');",
+                      "    pm.expect(response.data).to.have.property('totalDays');",
+                      "    pm.expect(response.data).to.have.property('weekDays');",
+                      "    pm.expect(response.data).to.have.property('activePercentage');",
+                      "});",
+                      "",
+                      "pm.test('weekDays has 7 entries', function() {",
+                      "    pm.expect(response.data.weekDays).to.have.length(7);",
+                      "});",
+                      "",
+                      "pm.test('Each day has required fields', function() {",
+                      "    response.data.weekDays.forEach(function(day) {",
+                      "        pm.expect(day).to.have.property('day');",
+                      "        pm.expect(day).to.have.property('date');",
+                      "        pm.expect(day).to.have.property('isActive');",
+                      "        pm.expect(day).to.have.property('exercisesCompleted');",
+                      "    });",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/progress/exercise-active-days",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["progress", "exercise-active-days"]
+                },
+                "description": "Get the exercise activity for the current week.\n\nReturns day-by-day breakdown showing which days the user was active."
+              },
+              "response": [
+                {
+                  "name": "Success Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "url": {
+                      "raw": "{{baseUrl}}/progress/exercise-active-days",
+                      "host": ["{{baseUrl}}"],
+                      "path": ["progress", "exercise-active-days"]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"success\": true,\n  \"data\": {\n    \"weekStart\": \"2026-02-08\",\n    \"weekEnd\": \"2026-02-14\",\n    \"activeDaysCount\": 3,\n    \"totalDays\": 7,\n    \"totalExercisesCompleted\": 5,\n    \"weekDays\": [\n      {\n        \"day\": \"Sunday\",\n        \"date\": \"2026-02-08\",\n        \"isActive\": true,\n        \"exercisesCompleted\": 2,\n        \"exercises\": [\n          { \"name\": \"Push-ups\", \"caloriesBurned\": 50 },\n          { \"name\": \"Squats\", \"caloriesBurned\": 80 }\n        ]\n      },\n      {\n        \"day\": \"Monday\",\n        \"date\": \"2026-02-09\",\n        \"isActive\": true,\n        \"exercisesCompleted\": 2,\n        \"exercises\": [\n          { \"name\": \"Running\", \"caloriesBurned\": 200 },\n          { \"name\": \"Plank\", \"caloriesBurned\": 30 }\n        ]\n      },\n      {\n        \"day\": \"Tuesday\",\n        \"date\": \"2026-02-10\",\n        \"isActive\": true,\n        \"exercisesCompleted\": 1,\n        \"exercises\": [\n          { \"name\": \"Yoga\", \"caloriesBurned\": 60 }\n        ]\n      },\n      {\n        \"day\": \"Wednesday\",\n        \"date\": \"2026-02-11\",\n        \"isActive\": false,\n        \"exercisesCompleted\": 0,\n        \"exercises\": []\n      },\n      {\n        \"day\": \"Thursday\",\n        \"date\": \"2026-02-12\",\n        \"isActive\": false,\n        \"exercisesCompleted\": 0,\n        \"exercises\": []\n      },\n      {\n        \"day\": \"Friday\",\n        \"date\": \"2026-02-13\",\n        \"isActive\": false,\n        \"exercisesCompleted\": 0,\n        \"exercises\": []\n      },\n      {\n        \"day\": \"Saturday\",\n        \"date\": \"2026-02-14\",\n        \"isActive\": false,\n        \"exercisesCompleted\": 0,\n        \"exercises\": []\n      }\n    ],\n    \"activePercentage\": 43\n  },\n  \"message\": \"Exercise active days retrieved successfully\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Get Exercise Active Days (Previous Week)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test('Status code is 200', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Response is successful', function() {",
+                      "    pm.expect(response.success).to.be.true;",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/progress/exercise-active-days?weekOffset=1",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["progress", "exercise-active-days"],
+                  "query": [
+                    {
+                      "key": "weekOffset",
+                      "value": "1",
+                      "description": "0 = current week, 1 = last week, 2 = two weeks ago, etc."
+                    }
+                  ]
+                },
+                "description": "Get exercise activity for the previous week. Use `weekOffset=1` for last week, `weekOffset=2` for two weeks ago, etc."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "4. Medication Stats",
+          "item": [
+            {
+              "name": "Get Medication Stats (Default 30 days)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test('Status code is 200', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Response has correct structure', function() {",
+                      "    pm.expect(response.success).to.be.true;",
+                      "    pm.expect(response.data).to.have.property('totalMedications');",
+                      "    pm.expect(response.data).to.have.property('overallAdherencePercent');",
+                      "    pm.expect(response.data).to.have.property('medicationBreakdown');",
+                      "    pm.expect(response.data).to.have.property('summary');",
+                      "});",
+                      "",
+                      "pm.test('Summary has required fields', function() {",
+                      "    const summary = response.data.summary;",
+                      "    pm.expect(summary).to.have.property('active');",
+                      "    pm.expect(summary).to.have.property('inactive');",
+                      "    pm.expect(summary).to.have.property('total');",
+                      "    pm.expect(summary).to.have.property('activePercent');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/progress/medication-stats",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["progress", "medication-stats"]
+                },
+                "description": "Get medication adherence stats for the authenticated user.\n\nReturns:\n- Overall adherence percentage\n- Per-medication breakdown\n- Active vs inactive medication counts"
+              },
+              "response": [
+                {
+                  "name": "Success Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "url": {
+                      "raw": "{{baseUrl}}/progress/medication-stats",
+                      "host": ["{{baseUrl}}"],
+                      "path": ["progress", "medication-stats"]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"success\": true,\n  \"data\": {\n    \"totalMedications\": 3,\n    \"overallAdherencePercent\": 54,\n    \"periodDays\": 30,\n    \"medicationBreakdown\": [\n      {\n        \"id\": \"clx...\",\n        \"name\": \"Metformin\",\n        \"dose\": \"500mg\",\n        \"frequency\": \"twice daily\",\n        \"quantity\": 60,\n        \"adherencePercent\": 80,\n        \"totalReminders\": 2,\n        \"enabledReminders\": 2,\n        \"disabledReminders\": 0,\n        \"expectedDoses\": 60\n      },\n      {\n        \"id\": \"clx...\",\n        \"name\": \"Vitamin D\",\n        \"dose\": \"1000IU\",\n        \"frequency\": \"daily\",\n        \"quantity\": 30,\n        \"adherencePercent\": 50,\n        \"totalReminders\": 2,\n        \"enabledReminders\": 1,\n        \"disabledReminders\": 1,\n        \"expectedDoses\": 30\n      },\n      {\n        \"id\": \"clx...\",\n        \"name\": \"Omega-3\",\n        \"dose\": \"1000mg\",\n        \"frequency\": \"daily\",\n        \"quantity\": 30,\n        \"adherencePercent\": 33,\n        \"totalReminders\": 3,\n        \"enabledReminders\": 1,\n        \"disabledReminders\": 2,\n        \"expectedDoses\": 30\n      }\n    ],\n    \"summary\": {\n      \"active\": 2,\n      \"inactive\": 1,\n      \"total\": 3,\n      \"activePercent\": 67,\n      \"inactivePercent\": 33\n    }\n  },\n  \"message\": \"Medication stats retrieved successfully\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Get Medication Stats (Custom Period - 7 days)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test('Status code is 200', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Period is 7 days', function() {",
+                      "    pm.expect(response.data.periodDays).to.equal(7);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/progress/medication-stats?period=7",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["progress", "medication-stats"],
+                  "query": [
+                    {
+                      "key": "period",
+                      "value": "7",
+                      "description": "Number of days to look back (default: 30)"
+                    }
+                  ]
+                },
+                "description": "Get medication stats for the last 7 days."
+              },
+              "response": []
+            },
+            {
+              "name": "Get Medication Stats (Custom Period - 90 days)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/progress/medication-stats?period=90",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["progress", "medication-stats"],
+                  "query": [
+                    {
+                      "key": "period",
+                      "value": "90",
+                      "description": "Number of days to look back"
+                    }
+                  ]
+                },
+                "description": "Get medication stats for the last 90 days."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "5. Challenge Progress",
+          "item": [
+            {
+              "name": "Get User Challenge Progress",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "",
+                      "pm.test('Status code is 200', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Response has correct structure', function() {",
+                      "    pm.expect(response.success).to.be.true;",
+                      "    pm.expect(response.data).to.have.property('totalJoined');",
+                      "    pm.expect(response.data).to.have.property('completedCount');",
+                      "    pm.expect(response.data).to.have.property('inProgressCount');",
+                      "    pm.expect(response.data).to.have.property('totalAvailableChallenges');",
+                      "    pm.expect(response.data).to.have.property('completionPercentage');",
+                      "    pm.expect(response.data).to.have.property('challenges');",
+                      "});",
+                      "",
+                      "pm.test('Challenges is an array', function() {",
+                      "    pm.expect(response.data.challenges).to.be.an('array');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/progress/challenges",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["progress", "challenges"]
+                },
+                "description": "Get the authenticated user's challenge completion status.\n\nReturns:\n- Total challenges joined\n- Completed count\n- In-progress count\n- Completion percentage\n- Detailed breakdown per challenge"
+              },
+              "response": [
+                {
+                  "name": "Success Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "url": {
+                      "raw": "{{baseUrl}}/progress/challenges",
+                      "host": ["{{baseUrl}}"],
+                      "path": ["progress", "challenges"]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"success\": true,\n  \"data\": {\n    \"totalJoined\": 4,\n    \"completedCount\": 2,\n    \"inProgressCount\": 2,\n    \"totalAvailableChallenges\": 10,\n    \"completionPercentage\": 50,\n    \"challenges\": [\n      {\n        \"id\": \"clx...\",\n        \"challengeId\": \"clx...\",\n        \"challengeName\": \"30-Day Fitness Challenge\",\n        \"status\": \"COMPLETED\",\n        \"joinedAt\": \"2026-01-01T00:00:00.000Z\",\n        \"exerciseCount\": 5,\n        \"dietCount\": 1,\n        \"exercises\": [\n          { \"id\": \"clx...\", \"name\": \"Push-ups\", \"duration\": \"10 min\" }\n        ],\n        \"diets\": [\n          { \"id\": \"clx...\", \"name\": \"High Protein Diet\" }\n        ],\n        \"feePaid\": {\n          \"amount\": 29.99,\n          \"method\": \"credit_card\",\n          \"status\": \"paid\"\n        }\n      }\n    ]\n  },\n  \"message\": \"User challenge progress retrieved successfully\"\n}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "App Settings",
+      "description": "App Settings CRUD endpoints (existing but missing from Postman).",
+      "item": [
+        {
+          "name": "Create App Setting",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();",
+                  "",
+                  "pm.test('Status code is 201', function() {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('App setting created', function() {",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    if (response.data && response.data.id) {",
+                  "        pm.collectionVariables.set('appSettingId', response.data.id);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key\": \"app_theme\",\n  \"value\": \"dark\",\n  \"scope\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/app-settings",
+              "host": ["{{baseUrl}}"],
+              "path": ["app-settings"]
+            },
+            "description": "Create a new app setting."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All App Settings",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();",
+                  "",
+                  "pm.test('Status code is 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is successful', function() {",
+                  "    pm.expect(response.success).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/app-settings",
+              "host": ["{{baseUrl}}"],
+              "path": ["app-settings"]
+            },
+            "description": "Get all app settings."
+          },
+          "response": []
+        },
+        {
+          "name": "Get App Setting by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();",
+                  "",
+                  "pm.test('Status code is 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is successful', function() {",
+                  "    pm.expect(response.success).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/app-settings/{{appSettingId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["app-settings", "{{appSettingId}}"]
+            },
+            "description": "Get a single app setting by ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Get App Setting by Key",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();",
+                  "",
+                  "pm.test('Status code is 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is successful', function() {",
+                  "    pm.expect(response.success).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/app-settings/key/app_theme",
+              "host": ["{{baseUrl}}"],
+              "path": ["app-settings", "key", "app_theme"]
+            },
+            "description": "Get an app setting by its key name."
+          },
+          "response": []
+        },
+        {
+          "name": "Update App Setting",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();",
+                  "",
+                  "pm.test('Status code is 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('App setting updated', function() {",
+                  "    pm.expect(response.success).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"value\": \"light\",\n  \"scope\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/app-settings/{{appSettingId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["app-settings", "{{appSettingId}}"]
+            },
+            "description": "Update an existing app setting."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete App Setting",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();",
+                  "",
+                  "pm.test('Status code is 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('App setting deleted', function() {",
+                  "    pm.expect(response.success).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/app-settings/{{appSettingId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["app-settings", "{{appSettingId}}"]
+            },
+            "description": "Delete an app setting."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Error Cases",
+      "description": "Test unauthorized and edge cases.",
+      "item": [
+        {
+          "name": "Progress Summary - No Auth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 401', function() {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test('Returns authentication error', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.false;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/progress/summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["progress", "summary"]
+            },
+            "description": "Test that accessing progress summary without an auth token returns 401."
+          },
+          "response": []
+        },
+        {
+          "name": "Calories Intake - No Auth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 401', function() {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/progress/calories-intake",
+              "host": ["{{baseUrl}}"],
+              "path": ["progress", "calories-intake"]
+            },
+            "description": "Test that accessing calories intake without an auth token returns 401."
+          },
+          "response": []
+        },
+        {
+          "name": "Exercise Active Days - No Auth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 401', function() {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/progress/exercise-active-days",
+              "host": ["{{baseUrl}}"],
+              "path": ["progress", "exercise-active-days"]
+            },
+            "description": "Test that accessing exercise active days without an auth token returns 401."
+          },
+          "response": []
+        },
+        {
+          "name": "Medication Stats - No Auth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 401', function() {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/progress/medication-stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["progress", "medication-stats"]
+            },
+            "description": "Test that accessing medication stats without an auth token returns 401."
+          },
+          "response": []
+        },
+        {
+          "name": "Challenge Progress - No Auth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 401', function() {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/progress/challenges",
+              "host": ["{{baseUrl}}"],
+              "path": ["progress", "challenges"]
+            },
+            "description": "Test that accessing challenge progress without an auth token returns 401."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
