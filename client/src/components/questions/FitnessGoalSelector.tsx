@@ -1,0 +1,125 @@
+import React, { useState, useEffect } from "react";
+import { Check } from "lucide-react";
+import image from "@/assets/images/Q-goals/Ellipse10.3.webp";
+import image1 from "@/assets/images/Q-goals/excited lady.webp";
+import image2 from "@/assets/images/Q-goals/buildmuscles.webp";
+import image3 from "@/assets/images/Q-goals/food image.webp";
+import image4 from "@/assets/images/Q-goals/high stress.webp";
+import image5 from "@/assets/images/Q-goals/alarm-clock.webp";
+import api from "@/lib/axios";
+
+interface FitnessGoal {
+  id: string;
+  label: string;
+  image?: string;
+}
+
+interface FitnessGoalSelectorProps {
+  handleContinue?: () => void;
+  onGoalChange?: (goalId: string) => void;
+  onBack?: () => void;
+}
+
+const fitnessGoals: FitnessGoal[] = [
+  { id: "lose-weight", label: "Lose Weight", image: image },
+  { id: "gain-weight", label: "Gain Weight", image: image1 },
+  { id: "build-muscle", label: "Build Muscle", image: image2 },
+  { id: "modify-diet", label: "Improve Your Diet", image: image3 },
+  { id: "manage-stress", label: "Manage Stress", image: image4 },
+  { id: "intermittent-fasting", label: "Intermittent Fasting", image: image5 },
+];
+
+const FitnessGoalSelector: React.FC<FitnessGoalSelectorProps> = ({
+  handleContinue,
+  onGoalChange,
+}) => {
+  const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch saved goal on mount
+  useEffect(() => {
+    const fetchGoal = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get("/questionnaire/goal");
+        const goalFromApi = res?.data?.data?.goal;
+        if (goalFromApi && fitnessGoals.some(goal => goal.id === goalFromApi)) {
+          setSelectedGoal(goalFromApi);
+          onGoalChange?.(goalFromApi);
+        }
+      } catch {
+        // Optionally handle errors
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchGoal();
+  }, [onGoalChange]);
+
+  // Save goal to backend when selection changes
+  const handleGoalSelect = async (goalId: string) => {
+    setSelectedGoal(goalId);
+    onGoalChange?.(goalId);
+
+    setLoading(true);
+    try {
+      const response = await api.put("/questionnaire/goal", { goal: goalId });
+      if (response.status == 200) {
+        handleContinue?.()
+      }
+    } catch {
+      // Optionally handle errors
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col w-full p-6 box-border">
+      <div className="flex flex-col items-center justify-center w-full h-full">
+        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 text-center mb-4 sm:mb-6">
+          Select your primary fitness goal
+        </h1>
+        <div className="space-y-2 sm:space-y-3 w-full h-full sm:max-w-sm">
+          {fitnessGoals.map((goal) => (
+            <button
+              key={goal.id}
+              onClick={() => handleGoalSelect(goal.id)}
+              disabled={loading}
+              className={`w-full flex items-center justify-between px-3 rounded-full transition-all duration-200 ${selectedGoal === goal.id
+                ? "bg-primary border-primary-400 text-white shadow-lg transform scale-102"
+                : "bg-gray-100 text-gray-700 hover:border-primary-300 hover:shadow-md hover:scale-101"
+                }`}
+            >
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                <div className="h-16 flex items-center justify-center overflow-hidden">
+                  {goal.image ? (
+                    <img
+                      src={goal.image}
+                      alt={goal.label}
+                      className="object-cover h-12 w-12 rounded-full border-2 border-white"
+                    />
+                  ) : null}
+                </div>
+
+                <span
+                  className={`text-xs sm:text-lg font-medium ${selectedGoal === goal.id ? "text-white" : "text-gray-900"
+                    }`}
+                >
+                  {goal.label}
+                </span>
+              </div>
+              {selectedGoal === goal.id && (
+                <div className="w-4 h-4 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center me-2">
+                  <Check className="w-4 h-4 sm:w-5 sm:h-5 text-primary-400 " />
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FitnessGoalSelector;

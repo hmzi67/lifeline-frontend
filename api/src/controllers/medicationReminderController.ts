@@ -1,0 +1,321 @@
+import { Request, Response } from 'express';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+// Get all reminders for a medication
+export const getMedicationReminders = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { medicationId } = req.params;
+
+    const reminders = await prisma.medicationReminder.findMany({
+      where: { medicationId },
+      include: {
+        medication: true,
+        user: {
+          select: {
+            id: true,
+            email: true,
+            username: true
+          }
+        }
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      data: reminders,
+      message: 'Medication reminders retrieved successfully'
+    });
+  } catch (error) {
+    console.error('Error fetching medication reminders:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+// Get user's all medication reminders
+export const getUserMedicationReminders = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { userId } = req.params;
+
+    const reminders = await prisma.medicationReminder.findMany({
+      where: { userId },
+      include: {
+        medication: true
+      },
+      orderBy: {
+        reminderTime: 'asc'
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      data: reminders,
+      message: 'User medication reminders retrieved successfully'
+    });
+  } catch (error) {
+    console.error('Error fetching user medication reminders:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+// Get reminder by ID
+export const getMedicationReminderById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const reminder = await prisma.medicationReminder.findUnique({
+      where: { id },
+      include: {
+        medication: true,
+        user: {
+          select: {
+            id: true,
+            email: true,
+            username: true
+          }
+        }
+      }
+    });
+
+    if (!reminder) {
+      res.status(404).json({
+        success: false,
+        message: 'Medication reminder not found'
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      data: reminder,
+      message: 'Medication reminder retrieved successfully'
+    });
+  } catch (error) {
+    console.error('Error fetching medication reminder:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+// Create medication reminder
+export const createMedicationReminder = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { medicationId, userId, reminderTime, repeatType, enabled } = req.body;
+
+    if (!medicationId || !userId || !reminderTime) {
+      res.status(400).json({
+        success: false,
+        message: 'Medication ID, user ID, and reminder time are required'
+      });
+      return;
+    }
+
+    // Verify medication exists
+    const medication = await prisma.medication.findUnique({
+      where: { id: medicationId }
+    });
+
+    if (!medication) {
+      res.status(404).json({
+        success: false,
+        message: 'Medication not found'
+      });
+      return;
+    }
+
+    // Verify user exists
+    const user = await prisma.user.findUnique({
+      where: { id: userId }
+    });
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+      return;
+    }
+
+    const reminder = await prisma.medicationReminder.create({
+      data: {
+        medicationId,
+        userId,
+        reminderTime: new Date(reminderTime),
+        repeatType: repeatType || null,
+        enabled: enabled !== undefined ? enabled : true
+      },
+      include: {
+        medication: true,
+        user: {
+          select: {
+            id: true,
+            email: true,
+            username: true
+          }
+        }
+      }
+    });
+
+    res.status(201).json({
+      success: true,
+      data: reminder,
+      message: 'Medication reminder created successfully'
+    });
+  } catch (error) {
+    console.error('Error creating medication reminder:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+// Update medication reminder
+export const updateMedicationReminder = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { reminderTime, repeatType, enabled } = req.body;
+
+    const existingReminder = await prisma.medicationReminder.findUnique({
+      where: { id }
+    });
+
+    if (!existingReminder) {
+      res.status(404).json({
+        success: false,
+        message: 'Medication reminder not found'
+      });
+      return;
+    }
+
+    const updateData: any = {};
+    if (reminderTime !== undefined) updateData.reminderTime = new Date(reminderTime);
+    if (repeatType !== undefined) updateData.repeatType = repeatType;
+    if (enabled !== undefined) updateData.enabled = enabled;
+
+    const reminder = await prisma.medicationReminder.update({
+      where: { id },
+      data: updateData,
+      include: {
+        medication: true,
+        user: {
+          select: {
+            id: true,
+            email: true,
+            username: true
+          }
+        }
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      data: reminder,
+      message: 'Medication reminder updated successfully'
+    });
+  } catch (error) {
+    console.error('Error updating medication reminder:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+// Toggle reminder enabled status
+export const toggleMedicationReminder = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const existingReminder = await prisma.medicationReminder.findUnique({
+      where: { id }
+    });
+
+    if (!existingReminder) {
+      res.status(404).json({
+        success: false,
+        message: 'Medication reminder not found'
+      });
+      return;
+    }
+
+    const reminder = await prisma.medicationReminder.update({
+      where: { id },
+      data: {
+        enabled: !existingReminder.enabled
+      },
+      include: {
+        medication: true,
+        user: {
+          select: {
+            id: true,
+            email: true,
+            username: true
+          }
+        }
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      data: reminder,
+      message: `Medication reminder ${reminder.enabled ? 'enabled' : 'disabled'} successfully`
+    });
+  } catch (error) {
+    console.error('Error toggling medication reminder:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+// Delete medication reminder
+export const deleteMedicationReminder = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const existingReminder = await prisma.medicationReminder.findUnique({
+      where: { id }
+    });
+
+    if (!existingReminder) {
+      res.status(404).json({
+        success: false,
+        message: 'Medication reminder not found'
+      });
+      return;
+    }
+
+    await prisma.medicationReminder.delete({
+      where: { id }
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Medication reminder deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting medication reminder:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};

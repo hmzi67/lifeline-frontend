@@ -1,0 +1,318 @@
+### Auth API Testing
+### Base URL - Update this according to your server configuration
+@baseUrl = http://localhost:3000/api/auth
+@contentType = application/json
+
+### Variables for testing (update these values during testing)
+@testEmail = muhammadnaveedcis@gmail.com
+@testUsername = naveed
+@testPassword = password123
+@accessToken = your_access_token_here
+@otp = 000000
+
+###############################################
+### 1. USER SIGNUP
+###############################################
+
+POST {{baseUrl}}/signup
+Content-Type: {{contentType}}
+
+{
+  "email": "{{testEmail}}",
+  "username": "{{testUsername}}",
+  "password": "{{testPassword}}"
+}
+
+### Alternative signup without username (auto-generated)
+POST {{baseUrl}}/signup
+Content-Type: {{contentType}}
+
+{
+  "email": "newuser@example.com",
+  "password": "password123"
+}
+
+### Signup with validation errors (testing)
+POST {{baseUrl}}/signup
+Content-Type: {{contentType}}
+
+{
+  "email": "invalid-email",
+  "username": "",
+  "password": "123"
+}
+
+###############################################
+### 2. RESEND VERIFICATION EMAIL
+###############################################
+
+POST {{baseUrl}}/resend-verification
+Content-Type: {{contentType}}
+
+{
+  "email": "{{testEmail}}"
+}
+
+### Test with non-existent email
+POST {{baseUrl}}/resend-verification
+Content-Type: {{contentType}}
+
+{
+  "email": "nonexistent@example.com"
+}
+
+###############################################
+### 3. EMAIL VERIFICATION WITH OTP
+###############################################
+
+POST {{baseUrl}}/verify
+Content-Type: {{contentType}}
+
+{
+  "email": "{{testEmail}}",
+  "otp": "{{otp}}"
+}
+
+### Test with invalid OTP
+POST {{baseUrl}}/verify
+Content-Type: {{contentType}}
+
+{
+  "email": "{{testEmail}}",
+  "otp": "000000"
+}
+
+### Test with missing fields
+POST {{baseUrl}}/verify
+Content-Type: {{contentType}}
+
+{
+  "email": "{{testEmail}}"
+}
+
+###############################################
+### 4. USER LOGIN
+###############################################
+
+POST {{baseUrl}}/login
+Content-Type: {{contentType}}
+
+{
+  "email": "{{testEmail}}",
+  "password": "{{testPassword}}"
+}
+
+### Login with invalid credentials
+POST {{baseUrl}}/login
+Content-Type: {{contentType}}
+
+{
+  "email": "{{testEmail}}",
+  "password": "wrongpassword"
+}
+
+### Login with non-existent user
+POST {{baseUrl}}/login
+Content-Type: {{contentType}}
+
+{
+  "email": "nonexistent@example.com",
+  "password": "{{testPassword}}"
+}
+
+### Login with validation errors
+POST {{baseUrl}}/login
+Content-Type: {{contentType}}
+
+{
+  "email": "invalid-email",
+  "password": ""
+}
+
+###############################################
+### 5. GET CURRENT USER
+###############################################
+
+GET {{baseUrl}}/me
+Authorization: Bearer {{accessToken}}
+
+### Test without authorization header
+GET {{baseUrl}}/me
+
+### Test with invalid token
+GET {{baseUrl}}/me
+Authorization: Bearer invalid_token_here
+
+###############################################
+### 6. REFRESH TOKEN
+###############################################
+
+POST {{baseUrl}}/refresh
+Content-Type: {{contentType}}
+
+### Note: This endpoint uses httpOnly cookies, so make sure cookies are enabled in your HTTP client
+
+###############################################
+### 7. PASSWORD RESET REQUEST
+###############################################
+
+POST {{baseUrl}}/request-password-reset
+Content-Type: {{contentType}}
+
+{
+  "email": "{{testEmail}}"
+}
+
+### Test with non-existent email
+POST {{baseUrl}}/request-password-reset
+Content-Type: {{contentType}}
+
+{
+  "email": "nonexistent@example.com"
+}
+
+### Test with invalid email format
+POST {{baseUrl}}/request-password-reset
+Content-Type: {{contentType}}
+
+{
+  "email": "invalid-email"
+}
+
+### Test without email
+POST {{baseUrl}}/request-password-reset
+Content-Type: {{contentType}}
+
+{
+}
+
+###############################################
+### 8. PASSWORD RESET WITH OTP
+###############################################
+
+POST {{baseUrl}}/reset-password
+Content-Type: {{contentType}}
+
+{
+  "email": "{{testEmail}}",
+  "otp": "{{otp}}",
+  "newPassword": "newpassword123"
+}
+
+### Test with invalid OTP
+POST {{baseUrl}}/reset-password
+Content-Type: {{contentType}}
+
+{
+  "email": "{{testEmail}}",
+  "otp": "000000",
+  "newPassword": "newpassword123"
+}
+
+### Test with short password
+POST {{baseUrl}}/reset-password
+Content-Type: {{contentType}}
+
+{
+  "email": "{{testEmail}}",
+  "otp": "{{otp}}",
+  "newPassword": "123"
+}
+
+### Test with missing fields
+POST {{baseUrl}}/reset-password
+Content-Type: {{contentType}}
+
+{
+  "email": "{{testEmail}}"
+}
+
+###############################################
+### 9. LOGOUT
+###############################################
+
+POST {{baseUrl}}/logout
+Content-Type: {{contentType}}
+
+### Note: This endpoint also uses httpOnly cookies
+
+###############################################
+### 10. GOOGLE OAUTH (Browser redirect endpoints)
+###############################################
+
+### Initiate Google OAuth
+GET {{baseUrl}}/google
+
+### Google OAuth Callback (This is handled by Google, just for reference)
+# GET {{baseUrl}}/google/callback?code=...
+
+###############################################
+### TESTING SCENARIOS
+###############################################
+
+### Scenario 1: Complete User Registration Flow
+# 1. POST /signup
+# 2. Check email for OTP
+# 3. POST /verify with OTP
+# 4. POST /login
+
+### Scenario 2: Password Reset Flow
+# 1. POST /request-password-reset
+# 2. Check email for OTP
+# 3. POST /reset-password with OTP
+# 4. POST /login with new password
+
+### Scenario 3: Token Refresh Flow
+# 1. POST /login (get tokens)
+# 2. Wait for access token to expire (15 minutes)
+# 3. POST /refresh (get new access token)
+# 4. GET /me (use new access token)
+
+###############################################
+### ERROR TESTING
+###############################################
+
+### Test duplicate user signup
+POST {{baseUrl}}/signup
+Content-Type: {{contentType}}
+
+{
+  "email": "{{testEmail}}",
+  "username": "{{testUsername}}",
+  "password": "{{testPassword}}"
+}
+
+### Test login with OAuth-only account (no password)
+POST {{baseUrl}}/login
+Content-Type: {{contentType}}
+
+{
+  "email": "oauth-user@example.com",
+  "password": "anypassword"
+}
+
+### Test accessing protected route without token
+GET {{baseUrl}}/me
+
+### Test with malformed JSON
+POST {{baseUrl}}/login
+Content-Type: {{contentType}}
+
+{
+  "email": "{{testEmail}}",
+  "password": "{{testPassword}}"
+  // Missing comma - malformed JSON
+}
+
+###############################################
+### LOAD TESTING (Optional)
+###############################################
+
+### Test rate limiting (if implemented)
+# Run this multiple times quickly
+POST {{baseUrl}}/request-password-reset
+Content-Type: {{contentType}}
+
+{
+  "email": "{{testEmail}}"
+}

@@ -1,0 +1,271 @@
+import { Request, Response } from 'express';
+import { PrismaClient } from '@prisma/client';
+import jwt from 'jsonwebtoken';
+
+const prisma = new PrismaClient();
+
+// Helper function to get userId from token
+const getUserIdFromToken = (req: Request): string | null => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return null;
+  }
+  const token = authHeader.substring(7);
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as {
+      userId: string;
+    };
+    return decoded.userId;
+  } catch {
+    return null;
+  }
+};
+
+export const createMedication = async (req: Request, res: Response) => {
+  try {
+    const userId = getUserIdFromToken(req);
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'User not authenticated'
+      });
+    }
+
+    const { name, quantity, dose, frequency, reminderTime, icon, appearanceColor, appearanceIcon } = req.body;
+
+    if (!name || !dose || !frequency) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name, dose, and frequency are required'
+      });
+    }
+
+    const medication = await prisma.medication.create({
+      data: {
+        userId,
+        name,
+        quantity: quantity || null,
+        dose,
+        frequency,
+        reminderTime: reminderTime ? new Date(reminderTime) : null,
+        icon: icon || null,
+        appearanceColor: appearanceColor || null,
+        appearanceIcon: appearanceIcon || null,
+        addedAt: new Date()
+      }
+    });
+
+    res.status(201).json({
+      success: true,
+      data: medication,
+      message: 'Medication created successfully'
+    });
+  } catch (error) {
+    console.error('Error creating medication:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create medication'
+    });
+  }
+};
+
+export const getMedications = async (req: Request, res: Response) => {
+  try {
+    const medications = await prisma.medication.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            username: true
+          }
+        }
+      }
+    });
+    
+    res.json({
+      success: true,
+      data: medications,
+      count: medications.length
+    });
+  } catch (error) {
+    console.error('Error fetching medications:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch medications'
+    });
+  }
+};
+
+export const getUserMedications = async (req: Request, res: Response) => {
+  try {
+    const userId = getUserIdFromToken(req);
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'User not authenticated'
+      });
+    }
+
+    const medications = await prisma.medication.findMany({
+      where: {
+        userId
+      },
+      orderBy: {
+        addedAt: 'desc'
+      }
+    });
+    
+    res.json({
+      success: true,
+      data: medications,
+      count: medications.length
+    });
+  } catch (error) {
+    console.error('Error fetching user medications:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch user medications'
+    });
+  }
+};
+
+export const getMedicationById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const userId = getUserIdFromToken(req);
+
+    const medication = await prisma.medication.findUnique({
+      where: {
+        id
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            username: true
+          }
+        }
+      }
+    });
+    
+    if (!medication) {
+      return res.status(404).json({
+        success: false,
+        message: 'Medication not found'
+      });
+    }
+
+    // Check if the medication belongs to the user
+    if (medication.userId !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: 'You do not have permission to view this medication'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: medication
+    });
+  } catch (error) {
+    console.error('Error fetching medication:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch medication'
+    });
+  }
+};
+
+export const updateMedication = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const userId = getUserIdFromToken(req);
+    const { name, quantity, dose, frequency, reminderTime, icon } = req.body;
+
+    // First check if medication exists and belongs to user
+    const existingMedication = await prisma.medication.findUnique({
+      where: { id }
+    });
+    
+    if (!existingMedication) {
+      return res.status(404).json({
+        success: false,
+        message: 'Medication not found'
+      });
+    }
+
+    if (existingMedication.userId !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: 'You do not have permission to update this medication'
+      });
+    }
+
+    const medication = await prisma.medication.update({
+      where: { id },
+      data: {
+        name,
+        quantity: quantity !== undefined ? quantity : existingMedication.quantity,
+        dose,
+        frequency,
+        reminderTime: reminderTime ? new Date(reminderTime) : existingMedication.reminderTime,
+        icon: icon !== undefined ? icon : existingMedication.icon
+      }
+    });
+
+    res.json({
+      success: true,
+      data: medication,
+      message: 'Medication updated successfully'
+    });
+  } catch (error) {
+    console.error('Error updating medication:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update medication'
+    });
+  }
+};
+
+export const deleteMedication = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const userId = getUserIdFromToken(req);
+
+    // First check if medication exists and belongs to user
+    const existingMedication = await prisma.medication.findUnique({
+      where: { id }
+    });
+    
+    if (!existingMedication) {
+      return res.status(404).json({
+        success: false,
+        message: 'Medication not found'
+      });
+    }
+
+    if (existingMedication.userId !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: 'You do not have permission to delete this medication'
+      });
+    }
+
+    await prisma.medication.delete({
+      where: { id }
+    });
+
+    res.json({
+      success: true,
+      message: 'Medication deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting medication:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to delete medication'
+    });
+  }
+};

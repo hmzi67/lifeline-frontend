@@ -1,0 +1,689 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================
+// Core User & Auth Module
+// ============================
+
+// Roles Table
+model Role {
+  id          String  @id @default(cuid())
+  name        String  @db.VarChar(50)
+  description String? @db.Text
+  users       User[]
+
+  @@map("roles")
+}
+
+// Users Table
+model User {
+  id              String   @id @default(cuid())
+  email           String   @unique @db.VarChar(255)
+  username        String?  @unique @db.VarChar(100)
+  googleId        String?  @unique @map("google_id") @db.VarChar(255)
+  profileImage    String?  @map("profile_image") @db.Text
+  isEmailVerified Boolean  @default(false) @map("is_email_verified")
+  subject         String?  @db.VarChar(255)
+  password        String?  @db.VarChar(255)
+  otp             String?  @db.VarChar(20)
+  status          String?  @db.VarChar(20)
+  roleId          String?  @map("role_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  role                    Role?                    @relation(fields: [roleId], references: [id])
+  authTokens              AuthToken[]
+  refreshTokens           RefreshToken[]
+  subscriptionPayments    SubscriptionPayment[]
+  userLicenses            UserLicense[]
+  questionnaires          Questionnaire[]
+  userDietPlans           UserDietPlan[]
+  userActiveDietPlan      UserActiveDietPlan[]
+  userExercises           UserExercise[]
+  userActiveExercisePlan  UserActiveExercisePlan[]
+  userExerciseProgress    UserExerciseProgress[]
+  challengeFees           ChallengeFee[]
+  userChallenges          UserChallenge[]
+  cheatDays               CheatDay[]
+  fastingLogs             FastingLog[]
+  sleepLogs               SleepLog[]
+  waterIntakeLogs         WaterIntakeLog[]
+  userWaterGoal           UserWaterGoal[]
+  medications             Medication[]
+  medicationReminders     MedicationReminder[]
+  userDailyRoutines       UserDailyRoutine[]
+  userFavoriteMeditations UserFavoriteMeditation[]
+  blogs                   Blog[]
+  blogComments            BlogComment[]
+
+  @@map("users")
+}
+
+// Auth Tokens Table
+model AuthToken {
+  id           String    @id @default(cuid())
+  userId       String?   @map("user_id")
+  accessToken  String?   @map("access_token") @db.Text
+  refreshToken String?   @map("refresh_token") @db.Text
+  authKey      String?   @map("auth_key") @db.Text
+  privateKey   String?   @map("private_key") @db.Text
+  publicKey    String?   @map("public_key") @db.Text
+  createdAt    DateTime? @map("created_at")
+  expiresAt    DateTime? @map("expires_at")
+  user         User?     @relation(fields: [userId], references: [id])
+
+  @@map("auth_tokens")
+}
+
+// Refresh Tokens Table
+model RefreshToken {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  token     String   @unique @db.Text
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("refresh_tokens")
+}
+
+// ============================
+// Subscription & Payment Module
+// ============================
+
+// Subscription Payments Table
+model SubscriptionPayment {
+  id           String        @id @default(cuid())
+  userId       String?       @map("user_id")
+  planName     String?       @map("plan_name") @db.VarChar(100)
+  amount       Decimal?      @db.Decimal(10, 2)
+  method       String?       @db.VarChar(50)
+  status       String?       @db.VarChar(20)
+  createdAt    DateTime?     @map("created_at")
+  user         User?         @relation(fields: [userId], references: [id])
+  userLicenses UserLicense[]
+
+  @@map("subscription_payments")
+}
+
+// User Licenses Table
+model UserLicense {
+  id        String               @id @default(cuid())
+  userId    String?              @map("user_id")
+  paymentId String?              @map("payment_id")
+  createdAt DateTime?            @map("created_at")
+  expiresAt DateTime?            @map("expires_at")
+  user      User?                @relation(fields: [userId], references: [id])
+  payment   SubscriptionPayment? @relation(fields: [paymentId], references: [id])
+
+  @@map("user_licenses")
+}
+
+// ============================
+// Questionnaire Module
+// ============================
+
+// Questionnaires Table
+model Questionnaire {
+  id                  String    @id @default(cuid())
+  userId              String?   @map("user_id")
+  gender              String?   @db.VarChar(10)
+  goal                String?   @db.Text
+  dietType            String[]  @map("diet_type") @db.VarChar(50)
+  isDiabetic          Boolean?  @map("is_diabetic")
+  allergenFood        String[]  @map("allergen_food") @db.Text
+  fitnessLevel        String?   @map("fitness_level") @db.VarChar(20)
+  typicalDayType      String?   @map("typical_day_type") @db.Text
+  physicalLimitations String?   @map("physical_limitations") @db.Text
+  bodyFocusArea       String[]  @map("body_focus_area") @db.Text
+  dateOfBirth         DateTime? @map("date_of_birth") @db.Date
+  height              Float?
+  heightUnit          String?   @map("height_unit") @db.VarChar(10)
+  weight              Float?
+  weightUnit          String?   @map("weight_unit") @db.VarChar(10)
+  goalWeight          Float?    @map("goal_weight")
+  motivationFor       String?   @map("motivation_for") @db.Text
+  user                User?     @relation(fields: [userId], references: [id])
+
+  @@map("questionnaires")
+}
+
+// ============================
+// Diet Module
+// ============================
+
+// Diet Plans Table
+model DietPlan {
+  id                   String               @id @default(cuid())
+  name                 String?              @db.VarChar(100)
+  calories             Int?
+  duration             String?              @db.VarChar(50)
+  description          String?              @db.Text
+  image                String?              @db.Text
+  userDietPlans        UserDietPlan[]
+  userActiveDietPlan   UserActiveDietPlan[]
+  challengeDiets       ChallengeDiet[]
+  dietPlanDays         DietPlanDay[]
+
+  @@map("diet_plans")
+}
+
+// User Diet Plans Table
+model UserDietPlan {
+  id        String    @id @default(cuid())
+  userId    String?   @map("user_id")
+  dietId    String?   @map("diet_id")
+  startedAt DateTime? @map("started_at")
+  user      User?     @relation(fields: [userId], references: [id])
+  diet      DietPlan? @relation(fields: [dietId], references: [id])
+
+  @@map("user_diet_plans")
+}
+
+// Diet Plan Days
+model DietPlanDay {
+  id             String          @id @default(cuid())
+  dietId         String          @map("diet_id")
+  dayNumber      Int             @map("day_number")
+  notes          String?         @db.Text
+  diet           DietPlan        @relation(fields: [dietId], references: [id])
+  dietPlanMeals  DietPlanMeal[]
+
+  @@map("diet_plan_days")
+}
+
+// Meal Types
+model MealType {
+  id            String         @id @default(cuid())
+  name          String         @db.VarChar(50)
+  dietPlanMeals DietPlanMeal[]
+
+  @@map("meal_types")
+}
+
+// Diet Plan Meals
+model DietPlanMeal {
+  id          String       @id @default(cuid())
+  dayId       String       @map("day_id")
+  mealTypeId  String       @map("meal_type_id")
+  name        String       @db.VarChar(100)
+  calories    Int?
+  portionSize String?      @map("portion_size") @db.VarChar(50)
+  image       String?      @db.Text
+  recipe      String?      @db.Text
+  day         DietPlanDay  @relation(fields: [dayId], references: [id])
+  mealType    MealType     @relation(fields: [mealTypeId], references: [id])
+
+  @@map("diet_plan_meals")
+}
+
+// User Active Diet Plan
+model UserActiveDietPlan {
+  id         String    @id @default(cuid())
+  userId     String    @map("user_id")
+  dietId     String    @map("diet_id")
+  currentDay Int       @map("current_day")
+  startedAt  DateTime  @map("started_at")
+  pausedAt   DateTime? @map("paused_at")
+  user       User      @relation(fields: [userId], references: [id])
+  diet       DietPlan  @relation(fields: [dietId], references: [id])
+
+  @@map("user_active_diet_plan")
+}
+
+// ============================
+// Exercise Module
+// ============================
+
+// Exercises Table
+model Exercise {
+  id                   String                 @id @default(cuid())
+  name                 String?                @db.VarChar(100)
+  purpose              String?                @db.Text
+  description          String?                @db.Text
+  image                String?                @db.Text
+  duration             String?                @db.VarChar(50)
+  videoUrl             String?                @map("video_url") @db.Text
+  difficulty           String?                @db.VarChar(20)
+  caloriesBurnEstimate Int?                   @map("calories_burn_estimate")
+  userExercises        UserExercise[]
+  challengeExercises   ChallengeExercise[]
+  exerciseDetails      ExerciseDetail[]
+  exercisePlanSchedule ExercisePlanSchedule[]
+
+  @@map("exercises")
+}
+
+// User Exercises Table
+model UserExercise {
+  id         String    @id @default(cuid())
+  userId     String?   @map("user_id")
+  exerciseId String?   @map("exercise_id")
+  addedAt    DateTime? @map("added_at")
+  favorite   Boolean   @default(false)
+  user       User?     @relation(fields: [userId], references: [id])
+  exercise   Exercise? @relation(fields: [exerciseId], references: [id])
+
+  @@map("user_exercises")
+}
+
+// Exercise Plans
+model ExercisePlan {
+  id                     String                   @id @default(cuid())
+  name                   String                   @db.VarChar(100)
+  description            String?                  @db.Text
+  image                  String?                  @db.Text
+  level                  String?                  @db.VarChar(20)
+  durationWeeks          Int?                     @map("duration_weeks")
+  exercisePlanWeeks      ExercisePlanWeek[]
+  userActiveExercisePlan UserActiveExercisePlan[]
+
+  @@map("exercise_plans")
+}
+
+// Exercise Plan Weeks
+model ExercisePlanWeek {
+  id                   String                 @id @default(cuid())
+  planId               String                 @map("plan_id")
+  weekNumber           Int                    @map("week_number")
+  plan                 ExercisePlan           @relation(fields: [planId], references: [id])
+  exercisePlanSchedule ExercisePlanSchedule[]
+
+  @@map("exercise_plan_weeks")
+}
+
+// Exercise Plan Schedule
+model ExercisePlanSchedule {
+  id                   String                 @id @default(cuid())
+  weekId               String                 @map("week_id")
+  exerciseId           String                 @map("exercise_id")
+  dayOfWeek            String                 @map("day_of_week") @db.VarChar(20)
+  sets                 Int?
+  reps                 String?                @db.VarChar(50)
+  duration             String?                @db.VarChar(50)
+  orderIndex           Int?                   @map("order_index")
+  completed            Boolean                @default(false)
+  week                 ExercisePlanWeek       @relation(fields: [weekId], references: [id])
+  exercise             Exercise               @relation(fields: [exerciseId], references: [id])
+  userExerciseProgress UserExerciseProgress[]
+
+  @@map("exercise_plan_schedule")
+}
+
+// User Active Exercise Plan
+model UserActiveExercisePlan {
+  id          String        @id @default(cuid())
+  userId      String        @map("user_id")
+  planId      String        @map("plan_id")
+  currentWeek Int           @map("current_week")
+  startedAt   DateTime      @map("started_at")
+  pausedAt    DateTime?     @map("paused_at")
+  user        User          @relation(fields: [userId], references: [id])
+  plan        ExercisePlan  @relation(fields: [planId], references: [id])
+
+  @@map("user_active_exercise_plan")
+}
+
+// Exercise Details
+model ExerciseDetail {
+  id           String    @id @default(cuid())
+  exerciseId   String    @map("exercise_id")
+  sets         Int?
+  reps         String?   @db.VarChar(50)
+  calories     Int?
+  timeRequired String?   @map("time_required") @db.VarChar(50)
+  mediaUrl     String?   @map("media_url") @db.Text
+  instructions String?   @db.Text
+  exercise     Exercise  @relation(fields: [exerciseId], references: [id])
+
+  @@map("exercise_details")
+}
+
+// User Exercise Progress
+model UserExerciseProgress {
+  id                 String                @id @default(cuid())
+  userId             String                @map("user_id")
+  exerciseScheduleId String                @map("exercise_schedule_id")
+  progressPercent    Int?                  @map("progress_percent")
+  note               String?               @db.Text
+  completed          Boolean?
+  completedAt        DateTime?             @map("completed_at")
+  user               User                  @relation(fields: [userId], references: [id])
+  exerciseSchedule   ExercisePlanSchedule  @relation(fields: [exerciseScheduleId], references: [id])
+
+  @@map("user_exercise_progress")
+}
+
+// ============================
+// Challenges Module
+// ============================
+
+// Challenges Table
+model Challenge {
+  id                 String              @id @default(cuid())
+  name               String?             @db.VarChar(100)
+  purpose            String?             @db.Text
+  description        String?             @db.Text
+  status             String?             @db.VarChar(20)
+  challengeExercises ChallengeExercise[]
+  challengeDiets     ChallengeDiet[]
+  challengeFees      ChallengeFee[]
+  userChallenges     UserChallenge[]
+
+  @@map("challenges")
+}
+
+// Challenge Exercises Table (Many-to-Many)
+model ChallengeExercise {
+  challengeId String    @map("challenge_id")
+  exerciseId  String    @map("exercise_id")
+  challenge   Challenge @relation(fields: [challengeId], references: [id])
+  exercise    Exercise  @relation(fields: [exerciseId], references: [id])
+
+  @@id([challengeId, exerciseId])
+  @@map("challenge_exercises")
+}
+
+// Challenge Diets Table (Many-to-Many)
+model ChallengeDiet {
+  challengeId String    @map("challenge_id")
+  dietId      String    @map("diet_id")
+  challenge   Challenge @relation(fields: [challengeId], references: [id])
+  diet        DietPlan  @relation(fields: [dietId], references: [id])
+
+  @@id([challengeId, dietId])
+  @@map("challenge_diets")
+}
+
+// Challenge Fees Table
+model ChallengeFee {
+  id             String          @id @default(cuid())
+  userId         String?         @map("user_id")
+  challengeId    String?         @map("challenge_id")
+  amount         Decimal?        @db.Decimal(10, 2)
+  method         String?         @db.VarChar(50)
+  status         String?         @db.VarChar(20)
+  user           User?           @relation(fields: [userId], references: [id])
+  challenge      Challenge?      @relation(fields: [challengeId], references: [id])
+  userChallenges UserChallenge[]
+
+  @@map("challenge_fees")
+}
+
+// User Challenges Table
+model UserChallenge {
+  id          String        @id @default(cuid())
+  challengeId String?       @map("challenge_id")
+  feeId       String?       @map("fee_id")
+  userId      String?       @map("user_id")
+  date        DateTime?     @db.Date
+  time        DateTime?     @db.Time(6)
+  joinedAt    DateTime?     @map("joined_at")
+  challenge   Challenge?    @relation(fields: [challengeId], references: [id])
+  fee         ChallengeFee? @relation(fields: [feeId], references: [id])
+  user        User?         @relation(fields: [userId], references: [id])
+
+  @@map("user_challenges")
+}
+
+// ============================
+// Cheat Days, Fasting, Sleep
+// ============================
+
+// Cheat Days Table
+model CheatDay {
+  id          String    @id @default(cuid())
+  userId      String?   @map("user_id")
+  foodName    String?   @map("food_name") @db.VarChar(100)
+  image       String?   @db.Text
+  mealType    String?   @map("meal_type") @db.VarChar(50)
+  portionSize String?   @map("portion_size") @db.VarChar(50)
+  loggedAt    DateTime? @map("logged_at")
+  user        User?     @relation(fields: [userId], references: [id])
+
+  @@map("cheat_days")
+}
+
+// Fasting Logs Table
+model FastingLog {
+  id                String             @id @default(cuid())
+  userId            String?            @map("user_id")
+  date              DateTime?          @db.Date
+  timeStart         DateTime?          @map("time_start") @db.Time(6)
+  timeEnd           DateTime?          @map("time_end") @db.Time(6)
+  durationMinutes   Int?               @map("duration_minutes")
+  user              User?              @relation(fields: [userId], references: [id])
+  userDailyRoutines UserDailyRoutine[]
+
+  @@map("fasting_logs")
+}
+
+// Sleep Logs Table
+model SleepLog {
+  id                String             @id @default(cuid())
+  userId            String?            @map("user_id")
+  date              DateTime?          @db.Date
+  timeStart         DateTime?          @map("time_start") @db.Time(6)
+  timeEnd           DateTime?          @map("time_end") @db.Time(6)
+  durationMinutes   Int?               @map("duration_minutes")
+  sleepQuality      String?            @map("sleep_quality") @db.VarChar(50)
+  user              User?              @relation(fields: [userId], references: [id])
+  userDailyRoutines UserDailyRoutine[]
+
+  @@map("sleep_logs")
+}
+
+// ============================
+// Water Intake Module
+// ============================
+
+// User Water Goal
+model UserWaterGoal {
+  id         String    @id @default(cuid())
+  userId     String    @map("user_id")
+  goalAmount Int       @map("goal_amount")
+  unit       String    @db.VarChar(10)
+  updatedAt  DateTime? @map("updated_at")
+  user       User      @relation(fields: [userId], references: [id])
+
+  @@map("user_water_goal")
+}
+
+// Water Intake Logs Table
+model WaterIntakeLog {
+  id                String             @id @default(cuid())
+  userId            String?            @map("user_id")
+  date              DateTime?          @db.Date
+  timeStart         DateTime?          @map("time_start") @db.Time(6)
+  timeEnd           DateTime?          @map("time_end") @db.Time(6)
+  amount            Int?
+  unit              String?            @db.VarChar(10)
+  drinkType         String?            @map("drink_type") @db.VarChar(50)
+  loggedAt          DateTime?          @map("logged_at")
+  notes             String?            @db.Text
+  user              User?              @relation(fields: [userId], references: [id])
+  userDailyRoutines UserDailyRoutine[]
+
+  @@map("water_intake_logs")
+}
+
+// ============================
+// Medications Module
+// ============================
+
+// Medications Table
+model Medication {
+  id                String               @id @default(cuid())
+  userId            String?              @map("user_id")
+  name              String?              @db.VarChar(100)
+  quantity          Int?
+  dose              String?              @db.VarChar(50)
+  frequency         String?              @db.VarChar(50)
+  reminderTime      DateTime?            @map("reminder_time") @db.Time(6)
+  icon              String?              @db.Text
+  appearanceColor   String?              @map("appearance_color") @db.VarChar(20)
+  appearanceIcon    String?              @map("appearance_icon") @db.Text
+  addedAt           DateTime?            @map("added_at")
+  user              User?                @relation(fields: [userId], references: [id])
+  medicationReminders MedicationReminder[]
+  userDailyRoutines UserDailyRoutine[]
+
+  @@map("medications")
+}
+
+// Medication Reminders
+model MedicationReminder {
+  id           String      @id @default(cuid())
+  medicationId String      @map("medication_id")
+  userId       String      @map("user_id")
+  reminderTime DateTime    @map("reminder_time") @db.Time(6)
+  repeatType   String?     @map("repeat_type") @db.VarChar(50)
+  enabled      Boolean     @default(true)
+  medication   Medication  @relation(fields: [medicationId], references: [id])
+  user         User        @relation(fields: [userId], references: [id])
+
+  @@map("medication_reminders")
+}
+
+// ============================
+// Meditation Module
+// ============================
+
+// Meditations Table
+model Meditation {
+  id                String              @id @default(cuid())
+  name              String?             @db.VarChar(100)
+  type              String?             @db.VarChar(50)
+  description       String?             @db.Text
+  image             String?             @db.Text
+  soundUrl          String?             @map("sound_url") @db.Text
+  meditationSessions MeditationSession[]
+  userDailyRoutines UserDailyRoutine[]
+
+  @@map("meditations")
+}
+
+// Meditation Sessions
+model MeditationSession {
+  id                      String                   @id @default(cuid())
+  meditationId            String                   @map("meditation_id")
+  durationMinutes         Int?                     @map("duration_minutes")
+  image                   String?                  @db.Text
+  soundUrl                String?                  @map("sound_url") @db.Text
+  difficulty              String?                  @db.VarChar(20)
+  meditation              Meditation               @relation(fields: [meditationId], references: [id])
+  userFavoriteMeditations UserFavoriteMeditation[]
+
+  @@map("meditation_sessions")
+}
+
+// User Favorite Meditations
+model UserFavoriteMeditation {
+  id          String            @id @default(cuid())
+  userId      String            @map("user_id")
+  sessionId   String            @map("session_id")
+  favoritedAt DateTime          @map("favorited_at")
+  user        User              @relation(fields: [userId], references: [id])
+  session     MeditationSession @relation(fields: [sessionId], references: [id])
+
+  @@map("user_favorite_meditations")
+}
+
+// ============================
+// User Daily Routine
+// ============================
+
+// User Daily Routine Table
+model UserDailyRoutine {
+  id           String          @id @default(cuid())
+  userId       String?         @map("user_id")
+  fastingId    String?         @map("fasting_id")
+  sleepId      String?         @map("sleep_id")
+  medicationId String?         @map("medication_id")
+  meditationId String?         @map("meditation_id")
+  waterId      String?         @map("water_id")
+  routinesDate DateTime?       @map("routines_date") @db.Date
+  user         User?           @relation(fields: [userId], references: [id])
+  fasting      FastingLog?     @relation(fields: [fastingId], references: [id])
+  sleep        SleepLog?       @relation(fields: [sleepId], references: [id])
+  medication   Medication?     @relation(fields: [medicationId], references: [id])
+  meditation   Meditation?     @relation(fields: [meditationId], references: [id])
+  water        WaterIntakeLog? @relation(fields: [waterId], references: [id])
+
+  @@map("user_daily_routine")
+}
+
+// ============================
+// Blog Module (Optional - Keep if needed)
+// ============================
+
+// Blog Categories Table
+model BlogCategory {
+  id        String   @id @default(cuid())
+  name      String   @unique @db.VarChar(100)
+  slug      String   @unique @db.VarChar(100)
+  blogs     Blog[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("blog_categories")
+}
+
+// Blogs Table
+model Blog {
+  id          String        @id @default(cuid())
+  title       String        @db.VarChar(255)
+  slug        String        @unique @db.VarChar(255)
+  content     String        @db.Text
+  excerpt     String?       @db.Text
+  coverImage  String?       @map("cover_image") @db.Text
+  status      String        @default("draft") @db.VarChar(20)
+  authorId    String?       @map("author_id")
+  categoryId  String?       @map("category_id")
+  author      User?         @relation(fields: [authorId], references: [id])
+  category    BlogCategory? @relation(fields: [categoryId], references: [id])
+  comments    BlogComment[]
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  @@map("blogs")
+}
+
+// Blog Comments Table
+model BlogComment {
+  id        String          @id @default(cuid())
+  blogId    String          @map("blog_id")
+  userId    String?         @map("user_id")
+  content   String          @db.Text
+  parentId  String?         @map("parent_id")
+  blog      Blog            @relation(fields: [blogId], references: [id])
+  user      User?           @relation(fields: [userId], references: [id])
+  parent    BlogComment?    @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   BlogComment[]   @relation("CommentReplies")
+  createdAt DateTime        @default(now()) @map("created_at")
+
+  @@map("blog_comments")
+}
+
+// ============================
+// App Settings
+// ============================
+
+// App Settings Table
+model AppSetting {
+  id    String  @id @default(cuid())
+  key   String? @db.VarChar(100)
+  value String? @db.Text
+  scope String? @db.VarChar(50)
+
+  @@map("app_settings")
+}

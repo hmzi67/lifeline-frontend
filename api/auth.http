@@ -1,0 +1,296 @@
+### Authentication API Test Cases
+### Base URL: http://localhost:3000/api/auth
+
+# Variables (update these as needed)
+@baseUrl = http://localhost:3000/api/auth
+@email = test_user_{{$timestamp}}@example.com
+@password = testpassword123
+@accessToken = 
+@refreshToken = 
+
+###############################################
+# 1. SIGNUP - Create New Account
+###############################################
+
+### 1.1 Signup with email and password
+POST {{baseUrl}}/signup
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### 1.2 Signup with username
+POST {{baseUrl}}/signup
+Content-Type: application/json
+
+{
+  "email": "user_with_username_{{$timestamp}}@example.com",
+  "username": "testuser{{$timestamp}}",
+  "password": "{{password}}"
+}
+
+### 1.3 Signup - Duplicate email (should fail)
+POST {{baseUrl}}/signup
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### 1.4 Signup - Invalid email (should fail)
+POST {{baseUrl}}/signup
+Content-Type: application/json
+
+{
+  "email": "invalid-email",
+  "password": "{{password}}"
+}
+
+### 1.5 Signup - Short password (should fail)
+POST {{baseUrl}}/signup
+Content-Type: application/json
+
+{
+  "email": "newuser_{{$timestamp}}@example.com",
+  "password": "short"
+}
+
+###############################################
+# 2. EMAIL VERIFICATION
+###############################################
+
+### 2.1 Verify email with OTP
+# Note: Replace OTP with the one sent to email
+POST {{baseUrl}}/verify
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "otp": "123456"
+}
+
+### 2.2 Resend verification email
+POST {{baseUrl}}/resend-verification
+Content-Type: application/json
+
+{
+  "email": "{{email}}"
+}
+
+###############################################
+# 3. LOGIN
+###############################################
+
+### 3.1 Login with email and password
+# Save the accessToken and refreshToken from response
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### 3.2 Login - Invalid credentials (should fail)
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "wrongpassword"
+}
+
+### 3.3 Login - Non-existent user (should fail)
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "nonexistent@example.com",
+  "password": "{{password}}"
+}
+
+###############################################
+# 4. REFRESH TOKEN (React Native - JSON Body)
+###############################################
+
+### 4.1 Refresh token using request body (React Native)
+# Replace {{refreshToken}} with actual token from login/signup
+POST {{baseUrl}}/refresh-token
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### 4.2 Refresh token - Invalid token (should fail)
+POST {{baseUrl}}/refresh-token
+Content-Type: application/json
+
+{
+  "refreshToken": "invalid.token.here"
+}
+
+### 4.3 Refresh token - Missing token (should fail)
+POST {{baseUrl}}/refresh-token
+Content-Type: application/json
+
+{}
+
+###############################################
+# 5. REFRESH TOKEN (Web - Cookie)
+###############################################
+
+### 5.1 Refresh token using cookie (Web)
+# Cookie is automatically sent by browser/REST client
+POST {{baseUrl}}/refresh-token
+Content-Type: application/json
+
+###############################################
+# 6. GET CURRENT USER
+###############################################
+
+### 6.1 Get current user with valid token
+# Replace {{accessToken}} with actual token from login
+GET {{baseUrl}}/current-user
+Authorization: Bearer {{accessToken}}
+
+### 6.2 Get current user - No token (should fail)
+GET {{baseUrl}}/current-user
+
+### 6.3 Get current user - Invalid token (should fail)
+GET {{baseUrl}}/current-user
+Authorization: Bearer invalid.token.here
+
+###############################################
+# 7. PASSWORD RESET
+###############################################
+
+### 7.1 Request password reset
+POST {{baseUrl}}/request-password-reset
+Content-Type: application/json
+
+{
+  "email": "{{email}}"
+}
+
+### 7.2 Reset password with OTP
+# Replace OTP with the one sent to email
+POST {{baseUrl}}/reset-password
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "otp": "123456",
+  "newPassword": "newpassword123"
+}
+
+### 7.3 Reset password - Invalid OTP (should fail)
+POST {{baseUrl}}/reset-password
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "otp": "000000",
+  "newPassword": "newpassword123"
+}
+
+###############################################
+# 8. LOGOUT (React Native - JSON Body)
+###############################################
+
+### 8.1 Logout using request body (React Native)
+# Replace {{refreshToken}} with actual token
+POST {{baseUrl}}/logout
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+###############################################
+# 9. LOGOUT (Web - Cookie)
+###############################################
+
+### 9.1 Logout using cookie (Web)
+POST {{baseUrl}}/logout
+Content-Type: application/json
+
+###############################################
+# 10. LOGOUT FROM ALL DEVICES
+###############################################
+
+### 10.1 Logout from all devices
+# Replace {{accessToken}} with actual token
+POST {{baseUrl}}/logout-all
+Authorization: Bearer {{accessToken}}
+
+### 10.2 Logout from all devices - No token (should fail)
+POST {{baseUrl}}/logout-all
+
+###############################################
+# 11. GOOGLE OAUTH
+###############################################
+
+### 11.1 Initiate Google OAuth
+# This will redirect to Google sign-in page
+GET {{baseUrl}}/google
+
+### 11.2 Google OAuth Callback
+# This is called by Google after authentication
+# The callback URL should be: http://localhost:3000/api/auth/google/callback
+# After successful auth, redirects to: http://localhost:5173/auth/callback?token=<accessToken>&refreshToken=<refreshToken>
+
+###############################################
+# 12. INTEGRATION TESTS - Complete Flow
+###############################################
+
+### 12.1 Complete React Native Flow
+# Step 1: Signup
+POST {{baseUrl}}/signup
+Content-Type: application/json
+
+{
+  "email": "rn_flow_{{$timestamp}}@example.com",
+  "password": "testpassword123"
+}
+
+# Step 2: Login (get tokens)
+# POST {{baseUrl}}/login
+
+# Step 3: Use access token for authenticated requests
+# GET {{baseUrl}}/current-user
+# Authorization: Bearer <accessToken>
+
+# Step 4: Refresh token when access token expires
+# POST {{baseUrl}}/refresh-token
+# { "refreshToken": "<refreshToken>" }
+
+# Step 5: Logout
+# POST {{baseUrl}}/logout
+# { "refreshToken": "<refreshToken>" }
+
+###############################################
+# NOTES
+###############################################
+
+# React Native Usage:
+# - All tokens are returned in JSON response body
+# - Send refreshToken in request body for /refresh-token and /logout
+# - Store tokens securely using expo-secure-store or react-native-keychain
+# - Include accessToken in Authorization header for protected routes
+
+# Web Usage:
+# - Tokens are set as HTTP-only cookies automatically
+# - No need to send refreshToken in body (uses cookies)
+# - Cookies are sent automatically by browser
+
+# Token Lifetimes:
+# - Access Token: 15 minutes
+# - Refresh Token: 7 days
+
+# Response Format:
+# Success: { "success": true, "message": "...", "data": {...} }
+# Error: { "success": false, "message": "...", "errors": [...] }

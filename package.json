@@ -1,57 +1,28 @@
 {
-  "name": "lifeline-frontend",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "lifeline-web",
+  "version": "1.0.0",
+  "description": "Full stack application with Express API and React TypeScript client",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "build:netlify": "vite build",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "preview": "vite preview",
-    "test": "vitest",
-    "test:watch": "vitest --watch",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "type-check": "tsc --noEmit",
-    "clean": "rm -rf dist node_modules/.vite"
-  },
-  "dependencies": {
-    "@radix-ui/react-label": "^2.1.7",
-    "@radix-ui/react-slot": "^1.2.3",
-    "axios": "^1.6.7",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "lucide-react": "^0.515.0",
-    "react": "^19.1.0",
-    "react-circular-progressbar": "^2.2.0",
-    "react-dom": "^19.1.0",
-    "react-icons": "^5.5.0",
-    "react-router-dom": "^7.6.2",
-    "swiper": "^11.2.10",
-    "tailwind-merge": "^3.3.1",
-    "zod": "^3.22.4"
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd api && npm run dev",
+    "client": "cd client && npm run dev",
+    "install-all": "npm install && cd api && npm install && cd ../client && npm install",
+    "build": "cd client && npm run build",
+    "start": "cd api && npm start"
   },
   "devDependencies": {
-    "@eslint/js": "^9.25.0",
-    "@types/node": "^24.0.1",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "@types/react-router-dom": "^5.3.3",
-    "@vitejs/plugin-react": "^4.4.1",
-    "autoprefixer": "^10.4.17",
-    "eslint": "^9.25.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.19",
-    "globals": "^16.0.0",
-    "postcss": "^8.4.35",
-    "prettier": "^3.2.5",
-    "tailwindcss": "^3.4.1",
-    "tailwindcss-animate": "^1.0.7",
-    "typescript": "~5.8.3",
-    "typescript-eslint": "^8.30.1",
-    "vite": "^6.4.1",
-    "vitest": "^3.2.3"
-  }
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "express",
+    "react",
+    "typescript",
+    "fullstack"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "sonner": "^2.0.7"
+  },
+  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
 }
