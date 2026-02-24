@@ -4,4 +4,6 @@ export const config = {
   isProduction: import.meta.env.PROD,
   isDevelopment: import.meta.env.DEV,
   stripePublishableKey: import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "",
+  // Lemon Squeezy configuration (optional - used for client-side features if needed)
+  lemonSqueezyStoreId: import.meta.env.VITE_LEMONSQUEEZY_STORE_ID || "",
 };

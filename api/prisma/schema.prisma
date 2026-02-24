@@ -26,19 +26,26 @@ model Role {
 
 // Users Table
 model User {
-  id              String   @id @default(cuid())
-  email           String   @unique @db.VarChar(255)
-  username        String?  @unique @db.VarChar(100)
-  googleId        String?  @unique @map("google_id") @db.VarChar(255)
-  profileImage    String?  @map("profile_image") @db.Text
-  isEmailVerified Boolean  @default(false) @map("is_email_verified")
-  subject         String?  @db.VarChar(255)
-  password        String?  @db.VarChar(255)
-  otp             String?  @db.VarChar(20)
-  status          String?  @db.VarChar(20)
-  roleId          String?  @map("role_id")
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  id                        String    @id @default(cuid())
+  email                     String    @unique @db.VarChar(255)
+  username                  String?   @unique @db.VarChar(100)
+  googleId                  String?   @unique @map("google_id") @db.VarChar(255)
+  profileImage              String?   @map("profile_image") @db.Text
+  isEmailVerified           Boolean   @default(false) @map("is_email_verified")
+  subject                   String?   @db.VarChar(255)
+  password                  String?   @db.VarChar(255)
+  otp                       String?   @db.VarChar(20)
+  status                    String?   @db.VarChar(20)
+  roleId                    String?   @map("role_id")
+  createdAt                 DateTime  @default(now()) @map("created_at")
+  updatedAt                 DateTime  @updatedAt @map("updated_at")
+  
+  // Lemon Squeezy subscription fields
+  subscriptionActive        Boolean?  @default(false) @map("subscription_active")
+  subscriptionId            String?   @map("subscription_id") @db.VarChar(255)
+  subscriptionStatus        String?   @map("subscription_status") @db.VarChar(50)
+  currentPeriodEnd          DateTime? @map("current_period_end")
+  lemonSqueezyCustomerId    String?   @map("lemon_squeezy_customer_id") @db.VarChar(255)
 
   role                    Role?                    @relation(fields: [roleId], references: [id])
   authTokens              AuthToken[]

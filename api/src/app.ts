@@ -18,6 +18,7 @@ import userRoute from './routes/userRoutes.js';
 import questionnaireRoutes from './routes/questionnaireRoutes.js';
 import subscriptionPaymentRoutes from './routes/subscriptionPaymentRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
+import lemonSqueezyRoutes from './routes/lemonSqueezyRoutes.js';
 import dietPlanRoutes from './routes/dietPlanRoutes.js';
 import userDietPlanRoutes from './routes/userDietPlanRoutes.js';
 import exerciseRoutes from './routes/exerciseRoutes.js';
@@ -58,6 +59,23 @@ app.use(helmet);
 
 // Request processing middlewares
 app.use(compression);
+
+// Webhook route - MUST be before express.json() to get raw body
+app.use(
+  '/api/webhooks/lemonsqueezy',
+  express.raw({ type: 'application/json' }),
+  (req, res, next) => {
+    // Store raw body for signature verification
+    if (Buffer.isBuffer(req.body)) {
+      (req as any).rawBody = req.body.toString('utf8');
+      req.body = JSON.parse((req as any).rawBody);
+    }
+    next();
+  },
+  lemonSqueezyRoutes
+);
+
+// JSON parsing for all other routes
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -104,6 +122,9 @@ app.use('/api/subscription-payments', subscriptionPaymentRoutes);
 
 // payment routes (Stripe)
 app.use('/api/payments', paymentRoutes);
+
+// Lemon Squeezy routes (checkout endpoint)
+app.use('/api/lemonsqueezy', lemonSqueezyRoutes);
 
 // diet plan routes
 app.use('/api/diet-plans', dietPlanRoutes);

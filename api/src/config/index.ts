@@ -24,6 +24,11 @@ const envSchema = z.object({
   BCRYPT_ROUNDS: z.string().transform(Number).default('12'),
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
   LOG_FILE: z.string().default('logs/app.log'),
+  // Lemon Squeezy configuration
+  LEMONSQUEEZY_API_KEY: z.string().optional(),
+  LEMONSQUEEZY_STORE_ID: z.string().optional(),
+  LEMONSQUEEZY_WEBHOOK_SECRET: z.string().optional(),
+  LEMONSQUEEZY_VARIANT_ID: z.string().optional(),
 });
 
 // Validate environment variables
@@ -55,5 +60,11 @@ export const config = {
   logging: {
     level: env.LOG_LEVEL,
     file: env.LOG_FILE,
+  },
+  lemonSqueezy: {
+    apiKey: env.LEMONSQUEEZY_API_KEY,
+    storeId: env.LEMONSQUEEZY_STORE_ID,
+    webhookSecret: env.LEMONSQUEEZY_WEBHOOK_SECRET,
+    variantId: env.LEMONSQUEEZY_VARIANT_ID,
   },
 } as const;
