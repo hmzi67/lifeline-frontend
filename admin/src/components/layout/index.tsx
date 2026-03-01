@@ -6,9 +6,31 @@ import {
     LogOut,
     Menu,
     X,
-    Zap
+    Zap,
+    User,
 } from 'lucide-react';
 import type { NavigationItem } from '@/types';
+import { useAuthStore } from '@/store/useAuthStore';
+
+// Logout Button Component
+const LogoutButton: React.FC<{ sidebarOpen: boolean }> = ({ sidebarOpen }) => {
+    const logout = useAuthStore((s) => s.logout);
+    const loading = useAuthStore((s) => s.loading);
+
+    return (
+        <button
+            onClick={() => logout()}
+            disabled={loading}
+            className={`w-full flex items-center gap-3 px-4 py-3 text-gray-600 
+                       hover:bg-red-50 hover:text-red-600 rounded-xl 
+                       transition-all duration-300 disabled:opacity-60 ${!sidebarOpen && 'justify-center'}`}
+            aria-label="Log out"
+        >
+            <LogOut className="w-5 h-5 flex-shrink-0" />
+            {sidebarOpen && <span className="font-medium">Log Out</span>}
+        </button>
+    );
+};
 
 // Sidebar Component
 export const Sidebar: React.FC<{
@@ -81,21 +103,18 @@ export const Sidebar: React.FC<{
         </nav>
 
         <div className="p-6 border-t border-gray-200 flex-shrink-0">
-            <button
-                className={`w-full flex items-center gap-3 px-4 py-3 text-gray-600 
-                           hover:bg-red-50 hover:text-red-600 rounded-xl 
-                           transition-all duration-300 ${!sidebarOpen && 'justify-center'}`}
-                aria-label="Log out"
-            >
-                <LogOut className="w-5 h-5 flex-shrink-0" />
-                {sidebarOpen && <span className="font-medium">Log Out</span>}
-            </button>
+            <LogoutButton sidebarOpen={sidebarOpen} />
         </div>
     </aside>
 );
 
 // Header Component
 export const Header: React.FC<{ activeNav: string }> = ({ activeNav }) => {
+    const user = useAuthStore((s) => s.user);
+
+    const displayName = user?.username ?? 'Admin';
+    const displayEmail = user?.email ?? '';
+
     const getPageTitle = () => {
         switch (activeNav) {
             case 'dashboard':
@@ -135,17 +154,13 @@ export const Header: React.FC<{ activeNav: string }> = ({ activeNav }) => {
                     <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse" aria-label="New notifications" />
                 </button>
                 <div className="text-right">
-                    <p className="font-semibold text-gray-900">Maksym K.</p>
-                    <p className="text-sm text-gray-500">example@mail.com</p>
+                    <p className="font-semibold text-gray-900">{displayName}</p>
+                    <p className="text-sm text-gray-500">{displayEmail}</p>
                 </div>
                 <div className="relative">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 p-0.5">
-                        <div className="w-full h-full rounded-full overflow-hidden">
-                            <img
-                                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
-                                alt="User profile"
-                                className="w-full h-full object-cover"
-                            />
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 p-0.5 flex items-center justify-center">
+                        <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center">
+                            <User className="w-6 h-6 text-teal-500" />
                         </div>
                     </div>
                     <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full" aria-label="Online" />

@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Sidebar, Header } from '@/components/layout';
-import { UsersComponent, DietComponent, ExerciseComponent, BlogComponent, MeditationComponent, RoleComponent, BlogCategoryComponent, MealTypeComponent, ChallengeComponent } from '@/components/pages';
+import { LoginPage, UsersComponent, DietComponent, ExerciseComponent, BlogComponent, MeditationComponent, RoleComponent, BlogCategoryComponent, MealTypeComponent, ChallengeComponent } from '@/components/pages';
 import { navigationItems, getStatsData } from '@/components/constants';
 import { DashboardComponent } from '@/components/dashboard';
 import { useAnimation } from '@/hooks/useAnimation';
+import { useAuthStore } from '@/store/useAuthStore';
 
-const App: React.FC = () => {
+// ── Protected layout ──────────────────────────────────────────────────────────
+const AdminLayout: React.FC = () => {
     const [activeNav, setActiveNav] = useState<string>('dashboard');
     const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
     const animatedValues = useAnimation();
-
     const statsData = getStatsData(animatedValues);
 
-    // Render content based on active navigation
     const renderContent = () => {
         switch (activeNav) {
             case 'dashboard':
@@ -49,7 +50,6 @@ const App: React.FC = () => {
                 setActiveNav={setActiveNav}
                 navigationItems={navigationItems}
             />
-
             <main className="flex-1 overflow-x-hidden">
                 <div className="p-8">
                     <Header activeNav={activeNav} />
@@ -59,5 +59,26 @@ const App: React.FC = () => {
         </div>
     );
 };
+
+// ── Auth guard ────────────────────────────────────────────────────────────────
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+    return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
+};
+
+// ── Root app ──────────────────────────────────────────────────────────────────
+const App: React.FC = () => (
+    <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+            path="/*"
+            element={
+                <ProtectedRoute>
+                    <AdminLayout />
+                </ProtectedRoute>
+            }
+        />
+    </Routes>
+);
 
 export default App;

@@ -1,3 +1,4 @@
+export { default as LoginPage } from './LoginPage';
 export { default as UsersComponent } from './UsersComponent';
 export { default as DietComponent } from './DietComponent';
 export { default as ExerciseComponent } from './ExerciseComponent';
