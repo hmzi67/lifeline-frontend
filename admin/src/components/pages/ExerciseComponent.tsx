@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
     Dumbbell, Plus, Loader2, AlertCircle, Timer, Flame, Edit, Trash2,
-    ImageIcon, Video, Search, ChevronRight,
-    RotateCcw, Save, ArrowLeft, X,
+    ImageIcon, Video, Search, ChevronRight, RotateCcw, Save, ArrowLeft, X,
+    Activity, Sprout, TrendingUp, Zap, FileText, Film, Eye, Target,
+    Repeat2, SlidersHorizontal, ClipboardList, ShieldAlert, Tag, Clapperboard,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -51,19 +53,19 @@ interface Exercise {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const FOCUS_AREAS = [
-    { label: '🏋️ Full Body', value: 'Full Body' },
-    { label: '🦾 Shoulders', value: 'Shoulders' },
-    { label: '🫀 Chest', value: 'Chest' },
-    { label: '💪 Arms', value: 'Arms' },
-    { label: '🔙 Back', value: 'Back' },
-    { label: '🔥 Belly / Core', value: 'Belly / Core' },
-    { label: '🦵 Legs', value: 'Legs' },
+    { label: 'Full Body', value: 'Full Body' },
+    { label: 'Shoulders', value: 'Shoulders' },
+    { label: 'Chest', value: 'Chest' },
+    { label: 'Arms', value: 'Arms' },
+    { label: 'Back', value: 'Back' },
+    { label: 'Belly / Core', value: 'Belly / Core' },
+    { label: 'Legs', value: 'Legs' },
 ];
 
-const DIFFICULTY_OPTIONS = [
-    { value: 'Beginner', label: 'Beginner', icon: '🟢', active: 'border-green-500 bg-green-50 text-green-800', hover: 'hover:border-green-300' },
-    { value: 'Intermediate', label: 'Intermediate', icon: '🟡', active: 'border-yellow-500 bg-yellow-50 text-yellow-800', hover: 'hover:border-yellow-300' },
-    { value: 'Advanced', label: 'Advanced', icon: '🔴', active: 'border-red-500 bg-red-50 text-red-800', hover: 'hover:border-red-300' },
+const DIFFICULTY_OPTIONS: { value: string; label: string; Icon: LucideIcon; iconClass: string; active: string; hover: string }[] = [
+    { value: 'Beginner', label: 'Beginner', Icon: Sprout, iconClass: 'text-green-500', active: 'border-green-500 bg-green-50 text-green-800', hover: 'hover:border-green-300' },
+    { value: 'Intermediate', label: 'Intermediate', Icon: TrendingUp, iconClass: 'text-yellow-500', active: 'border-yellow-500 bg-yellow-50 text-yellow-800', hover: 'hover:border-yellow-300' },
+    { value: 'Advanced', label: 'Advanced', Icon: Zap, iconClass: 'text-red-500', active: 'border-red-500 bg-red-50 text-red-800', hover: 'hover:border-red-300' },
 ];
 
 const EXERCISE_TYPES = [
@@ -82,10 +84,10 @@ const MUSCLE_GROUPS = [
     'Quadriceps', 'Hamstrings', 'Glutes', 'Abdominals (Core)',
 ];
 
-const TABS = [
-    { id: 'basic' as const, label: 'Basic Info', icon: '📝' },
-    { id: 'media' as const, label: 'Media & Instructions', icon: '🎬' },
-    { id: 'preview' as const, label: 'Preview', icon: '👁️' },
+const TABS: { id: TabId; label: string; Icon: LucideIcon }[] = [
+    { id: 'basic', label: 'Basic Info', Icon: FileText },
+    { id: 'media', label: 'Media & Instructions', Icon: Film },
+    { id: 'preview', label: 'Preview', Icon: Eye },
 ];
 
 type TabId = 'basic' | 'media' | 'preview';
@@ -128,12 +130,13 @@ const diffBadgeClass = (d: string | null) => {
 // Sub-components
 // ─────────────────────────────────────────────────────────────────────────────
 
-const StepCard: React.FC<{ step: string; title: string; children: React.ReactNode }> = ({ step, title, children }) => (
+const StepCard: React.FC<{ step: string; title: string; Icon?: LucideIcon; children: React.ReactNode }> = ({ step, title, Icon, children }) => (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100 bg-gray-50/60">
             <span className="bg-gradient-to-r from-red-500 to-orange-500 text-white text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-md">
                 Step {step}
             </span>
+            {Icon && <Icon className="w-4 h-4 text-gray-400 flex-shrink-0" />}
             <h3 className="font-bold text-gray-800 text-[15px]">{title}</h3>
         </div>
         <div className="p-6">{children}</div>
@@ -394,7 +397,7 @@ const ExerciseComponent: React.FC = () => {
                 }
             }
 
-            showToast(`\u2705 "${formData.name}" ${editingExercise ? 'updated' : 'created'} successfully!`);
+            showToast(`"${formData.name}" ${editingExercise ? 'updated' : 'created'} successfully!`);
             resetForm();
             setViewMode('list');
             fetchExercises();
@@ -414,11 +417,11 @@ const ExerciseComponent: React.FC = () => {
         setDeleteLoading(true);
         try {
             await api.delete(`/exercises/${deleteTarget.id}`);
-            showToast(`\uD83D\uDDD1\uFE0F "${deleteTarget.name}" deleted.`);
+            showToast(`"${deleteTarget.name}" deleted.`);
             setDeleteTarget(null);
             fetchExercises();
         } catch {
-            showToast('\u274C Failed to delete exercise.');
+            showToast('Failed to delete exercise.');
         } finally {
             setDeleteLoading(false);
         }
@@ -489,18 +492,34 @@ const ExerciseComponent: React.FC = () => {
 
                 {/* Stats cards */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {[
-                        { icon: '\uD83C\uDFCB\uFE0F', val: stats.total, lbl: 'Total Exercises', color: 'text-gray-900' },
-                        { icon: '\uD83D\uDFE2', val: stats.beginners, lbl: 'Beginner', color: 'text-green-600' },
-                        { icon: '\uD83D\uDFE1', val: stats.intermediate, lbl: 'Intermediate', color: 'text-yellow-600' },
-                        { icon: '\uD83D\uDD25', val: stats.avgCal, lbl: 'Avg Calories', color: 'text-orange-500' },
-                    ].map(s => (
-                        <div key={s.lbl} className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
-                            <span className="text-2xl">{s.icon}</span>
-                            <div className={`text-3xl font-bold mt-2 ${s.color}`}>{s.val}</div>
-                            <div className="text-sm text-gray-500 mt-0.5">{s.lbl}</div>
+                    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+                        <div className="w-9 h-9 bg-gray-100 rounded-lg flex items-center justify-center mb-3">
+                            <Activity className="w-5 h-5 text-gray-500" />
                         </div>
-                    ))}
+                        <div className="text-3xl font-bold text-gray-900">{stats.total}</div>
+                        <div className="text-sm text-gray-500 mt-0.5">Total Exercises</div>
+                    </div>
+                    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+                        <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center mb-3">
+                            <Sprout className="w-5 h-5 text-green-500" />
+                        </div>
+                        <div className="text-3xl font-bold text-green-600">{stats.beginners}</div>
+                        <div className="text-sm text-gray-500 mt-0.5">Beginner</div>
+                    </div>
+                    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+                        <div className="w-9 h-9 bg-yellow-50 rounded-lg flex items-center justify-center mb-3">
+                            <TrendingUp className="w-5 h-5 text-yellow-500" />
+                        </div>
+                        <div className="text-3xl font-bold text-yellow-600">{stats.intermediate}</div>
+                        <div className="text-sm text-gray-500 mt-0.5">Intermediate</div>
+                    </div>
+                    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+                        <div className="w-9 h-9 bg-orange-50 rounded-lg flex items-center justify-center mb-3">
+                            <Flame className="w-5 h-5 text-orange-400" />
+                        </div>
+                        <div className="text-3xl font-bold text-orange-500">{stats.avgCal}</div>
+                        <div className="text-sm text-gray-500 mt-0.5">Avg Calories</div>
+                    </div>
                 </div>
 
                 {/* Table panel */}
@@ -661,7 +680,10 @@ const ExerciseComponent: React.FC = () => {
                     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-50">
                         <div className="bg-white rounded-2xl shadow-2xl w-[440px] max-w-[95vw] overflow-hidden">
                             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                                <h3 className="font-bold text-gray-900">\uD83D\uDDD1\uFE0F Delete Exercise</h3>
+                                <div className="flex items-center gap-2">
+                                    <Trash2 className="w-4 h-4 text-red-500" />
+                                    <h3 className="font-bold text-gray-900">Delete Exercise</h3>
+                                </div>
                                 <button
                                     onClick={() => setDeleteTarget(null)}
                                     className="w-7 h-7 rounded-lg border border-gray-200 bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all"
@@ -679,7 +701,7 @@ const ExerciseComponent: React.FC = () => {
                             <div className="flex gap-3 px-6 py-4 border-t border-gray-100 justify-end">
                                 <Button variant="outline" onClick={() => setDeleteTarget(null)} disabled={deleteLoading}>Cancel</Button>
                                 <Button onClick={handleDelete} disabled={deleteLoading} className="bg-red-500 hover:bg-red-600 text-white">
-                                    {deleteLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : '\uD83D\uDDD1\uFE0F Delete'}
+                                    {deleteLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Trash2 className="w-3.5 h-3.5 mr-1.5" />Delete</>}
                                 </Button>
                             </div>
                         </div>
@@ -715,7 +737,7 @@ const ExerciseComponent: React.FC = () => {
                     </button>
                     <div>
                         <h2 className="text-2xl font-bold text-gray-900">
-                            {editingExercise ? '\u270F\uFE0F Edit Exercise' : '\u2795 Add New Exercise'}
+                            {editingExercise ? 'Edit Exercise' : 'Add New Exercise'}
                         </h2>
                         <p className="text-sm text-gray-500">
                             {editingExercise ? `Editing "${editingExercise.name}"` : 'Fill in the exercise details below'}
@@ -746,7 +768,7 @@ const ExerciseComponent: React.FC = () => {
                                 : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
                         }`}
                     >
-                        <span>{tab.icon}</span>{tab.label}
+                        <tab.Icon className="w-4 h-4 flex-shrink-0" />{tab.label}
                     </button>
                 ))}
             </div>
@@ -755,7 +777,7 @@ const ExerciseComponent: React.FC = () => {
             {activeTab === 'basic' && (
                 <div className="space-y-4">
 
-                    <StepCard step="01" title="\uD83C\uDFF7\uFE0F Exercise Info">
+                    <StepCard step="01" title="Exercise Info" Icon={Tag}>
                         <div className="space-y-4">
                             <div className="space-y-2">
                                 <Label className="text-[11px] font-bold uppercase tracking-wide text-gray-500">
@@ -781,7 +803,7 @@ const ExerciseComponent: React.FC = () => {
                         </div>
                     </StepCard>
 
-                    <StepCard step="02" title="\uD83C\uDFAF Select Focus Area">
+                    <StepCard step="02" title="Select Focus Area" Icon={Target}>
                         <div className="space-y-3">
                             <Label className="text-[11px] font-bold uppercase tracking-wide text-gray-500">
                                 Focus Area <span className="text-red-500">*</span>
@@ -807,7 +829,7 @@ const ExerciseComponent: React.FC = () => {
                         </div>
                     </StepCard>
 
-                    <StepCard step="03" title="\uD83D\uDD01 Sets &amp; Reps">
+                    <StepCard step="03" title="Sets &amp; Reps" Icon={Repeat2}>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <UnitInput label="Number of Sets" required unit="sets" value={formData.sets} onChange={v => setField('sets', v)} placeholder="3" type="number" />
                             <UnitInput label="Reps per Set" required unit="reps" value={formData.reps} onChange={v => setField('reps', v)} placeholder="12" type="number" />
@@ -823,14 +845,14 @@ const ExerciseComponent: React.FC = () => {
                         </div>
                     </StepCard>
 
-                    <StepCard step="04" title="\u23F1\uFE0F Duration &amp; Calories">
+                    <StepCard step="04" title="Duration &amp; Calories" Icon={Timer}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <UnitInput label="Total Duration" required unit="min" value={formData.duration} onChange={v => setField('duration', v)} placeholder="15" type="number" />
-                            <UnitInput label="Calories to Burn \uD83D\uDD25" required unit="kcal" value={formData.caloriesBurnEstimate} onChange={v => setField('caloriesBurnEstimate', v)} placeholder="120" type="number" />
+                            <UnitInput label="Calories to Burn" required unit="kcal" value={formData.caloriesBurnEstimate} onChange={v => setField('caloriesBurnEstimate', v)} placeholder="120" type="number" />
                         </div>
                     </StepCard>
 
-                    <StepCard step="05" title="\u2699\uFE0F Difficulty &amp; Classification">
+                    <StepCard step="05" title="Difficulty &amp; Classification" Icon={SlidersHorizontal}>
                         <div className="space-y-5">
                             <div className="space-y-2">
                                 <Label className="text-[11px] font-bold uppercase tracking-wide text-gray-500">
@@ -848,7 +870,7 @@ const ExerciseComponent: React.FC = () => {
                                                     : `border-gray-200 bg-white text-gray-500 ${d.hover}`
                                             }`}
                                         >
-                                            <span className="text-xl block mb-1">{d.icon}</span>
+                                            <d.Icon className={`w-5 h-5 mx-auto mb-1.5 ${formData.difficulty === d.value ? d.iconClass : 'text-gray-300'}`} />
                                             {d.label}
                                         </button>
                                     ))}
@@ -885,7 +907,7 @@ const ExerciseComponent: React.FC = () => {
             {/* ── TAB 2: MEDIA & INSTRUCTIONS ── */}
             {activeTab === 'media' && (
                 <div className="space-y-4">
-                    <StepCard step="06" title="\uD83C\uDFAC Media">
+                    <StepCard step="06" title="Media" Icon={Clapperboard}>
                         <div className="space-y-5">
                             <div className="space-y-2">
                                 <Label className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Demo Video URL</Label>
@@ -913,7 +935,7 @@ const ExerciseComponent: React.FC = () => {
                         </div>
                     </StepCard>
 
-                    <StepCard step="07" title="\uD83D\uDCCB Instructions &amp; Safety">
+                    <StepCard step="07" title="Instructions &amp; Safety" Icon={ClipboardList}>
                         <div className="space-y-5">
                             <div className="space-y-2">
                                 <Label className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Step-by-Step Instructions</Label>
@@ -926,7 +948,7 @@ const ExerciseComponent: React.FC = () => {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label className="text-[11px] font-bold uppercase tracking-wide text-gray-500">\u26A0\uFE0F Safety Tips / Common Mistakes</Label>
+                                <Label className="text-[11px] font-bold uppercase tracking-wide text-gray-500 flex items-center gap-1.5"><ShieldAlert className="w-3.5 h-3.5 text-yellow-500" /> Safety Tips / Common Mistakes</Label>
                                 <Textarea
                                     value={formData.safetyTips}
                                     onChange={e => setField('safetyTips', e.target.value)}
@@ -957,8 +979,9 @@ const ExerciseComponent: React.FC = () => {
                             <div className="text-sm text-gray-400 mt-0.5">{previewAreas}</div>
                         </div>
                         {diffOption && (
-                            <span className={`px-3 py-1.5 rounded-full text-xs font-semibold flex-shrink-0 ${diffOption.active}`}>
-                                {diffOption.icon} {diffOption.label}
+                            <span className={`px-3 py-1.5 rounded-full text-xs font-semibold flex-shrink-0 flex items-center gap-1.5 ${diffOption.active}`}>
+                                <diffOption.Icon className={`w-3.5 h-3.5 ${diffOption.iconClass}`} />
+                                {diffOption.label}
                             </span>
                         )}
                     </div>
@@ -969,7 +992,7 @@ const ExerciseComponent: React.FC = () => {
                             { val: formData.sets || '\u2014', lbl: 'Sets' },
                             { val: formData.reps || '\u2014', lbl: 'Reps' },
                             { val: formData.duration ? `${formData.duration} min` : '\u2014', lbl: 'Duration' },
-                            { val: formData.caloriesBurnEstimate ? `${formData.caloriesBurnEstimate} kcal` : '\u2014', lbl: 'Calories \uD83D\uDD25' },
+                            { val: formData.caloriesBurnEstimate ? `${formData.caloriesBurnEstimate} kcal` : '\u2014', lbl: 'Calories' },
                         ].map(s => (
                             <div key={s.lbl} className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-center">
                                 <div className="text-2xl font-extrabold text-teal-600">{s.val}</div>
@@ -987,16 +1010,24 @@ const ExerciseComponent: React.FC = () => {
 
                     {/* Classification */}
                     <div className="grid grid-cols-3 gap-4">
-                        {[
-                            { label: 'Exercise Type', value: formData.exerciseType, icon: '\uD83C\uDFCB\uFE0F' },
-                            { label: 'Equipment', value: formData.equipment.replace(' (Bodyweight)', ''), icon: '\u2699\uFE0F' },
-                            { label: 'Primary Muscle', value: formData.muscleGroup.split(' (')[0], icon: '\uD83D\uDCAA' },
-                        ].map(c => (
-                            <div key={c.label} className="bg-gray-50 border border-gray-100 rounded-xl p-4">
-                                <div className="text-[10px] text-gray-400 uppercase tracking-wide mb-1">{c.icon} {c.label}</div>
-                                <div className="text-sm font-semibold text-gray-700">{c.value}</div>
+                        <div className="bg-gray-50 border border-gray-100 rounded-xl p-4">
+                            <div className="flex items-center gap-1.5 text-[10px] text-gray-400 uppercase tracking-wide mb-2">
+                                <Activity className="w-3 h-3" /> Exercise Type
                             </div>
-                        ))}
+                            <div className="text-sm font-semibold text-gray-700">{formData.exerciseType}</div>
+                        </div>
+                        <div className="bg-gray-50 border border-gray-100 rounded-xl p-4">
+                            <div className="flex items-center gap-1.5 text-[10px] text-gray-400 uppercase tracking-wide mb-2">
+                                <SlidersHorizontal className="w-3 h-3" /> Equipment
+                            </div>
+                            <div className="text-sm font-semibold text-gray-700">{formData.equipment.replace(' (Bodyweight)', '')}</div>
+                        </div>
+                        <div className="bg-gray-50 border border-gray-100 rounded-xl p-4">
+                            <div className="flex items-center gap-1.5 text-[10px] text-gray-400 uppercase tracking-wide mb-2">
+                                <Dumbbell className="w-3 h-3" /> Primary Muscle
+                            </div>
+                            <div className="text-sm font-semibold text-gray-700">{formData.muscleGroup.split(' (')[0]}</div>
+                        </div>
                     </div>
 
                     {formData.videoUrl && (
@@ -1010,14 +1041,14 @@ const ExerciseComponent: React.FC = () => {
 
                     {formData.instructions && (
                         <div>
-                            <h4 className="text-[11px] font-bold uppercase tracking-wide text-gray-400 mb-2">\uD83D\uDCCB Instructions</h4>
+                            <h4 className="text-[11px] font-bold uppercase tracking-wide text-gray-400 mb-2 flex items-center gap-1.5"><ClipboardList className="w-3.5 h-3.5" /> Instructions</h4>
                             <pre className="text-sm text-gray-600 whitespace-pre-wrap font-sans leading-relaxed bg-gray-50 border border-gray-100 rounded-xl p-4">{formData.instructions}</pre>
                         </div>
                     )}
 
                     {formData.safetyTips && (
                         <div>
-                            <h4 className="text-[11px] font-bold uppercase tracking-wide text-gray-400 mb-2">\u26A0\uFE0F Safety Tips</h4>
+                            <h4 className="text-[11px] font-bold uppercase tracking-wide text-gray-400 mb-2 flex items-center gap-1.5"><ShieldAlert className="w-3.5 h-3.5 text-yellow-500" /> Safety Tips</h4>
                             <pre className="text-sm text-gray-600 whitespace-pre-wrap font-sans leading-relaxed bg-yellow-50 border border-yellow-100 rounded-xl p-4">{formData.safetyTips}</pre>
                         </div>
                     )}
@@ -1048,18 +1079,18 @@ const ExerciseComponent: React.FC = () => {
                             </span>
                         )}
                         {formData.duration && (
-                            <span className="text-xs bg-teal-50 border border-teal-200 text-teal-700 font-semibold px-2.5 py-1 rounded-full whitespace-nowrap">
-                                \u23F1 {formData.duration} min
+                            <span className="text-xs bg-teal-50 border border-teal-200 text-teal-700 font-semibold px-2.5 py-1 rounded-full whitespace-nowrap flex items-center gap-1">
+                                <Timer className="w-3 h-3" /> {formData.duration} min
                             </span>
                         )}
                         {formData.caloriesBurnEstimate && (
-                            <span className="text-xs bg-orange-50 border border-orange-200 text-orange-700 font-semibold px-2.5 py-1 rounded-full whitespace-nowrap">
-                                \uD83D\uDD25 {formData.caloriesBurnEstimate} kcal
+                            <span className="text-xs bg-orange-50 border border-orange-200 text-orange-700 font-semibold px-2.5 py-1 rounded-full whitespace-nowrap flex items-center gap-1">
+                                <Flame className="w-3 h-3" /> {formData.caloriesBurnEstimate} kcal
                             </span>
                         )}
                         {(formData.videoUrl || formData.image) && (
-                            <span className="text-xs bg-blue-50 border border-blue-200 text-blue-700 font-semibold px-2.5 py-1 rounded-full whitespace-nowrap">
-                                \uD83D\uDCF7 Media added
+                            <span className="text-xs bg-blue-50 border border-blue-200 text-blue-700 font-semibold px-2.5 py-1 rounded-full whitespace-nowrap flex items-center gap-1">
+                                <ImageIcon className="w-3 h-3" /> Media added
                             </span>
                         )}
                     </div>
