@@ -610,7 +610,7 @@ async function seedMedications(userId: string) {
 
 // ─── 28. Medication Reminders ─────────────────────────────────────────────────
 
-async function seedMedicationReminders(medications: Array<{ id: string; name: string }>, userId: string) {
+async function seedMedicationReminders(medications: Array<{ id: string; name: string | null }>, userId: string) {
   log('28 / Medication Reminders');
   for (let i = 0; i < medications.length; i++) {
     const medicationId = medications[i].id;
