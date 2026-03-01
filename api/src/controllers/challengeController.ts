@@ -101,6 +101,16 @@ const challengeSchema = z.object({
   purpose: z.string().min(1, 'Purpose is required'),
   description: z.string().min(1, 'Description is required'),
   status: z.enum(['ACTIVE', 'INACTIVE', 'DRAFT', 'COMPLETED']).optional().default('DRAFT'),
+  image: z.string().optional().nullable().transform(v => v?.trim() || null),
+  videoUrl: z.string().optional().nullable().transform(v => v?.trim() || null),
+  startDate: z.preprocess(
+    val => (val === '' || val == null ? undefined : val),
+    z.coerce.date().optional()
+  ),
+  endDate: z.preprocess(
+    val => (val === '' || val == null ? undefined : val),
+    z.coerce.date().optional()
+  ),
 });
 
 // ---------------- Common Includes ----------------

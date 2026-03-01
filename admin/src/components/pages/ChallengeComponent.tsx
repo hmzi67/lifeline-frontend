@@ -18,6 +18,10 @@ interface Challenge {
     approvalStatus: string;
     rejectionReason: string | null;
     submittedById: string | null;
+    image: string | null;
+    videoUrl: string | null;
+    startDate: string | null;
+    endDate: string | null;
     submittedBy?: {
         id: string;
         username: string | null;
@@ -359,11 +363,20 @@ const ChallengeComponent: React.FC = () => {
         {
             key: 'name',
             label: 'Challenge Name',
-            render: (value) => (
-                <div className="flex items-center gap-2">
-                    <div className="p-2 bg-yellow-100 rounded-lg">
-                        <Target className="w-4 h-4 text-yellow-600" />
-                    </div>
+            render: (value, row) => (
+                <div className="flex items-center gap-3">
+                    {row.image ? (
+                        <img
+                            src={row.image}
+                            alt={row.name || 'challenge'}
+                            className="w-10 h-10 rounded-lg object-cover flex-shrink-0 border border-gray-200"
+                            onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
+                    ) : (
+                        <div className="p-2 bg-yellow-100 rounded-lg flex-shrink-0">
+                            <Target className="w-4 h-4 text-yellow-600" />
+                        </div>
+                    )}
                     <span className="font-medium text-gray-900">{value || '-'}</span>
                 </div>
             ),
@@ -394,6 +407,24 @@ const ChallengeComponent: React.FC = () => {
             },
         },
         {
+            key: 'startDate',
+            label: 'Start Date',
+            render: (value) => (
+                <span className="text-sm text-gray-600">
+                    {value ? new Date(value).toLocaleDateString() : '-'}
+                </span>
+            ),
+        },
+        {
+            key: 'endDate',
+            label: 'End Date',
+            render: (value) => (
+                <span className="text-sm text-gray-600">
+                    {value ? new Date(value).toLocaleDateString() : '-'}
+                </span>
+            ),
+        },
+        {
             key: 'approvalStatus',
             label: 'Approval',
             render: (value) => <ApprovalBadge status={value ?? 'APPROVED'} />,
@@ -413,6 +444,10 @@ const ChallengeComponent: React.FC = () => {
                 { value: 'COMPLETED', label: 'Completed' },
             ],
         },
+        { name: 'startDate', label: 'Start Date', type: 'date' },
+        { name: 'endDate', label: 'End Date', type: 'date' },
+        { name: 'image', label: 'Cover Image URL', type: 'text', placeholder: 'https://example.com/image.jpg' },
+        { name: 'videoUrl', label: 'Video URL', type: 'text', placeholder: 'https://example.com/video.mp4' },
     ];
 
     const stats = [
