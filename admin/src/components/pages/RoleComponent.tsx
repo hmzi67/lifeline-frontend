@@ -163,10 +163,14 @@ const RoleComponent: React.FC = () => {
             options: [
                 { value: '', label: 'No Role' },
                 ...roles
-                    .filter(role => role.name.toLowerCase() === 'admin')
+                    .filter(role => ['admin', 'user'].includes(role.name.toLowerCase()))
+                    .sort((a, b) => {
+                        const order = ['user', 'admin'];
+                        return order.indexOf(a.name.toLowerCase()) - order.indexOf(b.name.toLowerCase());
+                    })
                     .map(role => ({
                         value: role.id,
-                        label: role.name
+                        label: role.name.charAt(0).toUpperCase() + role.name.slice(1),
                     }))
             ],
         },

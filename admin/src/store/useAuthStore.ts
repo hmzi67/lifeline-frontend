@@ -29,6 +29,19 @@ export const useAuthStore = create<AuthStore>()(
           const response = await authService.login(credentials);
           if (response.success) {
             const { user, accessToken } = response.data;
+
+            // Enforce admin-only access to this panel
+            const roleName = user.role?.name?.toLowerCase();
+            if (roleName !== 'admin') {
+              // Log out the server-side session so the cookie is cleared
+              try { await authService.logout(); } catch { /* ignore */ }
+              set({
+                loading: false,
+                error: 'Access denied. This panel is restricted to admin accounts only.',
+              });
+              return;
+            }
+
             localStorage.setItem('token', accessToken);
             set({
               user,
