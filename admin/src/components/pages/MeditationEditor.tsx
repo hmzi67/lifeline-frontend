@@ -27,6 +27,16 @@ const MEDITATION_TYPES = [
     'Mantra',
     'Walking',
     'Loving-Kindness',
+    'Yoga Nidra',
+    'Chakra',
+    'Zen',
+    'Transcendental',
+    'Progressive Relaxation',
+    'Sound Bath',
+    'Gratitude',
+    'Focus & Productivity',
+    'Anxiety Relief',
+    'Morning Energy',
     'Other'
 ];
 
