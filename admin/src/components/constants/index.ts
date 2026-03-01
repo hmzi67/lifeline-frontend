@@ -14,6 +14,8 @@ import {
     Target,
     Waves,
     Music,
+    Ticket,
+    Link2
 } from 'lucide-react';
 import type { NavigationItem, StatData } from '@/types';
 
@@ -30,6 +32,8 @@ export const navigationItems: NavigationItem[] = [
     { id: 'sleepSounds', label: 'Sleep Sounds', icon: Waves },
     { id: 'blogCategories', label: 'Blog Categories', icon: FolderOpen },
     { id: 'blog', label: 'Blogs', icon: FileText },
+    { id: 'coupons', label: 'Coupon Codes', icon: Ticket },
+    { id: 'referralCodes', label: 'Referral Codes', icon: Link2 },
 ];
 
 export const getStatsData = (animatedValues: Record<string, number>): StatData[] => [

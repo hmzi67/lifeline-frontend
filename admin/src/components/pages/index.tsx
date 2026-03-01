@@ -12,3 +12,5 @@ export { default as MealTypeComponent } from './MealTypeComponent';
 export { default as ChallengeComponent } from './ChallengeComponent';
 export { default as SleepStoriesComponent } from './SleepStoriesComponent';
 export { default as SleepSoundsComponent } from './SleepSoundsComponent';
+export { default as CouponComponent } from './CouponComponent';
+export { default as ReferralComponent } from './ReferralComponent';

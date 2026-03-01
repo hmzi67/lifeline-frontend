@@ -6,6 +6,8 @@ import { navigationItems, getStatsData } from '@/components/constants';
 import { DashboardComponent } from '@/components/dashboard';
 import { useAnimation } from '@/hooks/useAnimation';
 import { useAuthStore } from '@/store/useAuthStore';
+import CouponComponent from './components/pages/CouponComponent';
+import ReferralComponent from './components/pages/ReferralComponent';
 
 // ── Protected layout ──────────────────────────────────────────────────────────
 const AdminLayout: React.FC = () => {
@@ -40,6 +42,10 @@ const AdminLayout: React.FC = () => {
                 return <BlogCategoryComponent />;
             case 'blog':
                 return <BlogComponent />;
+            case 'coupons':
+                return <CouponComponent />;
+            case 'referralCodes':
+                return <ReferralComponent />;
             default:
                 return <DashboardComponent statsData={statsData} animatedValues={animatedValues} />;
         }

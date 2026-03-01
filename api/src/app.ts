@@ -50,6 +50,8 @@ import medicationReminderRoutes from './routes/medicationReminderRoutes.js';
 import cheatDayRoutes from './routes/cheatDayRoutes.js';
 import roleRoutes from './routes/roleRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
+import couponRoutes from './routes/couponRoutes.js';
+import referralRoutes from './routes/referralRoutes.js';
 
 const app = express();
 
@@ -178,6 +180,12 @@ app.use('/api/roles', roleRoutes);
 
 // Progress / Stats routes (aggregation endpoints)
 app.use('/api/progress', progressRoutes);
+
+// Coupon routes (admin CRUD + user validate)
+app.use('/api/coupons', couponRoutes);
+
+// Referral code routes (admin CRUD + user validate)
+app.use('/api/referral-codes', referralRoutes);
 
 // Example protected route
 // app.get('/api/protected', authenticate, (req, res) => {

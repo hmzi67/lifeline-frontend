@@ -65,6 +65,10 @@ model User {
   blogs                   Blog[]
   blogComments            BlogComment[]
   submittedChallenges     Challenge[]              @relation("SubmittedChallenges")
+  createdCoupons          CouponCode[]    @relation("AdminCreatedCoupons")
+  couponUsages            CouponUsage[]
+  referralCodes           ReferralCode[]  @relation("ReferralCodeOwner")
+  referralUsages          ReferralUsage[]
 
   @@map("users")
 }
@@ -103,15 +107,19 @@ model RefreshToken {
 
 // Subscription Payments Table
 model SubscriptionPayment {
-  id           String        @id @default(cuid())
-  userId       String?       @map("user_id")
-  planName     String?       @map("plan_name") @db.VarChar(100)
-  amount       Decimal?      @db.Decimal(10, 2)
-  method       String?       @db.VarChar(50)
-  status       String?       @db.VarChar(20)
-  createdAt    DateTime?     @map("created_at")
-  user         User?         @relation(fields: [userId], references: [id])
-  userLicenses UserLicense[]
+  id              String        @id @default(cuid())
+  userId          String?       @map("user_id")
+  planName        String?       @map("plan_name") @db.VarChar(100)
+  originalAmount  Decimal?      @map("original_amount") @db.Decimal(10, 2)
+  discountAmount  Decimal?      @map("discount_amount") @db.Decimal(10, 2)
+  amount          Decimal?      @db.Decimal(10, 2)
+  discountCode    String?       @map("discount_code") @db.VarChar(50)
+  discountType    String?       @map("discount_type") @db.VarChar(20)
+  method          String?       @db.VarChar(50)
+  status          String?       @db.VarChar(20)
+  createdAt       DateTime?     @map("created_at")
+  user            User?         @relation(fields: [userId], references: [id])
+  userLicenses    UserLicense[]
 
   @@map("subscription_payments")
 }
@@ -714,6 +722,80 @@ model BlogComment {
   createdAt DateTime        @default(now()) @map("created_at")
 
   @@map("blog_comments")
+}
+
+// ============================
+// Coupon & Referral Module
+// ============================
+
+// Coupon Codes Table (created by admin, given to doctors/users)
+model CouponCode {
+  id              String        @id @default(cuid())
+  code            String        @unique @db.VarChar(50)
+  description     String?       @db.Text
+  discountPercent Int           @default(10) @map("discount_percent")
+  maxUses         Int           @map("max_uses")
+  currentUses     Int           @default(0) @map("current_uses")
+  isActive        Boolean       @default(true) @map("is_active")
+  expiresAt       DateTime?     @map("expires_at")
+  createdById     String?       @map("created_by_id")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  createdBy       User?         @relation("AdminCreatedCoupons", fields: [createdById], references: [id])
+  usages          CouponUsage[]
+
+  @@map("coupon_codes")
+}
+
+// Coupon Usage Table (tracks which users used which coupons)
+model CouponUsage {
+  id        String     @id @default(cuid())
+  couponId  String     @map("coupon_id")
+  userId    String     @map("user_id")
+  paymentId String?    @map("payment_id")
+  usedAt    DateTime   @default(now()) @map("used_at")
+
+  coupon    CouponCode @relation(fields: [couponId], references: [id])
+  user      User       @relation(fields: [userId], references: [id])
+
+  @@unique([couponId, userId])
+  @@map("coupon_usages")
+}
+
+// Referral Codes Table (admin creates & assigns to doctors)
+model ReferralCode {
+  id              String          @id @default(cuid())
+  code            String          @unique @db.VarChar(50)
+  referrerId      String          @map("referrer_id")
+  description     String?         @db.Text
+  discountPercent Int             @default(10) @map("discount_percent")
+  maxUses         Int             @map("max_uses")
+  currentUses     Int             @default(0) @map("current_uses")
+  isActive        Boolean         @default(true) @map("is_active")
+  expiresAt       DateTime?       @map("expires_at")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  referrer        User            @relation("ReferralCodeOwner", fields: [referrerId], references: [id])
+  usages          ReferralUsage[]
+
+  @@map("referral_codes")
+}
+
+// Referral Usage Table (tracks which users used which referral codes)
+model ReferralUsage {
+  id             String       @id @default(cuid())
+  referralCodeId String       @map("referral_code_id")
+  userId         String       @map("user_id")
+  paymentId      String?      @map("payment_id")
+  usedAt         DateTime     @default(now()) @map("used_at")
+
+  referralCode   ReferralCode @relation(fields: [referralCodeId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+
+  @@unique([referralCodeId, userId])
+  @@map("referral_usages")
 }
 
 // ============================
