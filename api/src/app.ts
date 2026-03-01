@@ -26,6 +26,8 @@ import challengeRoutes from './routes/challengeRoutes.js';
 import challengeExerciseRouter from './routes/challengeExerciseRoutes.js';
 import fastingRoutes from './routes/fastingLogRoutes.js';
 import sleepRoutes from './routes/sleepLogRoutes.js';
+import sleepStoryRoutes from './routes/sleepStoryRoutes.js';
+import sleepSoundRoutes from './routes/sleepSoundRoutes.js';
 import waterIntakeRoutes from './routes/waterIntakeRoutes.js';
 import medicationRoutes from './routes/medicationRoutes.js';
 import meditationRoutes from './routes/meditationRoutes.js';
@@ -122,6 +124,8 @@ app.use('/api/fasting-logs', fastingRoutes);
 
 // sleeping routes
 app.use('/api/sleep-logs', sleepRoutes);
+app.use('/api/sleep-stories', sleepStoryRoutes);
+app.use('/api/sleep-sounds', sleepSoundRoutes);
 
 // Water intake routes
 app.use('/api/water-intake', waterIntakeRoutes);

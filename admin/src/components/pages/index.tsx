@@ -10,3 +10,5 @@ export { default as AppSettingComponent } from './AppSettingComponent';
 export { default as BlogCategoryComponent } from './BlogCategoryComponent';
 export { default as MealTypeComponent } from './MealTypeComponent';
 export { default as ChallengeComponent } from './ChallengeComponent';
+export { default as SleepStoriesComponent } from './SleepStoriesComponent';
+export { default as SleepSoundsComponent } from './SleepSoundsComponent';

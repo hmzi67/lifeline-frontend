@@ -623,6 +623,39 @@ model UserDailyRoutine {
 }
 
 // ============================
+// Sleep Stories & Sounds Module
+// ============================
+
+// Sleep Stories Table
+model SleepStory {
+  id          String  @id @default(cuid())
+  title       String  @db.VarChar(150)
+  author      String? @db.VarChar(100)
+  description String? @db.Text
+  image       String? @db.Text
+  audioUrl    String  @map("audio_url") @db.Text
+  category    String? @db.VarChar(50)
+  duration    Int?
+  isActive    Boolean @default(true) @map("is_active")
+
+  @@map("sleep_stories")
+}
+
+// Sleep Sounds Table
+model SleepSound {
+  id          String  @id @default(cuid())
+  name        String  @db.VarChar(150)
+  description String? @db.Text
+  image       String? @db.Text
+  soundUrl    String  @map("sound_url") @db.Text
+  category    String? @db.VarChar(50)
+  duration    Int?
+  isActive    Boolean @default(true) @map("is_active")
+
+  @@map("sleep_sounds")
+}
+
+// ============================
 // Blog Module (Optional - Keep if needed)
 // ============================
 

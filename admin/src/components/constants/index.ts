@@ -11,7 +11,9 @@ import {
     Shield,
     FolderOpen,
     Utensils,
-    Target
+    Target,
+    Waves,
+    Music,
 } from 'lucide-react';
 import type { NavigationItem, StatData } from '@/types';
 
@@ -23,7 +25,9 @@ export const navigationItems: NavigationItem[] = [
     { id: 'mealTypes', label: 'Meal Types', icon: Utensils },
     { id: 'exercise', label: 'Exercises', icon: Dumbbell },
     { id: 'challenges', label: 'Challenges', icon: Target },
-    { id: 'mindMeditation', label: 'Meditation', icon: BookOpen },
+    { id: 'mindMeditation', label: 'Meditation', icon: Music },
+    { id: 'sleepStories', label: 'Sleep Stories', icon: BookOpen },
+    { id: 'sleepSounds', label: 'Sleep Sounds', icon: Waves },
     { id: 'blogCategories', label: 'Blog Categories', icon: FolderOpen },
     { id: 'blog', label: 'Blogs', icon: FileText },
 ];

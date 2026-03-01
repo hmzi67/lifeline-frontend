@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Sidebar, Header } from '@/components/layout';
-import { LoginPage, UsersComponent, DietComponent, ExerciseComponent, BlogComponent, MeditationComponent, RoleComponent, BlogCategoryComponent, MealTypeComponent, ChallengeComponent } from '@/components/pages';
+import { LoginPage, UsersComponent, DietComponent, ExerciseComponent, BlogComponent, MeditationComponent, RoleComponent, BlogCategoryComponent, MealTypeComponent, ChallengeComponent, SleepStoriesComponent, SleepSoundsComponent } from '@/components/pages';
 import { navigationItems, getStatsData } from '@/components/constants';
 import { DashboardComponent } from '@/components/dashboard';
 import { useAnimation } from '@/hooks/useAnimation';
@@ -32,6 +32,10 @@ const AdminLayout: React.FC = () => {
                 return <ChallengeComponent />;
             case 'mindMeditation':
                 return <MeditationComponent />;
+            case 'sleepStories':
+                return <SleepStoriesComponent />;
+            case 'sleepSounds':
+                return <SleepSoundsComponent />;
             case 'blogCategories':
                 return <BlogCategoryComponent />;
             case 'blog':
