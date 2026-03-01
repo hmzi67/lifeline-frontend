@@ -15,8 +15,10 @@ import {
     UserX,
     ArrowUpDown,
     Lock,
-    UserPlus
+    UserPlus,
+    Shield,
 } from 'lucide-react';
+import api from '@/lib/axios';
 import {
     useReactTable,
     getCoreRowModel,
@@ -73,11 +75,15 @@ const UsersComponent: React.FC = () => {
     const [isUpdatingUser, setIsUpdatingUser] = useState(false);
     const [isDeletingUser, setIsDeletingUser] = useState(false);
 
+    // Roles for the role dropdown
+    const [roles, setRoles] = useState<Array<{ id: string; name: string }>>([]);
+
     // Form state for adding user
     const [newUser, setNewUser] = useState<CreateUserData>({
         email: '',
         username: '',
-        password: ''
+        password: '',
+        roleId: '',
     });
 
     // Form state for editing user
@@ -86,6 +92,20 @@ const UsersComponent: React.FC = () => {
         username: ''
     }); useEffect(() => {
         fetchUsers();
+        api.get<{ success: boolean; data: Array<{ id: string; name: string }> }>('/roles')
+            .then(res => {
+                if (res.data.success) {
+                    setRoles(
+                        res.data.data.filter(r =>
+                            ['admin', 'user'].includes(r.name.toLowerCase())
+                        ).sort((a, b) => {
+                            const order = ['user', 'admin'];
+                            return order.indexOf(a.name.toLowerCase()) - order.indexOf(b.name.toLowerCase());
+                        })
+                    );
+                }
+            })
+            .catch(() => { });
     }, []);
 
     const handleUserClick = (user: UserProfile) => {
@@ -105,7 +125,8 @@ const UsersComponent: React.FC = () => {
             setNewUser({
                 email: '',
                 username: '',
-                password: ''
+                password: '',
+                roleId: '',
             });
         } catch (error) {
             console.error('Failed to create user:', error);
@@ -659,6 +680,25 @@ const UsersComponent: React.FC = () => {
                                     onChange={(e) => handleInputChange('password', e.target.value)}
                                     className="mt-1"
                                 />
+                            </div>
+
+                            <div>
+                                <Label className="text-sm font-medium text-gray-700 flex items-center gap-1">
+                                    <Shield className="w-4 h-4" />
+                                    Role
+                                </Label>
+                                <select
+                                    value={newUser.roleId || ''}
+                                    onChange={(e) => handleInputChange('roleId', e.target.value)}
+                                    className="mt-1 w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                                    <option value="">No Role</option>
+                                    {roles.map(role => (
+                                        <option key={role.id} value={role.id}>
+                                            {role.name.charAt(0).toUpperCase() + role.name.slice(1)}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                         </div>
 
