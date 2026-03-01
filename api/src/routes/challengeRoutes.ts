@@ -5,34 +5,32 @@ import {
   createChallenge,
   updateChallenge,
   deleteChallenge,
+  getPendingApprovals,
+  updateApprovalStatus,
 } from '../controllers/challengeController.js';
 
 
 const challengeRoute = express.Router();
 
 // @route   GET /api/challenges
-// @desc    Get all challenges
-// @access  Public
 challengeRoute.get('/', getAllChallenges);
 
+// @route   GET /api/challenges/approvals/pending
+challengeRoute.get('/approvals/pending', getPendingApprovals);
+
 // @route   GET /api/challenges/:id
-// @desc    Get challenge by ID
-// @access  Public
 challengeRoute.get('/:id', getChallengeById);
 
 // @route   POST /api/challenges
-// @desc    Create new challenge
-// @access  Private (add authentication middleware as needed)
 challengeRoute.post('/', createChallenge);
 
+// @route   PATCH /api/challenges/:id/approval
+challengeRoute.patch('/:id/approval', updateApprovalStatus);
+
 // @route   PUT /api/challenges/:id
-// @desc    Update challenge
-// @access  Private (add authentication middleware as needed)
 challengeRoute.put('/:id', updateChallenge);
 
 // @route   DELETE /api/challenges/:id
-// @desc    Delete challenge
-// @access  Private (add authentication middleware as needed)
 challengeRoute.delete('/:id', deleteChallenge);
 
 export default challengeRoute;

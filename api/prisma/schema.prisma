@@ -64,6 +64,7 @@ model User {
   userFavoriteMeditations UserFavoriteMeditation[]
   blogs                   Blog[]
   blogComments            BlogComment[]
+  submittedChallenges     Challenge[]              @relation("SubmittedChallenges")
 
   @@map("users")
 }
@@ -374,6 +375,10 @@ model Challenge {
   purpose            String?             @db.Text
   description        String?             @db.Text
   status             String?             @db.VarChar(20)
+  approvalStatus     String              @default("APPROVED") @map("approval_status") @db.VarChar(20)
+  rejectionReason    String?             @map("rejection_reason") @db.Text
+  submittedById      String?             @map("submitted_by_id")
+  submittedBy        User?               @relation("SubmittedChallenges", fields: [submittedById], references: [id])
   challengeExercises ChallengeExercise[]
   challengeDiets     ChallengeDiet[]
   challengeFees      ChallengeFee[]

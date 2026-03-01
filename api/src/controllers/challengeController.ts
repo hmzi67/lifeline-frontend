@@ -270,6 +270,63 @@ export const deleteChallenge = async (
   }
 };
 
+// Get pending approval challenges
+export const getPendingApprovals = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const challenges = await prisma.challenge.findMany({
+      where: { approvalStatus: 'PENDING' },
+      include: {
+        ...challengeInclude,
+        submittedBy: { select: { id: true, username: true, email: true, profileImage: true } },
+      },
+      orderBy: { name: 'asc' },
+    });
+
+    sendResponse(res, 200, { challenges, total: challenges.length });
+  } catch (err) {
+    handleError(err, res);
+  }
+};
+
+// Update approval status (approve / reject)
+export const updateApprovalStatus = async (
+  req: Request<{ id: string }, {}, { action: 'approve' | 'reject'; rejectionReason?: string }>,
+  res: Response
+): Promise<void> => {
+  try {
+    const id = validateId(req.params.id);
+    const { action, rejectionReason } = req.body;
+
+    if (!['approve', 'reject'].includes(action)) {
+      throw new AppError('Action must be "approve" or "reject"', 400);
+    }
+
+    const challenge = await prisma.challenge.findUnique({ where: { id } });
+    if (!challenge) throw new AppError('Challenge not found', 404);
+
+    const updatedChallenge = await prisma.challenge.update({
+      where: { id },
+      data: {
+        approvalStatus: action === 'approve' ? 'APPROVED' : 'REJECTED',
+        status: action === 'approve' ? 'ACTIVE' : challenge.status,
+        rejectionReason: action === 'reject' ? (rejectionReason ?? null) : null,
+      },
+      include: {
+        ...challengeInclude,
+        submittedBy: { select: { id: true, username: true, email: true, profileImage: true } },
+      },
+    });
+
+    const msg = action === 'approve' ? 'Challenge approved successfully' : 'Challenge rejected';
+    sendResponse(res, 200, updatedChallenge, msg);
+  } catch (err) {
+    handleError(err, res);
+  }
+};
+
 // ---------------- Graceful Shutdown ----------------
 process.on('beforeExit', async () => {
   await prisma.$disconnect();
