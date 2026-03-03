@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import GoNext from "@/components/common/GoNext.tsx";
-import menimg from "@/assets/images/question/mensolo.svg";
-import womenimg from "@/assets/images/question/womensolo.svg";
+import menimg from "@/assets/images/question/mengroup.svg";
+import womenimg from "@/assets/images/question/womengroup2.svg";
 import api from '@/lib/axios';
 
 interface FocusAreaSelectorProps {
