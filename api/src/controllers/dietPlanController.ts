@@ -15,6 +15,8 @@ interface CreateDietPlanBody {
   duration?: string;
   description?: string;
   image?: string;
+  cuisineName?: string;
+  gender?: string;
 }
 
 interface UpdateDietPlanBody {
@@ -23,6 +25,8 @@ interface UpdateDietPlanBody {
   duration?: string;
   description?: string;
   image?: string;
+  cuisineName?: string;
+  gender?: string;
 }
 
 // Get all diet plans
@@ -129,7 +133,7 @@ export const getDietPlanById = async (req: Request, res: Response): Promise<void
 // Create new diet plan
 export const createDietPlan = async (req: Request<{}, {}, CreateDietPlanBody>, res: Response): Promise<void> => {
   try {
-    const { name, calories, duration, description, image } = req.body;
+    const { name, calories, duration, description, image, cuisineName, gender } = req.body;
 
     // Validation
     if (!name) {
@@ -146,7 +150,9 @@ export const createDietPlan = async (req: Request<{}, {}, CreateDietPlanBody>, r
         calories: calories || null,
         duration: duration || null,
         description: description || null,
-        image: image || null
+        image: image || null,
+        cuisineName: cuisineName || null,
+        gender: gender || null
       }
     });
 
@@ -169,7 +175,7 @@ export const createDietPlan = async (req: Request<{}, {}, CreateDietPlanBody>, r
 export const updateDietPlan = async (req: Request<{ id: string }, {}, UpdateDietPlanBody>, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const { name, calories, duration, description, image } = req.body;
+    const { name, calories, duration, description, image, cuisineName, gender } = req.body;
 
     // Check if diet plan exists
     const existingDietPlan = await prisma.dietPlan.findUnique({
@@ -190,6 +196,8 @@ export const updateDietPlan = async (req: Request<{ id: string }, {}, UpdateDiet
     if (duration !== undefined) updateData.duration = duration;
     if (description !== undefined) updateData.description = description;
     if (image !== undefined) updateData.image = image;
+    if (cuisineName !== undefined) updateData.cuisineName = cuisineName;
+    if (gender !== undefined) updateData.gender = gender;
 
     const updatedDietPlan = await prisma.dietPlan.update({
       where: { id },

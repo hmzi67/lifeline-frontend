@@ -178,6 +178,8 @@ model DietPlan {
   duration             String?              @db.VarChar(50)
   description          String?              @db.Text
   image                String?              @db.Text
+  cuisineName          String?              @map("cuisine_name") @db.VarChar(50)
+  gender               String?              @db.VarChar(20)
   userDietPlans        UserDietPlan[]
   userActiveDietPlan   UserActiveDietPlan[]
   challengeDiets       ChallengeDiet[]

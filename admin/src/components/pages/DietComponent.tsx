@@ -4,7 +4,7 @@ import {
     ImageIcon, FileText, ChevronRight, ChevronLeft, Target, Salad, Clock,
     Eye, RotateCcw, Save, X, UtensilsCrossed, Utensils, Check,
     List, Info, Dumbbell, TrendingDown, TrendingUp,
-    PlusCircle, ArrowLeft, LayoutList, BookOpen,
+    PlusCircle, ArrowLeft, LayoutList, BookOpen, Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -55,6 +55,8 @@ interface PlanInfo {
     caloriesPerDay: string;
     caloriesMin: string;
     caloriesMax: string;
+    cuisineName: string;
+    gender: string;
     imageFile: File | null;
     imagePreview: string;
 }
@@ -66,6 +68,8 @@ interface DietPlanApi {
     duration: string | null;
     description: string | null;
     image: string | null;
+    cuisineName?: string | null;
+    gender?: string | null;
     createdAt?: string;
     userDietPlans?: { user: { id: string; email: string; username: string } }[];
     challengeDiets?: { challenge: { id: string; name: string; status: string } }[];
@@ -112,8 +116,32 @@ const DURATIONS = [
 
 const UNITS = ['piece', 'grams', 'ml', 'cup', 'tbsp', 'tsp', 'slice', 'oz', 'kg', 'lb'];
 
+const CUISINES = [
+    { value: 'indian', label: 'Indian' },
+    { value: 'italian', label: 'Italian' },
+    { value: 'mexican', label: 'Mexican' },
+    { value: 'asian', label: 'Asian' },
+    { value: 'american', label: 'American' },
+    { value: 'mediterranean', label: 'Mediterranean' },
+    { value: 'middle_eastern', label: 'Middle Eastern' },
+    { value: 'thai', label: 'Thai' },
+    { value: 'japanese', label: 'Japanese' },
+    { value: 'chinese', label: 'Chinese' },
+    { value: 'fusion', label: 'Fusion' },
+    { value: 'other', label: 'Other' },
+];
+
+const GENDERS = [
+    { value: 'male', label: 'Male' },
+    { value: 'female', label: 'Female' },
+    { value: 'other', label: 'Other' },
+    { value: 'all', label: 'All' },
+];
+
 const GOAL_LABEL: Record<string, string> = Object.fromEntries(GOALS.map(g => [g.value, g.label]));
 const DIET_LABEL: Record<string, string> = Object.fromEntries(DIET_TYPES.map(d => [d.value, d.label]));
+const CUISINE_LABEL: Record<string, string> = Object.fromEntries(CUISINES.map(c => [c.value, c.label]));
+const GENDER_LABEL: Record<string, string> = Object.fromEntries(GENDERS.map(g => [g.value, g.label]));
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Empty state helpers
@@ -129,6 +157,8 @@ const emptyPlanInfo = (): PlanInfo => ({
     caloriesPerDay: '',
     caloriesMin: '',
     caloriesMax: '',
+    cuisineName: '',
+    gender: '',
     imageFile: null,
     imagePreview: '',
 });
@@ -351,6 +381,8 @@ const DietComponent: React.FC = () => {
             caloriesPerDay: plan.calories?.toString() || '',
             caloriesMin: '',
             caloriesMax: '',
+            cuisineName: plan.cuisineName || '',
+            gender: plan.gender || '',
             imageFile: null,
             imagePreview: plan.image || '',
         });
@@ -389,6 +421,8 @@ const DietComponent: React.FC = () => {
                 duration: durationDays ? `${durationDays} days` : undefined,
                 description: planInfo.description || undefined,
                 image: planInfo.imagePreview && !planInfo.imageFile ? planInfo.imagePreview : undefined,
+                cuisineName: planInfo.cuisineName || undefined,
+                gender: planInfo.gender || undefined,
             };
 
             let planId: string;
@@ -512,10 +546,10 @@ const DietComponent: React.FC = () => {
                 </div>
             </SectionCard>
 
-            {/* Step 2: Diet type, name, image, description */}
+            {/* Step 2: Diet type, cuisine name, plan name, image, description */}
             <SectionCard>
                 <StepBadge step={2} label="Diet Plan Details" />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <div className="space-y-1.5">
                         <Label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
                             Diet Type <span className="text-red-500">*</span>
@@ -530,6 +564,14 @@ const DietComponent: React.FC = () => {
                                 ))}
                             </SelectContent>
                         </Select>
+                    </div>
+                    <div className="space-y-1.5">
+                        <Label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Cuisine Name</Label>
+                        <Input
+                            value={planInfo.cuisineName}
+                            onChange={e => handlePlanInfoChange('cuisineName', e.target.value)}
+                            placeholder="e.g. Mediterranean, Indian"
+                        />
                     </div>
                     <div className="space-y-1.5">
                         <Label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
@@ -612,7 +654,7 @@ const DietComponent: React.FC = () => {
                 </div>
             </SectionCard>
 
-            {/* Step 4: Calories */}
+            {/* Step 4: Calories & Gender */}
             <SectionCard>
                 <StepBadge step={4} label="Daily Calorie Target" />
                 <div className="bg-teal-50 border border-teal-200 rounded-xl p-5">
@@ -654,6 +696,29 @@ const DietComponent: React.FC = () => {
                         <p className="text-[10px] text-gray-400">Maximum daily calories</p>
                     </div>
                 </div>
+                <div className="mt-5">
+                    <Label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-2">Target Gender</Label>
+                    <div className="grid grid-cols-4 gap-3">
+                        {GENDERS.map(g => {
+                            const active = planInfo.gender === g.value;
+                            return (
+                                <button
+                                    key={g.value}
+                                    type="button"
+                                    onClick={() => handlePlanInfoChange('gender', g.value)}
+                                    className={`flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all duration-150
+                                        ${active
+                                            ? 'border-teal-500 bg-teal-50 text-teal-700'
+                                            : 'border-gray-200 hover:border-teal-300 text-gray-500 hover:bg-gray-50'}`}
+                                >
+                                    {active && <Check className="w-3.5 h-3.5 text-teal-500" />}
+                                    {g.label}
+                                </button>
+                            );
+                        })}
+                    </div>
+                    <p className="text-[10px] text-gray-400 mt-1.5">Who this diet plan is designed for</p>
+                </div>
             </SectionCard>
 
             <div className="flex justify-end pb-6">
@@ -673,15 +738,17 @@ const DietComponent: React.FC = () => {
     const renderMealsTab = () => (
         <div className="space-y-5">
             {/* Summary bar */}
-            <div className="grid grid-cols-4 gap-4 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-2xl p-5">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-2xl p-5">
                 {[
                     { label: 'Goal', value: GOAL_LABEL[planInfo.goal] || '—' },
                     { label: 'Diet Type', value: DIET_LABEL[planInfo.dietType] || '—' },
                     { label: 'Duration', value: durationLabel() },
                     { label: 'Kcal / Day', value: planInfo.caloriesPerDay || '—' },
+                    { label: 'Cuisine', value: CUISINE_LABEL[planInfo.cuisineName] || planInfo.cuisineName || '—' },
+                    { label: 'Gender', value: GENDER_LABEL[planInfo.gender] || planInfo.gender || '—' },
                 ].map(s => (
                     <div key={s.label} className="text-center">
-                        <div className="text-xl font-bold font-mono truncate">{s.value}</div>
+                        <div className="text-lg font-bold font-mono truncate">{s.value}</div>
                         <div className="text-[10px] uppercase tracking-widest mt-1 opacity-75">{s.label}</div>
                     </div>
                 ))}
@@ -950,6 +1017,8 @@ const DietComponent: React.FC = () => {
                         { icon: Salad, label: DIET_LABEL[planInfo.dietType] || '—', color: 'bg-green-50 text-green-700 border-green-200' },
                         { icon: Calendar, label: `${durationLabel()} Days`, color: 'bg-blue-50 text-blue-700 border-blue-200' },
                         { icon: Flame, label: `${planInfo.caloriesPerDay || '—'} kcal/day`, color: 'bg-orange-50 text-orange-700 border-orange-200' },
+                        ...(planInfo.cuisineName ? [{ icon: UtensilsCrossed, label: CUISINE_LABEL[planInfo.cuisineName] || planInfo.cuisineName, color: 'bg-amber-50 text-amber-700 border-amber-200' }] : []),
+                        ...(planInfo.gender ? [{ icon: Users, label: GENDER_LABEL[planInfo.gender] || planInfo.gender, color: 'bg-purple-50 text-purple-700 border-purple-200' }] : []),
                     ].map(tag => {
                         const Icon = tag.icon;
                         return (
