@@ -40,6 +40,7 @@ interface Exercise {
     description: string | null;
     image: string | null;
     duration: string | null;
+    displayDuration: string | null;
     videoUrl: string | null;
     difficulty: string | null;
     caloriesBurnEstimate: number | null;
@@ -97,6 +98,7 @@ const DEFAULT_FORM = {
     description: '',
     focusAreas: [] as string[],
     duration: '',
+    displayDuration: '',
     videoUrl: '',
     image: '',
     difficulty: 'Intermediate',
@@ -318,6 +320,7 @@ const ExerciseComponent: React.FC = () => {
             description: exercise.description ?? '',
             focusAreas,
             duration,
+            displayDuration: exercise.displayDuration ?? '',
             videoUrl: exercise.videoUrl ?? '',
             image: exercise.image ?? '',
             difficulty: exercise.difficulty ?? 'Intermediate',
@@ -363,6 +366,7 @@ const ExerciseComponent: React.FC = () => {
                 description: formData.description || undefined,
                 image: formData.image || undefined,
                 duration: formData.duration ? `${formData.duration} min` : undefined,
+                displayDuration: formData.displayDuration || undefined,
                 videoUrl: formData.videoUrl || undefined,
                 difficulty: formData.difficulty || undefined,
                 caloriesBurnEstimate: formData.caloriesBurnEstimate
@@ -762,11 +766,10 @@ const ExerciseComponent: React.FC = () => {
                     <button
                         key={tab.id}
                         onClick={() => switchTab(tab.id, idx)}
-                        className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                            activeTab === tab.id
+                        className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${activeTab === tab.id
                                 ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-md'
                                 : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
-                        }`}
+                            }`}
                     >
                         <tab.Icon className="w-4 h-4 flex-shrink-0" />{tab.label}
                     </button>
@@ -815,11 +818,10 @@ const ExerciseComponent: React.FC = () => {
                                         key={fa.value}
                                         type="button"
                                         onClick={() => toggleFocusArea(fa.value)}
-                                        className={`flex items-center gap-1.5 px-4 py-2 rounded-full border-[1.5px] text-sm font-medium transition-all ${
-                                            formData.focusAreas.includes(fa.value)
+                                        className={`flex items-center gap-1.5 px-4 py-2 rounded-full border-[1.5px] text-sm font-medium transition-all ${formData.focusAreas.includes(fa.value)
                                                 ? 'bg-teal-50 border-teal-400 text-teal-800 font-semibold shadow-sm'
                                                 : 'bg-white border-gray-200 text-gray-500 hover:border-teal-400 hover:text-teal-700 hover:bg-teal-50'
-                                        }`}
+                                            }`}
                                     >
                                         {fa.label}
                                     </button>
@@ -864,11 +866,10 @@ const ExerciseComponent: React.FC = () => {
                                             key={d.value}
                                             type="button"
                                             onClick={() => setField('difficulty', d.value)}
-                                            className={`flex-1 py-3 rounded-xl border-2 text-center text-sm font-medium transition-all cursor-pointer ${
-                                                formData.difficulty === d.value
+                                            className={`flex-1 py-3 rounded-xl border-2 text-center text-sm font-medium transition-all cursor-pointer ${formData.difficulty === d.value
                                                     ? d.active
                                                     : `border-gray-200 bg-white text-gray-500 ${d.hover}`
-                                            }`}
+                                                }`}
                                         >
                                             <d.Icon className={`w-5 h-5 mx-auto mb-1.5 ${formData.difficulty === d.value ? d.iconClass : 'text-gray-300'}`} />
                                             {d.label}
@@ -931,6 +932,16 @@ const ExerciseComponent: React.FC = () => {
                                         <span className="text-xs">No image yet</span>
                                     </div>
                                 )}
+                            </div>
+                            <div className="space-y-2">
+                                <Label className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Display Duration</Label>
+                                <Input
+                                    value={formData.displayDuration}
+                                    onChange={e => setField('displayDuration', e.target.value)}
+                                    placeholder="e.g. 3:45 or 45 seconds"
+                                    className="border-gray-200 focus:border-red-400"
+                                />
+                                <p className="text-[10px] text-gray-400">How the duration appears to users (e.g. "3:45", "45 sec")</p>
                             </div>
                         </div>
                     </StepCard>

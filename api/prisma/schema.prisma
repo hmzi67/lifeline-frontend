@@ -263,6 +263,7 @@ model Exercise {
   description          String?                @db.Text
   image                String?                @db.Text
   duration             String?                @db.VarChar(50)
+  displayDuration      String?                @map("display_duration") @db.VarChar(100)
   videoUrl             String?                @map("video_url") @db.Text
   difficulty           String?                @db.VarChar(20)
   caloriesBurnEstimate Int?                   @map("calories_burn_estimate")
