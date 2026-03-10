@@ -89,7 +89,7 @@ export class CrudService<T> {
 /**
  * Upload file to server
  */
-export const uploadFile = async (file: File, endpoint: string = '/upload'): Promise<string> => {
+export const uploadFile = async (file: File, endpoint: string = '/uploads'): Promise<string> => {
     const formData = new FormData();
     formData.append('file', file);
 

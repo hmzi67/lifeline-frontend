@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import api from '@/lib/axios';
+import { MediaUploadField } from '@/components/shared/MediaUploadField';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 interface SleepSound {
@@ -203,32 +204,24 @@ const SleepSoundEditor: React.FC<EditorProps> = ({ soundId, onSave, onCancel }) 
                     />
                 </div>
 
-                {/* Cover Image URL */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Cover Image URL</label>
-                    <input
-                        type="url"
-                        value={formData.image}
-                        onChange={e => handleChange('image', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
-                        placeholder="https://example.com/cover.jpg"
-                    />
-                </div>
+                <MediaUploadField
+                    label="Cover Image"
+                    value={formData.image}
+                    onChange={(value) => handleChange('image', value)}
+                    accept="image/*"
+                    mediaKind="image"
+                    placeholder="https://example.com/cover.jpg"
+                />
 
-                {/* Sound URL */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Sound URL <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="url"
-                        value={formData.soundUrl}
-                        onChange={e => handleChange('soundUrl', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
-                        placeholder="https://example.com/rain.mp3"
-                        required
-                    />
-                </div>
+                <MediaUploadField
+                    label="Sound"
+                    value={formData.soundUrl}
+                    onChange={(value) => handleChange('soundUrl', value)}
+                    accept="audio/*"
+                    mediaKind="audio"
+                    required
+                    placeholder="https://example.com/rain.mp3"
+                />
 
                 {/* Active toggle */}
                 <div className="flex items-center gap-3">

@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import api from '@/lib/axios';
+import { MediaUploadField } from '@/components/shared/MediaUploadField';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 interface SleepStory {
@@ -220,32 +221,24 @@ const SleepStoryEditor: React.FC<EditorProps> = ({ storyId, onSave, onCancel }) 
                     />
                 </div>
 
-                {/* Cover Image URL */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Cover Image URL</label>
-                    <input
-                        type="url"
-                        value={formData.image}
-                        onChange={e => handleChange('image', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
-                        placeholder="https://example.com/cover.jpg"
-                    />
-                </div>
+                <MediaUploadField
+                    label="Cover Image"
+                    value={formData.image}
+                    onChange={(value) => handleChange('image', value)}
+                    accept="image/*"
+                    mediaKind="image"
+                    placeholder="https://example.com/cover.jpg"
+                />
 
-                {/* Audio URL */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Audio URL <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="url"
-                        value={formData.audioUrl}
-                        onChange={e => handleChange('audioUrl', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
-                        placeholder="https://example.com/story.mp3"
-                        required
-                    />
-                </div>
+                <MediaUploadField
+                    label="Audio"
+                    value={formData.audioUrl}
+                    onChange={(value) => handleChange('audioUrl', value)}
+                    accept="audio/*"
+                    mediaKind="audio"
+                    required
+                    placeholder="https://example.com/story.mp3"
+                />
 
                 {/* Active toggle */}
                 <div className="flex items-center gap-3">

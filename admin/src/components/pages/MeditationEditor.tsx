@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Save, X, Music, Image as ImageIcon, FileText, Tag, Volume2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import api from '@/lib/axios';
+import { MediaUploadField } from '@/components/shared/MediaUploadField';
 
 interface MeditationFormData {
     name: string;
@@ -214,71 +215,24 @@ const MeditationEditor: React.FC<MeditationEditorProps> = ({ meditationId, onSav
                     />
                 </div>
 
-                {/* Image URL Field */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        <div className="flex items-center gap-2">
-                            <ImageIcon className="w-4 h-4" />
-                            Image URL
-                        </div>
-                    </label>
-                    <input
-                        type="url"
-                        value={formData.image}
-                        onChange={(e) => handleChange('image', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                        placeholder="https://example.com/image.jpg"
-                    />
-                    {formData.image && (
-                        <div className="mt-3">
-                            <p className="text-xs text-gray-500 mb-2">Preview:</p>
-                            <img
-                                src={formData.image}
-                                alt="Preview"
-                                className="w-full max-w-md h-48 object-cover rounded-xl border border-gray-200"
-                                onError={(e) => {
-                                    (e.target as HTMLImageElement).style.display = 'none';
-                                }}
-                            />
-                        </div>
-                    )}
-                </div>
+                <MediaUploadField
+                    label="Meditation Image"
+                    value={formData.image}
+                    onChange={(value) => handleChange('image', value)}
+                    accept="image/*"
+                    mediaKind="image"
+                    placeholder="https://example.com/image.jpg"
+                />
 
-                {/* Sound URL Field */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        <div className="flex items-center gap-2">
-                            <Music className="w-4 h-4" />
-                            Sound URL <span className="text-red-500">*</span>
-                        </div>
-                    </label>
-                    <input
-                        type="url"
-                        value={formData.soundUrl}
-                        onChange={(e) => handleChange('soundUrl', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                        placeholder="https://example.com/audio.mp3"
-                        required
-                    />
-                    {formData.soundUrl && (
-                        <div className="mt-3">
-                            <p className="text-xs text-gray-500 mb-2">Audio Preview:</p>
-                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200">
-                                <Volume2 className="w-5 h-5 text-gray-400" />
-                                <audio
-                                    controls
-                                    className="flex-1"
-                                    src={formData.soundUrl}
-                                    onError={(e) => {
-                                        (e.target as HTMLAudioElement).style.display = 'none';
-                                    }}
-                                >
-                                    Your browser does not support the audio element.
-                                </audio>
-                            </div>
-                        </div>
-                    )}
-                </div>
+                <MediaUploadField
+                    label="Meditation Audio"
+                    value={formData.soundUrl}
+                    onChange={(value) => handleChange('soundUrl', value)}
+                    accept="audio/*"
+                    mediaKind="audio"
+                    required
+                    placeholder="https://example.com/audio.mp3"
+                />
 
                 {/* Action Buttons */}
                 <div className="flex gap-4 pt-4">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Loader2, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { uploadFile, handleApiError } from '@/services/crudService';
 
 export interface FormField {
     name: string;
@@ -42,6 +43,7 @@ export const FormModal: React.FC<FormModalProps> = ({
     const [submitError, setSubmitError] = React.useState<string | null>(null);
     const [errors, setErrors] = React.useState<Record<string, string>>({});
     const [previewUrls, setPreviewUrls] = React.useState<Record<string, string>>({});
+    const [uploadingFields, setUploadingFields] = React.useState<Record<string, boolean>>({});
 
     React.useEffect(() => {
         if (isOpen) {
@@ -72,13 +74,8 @@ export const FormModal: React.FC<FormModalProps> = ({
         if (submitError) setSubmitError(null);
     };
 
-    const handleFileChange = (name: string, file: File | null) => {
-        if (file) {
-            setFormData((prev) => ({ ...prev, [name]: file }));
-            // Create preview URL
-            const url = URL.createObjectURL(file);
-            setPreviewUrls((prev) => ({ ...prev, [name]: url }));
-        } else {
+    const handleFileChange = async (name: string, file: File | null) => {
+        if (!file) {
             setFormData((prev) => {
                 const newData = { ...prev };
                 delete newData[name];
@@ -89,6 +86,20 @@ export const FormModal: React.FC<FormModalProps> = ({
                 delete newUrls[name];
                 return newUrls;
             });
+            return;
+        }
+
+        setUploadingFields((prev) => ({ ...prev, [name]: true }));
+        setSubmitError(null);
+
+        try {
+            const uploadedUrl = await uploadFile(file, '/uploads');
+            setFormData((prev) => ({ ...prev, [name]: uploadedUrl }));
+            setPreviewUrls((prev) => ({ ...prev, [name]: uploadedUrl }));
+        } catch (error: any) {
+            setSubmitError(handleApiError(error));
+        } finally {
+            setUploadingFields((prev) => ({ ...prev, [name]: false }));
         }
     };
 
@@ -109,6 +120,11 @@ export const FormModal: React.FC<FormModalProps> = ({
         e.preventDefault();
 
         if (!validate()) {
+            return;
+        }
+
+        if (Object.values(uploadingFields).some(Boolean)) {
+            setSubmitError('Please wait for file uploads to finish.');
             return;
         }
 
@@ -241,32 +257,46 @@ export const FormModal: React.FC<FormModalProps> = ({
                                 {field.type === 'file' && (
                                     <div className="space-y-2">
                                         <div className="flex items-center gap-4">
-                                            <label className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg cursor-pointer transition-colors">
-                                                <Upload className="w-4 h-4" />
-                                                <span className="text-sm">Choose File</span>
+                                            <label className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${(field.disabled || loading || uploadingFields[field.name]) ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-100 hover:bg-gray-200 cursor-pointer'}`}>
+                                                {uploadingFields[field.name] ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                                                <span className="text-sm">{uploadingFields[field.name] ? 'Uploading...' : 'Choose File'}</span>
                                                 <input
                                                     type="file"
                                                     accept={field.accept}
-                                                    onChange={(e) => handleFileChange(field.name, e.target.files?.[0] || null)}
-                                                    disabled={field.disabled || loading}
+                                                    onChange={(e) => {
+                                                        void handleFileChange(field.name, e.target.files?.[0] || null);
+                                                        e.currentTarget.value = '';
+                                                    }}
+                                                    disabled={field.disabled || loading || uploadingFields[field.name]}
                                                     className="hidden"
                                                 />
                                             </label>
                                             {formData[field.name] && (
                                                 <span className="text-sm text-gray-600">
-                                                    {formData[field.name] instanceof File
-                                                        ? formData[field.name].name
+                                                    {typeof formData[field.name] === 'string'
+                                                        ? 'Upload complete'
                                                         : 'File selected'}
                                                 </span>
                                             )}
                                         </div>
                                         {previewUrls[field.name] && (
-                                            <div className="relative w-32 h-32 border border-gray-300 rounded-lg overflow-hidden">
-                                                <img
-                                                    src={previewUrls[field.name]}
-                                                    alt="Preview"
-                                                    className="w-full h-full object-cover"
-                                                />
+                                            <div className="space-y-2">
+                                                {(field.accept || '').includes('image') && (
+                                                    <div className="relative w-32 h-32 border border-gray-300 rounded-lg overflow-hidden">
+                                                        <img
+                                                            src={previewUrls[field.name]}
+                                                            alt="Preview"
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    </div>
+                                                )}
+                                                {(field.accept || '').includes('video') && (
+                                                    <video controls src={previewUrls[field.name]} className="w-full max-w-sm rounded-lg border border-gray-300 bg-black" />
+                                                )}
+                                                {(field.accept || '').includes('audio') && (
+                                                    <audio controls src={previewUrls[field.name]} className="w-full max-w-sm" />
+                                                )}
+                                                <p className="text-xs text-gray-500 break-all">{formData[field.name]}</p>
                                             </div>
                                         )}
                                     </div>

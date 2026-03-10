@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export const createMeditation = async (req: Request, res: Response) => {
   try {
-    const { name, type, soundUrl } = req.body;
+    const { name, type, description, image, soundUrl } = req.body;
 
     if (!name || !type || !soundUrl) {
       return res.status(400).json({
@@ -18,6 +18,8 @@ export const createMeditation = async (req: Request, res: Response) => {
       data: {
         name,
         type,
+        description: description || null,
+        image: image || null,
         soundUrl
       }
     });
@@ -145,7 +147,7 @@ export const getMeditationById = async (req: Request, res: Response) => {
 export const updateMeditation = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, type, soundUrl } = req.body;
+    const { name, type, description, image, soundUrl } = req.body;
 
     // Check if meditation exists
     const existingMeditation = await prisma.meditation.findUnique({
@@ -162,9 +164,11 @@ export const updateMeditation = async (req: Request, res: Response) => {
     const meditation = await prisma.meditation.update({
       where: { id },
       data: {
-        name: name || existingMeditation.name,
-        type: type || existingMeditation.type,
-        soundUrl: soundUrl || existingMeditation.soundUrl
+        name: name ?? existingMeditation.name,
+        type: type ?? existingMeditation.type,
+        description: description !== undefined ? description || null : existingMeditation.description,
+        image: image !== undefined ? image || null : existingMeditation.image,
+        soundUrl: soundUrl ?? existingMeditation.soundUrl
       }
     });
 

@@ -446,8 +446,8 @@ const ChallengeComponent: React.FC = () => {
         },
         { name: 'startDate', label: 'Start Date', type: 'date' },
         { name: 'endDate', label: 'End Date', type: 'date' },
-        { name: 'image', label: 'Cover Image URL', type: 'text', placeholder: 'https://example.com/image.jpg' },
-        { name: 'videoUrl', label: 'Video URL', type: 'text', placeholder: 'https://example.com/video.mp4' },
+        { name: 'image', label: 'Cover Image', type: 'file', accept: 'image/*' },
+        { name: 'videoUrl', label: 'Challenge Video', type: 'file', accept: 'video/*' },
     ];
 
     const stats = [

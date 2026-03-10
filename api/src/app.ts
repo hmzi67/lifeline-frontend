@@ -52,6 +52,8 @@ import roleRoutes from './routes/roleRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
 import couponRoutes from './routes/couponRoutes.js';
 import referralRoutes from './routes/referralRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
+import { getUploadRootPath } from './middleware/upload.js';
 
 const app = express();
 
@@ -64,6 +66,7 @@ app.use(helmet);
 app.use(compression);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use('/uploads', express.static(getUploadRootPath()));
 
 // Session middleware for Passport
 app.use(
@@ -96,6 +99,9 @@ app.get('/health', healthCheck);
 
 // route for authentication
 app.use('/api/auth/', authRoute);
+
+// media upload route
+app.use('/api/uploads', uploadRoutes);
 
 // User routes
 app.use('/api/user/', userRoute);

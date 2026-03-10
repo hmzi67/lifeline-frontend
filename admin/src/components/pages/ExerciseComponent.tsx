@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import api from '@/lib/axios';
+import { MediaUploadField } from '@/components/shared/MediaUploadField';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -695,27 +696,22 @@ const ExerciseComponent: React.FC = () => {
                                     <X className="w-4 h-4" />
                                 </button>
                             </div>
-                            <div className="px-6 py-5">
-                                <p className="text-gray-600 leading-relaxed text-sm">
-                                    Are you sure you want to delete{' '}
-                                    <strong className="text-gray-900">"{deleteTarget.name}"</strong>?{' '}
-                                    This action cannot be undone.
+                            <div className="px-6 py-5 space-y-4">
+                                <p className="text-sm text-gray-600">
+                                    Are you sure you want to delete <span className="font-semibold text-gray-900">{deleteTarget.name || 'this exercise'}</span>? This action cannot be undone.
                                 </p>
-                            </div>
-                            <div className="flex gap-3 px-6 py-4 border-t border-gray-100 justify-end">
-                                <Button variant="outline" onClick={() => setDeleteTarget(null)} disabled={deleteLoading}>Cancel</Button>
-                                <Button onClick={handleDelete} disabled={deleteLoading} className="bg-red-500 hover:bg-red-600 text-white">
-                                    {deleteLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Trash2 className="w-3.5 h-3.5 mr-1.5" />Delete</>}
-                                </Button>
+                                <div className="flex justify-end gap-3">
+                                    <Button variant="outline" onClick={() => setDeleteTarget(null)} disabled={deleteLoading}>
+                                        Cancel
+                                    </Button>
+                                    <Button onClick={handleDelete} disabled={deleteLoading} className="bg-red-600 hover:bg-red-700 text-white">
+                                        {deleteLoading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Deleting…</> : 'Delete'}
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 )}
-
-                {/* Toast */}
-                <div className={`fixed bottom-6 right-6 bg-gray-900 text-white text-sm px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2 z-50 transition-all duration-300 ${toast.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
-                    {toast.message}
-                </div>
             </div>
         );
     }
@@ -767,8 +763,8 @@ const ExerciseComponent: React.FC = () => {
                         key={tab.id}
                         onClick={() => switchTab(tab.id, idx)}
                         className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${activeTab === tab.id
-                                ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-md'
-                                : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
+                            ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-md'
+                            : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
                             }`}
                     >
                         <tab.Icon className="w-4 h-4 flex-shrink-0" />{tab.label}
@@ -819,8 +815,8 @@ const ExerciseComponent: React.FC = () => {
                                         type="button"
                                         onClick={() => toggleFocusArea(fa.value)}
                                         className={`flex items-center gap-1.5 px-4 py-2 rounded-full border-[1.5px] text-sm font-medium transition-all ${formData.focusAreas.includes(fa.value)
-                                                ? 'bg-teal-50 border-teal-400 text-teal-800 font-semibold shadow-sm'
-                                                : 'bg-white border-gray-200 text-gray-500 hover:border-teal-400 hover:text-teal-700 hover:bg-teal-50'
+                                            ? 'bg-teal-50 border-teal-400 text-teal-800 font-semibold shadow-sm'
+                                            : 'bg-white border-gray-200 text-gray-500 hover:border-teal-400 hover:text-teal-700 hover:bg-teal-50'
                                             }`}
                                     >
                                         {fa.label}
@@ -867,8 +863,8 @@ const ExerciseComponent: React.FC = () => {
                                             type="button"
                                             onClick={() => setField('difficulty', d.value)}
                                             className={`flex-1 py-3 rounded-xl border-2 text-center text-sm font-medium transition-all cursor-pointer ${formData.difficulty === d.value
-                                                    ? d.active
-                                                    : `border-gray-200 bg-white text-gray-500 ${d.hover}`
+                                                ? d.active
+                                                : `border-gray-200 bg-white text-gray-500 ${d.hover}`
                                                 }`}
                                         >
                                             <d.Icon className={`w-5 h-5 mx-auto mb-1.5 ${formData.difficulty === d.value ? d.iconClass : 'text-gray-300'}`} />
@@ -910,29 +906,22 @@ const ExerciseComponent: React.FC = () => {
                 <div className="space-y-4">
                     <StepCard step="06" title="Media" Icon={Clapperboard}>
                         <div className="space-y-5">
-                            <div className="space-y-2">
-                                <Label className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Demo Video URL</Label>
-                                <Input value={formData.videoUrl} onChange={e => setField('videoUrl', e.target.value)} placeholder="https://youtube.com/watch?v=\u2026" className="border-gray-200 focus:border-red-400" />
-                                {formData.videoUrl && (
-                                    <a href={formData.videoUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs text-blue-500 hover:underline mt-1">
-                                        <Video className="w-3.5 h-3.5" /> Preview video link
-                                    </a>
-                                )}
-                            </div>
-                            <div className="space-y-2">
-                                <Label className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Thumbnail Image URL</Label>
-                                <Input value={formData.image} onChange={e => setField('image', e.target.value)} placeholder="https://example.com/exercise-thumbnail.jpg" className="border-gray-200 focus:border-red-400" />
-                                {formData.image ? (
-                                    <div className="mt-2 w-48 h-32 rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
-                                        <img src={formData.image} alt="Thumbnail preview" className="w-full h-full object-cover" onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
-                                    </div>
-                                ) : (
-                                    <div className="mt-2 w-48 h-32 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 flex flex-col items-center justify-center text-gray-300">
-                                        <ImageIcon className="w-8 h-8 mb-1" />
-                                        <span className="text-xs">No image yet</span>
-                                    </div>
-                                )}
-                            </div>
+                            <MediaUploadField
+                                label="Demo Video"
+                                value={formData.videoUrl}
+                                onChange={(value) => setField('videoUrl', value)}
+                                accept="video/*"
+                                mediaKind="video"
+                                placeholder="https://example.com/exercise-demo.mp4"
+                            />
+                            <MediaUploadField
+                                label="Thumbnail Image"
+                                value={formData.image}
+                                onChange={(value) => setField('image', value)}
+                                accept="image/*"
+                                mediaKind="image"
+                                placeholder="https://example.com/exercise-thumbnail.jpg"
+                            />
                             <div className="space-y-2">
                                 <Label className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Display Duration</Label>
                                 <Input
