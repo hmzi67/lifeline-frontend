@@ -29,14 +29,6 @@ interface ListQuery extends PaginationQuery {
   date?: string; // YYYY-MM-DD or ISO
 }
 
-interface GetByUserParams {
-  userId: Id;
-}
-
-interface IdParams {
-  id: Id;
-}
-
 class WaterIntakeController {
   // Create new water intake log
   async createWaterIntake(
@@ -71,7 +63,7 @@ class WaterIntakeController {
       }
 
       const userExists = await prisma.user.findUnique({
-        where: { id: userId },
+        where: { id: resolvedUserId },
       });
       if (!userExists) {
         res.status(404).json({
@@ -190,11 +182,19 @@ class WaterIntakeController {
 
   // Get water intake log by ID
   async getWaterIntakeById(
-    req: Request<IdParams>,
+    req: Request,
     res: Response
   ): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id;
+
+      if (!id) {
+        res.status(400).json({
+          success: false,
+          message: 'Water intake ID is required',
+        });
+        return;
+      }
 
       const waterIntake = await prisma.waterIntakeLog.findUnique({
         where: { id },
@@ -241,11 +241,20 @@ class WaterIntakeController {
 
   // Get water intake logs by user ID
   async getWaterIntakesByUserId(
-    req: Request<GetByUserParams, unknown, unknown, PaginationQuery & { date?: string }>,
+    req: Request<any, unknown, unknown, PaginationQuery & { date?: string }>,
     res: Response
   ): Promise<void> {
     try {
-      const { userId } = req.params;
+      const userId = req.params.userId;
+
+      if (!userId) {
+        res.status(400).json({
+          success: false,
+          message: 'User ID is required',
+        });
+        return;
+      }
+
       const { date, page = "1", limit = "10" } = req.query;
 
       const authUser = (req as unknown as AuthenticatedRequest).user;
@@ -314,11 +323,20 @@ class WaterIntakeController {
 
   // Update water intake log
   async updateWaterIntake(
-    req: Request<IdParams, unknown, UpdateWaterIntakeBody>,
+    req: Request<any, unknown, UpdateWaterIntakeBody>,
     res: Response
   ): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id;
+
+      if (!id) {
+        res.status(400).json({
+          success: false,
+          message: 'Water intake ID is required',
+        });
+        return;
+      }
+
       const { userId, date, timeStart, timeEnd, amount, unit, drinkType, notes } = req.body;
 
       const existingWaterIntake = await prisma.waterIntakeLog.findUnique({
@@ -393,11 +411,19 @@ class WaterIntakeController {
 
   // Delete water intake log
   async deleteWaterIntake(
-    req: Request<IdParams>,
+    req: Request,
     res: Response
   ): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id;
+
+      if (!id) {
+        res.status(400).json({
+          success: false,
+          message: 'Water intake ID is required',
+        });
+        return;
+      }
 
       const existingWaterIntake = await prisma.waterIntakeLog.findUnique({
         where: { id },

@@ -1076,11 +1076,11 @@ export const appleMobileAuth = async (req: Request, res: Response) => {
       });
     }
 
-    // Try to find user by appleId first, then by email
+    // Try to find user by subject first, then by email
     let user = await prisma.user.findFirst({
       where: {
         OR: [
-          { appleId: appleUserId },
+          { subject: appleUserId },
           ...(email ? [{ email }] : []),
         ],
       },
@@ -1088,7 +1088,7 @@ export const appleMobileAuth = async (req: Request, res: Response) => {
         id: true,
         email: true,
         username: true,
-        appleId: true,
+        subject: true,
         profileImage: true,
         roleId: true,
         isEmailVerified: true,
@@ -1097,16 +1097,16 @@ export const appleMobileAuth = async (req: Request, res: Response) => {
     });
 
     if (user) {
-      // User exists, update their Apple ID if not set
-      if (!user.appleId) {
+      // User exists, update their Apple subject if not set
+      if (!user.subject) {
         user = await prisma.user.update({
           where: { id: user.id },
-          data: { appleId: appleUserId },
+          data: { subject: appleUserId },
           select: {
             id: true,
             email: true,
             username: true,
-            appleId: true,
+            subject: true,
             profileImage: true,
             roleId: true,
             isEmailVerified: true,
@@ -1133,7 +1133,7 @@ export const appleMobileAuth = async (req: Request, res: Response) => {
         data: {
           username,
           email: userEmail,
-          appleId: appleUserId,
+          subject: appleUserId,
           isEmailVerified: true, // Apple emails are verified
           status: 'active',
         },
@@ -1141,7 +1141,7 @@ export const appleMobileAuth = async (req: Request, res: Response) => {
           id: true,
           email: true,
           username: true,
-          appleId: true,
+          subject: true,
           profileImage: true,
           roleId: true,
           isEmailVerified: true,

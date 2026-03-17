@@ -647,15 +647,15 @@ async function seedCheatDays(userId: string) {
   await prisma.cheatDay.deleteMany({ where: { userId } });
 
   const defs = [
-    { foodName: 'Pepperoni Pizza',                image: 'https://example.com/pizza.jpg',   mealType: 'Dinner',  portionSize: '2 slices', calories: 570,  protein: 24,  carbs: 62,  fat: 26,  loggedAt: new Date('2026-03-07T19:00:00Z') },
-    { foodName: 'Chocolate Birthday Cake',        image: 'https://example.com/cake.jpg',    mealType: 'Dessert', portionSize: '1 slice',  calories: 350,  protein: 4,   carbs: 50,  fat: 16,  loggedAt: new Date('2026-03-14T15:00:00Z') },
-    { foodName: 'Double Cheeseburger with Fries', image: 'https://example.com/burger.jpg',  mealType: 'Lunch',   portionSize: '1 meal',   calories: 1100, protein: 52,  carbs: 85,  fat: 62,  loggedAt: new Date('2026-03-21T13:00:00Z') },
-    { foodName: 'Ice Cream Sundae',               image: 'https://example.com/icecream.jpg',mealType: 'Snack',   portionSize: '1 cup',    calories: 400,  protein: 6,   carbs: 52,  fat: 20,  loggedAt: new Date('2026-03-28T16:00:00Z') },
+    { foodName: 'Pepperoni Pizza',                image: 'https://example.com/pizza.jpg',   mealType: 'Dinner',  portionSize: '2 slices', loggedAt: new Date('2026-03-07T19:00:00Z') },
+    { foodName: 'Chocolate Birthday Cake',        image: 'https://example.com/cake.jpg',    mealType: 'Dessert', portionSize: '1 slice',  loggedAt: new Date('2026-03-14T15:00:00Z') },
+    { foodName: 'Double Cheeseburger with Fries', image: 'https://example.com/burger.jpg',  mealType: 'Lunch',   portionSize: '1 meal',   loggedAt: new Date('2026-03-21T13:00:00Z') },
+    { foodName: 'Ice Cream Sundae',               image: 'https://example.com/icecream.jpg',mealType: 'Snack',   portionSize: '1 cup',    loggedAt: new Date('2026-03-28T16:00:00Z') },
   ];
 
   for (const d of defs) {
     const cd = await prisma.cheatDay.create({ data: { userId, ...d } });
-    console.log(`  cheat day "${cd.foodName}" (${cd.calories} kcal) → ${cd.id}`);
+    console.log(`  cheat day "${cd.foodName}" → ${cd.id}`);
   }
 }
 
@@ -930,7 +930,7 @@ async function seedProgressDashboardDataForUser(userId: string, exercisePlanIds:
         purpose: 'Build consistent weekly workout habit',
         description: 'Complete your planned sessions through the week.',
         status: 'COMPLETED',
-        scheduledAt: startOfToday,
+        startDate: startOfToday,
       },
     });
   }

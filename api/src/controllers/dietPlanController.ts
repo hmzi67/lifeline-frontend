@@ -5,14 +5,12 @@ const prisma = new PrismaClient();
 
 interface DietPlanQuery {
   query?: string;
-  category?: string;
   calories?: string;
   duration?: string;
 }
 
 interface CreateDietPlanBody {
   name: string;
-  category?: string;
   calories?: number;
   duration?: string;
   description?: string;
@@ -21,7 +19,6 @@ interface CreateDietPlanBody {
 
 interface UpdateDietPlanBody {
   name?: string;
-  category?: string;
   calories?: number;
   duration?: string;
   description?: string;
@@ -132,7 +129,7 @@ export const getDietPlanById = async (req: Request, res: Response): Promise<void
 // Create new diet plan
 export const createDietPlan = async (req: Request<{}, {}, CreateDietPlanBody>, res: Response): Promise<void> => {
   try {
-    const { name, category, calories, duration, description, image } = req.body;
+    const { name, calories, duration, description, image } = req.body;
 
     // Validation
     if (!name) {
@@ -146,7 +143,6 @@ export const createDietPlan = async (req: Request<{}, {}, CreateDietPlanBody>, r
     const dietPlan = await prisma.dietPlan.create({
       data: {
         name,
-        category: category || null,
         calories: calories || null,
         duration: duration || null,
         description: description || null,
@@ -173,7 +169,7 @@ export const createDietPlan = async (req: Request<{}, {}, CreateDietPlanBody>, r
 export const updateDietPlan = async (req: Request<{ id: string }, {}, UpdateDietPlanBody>, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const { name, category, calories, duration, description, image } = req.body;
+    const { name, calories, duration, description, image } = req.body;
 
     // Check if diet plan exists
     const existingDietPlan = await prisma.dietPlan.findUnique({
@@ -190,7 +186,6 @@ export const updateDietPlan = async (req: Request<{ id: string }, {}, UpdateDiet
 
     const updateData: Partial<CreateDietPlanBody> = {};
     if (name !== undefined) updateData.name = name;
-    if (category !== undefined) updateData.category = category;
     if (calories !== undefined) updateData.calories = calories;
     if (duration !== undefined) updateData.duration = duration;
     if (description !== undefined) updateData.description = description;
@@ -255,20 +250,13 @@ export const deleteDietPlan = async (req: Request<{ id: string }>, res: Response
 // Search diet plans
 export const searchDietPlans = async (req: Request<{}, {}, {}, DietPlanQuery>, res: Response): Promise<void> => {
   try {
-    const { query, category, calories, duration } = req.query;
+    const { query, calories, duration } = req.query;
 
     const whereClause: any = {};
 
     if (query) {
       whereClause.name = {
         contains: query,
-        mode: 'insensitive'
-      };
-    }
-
-    if (category) {
-      whereClause.category = {
-        contains: category,
         mode: 'insensitive'
       };
     }

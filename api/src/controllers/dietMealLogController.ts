@@ -1,8 +1,5 @@
-import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-
-const prisma = new PrismaClient();
 
 const getUserIdFromToken = (req: Request): string | null => {
   const authHeader = req.headers.authorization;
@@ -28,18 +25,11 @@ export const getLoggedMeals = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-    const dateStr = (req.query.date as string) || new Date().toISOString().split('T')[0];
-    const dateStart = new Date(dateStr);
-    const dateEnd = new Date(dateStart.getTime() + 86400000);
-
-    const logs = await prisma.dietMealLog.findMany({
-      where: {
-        userId,
-        date: { gte: dateStart, lt: dateEnd },
-      },
+    res.status(200).json({
+      success: true,
+      data: [],
+      message: 'Meal logs feature is currently unavailable in this schema',
     });
-
-    res.status(200).json({ success: true, data: logs, message: 'Meal logs retrieved' });
   } catch (error) {
     console.error('Error fetching meal logs:', error);
     res.status(500).json({ success: false, message: 'Internal server error' });
@@ -56,7 +46,7 @@ export const logMeal = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const { activePlanId, mealId, mealName, mealType, calories, date } = req.body;
+    const { activePlanId, mealId, date } = req.body;
 
     if (!activePlanId || !mealId || !date) {
       res.status(400).json({
@@ -66,31 +56,11 @@ export const logMeal = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const dateStart = new Date(date as string);
-    const dateEnd = new Date(dateStart.getTime() + 86400000);
-
-    // Idempotent: return existing log if already logged
-    const existing = await prisma.dietMealLog.findFirst({
-      where: { userId, mealId, date: { gte: dateStart, lt: dateEnd } },
+    res.status(501).json({
+      success: false,
+      message: 'Meal logging is currently unavailable in this schema',
+      data: { userId, activePlanId, mealId, date },
     });
-    if (existing) {
-      res.status(200).json({ success: true, data: existing, message: 'Already logged' });
-      return;
-    }
-
-    const log = await prisma.dietMealLog.create({
-      data: {
-        userId,
-        activePlanId,
-        mealId,
-        mealName: mealName || '',
-        mealType: mealType || '',
-        calories: typeof calories === 'number' ? calories : 0,
-        date: dateStart,
-      },
-    });
-
-    res.status(201).json({ success: true, data: log, message: 'Meal logged successfully' });
   } catch (error) {
     console.error('Error logging meal:', error);
     res.status(500).json({ success: false, message: 'Internal server error' });
@@ -108,14 +78,11 @@ export const unlogMeal = async (req: Request, res: Response): Promise<void> => {
     }
 
     const { mealId, date } = req.params;
-    const dateStart = new Date(date);
-    const dateEnd = new Date(dateStart.getTime() + 86400000);
-
-    await prisma.dietMealLog.deleteMany({
-      where: { userId, mealId, date: { gte: dateStart, lt: dateEnd } },
+    res.status(501).json({
+      success: false,
+      message: 'Meal unlogging is currently unavailable in this schema',
+      data: { userId, mealId, date },
     });
-
-    res.status(200).json({ success: true, message: 'Meal unlogged successfully' });
   } catch (error) {
     console.error('Error unlogging meal:', error);
     res.status(500).json({ success: false, message: 'Internal server error' });

@@ -96,7 +96,7 @@ export const getCheatDayById = async (req: Request, res: Response): Promise<void
 // Log a cheat day meal
 export const logCheatDay = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { userId, foodName, image, mealType, portionSize, calories, protein, carbs, fat, barcode } = req.body;
+    const { userId, foodName, image, mealType, portionSize } = req.body;
 
     const authUser = (req as AuthenticatedRequest).user;
     if (!userId || authUser?.id !== userId) {
@@ -132,11 +132,6 @@ export const logCheatDay = async (req: Request, res: Response): Promise<void> =>
         image: image || null,
         mealType: mealType || null,
         portionSize: portionSize || null,
-        calories: calories != null ? Number(calories) : null,
-        protein: protein != null ? Number(protein) : null,
-        carbs: carbs != null ? Number(carbs) : null,
-        fat: fat != null ? Number(fat) : null,
-        barcode: barcode || null,
         loggedAt: new Date()
       },
       include: {
@@ -169,7 +164,7 @@ export const logCheatDay = async (req: Request, res: Response): Promise<void> =>
 export const updateCheatDay = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const { foodName, image, mealType, portionSize, calories, protein, carbs, fat, barcode } = req.body;
+    const { foodName, image, mealType, portionSize } = req.body;
 
     const existingCheatDay = await prisma.cheatDay.findUnique({
       where: { id }
@@ -194,11 +189,6 @@ export const updateCheatDay = async (req: Request, res: Response): Promise<void>
     if (image !== undefined) updateData.image = image;
     if (mealType !== undefined) updateData.mealType = mealType;
     if (portionSize !== undefined) updateData.portionSize = portionSize;
-    if (calories !== undefined) updateData.calories = Number(calories);
-    if (protein !== undefined) updateData.protein = Number(protein);
-    if (carbs !== undefined) updateData.carbs = Number(carbs);
-    if (fat !== undefined) updateData.fat = Number(fat);
-    if (barcode !== undefined) updateData.barcode = barcode;
 
     const cheatDay = await prisma.cheatDay.update({
       where: { id },
