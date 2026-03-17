@@ -1,31 +1,32 @@
 import { Router } from 'express';
 import {
-  createMedication,
-  getMedications,
-  getMedicationById,
-  updateMedication,
-  deleteMedication,
-  getUserMedications
+    createMedication,
+    deleteMedication,
+    getMedicationById,
+    getMedications,
+    getUserMedications,
+    updateMedication
 } from '../controllers/medicationController.js';
+import authenticate from '../middleware/authenticate.js';
 
 const router = Router();
 
 // Get all medications for the authenticated user
-router.get('/user', getUserMedications);
+router.get('/user', authenticate, getUserMedications);
 
 // Get all medications
-router.get('/', getMedications);
+router.get('/', authenticate, getMedications);
 
 // Get a specific medication by ID
-router.get('/:id', getMedicationById);
+router.get('/:id', authenticate, getMedicationById);
 
 // Create a new medication
-router.post('/', createMedication);
+router.post('/', authenticate, createMedication);
 
 // Update a medication
-router.put('/:id', updateMedication);
+router.put('/:id', authenticate, updateMedication);
 
 // Delete a medication
-router.delete('/:id', deleteMedication);
+router.delete('/:id', authenticate, deleteMedication);
 
 export default router;

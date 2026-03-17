@@ -1,35 +1,36 @@
 import { Router } from 'express';
 import {
-  getMedicationReminders,
-  getUserMedicationReminders,
-  getMedicationReminderById,
-  createMedicationReminder,
-  updateMedicationReminder,
-  toggleMedicationReminder,
-  deleteMedicationReminder
+    createMedicationReminder,
+    deleteMedicationReminder,
+    getMedicationReminderById,
+    getMedicationReminders,
+    getUserMedicationReminders,
+    toggleMedicationReminder,
+    updateMedicationReminder
 } from '../controllers/medicationReminderController.js';
+import authenticate from '../middleware/authenticate.js';
 
 const router = Router();
 
 // GET /api/medication-reminders/medication/:medicationId - Get reminders for a medication
-router.get('/medication/:medicationId', getMedicationReminders);
+router.get('/medication/:medicationId', authenticate, getMedicationReminders);
 
 // GET /api/medication-reminders/user/:userId - Get user's all medication reminders
-router.get('/user/:userId', getUserMedicationReminders);
+router.get('/user/:userId', authenticate, getUserMedicationReminders);
 
 // GET /api/medication-reminders/:id - Get reminder by ID
-router.get('/:id', getMedicationReminderById);
+router.get('/:id', authenticate, getMedicationReminderById);
 
 // POST /api/medication-reminders - Create medication reminder
-router.post('/', createMedicationReminder);
+router.post('/', authenticate, createMedicationReminder);
 
 // PUT /api/medication-reminders/:id - Update medication reminder
-router.put('/:id', updateMedicationReminder);
+router.put('/:id', authenticate, updateMedicationReminder);
 
 // PUT /api/medication-reminders/:id/toggle - Toggle reminder enabled status
-router.put('/:id/toggle', toggleMedicationReminder);
+router.put('/:id/toggle', authenticate, toggleMedicationReminder);
 
 // DELETE /api/medication-reminders/:id - Delete medication reminder
-router.delete('/:id', deleteMedicationReminder);
+router.delete('/:id', authenticate, deleteMedicationReminder);
 
 export default router;

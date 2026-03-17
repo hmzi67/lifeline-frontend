@@ -1,5 +1,6 @@
-import express, { Request, Response, NextFunction, Router } from "express";
+import express, { NextFunction, Request, Response, Router } from "express";
 import waterIntakeController from "../controllers/waterIntakeController.js";
+import authenticate from "../middleware/authenticate.js";
 
 const waterIntakeRoutes: Router = express.Router();
 
@@ -80,21 +81,21 @@ const validateDateFormat = (
 };
 
 // Create new water intake log
-waterIntakeRoutes.post("/", validateTimeFormat, validateDateFormat, waterIntakeController.createWaterIntake);
+waterIntakeRoutes.post("/", authenticate, validateTimeFormat, validateDateFormat, waterIntakeController.createWaterIntake);
 
 // Get all water intake logs (with optional filtering)
-waterIntakeRoutes.get("/", waterIntakeController.getAllWaterIntakes);
+waterIntakeRoutes.get("/", authenticate, waterIntakeController.getAllWaterIntakes);
 
 // Get water intake log by ID
-waterIntakeRoutes.get("/:id", waterIntakeController.getWaterIntakeById);
+waterIntakeRoutes.get("/:id", authenticate, waterIntakeController.getWaterIntakeById);
 
 // Get water intake logs by user ID
-waterIntakeRoutes.get("/user/:userId", waterIntakeController.getWaterIntakesByUserId);
+waterIntakeRoutes.get("/user/:userId", authenticate, waterIntakeController.getWaterIntakesByUserId);
 
 // Update water intake log
-waterIntakeRoutes.put("/:id", validateTimeFormat, validateDateFormat, waterIntakeController.updateWaterIntake);
+waterIntakeRoutes.put("/:id", authenticate, validateTimeFormat, validateDateFormat, waterIntakeController.updateWaterIntake);
 
 // Delete water intake log
-waterIntakeRoutes.delete("/:id", waterIntakeController.deleteWaterIntake);
+waterIntakeRoutes.delete("/:id", authenticate, waterIntakeController.deleteWaterIntake);
 
 export default waterIntakeRoutes;

@@ -1,5 +1,6 @@
-import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { Request, Response } from 'express';
+import { AuthenticatedRequest } from '../types/middlewareTypes.js';
 
 const prisma = new PrismaClient();
 
@@ -41,6 +42,12 @@ export const getMedicationReminders = async (req: Request, res: Response): Promi
 export const getUserMedicationReminders = async (req: Request, res: Response): Promise<void> => {
   try {
     const { userId } = req.params;
+
+    const authUser = (req as AuthenticatedRequest).user;
+    if (authUser?.id !== userId) {
+      res.status(403).json({ success: false, message: 'Forbidden: You can only access your own medication reminders' });
+      return;
+    }
 
     const reminders = await prisma.medicationReminder.findMany({
       where: { userId },
@@ -94,6 +101,12 @@ export const getMedicationReminderById = async (req: Request, res: Response): Pr
       return;
     }
 
+    const authUser = (req as AuthenticatedRequest).user;
+    if (authUser?.id !== reminder.userId) {
+      res.status(403).json({ success: false, message: 'Forbidden: You can only access your own medication reminders' });
+      return;
+    }
+
     res.status(200).json({
       success: true,
       data: reminder,
@@ -114,7 +127,13 @@ export const createMedicationReminder = async (req: Request, res: Response): Pro
   try {
     const { medicationId, userId, reminderTime, repeatType, enabled } = req.body;
 
-    if (!medicationId || !userId || !reminderTime) {
+    const authUser = (req as AuthenticatedRequest).user;
+    if (!userId || authUser?.id !== userId) {
+      res.status(403).json({ success: false, message: 'Forbidden: You can only create reminders for yourself' });
+      return;
+    }
+
+    if (!medicationId || !reminderTime) {
       res.status(400).json({
         success: false,
         message: 'Medication ID, user ID, and reminder time are required'
@@ -201,6 +220,12 @@ export const updateMedicationReminder = async (req: Request, res: Response): Pro
       return;
     }
 
+    const authUser = (req as AuthenticatedRequest).user;
+    if (authUser?.id !== existingReminder.userId) {
+      res.status(403).json({ success: false, message: 'Forbidden: You can only update your own medication reminders' });
+      return;
+    }
+
     const updateData: any = {};
     if (reminderTime !== undefined) updateData.reminderTime = new Date(reminderTime);
     if (repeatType !== undefined) updateData.repeatType = repeatType;
@@ -253,6 +278,12 @@ export const toggleMedicationReminder = async (req: Request, res: Response): Pro
       return;
     }
 
+    const authUser = (req as AuthenticatedRequest).user;
+    if (authUser?.id !== existingReminder.userId) {
+      res.status(403).json({ success: false, message: 'Forbidden: You can only toggle your own medication reminders' });
+      return;
+    }
+
     const reminder = await prisma.medicationReminder.update({
       where: { id },
       data: {
@@ -299,6 +330,12 @@ export const deleteMedicationReminder = async (req: Request, res: Response): Pro
         success: false,
         message: 'Medication reminder not found'
       });
+      return;
+    }
+
+    const authUserDel = (req as AuthenticatedRequest).user;
+    if (authUserDel?.id !== existingReminder.userId) {
+      res.status(403).json({ success: false, message: 'Forbidden: You can only delete your own medication reminders' });
       return;
     }
 

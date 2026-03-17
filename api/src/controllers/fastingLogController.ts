@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
@@ -32,7 +32,7 @@ export const createFastingLog = async (req: Request, res: Response) => {
       });
     }
 
-    const { date, timeStart, timeEnd } = req.body;
+    const { date, timeStart, timeEnd, durationMinutes } = req.body;
 
     // Validate required fields
     if (!date || !timeStart || !timeEnd) {
@@ -42,13 +42,25 @@ export const createFastingLog = async (req: Request, res: Response) => {
       });
     }
 
+    // Validate time format (HH:mm or HH:mm:ss)
+    const timeRegex = /^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/;
+    if (!timeRegex.test(timeStart) || !timeRegex.test(timeEnd)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Time must be in HH:mm or HH:mm:ss format',
+      });
+    }
+
+    const data: any = {
+      userId,
+      date: new Date(date),
+      timeStart: new Date(`1970-01-01T${timeStart}Z`),
+      timeEnd: new Date(`1970-01-01T${timeEnd}Z`),
+    };
+    if (durationMinutes != null) data.durationMinutes = parseInt(String(durationMinutes), 10);
+
     const fastingLog = await prisma.fastingLog.create({
-      data: {
-        userId,
-        date: new Date(date),
-        timeStart: new Date(`1970-01-01T${timeStart}`),
-        timeEnd: new Date(`1970-01-01T${timeEnd}`),
-      },
+      data,
       include: {
         user: {
           select: {
@@ -202,7 +214,7 @@ export const updateFastingLog = async (req: Request, res: Response) => {
     }
 
     const { id } = req.params;
-    const { date, timeStart, timeEnd } = req.body;
+    const { date, timeStart, timeEnd, durationMinutes } = req.body;
 
     // Check if the fasting log exists and belongs to the user
     const existingLog = await prisma.fastingLog.findFirst({
@@ -219,10 +231,20 @@ export const updateFastingLog = async (req: Request, res: Response) => {
       });
     }
 
+    // Validate time format if provided
+    const timeRegex = /^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/;
+    if (timeStart && !timeRegex.test(timeStart)) {
+      return res.status(400).json({ success: false, message: 'timeStart must be in HH:mm or HH:mm:ss format' });
+    }
+    if (timeEnd && !timeRegex.test(timeEnd)) {
+      return res.status(400).json({ success: false, message: 'timeEnd must be in HH:mm or HH:mm:ss format' });
+    }
+
     const data: any = {};
     if (date) data.date = new Date(date);
-    if (timeStart) data.timeStart = new Date(`1970-01-01T${timeStart}`);
-    if (timeEnd) data.timeEnd = new Date(`1970-01-01T${timeEnd}`);
+    if (timeStart) data.timeStart = new Date(`1970-01-01T${timeStart}Z`);
+    if (timeEnd) data.timeEnd = new Date(`1970-01-01T${timeEnd}Z`);
+    if (durationMinutes != null) data.durationMinutes = parseInt(String(durationMinutes), 10);
 
     const fastingLog = await prisma.fastingLog.update({
       where: { id },

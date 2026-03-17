@@ -1,32 +1,31 @@
-import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { Request, Response } from 'express';
 
 const prisma = new PrismaClient();
 
 interface DietPlanQuery {
   query?: string;
+  category?: string;
   calories?: string;
   duration?: string;
 }
 
 interface CreateDietPlanBody {
   name: string;
+  category?: string;
   calories?: number;
   duration?: string;
   description?: string;
   image?: string;
-  cuisineName?: string;
-  gender?: string;
 }
 
 interface UpdateDietPlanBody {
   name?: string;
+  category?: string;
   calories?: number;
   duration?: string;
   description?: string;
   image?: string;
-  cuisineName?: string;
-  gender?: string;
 }
 
 // Get all diet plans
@@ -133,7 +132,7 @@ export const getDietPlanById = async (req: Request, res: Response): Promise<void
 // Create new diet plan
 export const createDietPlan = async (req: Request<{}, {}, CreateDietPlanBody>, res: Response): Promise<void> => {
   try {
-    const { name, calories, duration, description, image, cuisineName, gender } = req.body;
+    const { name, category, calories, duration, description, image } = req.body;
 
     // Validation
     if (!name) {
@@ -147,12 +146,11 @@ export const createDietPlan = async (req: Request<{}, {}, CreateDietPlanBody>, r
     const dietPlan = await prisma.dietPlan.create({
       data: {
         name,
+        category: category || null,
         calories: calories || null,
         duration: duration || null,
         description: description || null,
-        image: image || null,
-        cuisineName: cuisineName || null,
-        gender: gender || null
+        image: image || null
       }
     });
 
@@ -175,7 +173,7 @@ export const createDietPlan = async (req: Request<{}, {}, CreateDietPlanBody>, r
 export const updateDietPlan = async (req: Request<{ id: string }, {}, UpdateDietPlanBody>, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const { name, calories, duration, description, image, cuisineName, gender } = req.body;
+    const { name, category, calories, duration, description, image } = req.body;
 
     // Check if diet plan exists
     const existingDietPlan = await prisma.dietPlan.findUnique({
@@ -192,12 +190,11 @@ export const updateDietPlan = async (req: Request<{ id: string }, {}, UpdateDiet
 
     const updateData: Partial<CreateDietPlanBody> = {};
     if (name !== undefined) updateData.name = name;
+    if (category !== undefined) updateData.category = category;
     if (calories !== undefined) updateData.calories = calories;
     if (duration !== undefined) updateData.duration = duration;
     if (description !== undefined) updateData.description = description;
     if (image !== undefined) updateData.image = image;
-    if (cuisineName !== undefined) updateData.cuisineName = cuisineName;
-    if (gender !== undefined) updateData.gender = gender;
 
     const updatedDietPlan = await prisma.dietPlan.update({
       where: { id },
@@ -258,13 +255,20 @@ export const deleteDietPlan = async (req: Request<{ id: string }>, res: Response
 // Search diet plans
 export const searchDietPlans = async (req: Request<{}, {}, {}, DietPlanQuery>, res: Response): Promise<void> => {
   try {
-    const { query, calories, duration } = req.query;
+    const { query, category, calories, duration } = req.query;
 
     const whereClause: any = {};
 
     if (query) {
       whereClause.name = {
         contains: query,
+        mode: 'insensitive'
+      };
+    }
+
+    if (category) {
+      whereClause.category = {
+        contains: category,
         mode: 'insensitive'
       };
     }

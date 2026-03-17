@@ -1,5 +1,6 @@
+import { Prisma, PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { PrismaClient, Prisma } from "@prisma/client";
+import { AuthenticatedRequest } from '../types/middlewareTypes.js';
 
 const prisma = new PrismaClient();
 
@@ -10,6 +11,10 @@ interface CreateWaterIntakeBody {
   date?: string | null;       // ISO date: YYYY-MM-DD
   timeStart?: string | null;  // HH:MM
   timeEnd?: string | null;    // HH:MM
+  amount?: number | null;
+  unit?: string | null;
+  drinkType?: string | null;
+  notes?: string | null;
 }
 
 interface UpdateWaterIntakeBody extends Partial<CreateWaterIntakeBody> {}
@@ -39,29 +44,56 @@ class WaterIntakeController {
     res: Response
   ): Promise<void> {
     try {
-      const { userId, date, timeStart, timeEnd } = req.body;
+      const { userId, date, timeStart, timeEnd, amount, unit, drinkType, notes } = req.body;
 
-      if (userId) {
-        const userExists = await prisma.user.findUnique({
-          where: { id: userId },
+      if (!amount || typeof amount !== 'number' || amount <= 0) {
+        res.status(400).json({
+          success: false,
+          message: "Amount is required and must be a positive number",
         });
-        if (!userExists) {
-          res.status(404).json({
-            success: false,
-            message: "User not found",
-          });
-          return;
-        }
+        return;
+      }
+
+      const authUser = (req as unknown as AuthenticatedRequest).user;
+      const resolvedUserId = userId || authUser?.id;
+
+      if (!resolvedUserId) {
+        res.status(400).json({
+          success: false,
+          message: "User ID is required",
+        });
+        return;
+      }
+
+      if (authUser?.id !== resolvedUserId) {
+        res.status(403).json({ success: false, message: 'Forbidden: You can only create water intake logs for yourself' });
+        return;
+      }
+
+      const userExists = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+      if (!userExists) {
+        res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+        return;
       }
 
       const waterIntake = await prisma.waterIntakeLog.create({
         data: {
-          userId: userId ?? null,
+          userId: resolvedUserId,
           date: date ? new Date(date) : null,
           timeStart: timeStart
             ? new Date(`1970-01-01T${timeStart}:00.000Z`)
             : null,
           timeEnd: timeEnd ? new Date(`1970-01-01T${timeEnd}:00.000Z`) : null,
+          amount: typeof amount === "number" ? amount : null,
+          unit: unit ?? 'ml',
+          drinkType: drinkType ?? 'water',
+          notes: notes ?? null,
+          loggedAt: new Date(),
         },
         include: {
           user: {
@@ -96,19 +128,17 @@ class WaterIntakeController {
     res: Response
   ): Promise<void> {
     try {
-      const { userId, date, page = "1", limit = "10" } = req.query;
+      const { date, page = "1", limit = "10" } = req.query;
       const pageNum = Number.parseInt(page, 10) || 1;
       const limitNum = Math.max(1, Number.parseInt(limit, 10) || 10);
       const skip = (pageNum - 1) * limitNum;
 
+      const authUser = (req as unknown as AuthenticatedRequest).user;
       const where: Prisma.WaterIntakeLogWhereInput = {};
-      if (userId) where.userId = userId;
+      where.userId = authUser?.id;
       if (date) {
-        const filterDate = new Date(date);
-        const start = new Date(filterDate);
-        start.setHours(0, 0, 0, 0);
-        const end = new Date(filterDate);
-        end.setHours(23, 59, 59, 999);
+        const start = new Date(date as string);
+        const end = new Date(start.getTime() + 86400000);
         where.date = { gte: start, lt: end };
       }
 
@@ -187,6 +217,12 @@ class WaterIntakeController {
         return;
       }
 
+      const authUser = (req as unknown as AuthenticatedRequest).user;
+      if (authUser?.id !== waterIntake.userId) {
+        res.status(403).json({ success: false, message: 'Forbidden: You can only access your own water intake logs' });
+        return;
+      }
+
       res.status(200).json({
         success: true,
         message: "Water intake log retrieved successfully",
@@ -211,6 +247,12 @@ class WaterIntakeController {
     try {
       const { userId } = req.params;
       const { date, page = "1", limit = "10" } = req.query;
+
+      const authUser = (req as unknown as AuthenticatedRequest).user;
+      if (authUser?.id !== userId) {
+        res.status(403).json({ success: false, message: 'Forbidden: You can only access your own water intake logs' });
+        return;
+      }
 
       const pageNum = Number.parseInt(page, 10) || 1;
       const limitNum = Math.max(1, Number.parseInt(limit, 10) || 10);
@@ -277,7 +319,7 @@ class WaterIntakeController {
   ): Promise<void> {
     try {
       const { id } = req.params;
-      const { userId, date, timeStart, timeEnd } = req.body;
+      const { userId, date, timeStart, timeEnd, amount, unit, drinkType, notes } = req.body;
 
       const existingWaterIntake = await prisma.waterIntakeLog.findUnique({
         where: { id },
@@ -291,17 +333,15 @@ class WaterIntakeController {
         return;
       }
 
+      const authUser = (req as unknown as AuthenticatedRequest).user;
+      if (authUser?.id !== existingWaterIntake.userId) {
+        res.status(403).json({ success: false, message: 'Forbidden: You can only update your own water intake logs' });
+        return;
+      }
+
       if (userId && userId !== existingWaterIntake.userId) {
-        const userExists = await prisma.user.findUnique({
-          where: { id: userId },
-        });
-        if (!userExists) {
-          res.status(404).json({
-            success: false,
-            message: "User not found",
-          });
-          return;
-        }
+        res.status(403).json({ success: false, message: 'Forbidden: Cannot reassign water intake to another user' });
+        return;
       }
 
       const updateData: Prisma.WaterIntakeLogUpdateInput = {};
@@ -315,6 +355,11 @@ class WaterIntakeController {
         updateData.timeEnd = timeEnd
           ? new Date(`1970-01-01T${timeEnd}:00.000Z`)
           : null;
+      if (amount !== undefined) updateData.amount = amount;
+      if (unit !== undefined) updateData.unit = unit;
+      if (drinkType !== undefined) updateData.drinkType = drinkType;
+      if (notes !== undefined) updateData.notes = notes;
+      updateData.loggedAt = new Date();
 
       const updatedWaterIntake = await prisma.waterIntakeLog.update({
         where: { id },
@@ -363,6 +408,12 @@ class WaterIntakeController {
           success: false,
           message: "Water intake log not found",
         });
+        return;
+      }
+
+      const authUser = (req as unknown as AuthenticatedRequest).user;
+      if (authUser?.id !== existingWaterIntake.userId) {
+        res.status(403).json({ success: false, message: 'Forbidden: You can only delete your own water intake logs' });
         return;
       }
 

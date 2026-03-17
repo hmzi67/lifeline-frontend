@@ -1,6 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClientInitializationError } from '@prisma/client/runtime/library';
+import { Request, Response } from 'express';
 import { z } from 'zod';
-import { Request, Response, NextFunction } from 'express';
+import { prisma } from '../config/database.js';
 
 // ---------------- Types ----------------
 type ChallengeWithRelations = {
@@ -21,10 +22,9 @@ type ChallengeInput = {
   name: string;
   purpose: string;
   description: string;
+  status?: 'ACTIVE' | 'INACTIVE' | 'DRAFT' | 'COMPLETED';
+  scheduledAt?: string;
 };
-
-// ---------------- Prisma ----------------
-const prisma = new PrismaClient();
 
 // ---------------- Utilities ----------------
 const sendResponse = <T>(
@@ -63,6 +63,16 @@ const handleError = (err: unknown, res: Response): void => {
   if (typeof err === 'object' && err !== null && 'code' in err) {
     const e = err as { code: string; message?: string };
 
+    if (e.code === 'P1001') {
+      sendResponse(
+        res,
+        503,
+        { error: 'Database is temporarily unavailable. Please try again shortly.' },
+        'Service Unavailable'
+      );
+      return;
+    }
+
     if (e.code === 'P2002') {
       sendResponse(res, 409, { error: 'A challenge with this name already exists' }, 'Conflict');
       return;
@@ -80,6 +90,16 @@ const handleError = (err: unknown, res: Response): void => {
       message: e.message,
     }));
     sendResponse(res, 400, { errors }, 'Validation Error');
+    return;
+  }
+
+  if (err instanceof PrismaClientInitializationError) {
+    sendResponse(
+      res,
+      503,
+      { error: 'Database is temporarily unavailable. Please try again shortly.' },
+      'Service Unavailable'
+    );
     return;
   }
 
@@ -101,16 +121,7 @@ const challengeSchema = z.object({
   purpose: z.string().min(1, 'Purpose is required'),
   description: z.string().min(1, 'Description is required'),
   status: z.enum(['ACTIVE', 'INACTIVE', 'DRAFT', 'COMPLETED']).optional().default('DRAFT'),
-  image: z.string().optional().nullable().transform(v => v?.trim() || null),
-  videoUrl: z.string().optional().nullable().transform(v => v?.trim() || null),
-  startDate: z.preprocess(
-    val => (val === '' || val == null ? undefined : val),
-    z.coerce.date().optional()
-  ),
-  endDate: z.preprocess(
-    val => (val === '' || val == null ? undefined : val),
-    z.coerce.date().optional()
-  ),
+  scheduledAt: z.string().datetime('Invalid scheduledAt datetime').optional(),
 });
 
 // ---------------- Common Includes ----------------
@@ -280,58 +291,41 @@ export const deleteChallenge = async (
   }
 };
 
-// Get pending approval challenges
-export const getPendingApprovals = async (
-  req: Request,
+// Join a challenge (create UserChallenge record)
+export const joinChallenge = async (
+  req: Request<{ id: string }>,
   res: Response
 ): Promise<void> => {
   try {
-    const challenges = await prisma.challenge.findMany({
-      where: { approvalStatus: 'PENDING' },
-      include: {
-        ...challengeInclude,
-        submittedBy: { select: { id: true, username: true, email: true, profileImage: true } },
-      },
-      orderBy: { name: 'asc' },
-    });
+    const challengeId = validateId(req.params.id);
+    const userId = (req as any).user?.id;
 
-    sendResponse(res, 200, { challenges, total: challenges.length });
-  } catch (err) {
-    handleError(err, res);
-  }
-};
-
-// Update approval status (approve / reject)
-export const updateApprovalStatus = async (
-  req: Request<{ id: string }, {}, { action: 'approve' | 'reject'; rejectionReason?: string }>,
-  res: Response
-): Promise<void> => {
-  try {
-    const id = validateId(req.params.id);
-    const { action, rejectionReason } = req.body;
-
-    if (!['approve', 'reject'].includes(action)) {
-      throw new AppError('Action must be "approve" or "reject"', 400);
+    if (!userId) {
+      throw new AppError('Authentication required', 401);
     }
 
-    const challenge = await prisma.challenge.findUnique({ where: { id } });
+    // Verify challenge exists
+    const challenge = await prisma.challenge.findUnique({ where: { id: challengeId } });
     if (!challenge) throw new AppError('Challenge not found', 404);
 
-    const updatedChallenge = await prisma.challenge.update({
-      where: { id },
+    // Check if already joined
+    const existing = await prisma.userChallenge.findFirst({
+      where: { challengeId, userId },
+    });
+    if (existing) {
+      throw new AppError('You have already joined this challenge', 409);
+    }
+
+    const userChallenge = await prisma.userChallenge.create({
       data: {
-        approvalStatus: action === 'approve' ? 'APPROVED' : 'REJECTED',
-        status: action === 'approve' ? 'ACTIVE' : challenge.status,
-        rejectionReason: action === 'reject' ? (rejectionReason ?? null) : null,
+        challengeId,
+        userId,
+        joinedAt: new Date(),
       },
-      include: {
-        ...challengeInclude,
-        submittedBy: { select: { id: true, username: true, email: true, profileImage: true } },
-      },
+      include: { challenge: true },
     });
 
-    const msg = action === 'approve' ? 'Challenge approved successfully' : 'Challenge rejected';
-    sendResponse(res, 200, updatedChallenge, msg);
+    sendResponse(res, 201, userChallenge, 'Successfully joined the challenge');
   } catch (err) {
     handleError(err, res);
   }

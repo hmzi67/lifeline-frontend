@@ -1,39 +1,48 @@
-import { Router } from 'express';
-import { authenticate } from '../middleware/index.js';
+import { NextFunction, Request, Response, Router } from 'express';
 import {
-  deleteUser,
-  getCurrentUser,
-  updateUser,
-  getAllUsers,
-  getUserStats,
-  getUserWithRelations,
-  createUser,
+    createUser,
+    deleteUser,
+    getAllUsers,
+    getCurrentUser,
+    getUserSettings,
+    getUserStats,
+    getUserWithRelations,
+    registerPushToken,
+    updateUser,
+    updateUserSettings,
 } from '../controllers/userController.js';
+import authenticate from '../middleware/authenticate.js';
+import authorize from '../middleware/authorize.js';
+import { AuthenticatedRequest } from '../types/middlewareTypes.js';
 
 const userRoute = Router();
 
+// Middleware to ensure a user can only modify their own profile
+const checkProfileOwnership = (req: Request, res: Response, next: NextFunction) => {
+    const authUser = (req as AuthenticatedRequest).user;
+    if (authUser && req.params.id !== authUser.id) {
+        return res.status(403).json({
+            success: false,
+            message: 'Forbidden: You can only modify your own profile',
+        });
+    }
+    next();
+};
+
 // Regular user routes
-userRoute.get('/profile', getCurrentUser);
-userRoute.put('/profile/:id', updateUser);
-userRoute.delete('/profile/:id', deleteUser);
+userRoute.get('/profile', authenticate, getCurrentUser);
+userRoute.put('/profile/:id', authenticate, checkProfileOwnership, updateUser);
+userRoute.delete('/profile/:id', authenticate, checkProfileOwnership, deleteUser);
+userRoute.get('/settings', authenticate, getUserSettings);
+userRoute.put('/settings', authenticate, updateUserSettings);
+userRoute.post('/push-token', authenticate, registerPushToken);
 
 // Admin-only routes
-userRoute.get('/admin/users', getAllUsers);
-userRoute.get('/admin/stats', getUserStats);
-userRoute.get('/admin/users/:id', getUserWithRelations);
-
-// Admin can update any user
-userRoute.put('/admin/users/:id', updateUser);
-userRoute.post('/admin/users', createUser);
-
-// Admin can delete any user
-userRoute.delete('/admin/users/:id', deleteUser);
+userRoute.get('/admin/users', authenticate, authorize(['admin']), getAllUsers);
+userRoute.get('/admin/stats', authenticate, authorize(['admin']), getUserStats);
+userRoute.get('/admin/users/:id', authenticate, authorize(['admin']), getUserWithRelations);
+userRoute.put('/admin/users/:id', authenticate, authorize(['admin']), updateUser);
+userRoute.post('/admin/users', authenticate, authorize(['admin']), createUser);
+userRoute.delete('/admin/users/:id', authenticate, authorize(['admin']), deleteUser);
 
 export default userRoute;
-
-// Admin-only route
-// router.delete(
-//   '/:id',
-//   authenticate,
-//   authorize(['admin']),
-//  );

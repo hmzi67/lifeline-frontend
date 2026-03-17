@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
@@ -32,7 +32,7 @@ export const createSleepLog = async (req: Request, res: Response) => {
       });
     }
 
-    const { date, timeStart, timeEnd } = req.body;
+    const { date, timeStart, timeEnd, durationMinutes, sleepQuality } = req.body;
 
     // Validate required fields
     if (!date || !timeStart || !timeEnd) {
@@ -42,12 +42,23 @@ export const createSleepLog = async (req: Request, res: Response) => {
       });
     }
 
+    // Validate time format (HH:mm or HH:mm:ss)
+    const timeRegex = /^\d{1,2}:\d{2}(:\d{2})?$/;
+    if (!timeRegex.test(timeStart) || !timeRegex.test(timeEnd)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid time format. Use HH:mm',
+      });
+    }
+
     const sleepLog = await prisma.sleepLog.create({
       data: {
         userId,
         date: new Date(date),
-        timeStart: new Date(`1970-01-01T${timeStart}`),
-        timeEnd: new Date(`1970-01-01T${timeEnd}`),
+        timeStart: new Date(`1970-01-01T${timeStart}Z`),
+        timeEnd: new Date(`1970-01-01T${timeEnd}Z`),
+        durationMinutes: durationMinutes ?? null,
+        sleepQuality: sleepQuality ?? null,
       },
       include: {
         user: {
@@ -202,7 +213,7 @@ export const updateSleepLog = async (req: Request, res: Response) => {
     }
 
     const { id } = req.params;
-    const { date, timeStart, timeEnd } = req.body;
+    const { date, timeStart, timeEnd, durationMinutes, sleepQuality } = req.body;
 
     // Check if the sleep log exists and belongs to the user
     const existingLog = await prisma.sleepLog.findFirst({
@@ -219,10 +230,21 @@ export const updateSleepLog = async (req: Request, res: Response) => {
       });
     }
 
+    // Validate time format if provided
+    const timeRegex = /^\d{1,2}:\d{2}(:\d{2})?$/;
+    if (timeStart && !timeRegex.test(timeStart)) {
+      return res.status(400).json({ success: false, message: 'Invalid timeStart format. Use HH:mm' });
+    }
+    if (timeEnd && !timeRegex.test(timeEnd)) {
+      return res.status(400).json({ success: false, message: 'Invalid timeEnd format. Use HH:mm' });
+    }
+
     const data: any = {};
     if (date) data.date = new Date(date);
-    if (timeStart) data.timeStart = new Date(`1970-01-01T${timeStart}`);
-    if (timeEnd) data.timeEnd = new Date(`1970-01-01T${timeEnd}`);
+    if (timeStart) data.timeStart = new Date(`1970-01-01T${timeStart}Z`);
+    if (timeEnd) data.timeEnd = new Date(`1970-01-01T${timeEnd}Z`);
+    if (durationMinutes !== undefined) data.durationMinutes = durationMinutes;
+    if (sleepQuality !== undefined) data.sleepQuality = sleepQuality;
 
     const sleepLog = await prisma.sleepLog.update({
       where: { id },
@@ -265,12 +287,9 @@ export const deleteSleepLog = async (req: Request, res: Response) => {
 
     const { id } = req.params;
 
-    // Check if the sleep log exists and belongs to the user
-    const existingLog = await prisma.sleepLog.findFirst({
-      where: {
-        id,
-        userId,
-      },
+    // Check if the sleep log exists
+    const existingLog = await prisma.sleepLog.findUnique({
+      where: { id },
     });
 
     if (!existingLog) {
@@ -279,6 +298,20 @@ export const deleteSleepLog = async (req: Request, res: Response) => {
         message: 'Sleep log not found',
       });
     }
+
+    // Verify ownership (allow if userId matches or if log has no owner)
+    if (existingLog.userId && existingLog.userId !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to delete this sleep log',
+      });
+    }
+
+    // Disconnect any UserDailyRoutine references before deleting
+    await prisma.userDailyRoutine.updateMany({
+      where: { sleepId: id },
+      data: { sleepId: null },
+    });
 
     await prisma.sleepLog.delete({
       where: { id },

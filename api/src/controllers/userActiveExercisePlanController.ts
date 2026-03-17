@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { Request, Response } from 'express';
 
 const prisma = new PrismaClient();
 
@@ -9,10 +9,8 @@ export const getUserActiveExercisePlan = async (req: Request, res: Response): Pr
     const { userId } = req.params;
 
     const activePlan = await prisma.userActiveExercisePlan.findFirst({
-      where: { 
-        userId,
-        pausedAt: null // Only get non-paused plans
-      },
+      where: { userId },
+      orderBy: { startedAt: 'desc' },
       include: {
         user: {
           select: {
@@ -44,8 +42,9 @@ export const getUserActiveExercisePlan = async (req: Request, res: Response): Pr
     });
 
     if (!activePlan) {
-      res.status(404).json({
-        success: false,
+      res.status(200).json({
+        success: true,
+        data: null,
         message: 'No active exercise plan found for this user'
       });
       return;

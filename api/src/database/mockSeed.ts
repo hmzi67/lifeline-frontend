@@ -21,10 +21,7 @@ function log(section: string) {
 
 /** Convert "HH:MM" string to a Date (for @db.Time fields) */
 function timeOf(hhmm: string): Date {
-  const [h, m] = hhmm.split(':').map(Number);
-  const d = new Date();
-  d.setHours(h, m, 0, 0);
-  return d;
+  return new Date(`1970-01-01T${hhmm}:00Z`);
 }
 
 // ─── 1. Roles ─────────────────────────────────────────────────────────────────
@@ -60,6 +57,7 @@ async function seedUsers(adminRoleId: string, userRoleId: string) {
     { email: 'jane.smith@example.com',username: 'jane_smith',      password: userPw,  roleId: userRoleId,  isEmailVerified: true, status: 'active' },
     { email: 'alex.j@example.com',    username: 'alex_johnson',   password: userPw,  roleId: userRoleId,  isEmailVerified: true, status: 'active' },
     { email: 'user@lifeline.dev',     username: 'test_user',      password: userPw,  roleId: userRoleId,  isEmailVerified: true, status: 'active' },
+    { email: 'sarmad.razaq4@gmail.com', username: 'sarmad_razaq4', password: userPw, roleId: userRoleId, isEmailVerified: true, status: 'active' },
   ];
 
   const users = [];
@@ -203,13 +201,19 @@ async function seedExercisePlanWeeks(planIds: string[]) {
 async function seedExercisePlanSchedules(weekIds: string[], exerciseIds: string[]) {
   log('9 / Exercise Plan Schedules');
   const days = ['Monday', 'Wednesday', 'Friday'];
+  const setsPerWeek = [3, 3, 4, 4];
+  const repsPerWeek = ['12', '10', '10', '8'];
+  const durPerWeek = [30, 30, 45, 45];
 
-  for (const weekId of weekIds.slice(0, 4)) {
+  for (let w = 0; w < Math.min(weekIds.length, 4); w++) {
+    const weekId = weekIds[w];
+    // Rotate exercises so each week starts with a different one
     for (let d = 0; d < days.length; d++) {
       const existing = await prisma.exercisePlanSchedule.findFirst({ where: { weekId, dayOfWeek: days[d] } });
       if (existing) { console.log(`  schedule ${days[d]} for week ${weekId} → already exists`); continue; }
+      const exIdx = (d + w) % exerciseIds.length;
       const s = await prisma.exercisePlanSchedule.create({
-        data: { weekId, exerciseId: exerciseIds[d % exerciseIds.length], dayOfWeek: days[d], sets: 3, reps: '12', orderIndex: d + 1, completed: false },
+        data: { weekId, exerciseId: exerciseIds[exIdx], dayOfWeek: days[d], sets: setsPerWeek[w], reps: repsPerWeek[w], duration: `${durPerWeek[w]}`, orderIndex: d + 1, completed: false },
       });
       console.log(`  schedule ${days[d]} for week ${weekId} → ${s.id}`);
     }
@@ -259,11 +263,11 @@ async function seedDietPlanDays(dietPlanIds: string[]) {
 async function seedDietPlanMeals(dayIds: string[], mealTypeMap: Record<string, string>) {
   log('12 / Diet Plan Meals');
   const meals = [
-    { mealTypeKey: 'Breakfast', name: 'Oatmeal with Berries',           calories: 350, portionSize: '1 bowl',    recipe: 'Cook oats in almond milk. Top with mixed berries, honey, and chia seeds.',                                      image: 'https://example.com/oatmeal.jpg'       },
-    { mealTypeKey: 'Lunch',     name: 'Grilled Chicken Salad',          calories: 450, portionSize: '1 plate',   recipe: 'Grill chicken breast. Toss with mixed greens, cherry tomatoes, and olive oil dressing.',                         image: 'https://example.com/chicken-salad.jpg' },
-    { mealTypeKey: 'Dinner',    name: 'Salmon with Roasted Vegetables', calories: 520, portionSize: '1 serving', recipe: 'Bake salmon at 200°C for 20 min. Roast broccoli, sweet potato, and peppers with olive oil.',                    image: 'https://example.com/salmon.jpg'        },
-    { mealTypeKey: 'Snack',     name: 'Greek Yogurt with Nuts',         calories: 200, portionSize: '1 cup',     recipe: 'Combine Greek yogurt with mixed nuts, a drizzle of honey, and a pinch of cinnamon.',                            image: 'https://example.com/yogurt.jpg'        },
-    { mealTypeKey: 'Pre-Workout', name: 'Banana & Peanut Butter',       calories: 280, portionSize: '1 snack',   recipe: 'Slice 1 large banana. Serve with 2 tbsp natural peanut butter.',                                               image: 'https://example.com/banana-pb.jpg'     },
+    { mealTypeKey: 'Breakfast', name: 'Oatmeal with Berries',           calories: 300, portionSize: '1 bowl',    recipe: 'Cook oats in almond milk. Top with mixed berries, honey, and chia seeds.',                                      image: 'https://example.com/oatmeal.jpg'       },
+    { mealTypeKey: 'Lunch',     name: 'Grilled Chicken Salad',          calories: 400, portionSize: '1 plate',   recipe: 'Grill chicken breast. Toss with mixed greens, cherry tomatoes, and olive oil dressing.',                         image: 'https://example.com/chicken-salad.jpg' },
+    { mealTypeKey: 'Dinner',    name: 'Salmon with Roasted Vegetables', calories: 450, portionSize: '1 serving', recipe: 'Bake salmon at 200°C for 20 min. Roast broccoli, sweet potato, and peppers with olive oil.',                    image: 'https://example.com/salmon.jpg'        },
+    { mealTypeKey: 'Snack',     name: 'Greek Yogurt with Nuts',         calories: 150, portionSize: '1 cup',     recipe: 'Combine Greek yogurt with mixed nuts, a drizzle of honey, and a pinch of cinnamon.',                            image: 'https://example.com/yogurt.jpg'        },
+    { mealTypeKey: 'Pre-Workout', name: 'Banana & Peanut Butter',       calories: 200, portionSize: '1 snack',   recipe: 'Slice 1 large banana. Serve with 2 tbsp natural peanut butter.',                                               image: 'https://example.com/banana-pb.jpg'     },
   ];
 
   for (const dayId of dayIds.slice(0, 7)) {
@@ -271,7 +275,11 @@ async function seedDietPlanMeals(dayIds: string[], mealTypeMap: Record<string, s
       const mealTypeId = mealTypeMap[meal.mealTypeKey];
       if (!mealTypeId) continue;
       const existing = await prisma.dietPlanMeal.findFirst({ where: { dayId, name: meal.name } });
-      if (existing) { console.log(`  meal "${meal.name}" for day ${dayId} → already exists`); continue; }
+      if (existing) {
+        await prisma.dietPlanMeal.update({ where: { id: existing.id }, data: { calories: meal.calories, portionSize: meal.portionSize, recipe: meal.recipe, image: meal.image } });
+        console.log(`  meal "${meal.name}" for day ${dayId} → updated`);
+        continue;
+      }
       const dm = await prisma.dietPlanMeal.create({ data: { dayId, mealTypeId, name: meal.name, calories: meal.calories, portionSize: meal.portionSize, recipe: meal.recipe, image: meal.image } });
       console.log(`  meal "${dm.name}" for day ${dayId} → ${dm.id}`);
     }
@@ -612,14 +620,21 @@ async function seedMedications(userId: string) {
 
 async function seedMedicationReminders(medications: Array<{ id: string; name: string | null }>, userId: string) {
   log('28 / Medication Reminders');
+  // Make it realistic: first 3 enabled (active), last 1 disabled (inactive)
+  const enabledFlags = [true, true, true, false];
   for (let i = 0; i < medications.length; i++) {
     const medicationId = medications[i].id;
+    const enabled = enabledFlags[i] ?? true;
     const existing = await prisma.medicationReminder.findFirst({ where: { medicationId, userId } });
-    if (existing) { console.log(`  reminder for "${medications[i].name}" → already exists`); continue; }
+    if (existing) {
+      await prisma.medicationReminder.update({ where: { id: existing.id }, data: { enabled } });
+      console.log(`  reminder for "${medications[i].name}" → updated (enabled=${enabled})`);
+      continue;
+    }
     const mr = await prisma.medicationReminder.create({
-      data: { medicationId, userId, reminderTime: timeOf(i % 2 === 0 ? '08:00' : '21:00'), repeatType: 'daily', enabled: true },
+      data: { medicationId, userId, reminderTime: timeOf(i % 2 === 0 ? '08:00' : '21:00'), repeatType: 'daily', enabled },
     });
-    console.log(`  reminder for "${medications[i].name}" → ${mr.id}`);
+    console.log(`  reminder for "${medications[i].name}" → ${mr.id} (enabled=${enabled})`);
   }
 }
 
@@ -627,16 +642,20 @@ async function seedMedicationReminders(medications: Array<{ id: string; name: st
 
 async function seedCheatDays(userId: string) {
   log('29 / Cheat Days');
+
+  // Delete existing cheat days for this user to avoid duplicates
+  await prisma.cheatDay.deleteMany({ where: { userId } });
+
   const defs = [
-    { foodName: 'Pepperoni Pizza',                image: 'https://example.com/pizza.jpg',   mealType: 'Dinner',  portionSize: '2 slices', loggedAt: new Date('2026-03-07T19:00:00Z') },
-    { foodName: 'Chocolate Birthday Cake',        image: 'https://example.com/cake.jpg',    mealType: 'Dessert', portionSize: '1 slice',   loggedAt: new Date('2026-03-14T15:00:00Z') },
-    { foodName: 'Double Cheeseburger with Fries', image: 'https://example.com/burger.jpg',  mealType: 'Lunch',   portionSize: '1 meal',    loggedAt: new Date('2026-03-21T13:00:00Z') },
-    { foodName: 'Ice Cream Sundae',               image: 'https://example.com/icecream.jpg',mealType: 'Snack',   portionSize: '1 cup',     loggedAt: new Date('2026-03-28T16:00:00Z') },
+    { foodName: 'Pepperoni Pizza',                image: 'https://example.com/pizza.jpg',   mealType: 'Dinner',  portionSize: '2 slices', calories: 570,  protein: 24,  carbs: 62,  fat: 26,  loggedAt: new Date('2026-03-07T19:00:00Z') },
+    { foodName: 'Chocolate Birthday Cake',        image: 'https://example.com/cake.jpg',    mealType: 'Dessert', portionSize: '1 slice',  calories: 350,  protein: 4,   carbs: 50,  fat: 16,  loggedAt: new Date('2026-03-14T15:00:00Z') },
+    { foodName: 'Double Cheeseburger with Fries', image: 'https://example.com/burger.jpg',  mealType: 'Lunch',   portionSize: '1 meal',   calories: 1100, protein: 52,  carbs: 85,  fat: 62,  loggedAt: new Date('2026-03-21T13:00:00Z') },
+    { foodName: 'Ice Cream Sundae',               image: 'https://example.com/icecream.jpg',mealType: 'Snack',   portionSize: '1 cup',    calories: 400,  protein: 6,   carbs: 52,  fat: 20,  loggedAt: new Date('2026-03-28T16:00:00Z') },
   ];
 
   for (const d of defs) {
     const cd = await prisma.cheatDay.create({ data: { userId, ...d } });
-    console.log(`  cheat day "${cd.foodName}" → ${cd.id}`);
+    console.log(`  cheat day "${cd.foodName}" (${cd.calories} kcal) → ${cd.id}`);
   }
 }
 
@@ -696,6 +715,245 @@ async function seedUserDailyRoutines(
     });
     console.log(`  daily routine ${date} → ${dr.id}`);
   }
+}
+
+async function seedProgressDashboardDataForUser(userId: string, exercisePlanIds: string[], dietPlanIds: string[]) {
+  log('33 / Target Progress Dashboard Data');
+
+  // Use UTC-based dates to match the progress controller's query approach
+  const todayStr = new Date().toISOString().split('T')[0];
+  const startOfToday = new Date(todayStr);
+  const endOfToday = new Date(new Date(startOfToday.getTime() + 86400000).toISOString().split('T')[0]);
+
+  const startOfWeek = new Date(startOfToday);
+  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(endOfWeek.getDate() + 7);
+
+  const questionnairePayload = {
+    gender: 'male',
+    goal: 'weight_loss',
+    dietType: ['balanced'],
+    isDiabetic: false,
+    allergenFood: [],
+    fitnessLevel: 'intermediate',
+    typicalDayType: 'moderately_active',
+    physicalLimitations: 'none',
+    bodyFocusArea: ['core', 'arms'],
+    dateOfBirth: new Date('2000-06-14'),
+    height: 178,
+    heightUnit: 'cm',
+    weight: 90,
+    weightUnit: 'kg',
+    goalWeight: 74,
+    motivationFor: 'health',
+  };
+
+  const existingQuestionnaire = await prisma.questionnaire.findFirst({ where: { userId } });
+  if (existingQuestionnaire) {
+    await prisma.questionnaire.update({
+      where: { id: existingQuestionnaire.id },
+      data: questionnairePayload,
+    });
+  } else {
+    await prisma.questionnaire.create({ data: { userId, ...questionnairePayload } });
+  }
+  console.log('  questionnaire → ready');
+
+  const existingWaterGoal = await prisma.userWaterGoal.findFirst({ where: { userId } });
+  if (!existingWaterGoal) {
+    await prisma.userWaterGoal.create({ data: { userId, goalAmount: 2600, unit: 'ml', updatedAt: new Date() } });
+  } else {
+    await prisma.userWaterGoal.update({
+      where: { id: existingWaterGoal.id },
+      data: { goalAmount: 2600, unit: 'ml', updatedAt: new Date() },
+    });
+  }
+  console.log('  water goal → ready');
+
+  await prisma.waterIntakeLog.deleteMany({
+    where: {
+      userId,
+      date: {
+        gte: startOfToday,
+        lt: endOfToday,
+      },
+    },
+  });
+
+  const waterEntries = [
+    { amount: 600, timeStart: '07:30', timeEnd: '07:40', drinkType: 'water', notes: 'Morning hydration' },
+    { amount: 550, timeStart: '11:00', timeEnd: '11:10', drinkType: 'water', notes: 'Midday hydration' },
+    { amount: 700, timeStart: '15:30', timeEnd: '15:45', drinkType: 'water', notes: 'Afternoon bottle' },
+    { amount: 500, timeStart: '20:30', timeEnd: '20:40', drinkType: 'water', notes: 'Evening hydration' },
+  ];
+
+  for (const entry of waterEntries) {
+    await prisma.waterIntakeLog.create({
+      data: {
+        userId,
+        date: startOfToday,
+        timeStart: timeOf(entry.timeStart),
+        timeEnd: timeOf(entry.timeEnd),
+        amount: entry.amount,
+        unit: 'ml',
+        drinkType: entry.drinkType,
+        notes: entry.notes,
+        loggedAt: new Date(),
+      },
+    });
+  }
+  console.log('  water intake logs (today) → seeded');
+
+  await prisma.sleepLog.deleteMany({
+    where: {
+      userId,
+      date: {
+        gte: startOfToday,
+        lt: endOfToday,
+      },
+    },
+  });
+
+  await prisma.sleepLog.create({
+    data: {
+      userId,
+      date: startOfToday,
+      timeStart: timeOf('23:00'),
+      timeEnd: timeOf('06:30'),
+      durationMinutes: 450,
+      sleepQuality: 'good',
+    },
+  });
+  console.log('  sleep log (today) → seeded');
+
+  const medications = await seedMedications(userId);
+  await seedMedicationReminders(medications, userId);
+
+  const dietPlanId = dietPlanIds[0];
+  if (dietPlanId) {
+    const activeDiet = await prisma.userActiveDietPlan.findFirst({ where: { userId } });
+    if (!activeDiet) {
+      await prisma.userActiveDietPlan.create({
+        data: {
+          userId,
+          dietId: dietPlanId,
+          currentDay: 1,
+          startedAt: new Date(startOfToday.getTime() - 5 * 24 * 60 * 60 * 1000),
+        },
+      });
+    } else {
+      await prisma.userActiveDietPlan.update({
+        where: { id: activeDiet.id },
+        data: {
+          dietId: dietPlanId,
+          currentDay: 1,
+          startedAt: new Date(startOfToday.getTime() - 5 * 24 * 60 * 60 * 1000),
+        },
+      });
+    }
+    console.log('  active diet plan → ready');
+  }
+
+  const exercisePlanId = exercisePlanIds[0];
+  if (exercisePlanId) {
+    const activeExercisePlan = await prisma.userActiveExercisePlan.findFirst({ where: { userId } });
+    if (!activeExercisePlan) {
+      await prisma.userActiveExercisePlan.create({
+        data: {
+          userId,
+          planId: exercisePlanId,
+          currentWeek: 1,
+          startedAt: new Date(startOfToday.getTime() - 7 * 24 * 60 * 60 * 1000),
+        },
+      });
+    } else {
+      await prisma.userActiveExercisePlan.update({
+        where: { id: activeExercisePlan.id },
+        data: {
+          planId: exercisePlanId,
+          currentWeek: 1,
+          startedAt: new Date(startOfToday.getTime() - 7 * 24 * 60 * 60 * 1000),
+        },
+      });
+    }
+
+    await prisma.userExerciseProgress.deleteMany({
+      where: {
+        userId,
+        completedAt: {
+          gte: startOfWeek,
+          lt: endOfWeek,
+        },
+      },
+    });
+
+    const schedules = await prisma.exercisePlanSchedule.findMany({
+      where: { week: { planId: exercisePlanId } },
+      orderBy: [{ weekId: 'asc' }, { orderIndex: 'asc' }],
+    });
+
+    if (schedules.length > 0) {
+      const completionOffsets = [0, 1, 3, 5];
+      for (let i = 0; i < completionOffsets.length; i++) {
+        const completedAt = new Date(startOfWeek);
+        completedAt.setDate(startOfWeek.getDate() + completionOffsets[i]);
+        completedAt.setHours(18, 0, 0, 0);
+
+        await prisma.userExerciseProgress.create({
+          data: {
+            userId,
+            exerciseScheduleId: schedules[i % schedules.length].id,
+            progressPercent: 100,
+            completed: true,
+            completedAt,
+            note: 'Completed scheduled workout',
+          },
+        });
+      }
+      console.log('  weekly exercise progress → seeded');
+    }
+  }
+
+  let completedChallenge = await prisma.challenge.findFirst({
+    where: {
+      name: 'Weekly Consistency Sprint',
+      status: 'COMPLETED',
+    },
+  });
+
+  if (!completedChallenge) {
+    completedChallenge = await prisma.challenge.create({
+      data: {
+        name: 'Weekly Consistency Sprint',
+        purpose: 'Build consistent weekly workout habit',
+        description: 'Complete your planned sessions through the week.',
+        status: 'COMPLETED',
+        scheduledAt: startOfToday,
+      },
+    });
+  }
+
+  const existingUserChallenge = await prisma.userChallenge.findFirst({
+    where: {
+      userId,
+      challengeId: completedChallenge.id,
+    },
+  });
+
+  if (!existingUserChallenge) {
+    await prisma.userChallenge.create({
+      data: {
+        userId,
+        challengeId: completedChallenge.id,
+        date: startOfToday,
+        time: timeOf('09:00'),
+        joinedAt: new Date(startOfToday.getTime() - 3 * 24 * 60 * 60 * 1000),
+      },
+    });
+  }
+  console.log('  challenge progress → ready');
 }
 
 // ─── main ─────────────────────────────────────────────────────────────────────
@@ -778,6 +1036,11 @@ async function main() {
         meditation.id,
         waterLogs[0].id,
       );
+    }
+
+    const targetProgressUser = users.find((u) => u.email === 'sarmad.razaq4@gmail.com');
+    if (targetProgressUser) {
+      await seedProgressDashboardDataForUser(targetProgressUser.id, exercisePlanIds, dietPlanIds);
     }
 
     // ── Summary ───────────────────────────────────────────────────────────

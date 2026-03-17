@@ -1,9 +1,48 @@
-import jwt from 'jsonwebtoken';
-import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
+
+const USER_SETTINGS_DEFAULTS = {
+  theme: 'system',
+  notificationsEnabled: true,
+  waterReminderEnabled: true,
+  language: 'en',
+  unitSystem: 'metric',
+} as const;
+
+const USER_SETTING_KEY_MAP = {
+  theme: 'theme',
+  notificationsEnabled: 'notifications_enabled',
+  waterReminderEnabled: 'water_reminder_enabled',
+  language: 'language',
+  unitSystem: 'unit_system',
+} as const;
+
+type UserSettingsPayload = {
+  theme?: string;
+  notificationsEnabled?: boolean;
+  waterReminderEnabled?: boolean;
+  language?: string;
+  unitSystem?: string;
+};
+
+const getUserIdFromAuth = (req: Request): string | null => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return null;
+  }
+
+  const token = authHeader.substring(7);
+  const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as {
+    userId: string;
+  };
+
+  return decoded.userId;
+};
 
 export const getCurrentUser = async (req: Request, res: Response) => {
   try {
@@ -27,6 +66,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
         id: true,
         email: true,
         username: true,
+        phone: true,
         googleId: true,
         profileImage: true,
         isEmailVerified: true,
@@ -80,6 +120,235 @@ export const getCurrentUser = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Get current user error:', error);
     res.status(401).json({
+      success: false,
+      message: 'Invalid token',
+    });
+  }
+};
+
+export const getUserSettings = async (req: Request, res: Response) => {
+  try {
+    const userId = getUserIdFromAuth(req);
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'No token provided',
+      });
+    }
+
+    const scope = `user:${userId}`;
+    const settings = await prisma.appSetting.findMany({
+      where: {
+        scope,
+        key: {
+          in: Object.values(USER_SETTING_KEY_MAP),
+        },
+      },
+    });
+
+    const valueByKey = new Map<string, string>(
+      settings
+        .filter(setting => typeof setting.key === 'string' && typeof setting.value === 'string')
+        .map(setting => [setting.key as string, setting.value as string])
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        theme: valueByKey.get(USER_SETTING_KEY_MAP.theme) || USER_SETTINGS_DEFAULTS.theme,
+        notificationsEnabled:
+          valueByKey.get(USER_SETTING_KEY_MAP.notificationsEnabled) !== undefined
+            ? valueByKey.get(USER_SETTING_KEY_MAP.notificationsEnabled) === 'true'
+            : USER_SETTINGS_DEFAULTS.notificationsEnabled,
+        waterReminderEnabled:
+          valueByKey.get(USER_SETTING_KEY_MAP.waterReminderEnabled) !== undefined
+            ? valueByKey.get(USER_SETTING_KEY_MAP.waterReminderEnabled) === 'true'
+            : USER_SETTINGS_DEFAULTS.waterReminderEnabled,
+        language: valueByKey.get(USER_SETTING_KEY_MAP.language) || USER_SETTINGS_DEFAULTS.language,
+        unitSystem: valueByKey.get(USER_SETTING_KEY_MAP.unitSystem) || USER_SETTINGS_DEFAULTS.unitSystem,
+      },
+    });
+  } catch (error) {
+    console.error('Get user settings error:', error);
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid token',
+    });
+  }
+};
+
+export const updateUserSettings = async (req: Request, res: Response) => {
+  try {
+    const userId = getUserIdFromAuth(req);
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'No token provided',
+      });
+    }
+
+    const payload = req.body as UserSettingsPayload;
+    const upsertEntries: Array<{ key: string; value: string }> = [];
+
+    if (typeof payload.theme === 'string') {
+      upsertEntries.push({ key: USER_SETTING_KEY_MAP.theme, value: payload.theme });
+    }
+
+    if (typeof payload.notificationsEnabled === 'boolean') {
+      upsertEntries.push({
+        key: USER_SETTING_KEY_MAP.notificationsEnabled,
+        value: String(payload.notificationsEnabled),
+      });
+    }
+
+    if (typeof payload.waterReminderEnabled === 'boolean') {
+      upsertEntries.push({
+        key: USER_SETTING_KEY_MAP.waterReminderEnabled,
+        value: String(payload.waterReminderEnabled),
+      });
+    }
+
+    if (typeof payload.language === 'string') {
+      upsertEntries.push({ key: USER_SETTING_KEY_MAP.language, value: payload.language });
+    }
+
+    if (typeof payload.unitSystem === 'string' && (payload.unitSystem === 'metric' || payload.unitSystem === 'imperial')) {
+      upsertEntries.push({ key: USER_SETTING_KEY_MAP.unitSystem, value: payload.unitSystem });
+    }
+
+    if (upsertEntries.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No valid settings were provided',
+      });
+    }
+
+    const scope = `user:${userId}`;
+
+    await prisma.$transaction(
+      upsertEntries.map(({ key, value }) =>
+        prisma.appSetting.upsert({
+          where: {
+            id: `${scope}:${key}`,
+          },
+          update: {
+            value,
+            scope,
+            key,
+          },
+          create: {
+            id: `${scope}:${key}`,
+            key,
+            value,
+            scope,
+          },
+        })
+      )
+    );
+
+    const settingsResponse = await prisma.appSetting.findMany({
+      where: {
+        scope,
+        key: {
+          in: Object.values(USER_SETTING_KEY_MAP),
+        },
+      },
+    });
+
+    const valueByKey = new Map<string, string>(
+      settingsResponse
+        .filter(setting => typeof setting.key === 'string' && typeof setting.value === 'string')
+        .map(setting => [setting.key as string, setting.value as string])
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: 'Settings updated successfully',
+      data: {
+        theme: valueByKey.get(USER_SETTING_KEY_MAP.theme) || USER_SETTINGS_DEFAULTS.theme,
+        notificationsEnabled:
+          valueByKey.get(USER_SETTING_KEY_MAP.notificationsEnabled) !== undefined
+            ? valueByKey.get(USER_SETTING_KEY_MAP.notificationsEnabled) === 'true'
+            : USER_SETTINGS_DEFAULTS.notificationsEnabled,
+        waterReminderEnabled:
+          valueByKey.get(USER_SETTING_KEY_MAP.waterReminderEnabled) !== undefined
+            ? valueByKey.get(USER_SETTING_KEY_MAP.waterReminderEnabled) === 'true'
+            : USER_SETTINGS_DEFAULTS.waterReminderEnabled,
+        language: valueByKey.get(USER_SETTING_KEY_MAP.language) || USER_SETTINGS_DEFAULTS.language,
+        unitSystem: valueByKey.get(USER_SETTING_KEY_MAP.unitSystem) || USER_SETTINGS_DEFAULTS.unitSystem,
+      },
+    });
+  } catch (error) {
+    console.error('Update user settings error:', error);
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid token',
+    });
+  }
+};
+
+export const registerPushToken = async (req: Request, res: Response) => {
+  try {
+    const userId = getUserIdFromAuth(req);
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'No token provided',
+      });
+    }
+
+    const { expoPushToken, platform } = req.body as {
+      expoPushToken?: string;
+      platform?: string;
+    };
+
+    if (!expoPushToken || typeof expoPushToken !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: 'expoPushToken is required',
+      });
+    }
+
+    const scope = `user:${userId}`;
+
+    await prisma.$transaction([
+      prisma.appSetting.upsert({
+        where: { id: `${scope}:push_token` },
+        update: {
+          key: 'push_token',
+          value: expoPushToken,
+          scope,
+        },
+        create: {
+          id: `${scope}:push_token`,
+          key: 'push_token',
+          value: expoPushToken,
+          scope,
+        },
+      }),
+      prisma.appSetting.upsert({
+        where: { id: `${scope}:push_platform` },
+        update: {
+          key: 'push_platform',
+          value: platform || 'unknown',
+          scope,
+        },
+        create: {
+          id: `${scope}:push_platform`,
+          key: 'push_platform',
+          value: platform || 'unknown',
+          scope,
+        },
+      }),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Push token registered successfully',
+    });
+  } catch (error) {
+    console.error('Register push token error:', error);
+    return res.status(401).json({
       success: false,
       message: 'Invalid token',
     });
@@ -273,6 +542,13 @@ export const updateUser = async (req: Request, res: Response) => {
       }
     }
 
+    if (Object.keys(data).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No valid fields provided for update',
+      });
+    }
+
     // Hash password if provided
     if (data.password) {
       data.password = await bcrypt.hash(data.password, 10);
@@ -300,6 +576,7 @@ export const updateUser = async (req: Request, res: Response) => {
         id: true,
         email: true,
         username: true,
+        phone: true,
         googleId: true,
         profileImage: true,
         isEmailVerified: true,
