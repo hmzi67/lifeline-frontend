@@ -12,6 +12,8 @@ import {
   notFound,
   timeout,
 } from './middleware/index.js';
+import authRoute from './routes/authRoute.js';
+import questionnaireRoutes from './routes/questionnaireRoutes.js';
 import { healthCheck, prisma } from './config/database.js';
 // @ts-ignore - The compiler couldn't find the bundled type declarations for this package on your server
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
