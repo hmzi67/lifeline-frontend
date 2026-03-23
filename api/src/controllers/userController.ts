@@ -29,6 +29,27 @@ type UserSettingsPayload = {
   unitSystem?: string;
 };
 
+const USER_PUBLIC_SELECT = {
+  id: true,
+  email: true,
+  username: true,
+  googleId: true,
+  profileImage: true,
+  isEmailVerified: true,
+  subject: true,
+  status: true,
+  roleId: true,
+  createdAt: true,
+  updatedAt: true,
+  role: {
+    select: {
+      id: true,
+      name: true,
+      description: true,
+    },
+  },
+} as const;
+
 const getUserIdFromAuth = (req: Request): string | null => {
   const authHeader = req.headers.authorization;
 
@@ -63,24 +84,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
       select: {
-        id: true,
-        email: true,
-        username: true,
-        googleId: true,
-        profileImage: true,
-        isEmailVerified: true,
-        subject: true,
-        status: true,
-        roleId: true,
-        createdAt: true,
-        updatedAt: true,
-        role: {
-          select: {
-            id: true,
-            name: true,
-            description: true,
-          },
-        },
+        ...USER_PUBLIC_SELECT,
         questionnaires: {
           select: {
             id: true,
@@ -399,24 +403,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
     const users = await prisma.user.findMany({
       where,
       select: {
-        id: true,
-        email: true,
-        username: true,
-        googleId: true,
-        profileImage: true,
-        isEmailVerified: true,
-        subject: true,
-        status: true,
-        roleId: true,
-        createdAt: true,
-        updatedAt: true,
-        role: {
-          select: {
-            id: true,
-            name: true,
-            description: true,
-          },
-        },
+        ...USER_PUBLIC_SELECT,
         _count: {
           select: {
             questionnaires: true,

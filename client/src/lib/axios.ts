@@ -44,25 +44,36 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // Prevent infinite loops
+    // Prevent infinite loops from the refresh endpoint itself
+    if (originalRequest.url === '/auth/refresh-token') {
+      return Promise.reject(error);
+    }
+
+    // Automatically try to refresh token on 401
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        // Call your refresh endpoint (must be set up server-side)
-        const res = await api.post('/auth/refresh');
-        const newAccessToken = res.data.accessToken;
+        // Call your refresh endpoint mapping correctly to backend
+        const res = await api.post('/auth/refresh-token');
+        
+        // Backend returns: { success: true, data: { accessToken: "..." } }
+        const newAccessToken = res.data?.data?.accessToken;
 
-        // Save new access token
-        localStorage.setItem('access_token', newAccessToken);
+        if (!newAccessToken) {
+           throw new Error("Invalid token refresh response from server.");
+        }
+
+        // Save new access token using the uniform "token" key
+        localStorage.setItem('token', newAccessToken);
 
         // Update Authorization header and retry original request
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        // Optionally, logout user here
-        localStorage.removeItem('access_token');
-        window.location.href = '/login'; // or any logout logic
+        // Logout user and cleanly redirect them if refresh token expires or fails
+        localStorage.removeItem('token');
+        window.location.href = '/login';
         return Promise.reject(refreshError);
       }
     }

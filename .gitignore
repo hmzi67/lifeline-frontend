@@ -1,5 +1,7 @@
 node_modules
 .idea
-
 # Test data folder
 http-test/
+client/.env
+api/.env
+.env
