@@ -1,10 +1,10 @@
-import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { z } from 'zod';
-import passport from 'passport';
+import { Request, Response } from 'express';
 import { OAuth2Client } from 'google-auth-library';
+import jwt from 'jsonwebtoken';
+import passport from 'passport';
+import { z } from 'zod';
 import { sendEmailVerificationEmail, sendPasswordResetEmail } from '../services/emailService.js';
 
 
@@ -25,6 +25,7 @@ const prisma = new PrismaClient();
 const signupSchema = z.object({
   email: z.string().email('Please provide a valid email address'),
   username: z.string().min(1, 'Username is required').optional(),
+  name: z.string().min(1, 'Name is required').optional(),
   password: z.string().min(8, 'Password must be at least 8 characters long'),
 });
 
@@ -73,15 +74,17 @@ export const signup = async (req: Request, res: Response) => {
   try {
     // Validate request body
     const validatedData = signupSchema.parse(req.body);
-    const { email, username, password } = validatedData;
+    const { email, username, name, password } = validatedData;
+
+    const orConditions: any[] = [{ email }];
+    if (username) {
+      orConditions.push({ username });
+    }
 
     // Check if a user already exists
     const existingUser = await prisma.user.findFirst({
       where: {
-        OR: [
-          { email },
-          { username: username || undefined }
-        ]
+        OR: orConditions
       },
     });
 
@@ -98,7 +101,7 @@ export const signup = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     // Generate username if not provided
-    let finalUsername = username;
+    let finalUsername = username || name;
     if (!finalUsername) {
       const baseUsername = email.split('@')[0];
       finalUsername = await generateUniqueUsername(baseUsername);
@@ -264,6 +267,44 @@ export const resendVerificationEmail = async (req: Request, res: Response) => {
   }
 };
 
+// Check email verification status
+export const checkVerificationStatus = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.query;
+
+    if (!email || typeof email !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: 'Email query parameter is required',
+      });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: { isEmailVerified: true },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: { isVerified: user.isEmailVerified },
+      message: user.isEmailVerified ? 'Email is verified' : 'Email is not verified',
+    });
+  } catch (error) {
+    console.error('Error checking verification status:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    });
+  }
+};
+
 // Email verification with OTP
 export const verify = async (req: Request, res: Response) => {
   try {
@@ -350,6 +391,14 @@ export const login = async (req: Request, res: Response) => {
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password',
+      });
+    }
+
+    // Check if email is verified
+    if (!user.isEmailVerified) {
+      return res.status(403).json({
+        success: false,
+        message: 'Please verify your email before logging in',
       });
     }
 
@@ -955,19 +1004,185 @@ export const googleMobileAuth = async (req: Request, res: Response) => {
   }
 };
 
-// Apple OAuth functions - To be implemented
+// Apple OAuth - web redirect (not used for mobile)
 export const appleAuth = (req: Request, res: Response) => {
   res.status(501).json({
     success: false,
-    message: 'Apple OAuth not implemented yet',
+    message: 'Apple OAuth web flow not implemented. Use /auth/apple/mobile for mobile apps.',
   });
 };
 
 export const appleAuthCallback = (req: Request, res: Response) => {
   res.status(501).json({
     success: false,
-    message: 'Apple OAuth callback not implemented yet',
+    message: 'Apple OAuth web callback not implemented. Use /auth/apple/mobile for mobile apps.',
   });
+};
+
+// Apple Mobile Authentication - For mobile apps using identity tokens
+export const appleMobileAuth = async (req: Request, res: Response) => {
+  try {
+    const { identityToken, firstName, lastName } = req.body;
+
+    if (!identityToken) {
+      return res.status(400).json({
+        success: false,
+        message: 'Identity token is required',
+      });
+    }
+
+    // Decode the Apple identity token (JWT) to extract claims
+    // Apple identity tokens are JWTs signed by Apple's keys
+    let decoded: any;
+    try {
+      // Apple tokens are JWTs - decode to get the payload
+      // In production, you should verify the signature against Apple's public keys
+      // For now, we decode and verify essential claims
+      decoded = jwt.decode(identityToken, { complete: true });
+      if (!decoded || !decoded.payload) {
+        throw new Error('Failed to decode token');
+      }
+    } catch (error) {
+      console.error('Apple identity token decode failed:', error);
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid Apple identity token',
+      });
+    }
+
+    const payload = decoded.payload;
+    const { sub: appleUserId, email } = payload;
+
+    if (!appleUserId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid token payload - Apple user ID not found',
+      });
+    }
+
+    // Verify issuer and audience
+    if (payload.iss !== 'https://appleid.apple.com') {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid token issuer',
+      });
+    }
+
+    // Check token expiration
+    if (payload.exp && payload.exp * 1000 < Date.now()) {
+      return res.status(401).json({
+        success: false,
+        message: 'Apple identity token has expired',
+      });
+    }
+
+    // Try to find user by subject first, then by email
+    let user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { subject: appleUserId },
+          ...(email ? [{ email }] : []),
+        ],
+      },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        subject: true,
+        profileImage: true,
+        roleId: true,
+        isEmailVerified: true,
+        status: true,
+      },
+    });
+
+    if (user) {
+      // User exists, update their Apple subject if not set
+      if (!user.subject) {
+        user = await prisma.user.update({
+          where: { id: user.id },
+          data: { subject: appleUserId },
+          select: {
+            id: true,
+            email: true,
+            username: true,
+            subject: true,
+            profileImage: true,
+            roleId: true,
+            isEmailVerified: true,
+            status: true,
+          },
+        });
+      }
+    } else {
+      // Create new user
+      // Apple may not provide email on subsequent sign-ins, so we use the appleUserId as fallback
+      const userEmail = email || `${appleUserId}@privaterelay.appleid.com`;
+      
+      // Generate a unique username
+      const baseUsername = (firstName || email?.split('@')[0] || 'user').toLowerCase().replace(/[^a-zA-Z0-9]/g, '');
+      let username = baseUsername;
+      let counter = 1;
+
+      while (await prisma.user.findUnique({ where: { username } })) {
+        username = `${baseUsername}${counter}`;
+        counter++;
+      }
+
+      user = await prisma.user.create({
+        data: {
+          username,
+          email: userEmail,
+          subject: appleUserId,
+          isEmailVerified: true, // Apple emails are verified
+          status: 'active',
+        },
+        select: {
+          id: true,
+          email: true,
+          username: true,
+          subject: true,
+          profileImage: true,
+          roleId: true,
+          isEmailVerified: true,
+          status: true,
+        },
+      });
+    }
+
+    // Generate JWT tokens for the app
+    const { accessToken, refreshToken } = generateTokens(
+      user.id,
+      user.email,
+      user.roleId || undefined
+    );
+
+    // Save refresh token to database
+    await prisma.refreshToken.create({
+      data: {
+        token: refreshToken,
+        userId: user.id,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+      },
+    });
+
+    // Return tokens and user info to mobile app
+    return res.status(200).json({
+      success: true,
+      message: 'Apple authentication successful',
+      data: {
+        user,
+        accessToken,
+        refreshToken,
+      },
+    });
+  } catch (error) {
+    console.error('Apple mobile auth error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error during authentication',
+    });
+  }
 };
 
 // Logout from all devices

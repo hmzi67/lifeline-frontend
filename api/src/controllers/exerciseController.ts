@@ -15,7 +15,6 @@ interface CreateExerciseBody {
   description?: string;
   image?: string;
   duration?: string;
-  displayDuration?: string;
   videoUrl?: string;
   difficulty?: string;
   caloriesBurnEstimate?: number;
@@ -27,7 +26,6 @@ interface UpdateExerciseBody {
   description?: string;
   image?: string;
   duration?: string;
-  displayDuration?: string;
   videoUrl?: string;
   difficulty?: string;
   caloriesBurnEstimate?: number;
@@ -86,6 +84,7 @@ export const getExerciseById = async (req: Request, res: Response): Promise<void
     const exercise = await prisma.exercise.findUnique({
       where: { id },
       include: {
+        exerciseDetails: true,
         userExercises: {
           include: {
             user: {
@@ -137,7 +136,7 @@ export const getExerciseById = async (req: Request, res: Response): Promise<void
 // Create new exercise
 export const createExercise = async (req: Request<{}, {}, CreateExerciseBody>, res: Response): Promise<void> => {
   try {
-    const { name, purpose, description, image, duration, displayDuration, videoUrl, difficulty, caloriesBurnEstimate } = req.body;
+    const { name, purpose, description, image, duration, videoUrl, difficulty, caloriesBurnEstimate } = req.body;
 
     // Validation
     if (!name) {
@@ -155,7 +154,6 @@ export const createExercise = async (req: Request<{}, {}, CreateExerciseBody>, r
         description: description || null,
         image: image || null,
         duration: duration || null,
-        displayDuration: displayDuration || null,
         videoUrl: videoUrl || null,
         difficulty: difficulty || null,
         caloriesBurnEstimate: caloriesBurnEstimate || null
@@ -181,7 +179,7 @@ export const createExercise = async (req: Request<{}, {}, CreateExerciseBody>, r
 export const updateExercise = async (req: Request<{ id: string }, {}, UpdateExerciseBody>, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const { name, purpose, description, image, duration, displayDuration, videoUrl, difficulty, caloriesBurnEstimate } = req.body;
+    const { name, purpose, description, image, duration, videoUrl, difficulty, caloriesBurnEstimate } = req.body;
 
     // Check if exercise exists
     const existingExercise = await prisma.exercise.findUnique({
@@ -202,7 +200,6 @@ export const updateExercise = async (req: Request<{ id: string }, {}, UpdateExer
     if (description !== undefined) updateData.description = description;
     if (image !== undefined) updateData.image = image;
     if (duration !== undefined) updateData.duration = duration;
-    if (displayDuration !== undefined) updateData.displayDuration = displayDuration;
     if (videoUrl !== undefined) updateData.videoUrl = videoUrl;
     if (difficulty !== undefined) updateData.difficulty = difficulty;
     if (caloriesBurnEstimate !== undefined) updateData.caloriesBurnEstimate = caloriesBurnEstimate;

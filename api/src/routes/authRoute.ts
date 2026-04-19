@@ -1,17 +1,21 @@
 import { Router } from 'express';
 import {
-  login,
-  signup,
-  logout,
-  refreshToken,
-  getCurrentUser,
-  requestPasswordReset,
-  resetPassword,
-  googleAuth,
-  googleAuthCallback,
-  googleMobileAuth,
-  appleAuth,
-  appleAuthCallback, verify, resendVerificationEmail,
+    appleAuth,
+    appleAuthCallback,
+    appleMobileAuth,
+    checkVerificationStatus,
+    getCurrentUser,
+    googleAuth,
+    googleAuthCallback,
+    googleMobileAuth,
+    login,
+    logout,
+    refreshToken,
+    requestPasswordReset,
+    resendVerificationEmail,
+    resetPassword,
+    signup,
+    verify,
 } from '../controllers/authController.js';
 
 const authRoute = Router();
@@ -30,6 +34,7 @@ authRoute.post('/reset-password', resetPassword);
 // Verification route
 authRoute.post('/resend-verification', resendVerificationEmail)
 authRoute.post('/verify', verify)
+authRoute.get('/check-verification', checkVerificationStatus)
 
 // OAuth routes
 authRoute.get('/google', googleAuth);
@@ -37,5 +42,6 @@ authRoute.get('/google/callback', googleAuthCallback);
 authRoute.post('/google/mobile', googleMobileAuth); // Mobile Google authentication
 authRoute.get('/apple', appleAuth);
 authRoute.post('/apple/callback', appleAuthCallback);
+authRoute.post('/apple/mobile', appleMobileAuth); // Mobile Apple authentication
 
 export default authRoute;

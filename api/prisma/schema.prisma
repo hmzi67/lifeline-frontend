@@ -814,3 +814,15 @@ model AppSetting {
 
   @@map("app_settings")
 }
+
+// ============================
+// Sessions
+// ============================
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   @db.Text
+  expiresAt DateTime @map("expires_at")
+  
+  @@map("sessions")
+}

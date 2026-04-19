@@ -1,9 +1,10 @@
 import rateLimit from 'express-rate-limit';
 import { Request, Response } from 'express';
+import { config } from '../config/index.js';
 
 const rateLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
+    windowMs: config.rateLimitWindowMs || 15 * 60 * 1000,
+    max: config.rateLimitMaxRequests || 100,
     message: {
         success: false,
         error: {

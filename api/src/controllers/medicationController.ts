@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
@@ -71,6 +71,14 @@ export const createMedication = async (req: Request, res: Response) => {
 
 export const getMedications = async (req: Request, res: Response) => {
   try {
+    const userId = getUserIdFromToken(req);
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'User not authenticated'
+      });
+    }
+
     const medications = await prisma.medication.findMany({
       include: {
         user: {
@@ -110,6 +118,9 @@ export const getUserMedications = async (req: Request, res: Response) => {
     const medications = await prisma.medication.findMany({
       where: {
         userId
+      },
+      include: {
+        medicationReminders: true
       },
       orderBy: {
         addedAt: 'desc'
@@ -210,7 +221,7 @@ export const updateMedication = async (req: Request, res: Response) => {
         quantity: quantity !== undefined ? quantity : existingMedication.quantity,
         dose,
         frequency,
-        reminderTime: reminderTime ? new Date(reminderTime) : existingMedication.reminderTime,
+        reminderTime: reminderTime === null ? null : (reminderTime ? new Date(reminderTime) : existingMedication.reminderTime),
         icon: icon !== undefined ? icon : existingMedication.icon
       }
     });
@@ -252,6 +263,11 @@ export const deleteMedication = async (req: Request, res: Response) => {
         message: 'You do not have permission to delete this medication'
       });
     }
+
+    // Delete associated reminders first to avoid FK constraint errors
+    await prisma.medicationReminder.deleteMany({
+      where: { medicationId: id }
+    });
 
     await prisma.medication.delete({
       where: { id }

@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { Request, Response } from 'express';
 
 const prisma = new PrismaClient();
 
@@ -10,8 +10,7 @@ export const getUserActiveDietPlan = async (req: Request, res: Response): Promis
 
     const activePlan = await prisma.userActiveDietPlan.findFirst({
       where: { 
-        userId,
-        pausedAt: null // Only get non-paused plans
+        userId
       },
       include: {
         user: {

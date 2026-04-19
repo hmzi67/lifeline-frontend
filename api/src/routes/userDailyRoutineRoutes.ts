@@ -1,24 +1,25 @@
 import { Router } from 'express';
 import { UserDailyRoutineController } from '../controllers/userDailyRoutineController.js';
+import authenticate from '../middleware/authenticate.js';
 
 const router = Router();
 
 // Create a new user daily routine
-router.post('/', UserDailyRoutineController.createUserDailyRoutine);
+router.post('/', authenticate, UserDailyRoutineController.createUserDailyRoutine);
 
 // Get all user daily routines with optional pagination and filtering
-router.get('/', UserDailyRoutineController.getAllUserDailyRoutines);
+router.get('/', authenticate, UserDailyRoutineController.getAllUserDailyRoutines);
 
 // Get user daily routine by ID
-router.get('/:id', UserDailyRoutineController.getUserDailyRoutineById);
+router.get('/:id', authenticate, UserDailyRoutineController.getUserDailyRoutineById);
 
 // Update user daily routine by ID
-router.put('/:id', UserDailyRoutineController.updateUserDailyRoutine);
+router.put('/:id', authenticate, UserDailyRoutineController.updateUserDailyRoutine);
 
 // Delete user daily routine by ID
-router.delete('/:id', UserDailyRoutineController.deleteUserDailyRoutine);
+router.delete('/:id', authenticate, UserDailyRoutineController.deleteUserDailyRoutine);
 
 // Get user daily routines by user ID
-router.get('/user/:userId', UserDailyRoutineController.getUserDailyRoutinesByUserId);
+router.get('/user/:userId', authenticate, UserDailyRoutineController.getUserDailyRoutinesByUserId);
 
 export default router;

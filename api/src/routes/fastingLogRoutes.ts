@@ -1,22 +1,23 @@
 import { Router } from 'express';
 import {
-  createFastingLog,
-  getUserFastingLogs,
-  getFastingLogById,
-  updateFastingLog,
-  deleteFastingLog,
-  getFastingStats,
+    createFastingLog,
+    deleteFastingLog,
+    getFastingLogById,
+    getFastingStats,
+    getUserFastingLogs,
+    updateFastingLog,
 } from '../controllers/fastingLogController.js';
+import authenticate from '../middleware/authenticate.js';
 
 const fastingRoutes = Router();
 
 
 // CRUD operations
-fastingRoutes.post('/', createFastingLog);
-fastingRoutes.get('/', getUserFastingLogs);
-fastingRoutes.get('/stats', getFastingStats);
-fastingRoutes.get('/:id', getFastingLogById);
-fastingRoutes.put('/:id', updateFastingLog);
-fastingRoutes.delete('/:id', deleteFastingLog);
+fastingRoutes.post('/', authenticate, createFastingLog);
+fastingRoutes.get('/', authenticate, getUserFastingLogs);
+fastingRoutes.get('/stats', authenticate, getFastingStats);
+fastingRoutes.get('/:id', authenticate, getFastingLogById);
+fastingRoutes.put('/:id', authenticate, updateFastingLog);
+fastingRoutes.delete('/:id', authenticate, deleteFastingLog);
 
 export default fastingRoutes;

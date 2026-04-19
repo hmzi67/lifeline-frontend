@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { Request, Response } from 'express';
 
 const prisma = new PrismaClient();
 
@@ -13,7 +13,8 @@ export class UserDailyRoutineController {
         sleepId,
         medicationId,
         meditationId,
-        waterId
+        waterId,
+        routinesDate,
       } = req.body;
 
       const userDailyRoutine = await prisma.userDailyRoutine.create({
@@ -23,7 +24,8 @@ export class UserDailyRoutineController {
           sleepId,
           medicationId,
           meditationId,
-          waterId
+          waterId,
+          routinesDate: routinesDate ? new Date(routinesDate) : undefined,
         },
         include: {
           user: true,
@@ -161,7 +163,8 @@ export class UserDailyRoutineController {
         sleepId,
         medicationId,
         meditationId,
-        waterId
+        waterId,
+        routinesDate,
       } = req.body;
 
       const existingRoutine = await prisma.userDailyRoutine.findUnique({
@@ -184,7 +187,8 @@ export class UserDailyRoutineController {
           sleepId,
           medicationId,
           meditationId,
-          waterId
+          waterId,
+          routinesDate: routinesDate ? new Date(routinesDate) : undefined,
         },
         include: {
           user: {

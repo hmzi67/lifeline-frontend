@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import {
-  getUserFavoriteMeditations,
-  addFavoriteMeditation,
-  removeFavoriteMeditation,
-  checkFavoriteMeditation
+    addFavoriteMeditation,
+    checkFavoriteMeditation,
+    getUserFavoriteMeditations,
+    removeFavoriteMeditation
 } from '../controllers/userFavoriteMeditationController.js';
+import authenticate from '../middleware/authenticate.js';
 
 const router = Router();
 
@@ -15,7 +16,7 @@ router.get('/user/:userId', getUserFavoriteMeditations);
 router.get('/check/:userId/:sessionId', checkFavoriteMeditation);
 
 // POST /api/favorite-meditations - Add meditation to favorites
-router.post('/', addFavoriteMeditation);
+router.post('/', authenticate, addFavoriteMeditation);
 
 // DELETE /api/favorite-meditations/:id - Remove meditation from favorites
 router.delete('/:id', removeFavoriteMeditation);

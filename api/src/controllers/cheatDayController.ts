@@ -1,12 +1,19 @@
-import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { Request, Response } from 'express';
+import { AuthenticatedRequest } from '../types/middlewareTypes.js';
 
 const prisma = new PrismaClient();
 
 // Get all cheat days for a user
 export const getUserCheatDays = async (req: Request, res: Response): Promise<void> => {
   try {
+    const authUser = (req as AuthenticatedRequest).user;
     const { userId } = req.params;
+
+    if (authUser?.id !== userId) {
+      res.status(403).json({ success: false, message: 'Forbidden: You can only access your own cheat days' });
+      return;
+    }
 
     const cheatDays = await prisma.cheatDay.findMany({
       where: { userId },
@@ -65,6 +72,12 @@ export const getCheatDayById = async (req: Request, res: Response): Promise<void
       return;
     }
 
+    const authUser = (req as AuthenticatedRequest).user;
+    if (authUser?.id !== cheatDay.userId) {
+      res.status(403).json({ success: false, message: 'Forbidden: You can only access your own cheat days' });
+      return;
+    }
+
     res.status(200).json({
       success: true,
       data: cheatDay,
@@ -85,7 +98,13 @@ export const logCheatDay = async (req: Request, res: Response): Promise<void> =>
   try {
     const { userId, foodName, image, mealType, portionSize } = req.body;
 
-    if (!userId || !foodName) {
+    const authUser = (req as AuthenticatedRequest).user;
+    if (!userId || authUser?.id !== userId) {
+      res.status(403).json({ success: false, message: 'Forbidden: You can only log cheat days for yourself' });
+      return;
+    }
+
+    if (!foodName) {
       res.status(400).json({
         success: false,
         message: 'User ID and food name are required'
@@ -159,6 +178,12 @@ export const updateCheatDay = async (req: Request, res: Response): Promise<void>
       return;
     }
 
+    const authUser = (req as AuthenticatedRequest).user;
+    if (authUser?.id !== existingCheatDay.userId) {
+      res.status(403).json({ success: false, message: 'Forbidden: You can only update your own cheat days' });
+      return;
+    }
+
     const updateData: any = {};
     if (foodName !== undefined) updateData.foodName = foodName;
     if (image !== undefined) updateData.image = image;
@@ -208,6 +233,12 @@ export const deleteCheatDay = async (req: Request, res: Response): Promise<void>
         success: false,
         message: 'Cheat day not found'
       });
+      return;
+    }
+
+    const authUser = (req as AuthenticatedRequest).user;
+    if (authUser?.id !== existingCheatDay.userId) {
+      res.status(403).json({ success: false, message: 'Forbidden: You can only delete your own cheat days' });
       return;
     }
 

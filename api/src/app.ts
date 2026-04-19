@@ -13,9 +13,11 @@ import {
   timeout,
 } from './middleware/index.js';
 import authRoute from './routes/authRoute.js';
-import { healthCheck } from './config/database.js';
-import userRoute from './routes/userRoutes.js';
 import questionnaireRoutes from './routes/questionnaireRoutes.js';
+import { healthCheck, prisma } from './config/database.js';
+// @ts-ignore - The compiler couldn't find the bundled type declarations for this package on your server
+import { PrismaSessionStore } from '@quixo3/prisma-session-store';
+import userRoute from './routes/userRoutes.js';
 import subscriptionPaymentRoutes from './routes/subscriptionPaymentRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import dietPlanRoutes from './routes/dietPlanRoutes.js';
@@ -74,6 +76,14 @@ app.use(
     secret: process.env.SESSION_SECRET || 'fallback-session-secret',
     resave: false,
     saveUninitialized: false,
+    store: new PrismaSessionStore(
+      prisma,
+      {
+        checkPeriod: 2 * 60 * 1000,  // ms
+        dbRecordIdIsSessionId: true,
+        dbRecordIdFunction: undefined,
+      }
+    ),
     cookie: {
       secure: process.env.NODE_ENV === 'production',
       maxAge: 24 * 60 * 60 * 1000, // 24 hours

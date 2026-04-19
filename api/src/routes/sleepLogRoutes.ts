@@ -1,23 +1,24 @@
 import { Router } from 'express';
 import {
-  createSleepLog,
-  getUserSleepLogs,
-  getSleepLogById,
-  updateSleepLog,
-  deleteSleepLog,
-  getSleepStats,
-  getSleepQuality,
+    createSleepLog,
+    deleteSleepLog,
+    getSleepLogById,
+    getSleepQuality,
+    getSleepStats,
+    getUserSleepLogs,
+    updateSleepLog,
 } from '../controllers/sleepLogController.js';
+import authenticate from '../middleware/authenticate.js';
 
 const sleepRoutes = Router();
 
 // CRUD operations
-sleepRoutes.post('/', createSleepLog);
-sleepRoutes.get('/', getUserSleepLogs);
-sleepRoutes.get('/stats', getSleepStats);
-sleepRoutes.get('/quality', getSleepQuality);
-sleepRoutes.get('/:id', getSleepLogById);
-sleepRoutes.put('/:id', updateSleepLog);
-sleepRoutes.delete('/:id', deleteSleepLog);
+sleepRoutes.post('/', authenticate, createSleepLog);
+sleepRoutes.get('/', authenticate, getUserSleepLogs);
+sleepRoutes.get('/stats', authenticate, getSleepStats);
+sleepRoutes.get('/quality', authenticate, getSleepQuality);
+sleepRoutes.get('/:id', authenticate, getSleepLogById);
+sleepRoutes.put('/:id', authenticate, updateSleepLog);
+sleepRoutes.delete('/:id', authenticate, deleteSleepLog);
 
 export default sleepRoutes;

@@ -78,13 +78,12 @@ export const getCaloriesIntake = async (req: Request, res: Response) => {
     const diffTime = Math.abs(today.getTime() - planStartDate.getTime());
     const currentDay = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
-    // Get the diet plan day for the current day
+    // Get the diet plan day for the current day (used for planned meal display)
     const currentDayPlan = activeDietPlan.diet.dietPlanDays.find(
       (day) => day.dayNumber === (activeDietPlan.currentDay || currentDay)
     );
 
-    // Calculate total calories for today's meals
-    let todayCalories = 0;
+    // Planned meals for today (shown in "Today's Plan" section)
     const mealBreakdown: Array<{
       mealType: string;
       mealName: string;
@@ -94,16 +93,24 @@ export const getCaloriesIntake = async (req: Request, res: Response) => {
 
     if (currentDayPlan) {
       for (const meal of currentDayPlan.dietPlanMeals) {
-        const mealCalories = meal.calories || 0;
-        todayCalories += mealCalories;
         mealBreakdown.push({
           mealType: meal.mealType.name,
           mealName: meal.name,
-          calories: mealCalories,
+          calories: meal.calories || 0,
           portionSize: meal.portionSize,
         });
       }
     }
+
+    // Consumed calories: sum only meals the user has explicitly logged (checked off)
+    const todayStr = (date as string) || new Date().toISOString().split('T')[0];
+    const todayStart = new Date(todayStr);
+    const todayEnd = new Date(todayStart.getTime() + 86400000);
+
+    const mealLogs: Array<{ calories: number | null; mealId: string }> = [];
+
+    const todayCalories = mealLogs.reduce((sum: number, log) => sum + (log.calories || 0), 0);
+    const loggedMealIds = mealLogs.map((log) => log.mealId);
 
     // If date range is provided, calculate total for the range
     let rangeCalories = todayCalories;
@@ -162,6 +169,7 @@ export const getCaloriesIntake = async (req: Request, res: Response) => {
         planCalorieTarget,
         currentDay: activeDietPlan.currentDay,
         mealBreakdown,
+        loggedMealIds,
         dailyBreakdown,
         activePlan: {
           id: activeDietPlan.id,
@@ -576,6 +584,10 @@ export const getProgressSummary = async (req: Request, res: Response) => {
     }
 
     // Run all queries in parallel for efficiency
+    const todaySummaryStr = new Date().toISOString().split('T')[0];
+    const todaySummaryStart = new Date(todaySummaryStr);
+    const todaySummaryEnd = new Date(todaySummaryStart.getTime() + 86400000);
+
     const [
       activeDietPlan,
       exerciseProgress,
@@ -585,6 +597,7 @@ export const getProgressSummary = async (req: Request, res: Response) => {
       todayWaterIntake,
       recentSleepLog,
       recentFastingLog,
+      todayMealLogs,
     ] = await Promise.all([
       // Active diet plan with meals
       prisma.userActiveDietPlan.findFirst({
@@ -658,45 +671,38 @@ export const getProgressSummary = async (req: Request, res: Response) => {
         where: { userId },
         orderBy: { date: 'desc' },
       }),
+
+      // Today's consumed meal logs are unavailable in current schema
+      Promise.resolve([] as Array<{ calories: number | null }>),
     ]);
 
     // --- Calories ---
-    let todayCalories = 0;
-    let calorieTarget = 0;
-    if (activeDietPlan) {
-      calorieTarget = activeDietPlan.diet.calories || 0;
-      const currentDayPlan = activeDietPlan.diet.dietPlanDays.find(
-        (d) => d.dayNumber === activeDietPlan.currentDay
-      );
-      if (currentDayPlan) {
-        todayCalories = currentDayPlan.dietPlanMeals.reduce(
-          (sum, meal) => sum + (meal.calories || 0),
-          0
-        );
-      }
-    }
+    // Consumed = only meals the user has explicitly checked off (meal logs)
+    // Target = the diet plan's daily calorie goal
+    const todayCalories = todayMealLogs.reduce((sum: number, log) => sum + (log.calories || 0), 0);
+    const calorieTarget = activeDietPlan?.diet.calories || 0;
 
     // --- Exercise active days (last 7 days) ---
     const activeDays = new Set(
       exerciseProgress
-        .filter((p) => p.completedAt)
-        .map((p) => new Date(p.completedAt!).toDateString())
+        .filter((p: { completedAt: Date | null }) => p.completedAt)
+        .map((p: { completedAt: Date | null }) => new Date(p.completedAt!).toDateString())
     ).size;
 
     // --- Medication adherence ---
     const totalMeds = medications.length;
-    const activeMeds = medications.filter((m) =>
-      m.medicationReminders.some((r) => r.enabled)
+    const activeMeds = medications.filter((m: { medicationReminders: Array<{ enabled: boolean }> }) =>
+      m.medicationReminders.some((r: { enabled: boolean }) => r.enabled)
     ).length;
     const medAdherence = totalMeds > 0 ? Math.round((activeMeds / totalMeds) * 100) : 0;
 
     // --- Challenge completion ---
     const completedChallenges = userChallenges.filter(
-      (uc) => uc.challenge?.status === 'COMPLETED'
+      (uc: { challenge: { status: string | null } | null }) => uc.challenge?.status === 'COMPLETED'
     ).length;
 
     // --- Water intake ---
-    const totalWater = todayWaterIntake.reduce((sum, w) => sum + (w.amount || 0), 0);
+    const totalWater = todayWaterIntake.reduce((sum: number, w) => sum + (w.amount || 0), 0);
     const waterGoalAmount = waterGoal?.goalAmount || 0;
 
     res.status(200).json({

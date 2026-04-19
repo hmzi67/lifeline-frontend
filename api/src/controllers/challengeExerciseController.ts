@@ -1,19 +1,19 @@
 import { PrismaClient } from '@prisma/client';
-import { z } from 'zod';
 import { Request, Response } from 'express';
-import { AppError, sendResponse, handleError } from '../utils/responseHandler.js';
+import { z } from 'zod';
+import { AppError, handleError, sendResponse } from '../utils/responseHandler.js';
 
 const prisma = new PrismaClient();
 
 // ---- Validation Schemas ----
 const challengeExerciseSchema = z.object({
-  challengeId: z.string().uuid('Invalid challenge ID format'),
-  exerciseId: z.string().uuid('Invalid exercise ID format'),
+  challengeId: z.string().min(1, 'Challenge ID is required'),
+  exerciseId: z.string().min(1, 'Exercise ID is required'),
 });
 
 const multipleExercisesSchema = z.object({
-  challengeId: z.string().uuid('Invalid challenge ID format'),
-  exerciseIds: z.array(z.string().uuid('Invalid exercise ID format')),
+  challengeId: z.string().min(1, 'Challenge ID is required'),
+  exerciseIds: z.array(z.string().min(1, 'Exercise ID is required')),
 });
 
 // ---- Common Prisma Include ----
@@ -28,8 +28,8 @@ const challengeExerciseInclude = {
 const validateIds = (challengeId: string, exerciseId: string) => {
   try {
     return {
-      challengeId: z.string().uuid().parse(challengeId),
-      exerciseId: z.string().uuid().parse(exerciseId),
+      challengeId: z.string().min(1).parse(challengeId),
+      exerciseId: z.string().min(1).parse(exerciseId),
     };
   } catch {
     throw new AppError('Invalid ID format', 400);

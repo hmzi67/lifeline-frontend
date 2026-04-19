@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { Request, Response } from 'express';
 
 const prisma = new PrismaClient();
 
@@ -47,12 +47,39 @@ export const getUserFavoriteMeditations = async (req: Request, res: Response): P
 // Add meditation to favorites
 export const addFavoriteMeditation = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { userId, sessionId } = req.body;
+    // Support both meditationId (from frontend) and sessionId (legacy)
+    const { meditationId, sessionId: bodySessionId } = req.body;
+    const userId = (req as any).user?.id || req.body.userId;
 
-    if (!userId || !sessionId) {
+    if (!userId) {
+      res.status(401).json({
+        success: false,
+        message: 'Authentication required'
+      });
+      return;
+    }
+
+    let resolvedSessionId = bodySessionId;
+
+    // If meditationId provided instead of sessionId, find or create a session
+    if (!resolvedSessionId && meditationId) {
+      const meditation = await prisma.meditation.findUnique({ where: { id: meditationId } });
+      if (!meditation) {
+        res.status(404).json({ success: false, message: 'Meditation not found' });
+        return;
+      }
+      // Find existing session for this meditation, or create one
+      let session = await prisma.meditationSession.findFirst({ where: { meditationId } });
+      if (!session) {
+        session = await prisma.meditationSession.create({ data: { meditationId } });
+      }
+      resolvedSessionId = session.id;
+    }
+
+    if (!resolvedSessionId) {
       res.status(400).json({
         success: false,
-        message: 'User ID and session ID are required'
+        message: 'Either meditationId or sessionId is required'
       });
       return;
     }
@@ -72,7 +99,7 @@ export const addFavoriteMeditation = async (req: Request, res: Response): Promis
 
     // Verify session exists
     const session = await prisma.meditationSession.findUnique({
-      where: { id: sessionId }
+      where: { id: resolvedSessionId }
     });
 
     if (!session) {
@@ -87,14 +114,14 @@ export const addFavoriteMeditation = async (req: Request, res: Response): Promis
     const existingFavorite = await prisma.userFavoriteMeditation.findFirst({
       where: {
         userId,
-        sessionId
+        sessionId: resolvedSessionId
       }
     });
 
     if (existingFavorite) {
       res.status(400).json({
         success: false,
-        message: 'Meditation session is already in favorites'
+        message: 'Meditation is already in favorites'
       });
       return;
     }
@@ -102,7 +129,7 @@ export const addFavoriteMeditation = async (req: Request, res: Response): Promis
     const favorite = await prisma.userFavoriteMeditation.create({
       data: {
         userId,
-        sessionId,
+        sessionId: resolvedSessionId,
         favoritedAt: new Date()
       },
       include: {
