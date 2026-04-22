@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { config } from '../config';
 
 // Create axios instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+  baseURL: config.apiUrl,
   withCredentials: true, // Needed to send refresh token cookie
 });
 
@@ -45,23 +46,28 @@ api.interceptors.response.use(
     }
 
     // Prevent infinite loops
+    if (originalRequest.url === '/auth/refresh-token') {
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        // Call your refresh endpoint (must be set up server-side)
-        const res = await api.post('/auth/refresh');
-        const newAccessToken = res.data.accessToken;
+        const res = await api.post('/auth/refresh-token');
+        const newAccessToken = res.data?.data?.accessToken;
 
-        // Save new access token
-        localStorage.setItem('access_token', newAccessToken);
+        if (!newAccessToken) {
+          throw new Error('Invalid token refresh response from server.');
+        }
+
+        localStorage.setItem('token', newAccessToken);
 
         // Update Authorization header and retry original request
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        // Optionally, logout user here
-        localStorage.removeItem('access_token');
+        localStorage.removeItem('token');
         window.location.href = '/login'; // or any logout logic
         return Promise.reject(refreshError);
       }
