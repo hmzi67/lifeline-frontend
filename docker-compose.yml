@@ -28,7 +28,7 @@ services:
       dockerfile: Dockerfile
     container_name: lifeline_api
     environment:
-     
+    
     depends_on:
       postgres:
         condition: service_healthy
