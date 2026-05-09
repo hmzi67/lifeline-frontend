@@ -8,7 +8,7 @@
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "postinstall": "npm run build && prisma generate",
+    "postinstall": "",
     "build:prod": "tsc && node dist/server.js",
     "test": "jest",
     "test:watch": "jest --watch",
