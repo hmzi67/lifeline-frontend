@@ -655,8 +655,8 @@ export const getProgressSummary = async (req: Request, res: Response) => {
         where: {
           userId,
           date: {
-            gte: new Date(new Date().toISOString().split('T')[0]),
-            lt: new Date(new Date(Date.now() + 86400000).toISOString().split('T')[0]),
+             gte: new Date(new Date().toISOString().split('T')[0] + 'T00:00:00Z'),
+             lt: new Date(new Date(Date.now() + 86400000).toISOString().split('T')[0] + 'T00:00:00Z'),
           },
         },
       }),

@@ -73,10 +73,13 @@ class WaterIntakeController {
         return;
       }
 
+      // Default to today's date if not provided
+      const logDate = date ? new Date(date) : new Date(new Date().toISOString().split('T')[0]);
+
       const waterIntake = await prisma.waterIntakeLog.create({
         data: {
           userId: resolvedUserId,
-          date: date ? new Date(date) : null,
+           date: logDate,
           timeStart: timeStart
             ? new Date(`1970-01-01T${timeStart}:00.000Z`)
             : null,
