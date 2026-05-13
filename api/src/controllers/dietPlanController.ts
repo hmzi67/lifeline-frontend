@@ -155,7 +155,8 @@ export const getAllDietPlans = async (req: Request, res: Response): Promise<void
       });
 
       if (questionnaire) {
-        const goal = normalizeText(questionnaire.goal);
+        // Keep goal in original format for keyword lookup, only normalize for text matching
+        const rawGoal = questionnaire.goal;
         const selectedCuisine = normalizeText(questionnaire.dietType?.[0]);
 
         const weightKg = toKg(questionnaire.weight, questionnaire.weightUnit);
@@ -169,8 +170,27 @@ export const getAllDietPlans = async (req: Request, res: Response): Promise<void
           }
         }
 
-        if (goal) {
-          const goalKeywords = GOAL_KEYWORDS[goal] || [goal];
+        if (rawGoal) {
+          // Normalize the goal for keyword lookup (convert underscores/hyphens to spaces)
+          const normalizedGoalForLookup = normalizeText(rawGoal);
+          // Try to find a matching key in GOAL_KEYWORDS by normalizing all keys
+          let goalKeywords = GOAL_KEYWORDS[rawGoal];
+          
+          if (!goalKeywords) {
+            // If exact match fails, try to find by matching normalized versions
+            for (const [key, keywords] of Object.entries(GOAL_KEYWORDS)) {
+              if (normalizeText(key) === normalizedGoalForLookup) {
+                goalKeywords = keywords;
+                break;
+              }
+            }
+          }
+          
+          if (!goalKeywords) {
+            // Fallback to using normalized goal as keyword
+            goalKeywords = [normalizedGoalForLookup];
+          }
+
           const byGoal = personalizedDietPlans.filter((plan) => {
             const planText = buildPlanSearchText(plan);
             return includesAnyKeyword(planText, goalKeywords);

@@ -225,10 +225,14 @@ async function seedExercisePlanSchedules(weekIds: string[], exerciseIds: string[
 async function seedDietPlans() {
   log('10 / Diet Plans');
   const defs = [
-    { name: 'Weight Loss Plan',  calories: 1500, duration: '30 days', description: 'Caloric deficit diet for sustainable weight loss',   image: 'https://example.com/weightloss-diet.jpg' },
-    { name: 'Muscle Gain Plan',  calories: 2800, duration: '60 days', description: 'High-protein diet for muscle hypertrophy',           image: 'https://example.com/muscle-diet.jpg'     },
-    { name: 'Clean Eating Plan', calories: 2000, duration: '30 days', description: 'Whole-foods balanced nutrition for maintenance',     image: 'https://example.com/clean-diet.jpg'      },
-    { name: 'Keto Plan',         calories: 1800, duration: '30 days', description: 'Low-carb, high-fat ketogenic diet',                  image: 'https://example.com/keto-diet.jpg'       },
+    { name: 'Weight Loss Plan - Traditional Cuisine (Overweight)', calories: 1500, duration: '30 days', description: 'Caloric deficit diet for sustainable weight loss - Traditional cuisine for overweight BMI category',   image: 'https://example.com/weightloss-traditional.jpg',    cuisineName: 'traditional' },
+    { name: 'Weight Loss Plan - Keto (Overweight)',            calories: 1600, duration: '30 days', description: 'Low-carb ketogenic approach for weight loss in overweight category',                               image: 'https://example.com/weightloss-keto.jpg',          cuisineName: 'keto' },
+    { name: 'Weight Loss Plan - Mediterranean (Overweight)',   calories: 1700, duration: '30 days', description: 'Mediterranean diet for sustainable weight loss in overweight BMI range',                         image: 'https://example.com/weightloss-mediterranean.jpg', cuisineName: 'mediterranean' },
+    { name: 'Weight Loss Plan - Balanced (Normal Weight)',    calories: 1800, duration: '30 days', description: 'Balanced weight loss plan for normal weight BMI category',                                     image: 'https://example.com/weightloss-balanced.jpg',      cuisineName: 'balanced' },
+    { name: 'Muscle Gain Plan - High Protein',                calories: 2800, duration: '60 days', description: 'High-protein diet for muscle hypertrophy and muscle gain',                                      image: 'https://example.com/muscle-diet.jpg',              cuisineName: 'high_protein' },
+    { name: 'Maintenance Plan - Balanced Nutrition',           calories: 2000, duration: '30 days', description: 'Whole-foods balanced nutrition for maintenance of healthy weight',                             image: 'https://example.com/maintenance-diet.jpg',         cuisineName: 'balanced' },
+    { name: 'Weight Loss Plan - Intermittent Fasting',         calories: 1500, duration: '45 days', description: 'Intermittent fasting approach for sustainable weight loss',                                      image: 'https://example.com/weightloss-if.jpg',            cuisineName: 'intermittent_fasting' },
+    { name: 'Muscle Gain Plan - Balanced',                     calories: 3000, duration: '60 days', description: 'Balanced muscle gain diet with adequate macro nutrients',                                      image: 'https://example.com/muscle-balanced.jpg',          cuisineName: 'balanced' },
   ];
 
   const created = [];
