@@ -122,6 +122,11 @@ async function seedExercises() {
     { name: 'Burpees',          purpose: 'cardio',   difficulty: 'intermediate', caloriesBurnEstimate: 450, duration: '20 min', videoUrl: 'https://example.com/burpees.mp4',          image: 'https://example.com/burpees.jpg',          description: 'Full body high-intensity exercise' },
     { name: 'Lunges',           purpose: 'strength', difficulty: 'beginner',     caloriesBurnEstimate: 240, duration: '30 min', videoUrl: 'https://example.com/lunges.mp4',           image: 'https://example.com/lunges.jpg',           description: 'Single-leg strength and balance exercise' },
     { name: 'Mountain Climbers',purpose: 'cardio',   difficulty: 'intermediate', caloriesBurnEstimate: 420, duration: '20 min', videoUrl: 'https://example.com/mountainclimbers.mp4', image: 'https://example.com/mountainclimbers.jpg', description: 'Core and cardio combination drill' },
+    { name: 'Jump Rope',        purpose: 'cardio',   difficulty: 'beginner',     caloriesBurnEstimate: 380, duration: '20 min', videoUrl: 'https://example.com/jumprope.mp4',         image: 'https://example.com/jumprope.jpg',         description: 'Rhythmic cardio drill that improves coordination and endurance' },
+    { name: 'Romanian Deadlift', purpose: 'strength', difficulty: 'intermediate', caloriesBurnEstimate: 290, duration: '35 min', videoUrl: 'https://example.com/romaniandeadlift.mp4', image: 'https://example.com/romaniandeadlift.jpg', description: 'Posterior chain strength exercise focused on hamstrings and glutes' },
+    { name: 'Overhead Press',   purpose: 'strength', difficulty: 'intermediate', caloriesBurnEstimate: 220, duration: '30 min', videoUrl: 'https://example.com/overheadpress.mp4',    image: 'https://example.com/overheadpress.jpg',    description: 'Vertical pressing movement for shoulders and upper body strength' },
+    { name: 'Bicycle Crunches', purpose: 'core',     difficulty: 'beginner',     caloriesBurnEstimate: 180, duration: '15 min', videoUrl: 'https://example.com/bicyclecrunches.mp4',   image: 'https://example.com/bicyclecrunches.jpg',   description: 'Dynamic core movement targeting obliques and abdominal endurance' },
+    { name: 'Rowing Machine',   purpose: 'cardio',   difficulty: 'beginner',     caloriesBurnEstimate: 400, duration: '25 min', videoUrl: 'https://example.com/rowingmachine.mp4',    image: 'https://example.com/rowingmachine.jpg',    description: 'Low-impact full-body cardio workout for endurance and calorie burn' },
   ];
 
   const created = [];
@@ -149,6 +154,11 @@ async function seedExerciseDetails(exerciseIds: string[]) {
     { sets: 4, reps: '15',   calories: 120, timeRequired: '20 min', instructions: 'Explosive jump, land softly. Chest to floor each rep.' },
     { sets: 3, reps: '12',   calories: 55,  timeRequired: '20 min', instructions: 'Alternate legs. Keep torso upright, front knee over ankle.' },
     { sets: 3, reps: null,   calories: 90,  timeRequired: '15 min', instructions: 'Drive alternating knees to chest at maximum speed.' },
+    { sets: 5, reps: '2 min', calories: 110, timeRequired: '20 min', instructions: 'Keep wrists relaxed and jump lightly on the balls of your feet.' },
+    { sets: 4, reps: '10',   calories: 85,  timeRequired: '25 min', instructions: 'Hinge at the hips with a neutral spine and controlled descent.' },
+    { sets: 4, reps: '12',   calories: 75,  timeRequired: '20 min', instructions: 'Press straight overhead without arching the lower back.' },
+    { sets: 3, reps: '20',   calories: 65,  timeRequired: '15 min', instructions: 'Keep lower back pressed into the floor and rotate slowly.' },
+    { sets: 1, reps: null,   calories: 140, timeRequired: '25 min', instructions: 'Drive through legs, hinge at hips, and keep a smooth rowing rhythm.' },
   ];
 
   for (let i = 0; i < Math.min(exerciseIds.length, defs.length); i++) {
@@ -167,6 +177,9 @@ async function seedExercisePlans() {
     { name: 'Beginner Strength Builder',   level: 'beginner',     durationWeeks: 8,  description: '8-week foundational strength program',       image: 'https://example.com/beginner-strength.jpg' },
     { name: 'Advanced Cardio Blast',        level: 'advanced',     durationWeeks: 6,  description: '6-week HIIT and endurance cardio program',   image: 'https://example.com/advanced-cardio.jpg'   },
     { name: 'Full Body Transformation',     level: 'intermediate', durationWeeks: 12, description: '12-week complete body transformation',       image: 'https://example.com/transformation.jpg'    },
+    { name: 'Mobility & Recovery Flow',     level: 'beginner',     durationWeeks: 4,  description: '4-week mobility and recovery focused plan',  image: 'https://example.com/mobility-flow.jpg'      },
+    { name: 'Fat Loss Accelerator',         level: 'intermediate', durationWeeks: 10, description: '10-week hybrid fat loss and conditioning plan', image: 'https://example.com/fat-loss.jpg'          },
+    { name: 'Lean Muscle Builder',          level: 'intermediate', durationWeeks: 10, description: '10-week progressive lean muscle building plan', image: 'https://example.com/lean-muscle.jpg'       },
   ];
 
   const created = [];
@@ -185,7 +198,7 @@ async function seedExercisePlanWeeks(planIds: string[]) {
   log('8 / Exercise Plan Weeks');
   const created = [];
 
-  for (const planId of planIds.slice(0, 2)) {
+  for (const planId of planIds.slice(0, 3)) {
     for (let w = 1; w <= 4; w++) {
       let week = await prisma.exercisePlanWeek.findFirst({ where: { planId, weekNumber: w } });
       if (!week) week = await prisma.exercisePlanWeek.create({ data: { planId, weekNumber: w } });
@@ -205,7 +218,7 @@ async function seedExercisePlanSchedules(weekIds: string[], exerciseIds: string[
   const repsPerWeek = ['12', '10', '10', '8'];
   const durPerWeek = [30, 30, 45, 45];
 
-  for (let w = 0; w < Math.min(weekIds.length, 4); w++) {
+  for (let w = 0; w < weekIds.length; w++) {
     const weekId = weekIds[w];
     // Rotate exercises so each week starts with a different one
     for (let d = 0; d < days.length; d++) {
@@ -233,6 +246,10 @@ async function seedDietPlans() {
     { name: 'Maintenance Plan - Balanced Nutrition',           calories: 2000, duration: '30 days', description: 'Whole-foods balanced nutrition for maintenance of healthy weight',                             image: 'https://example.com/maintenance-diet.jpg',         cuisineName: 'balanced' },
     { name: 'Weight Loss Plan - Intermittent Fasting',         calories: 1500, duration: '45 days', description: 'Intermittent fasting approach for sustainable weight loss',                                      image: 'https://example.com/weightloss-if.jpg',            cuisineName: 'intermittent_fasting' },
     { name: 'Muscle Gain Plan - Balanced',                     calories: 3000, duration: '60 days', description: 'Balanced muscle gain diet with adequate macro nutrients',                                      image: 'https://example.com/muscle-balanced.jpg',          cuisineName: 'balanced' },
+    { name: 'Weight Loss Plan - High Protein (Normal Weight)', calories: 1750, duration: '30 days', description: 'High-protein fat loss plan for normal weight BMI category',                                      image: 'https://example.com/weightloss-high-protein.jpg',  cuisineName: 'high_protein' },
+    { name: 'Maintenance Plan - Mediterranean',               calories: 2100, duration: '30 days', description: 'Mediterranean maintenance plan with balanced macros',                                        image: 'https://example.com/maintenance-mediterranean.jpg', cuisineName: 'mediterranean' },
+    { name: 'Muscle Gain Plan - Traditional',                 calories: 3100, duration: '60 days', description: 'Traditional cuisine muscle gain plan with calorie surplus',                                  image: 'https://example.com/muscle-traditional.jpg',        cuisineName: 'traditional' },
+    { name: 'Weight Loss Plan - Balanced (Overweight)',       calories: 1550, duration: '30 days', description: 'Balanced calorie deficit plan for overweight BMI category',                                  image: 'https://example.com/weightloss-balanced-overweight.jpg', cuisineName: 'balanced' },
   ];
 
   const created = [];
@@ -251,7 +268,7 @@ async function seedDietPlanDays(dietPlanIds: string[]) {
   log('11 / Diet Plan Days');
   const created = [];
 
-  for (const dietId of dietPlanIds.slice(0, 2)) {
+  for (const dietId of dietPlanIds.slice(0, 4)) {
     for (let d = 1; d <= 7; d++) {
       let day = await prisma.dietPlanDay.findFirst({ where: { dietId, dayNumber: d } });
       if (!day) day = await prisma.dietPlanDay.create({ data: { dietId, dayNumber: d, notes: `Nutrition plan for day ${d}` } });
@@ -272,9 +289,11 @@ async function seedDietPlanMeals(dayIds: string[], mealTypeMap: Record<string, s
     { mealTypeKey: 'Dinner',    name: 'Salmon with Roasted Vegetables', calories: 450, portionSize: '1 serving', recipe: 'Bake salmon at 200°C for 20 min. Roast broccoli, sweet potato, and peppers with olive oil.',                    image: 'https://example.com/salmon.jpg'        },
     { mealTypeKey: 'Snack',     name: 'Greek Yogurt with Nuts',         calories: 150, portionSize: '1 cup',     recipe: 'Combine Greek yogurt with mixed nuts, a drizzle of honey, and a pinch of cinnamon.',                            image: 'https://example.com/yogurt.jpg'        },
     { mealTypeKey: 'Pre-Workout', name: 'Banana & Peanut Butter',       calories: 200, portionSize: '1 snack',   recipe: 'Slice 1 large banana. Serve with 2 tbsp natural peanut butter.',                                               image: 'https://example.com/banana-pb.jpg'     },
+    { mealTypeKey: 'Post-Workout', name: 'Protein Smoothie',            calories: 220, portionSize: '1 glass',   recipe: 'Blend protein powder, banana, oats, spinach, and unsweetened almond milk until smooth.',                        image: 'https://example.com/protein-smoothie.jpg' },
+    { mealTypeKey: 'Breakfast', name: 'Veggie Omelette',                calories: 280, portionSize: '1 plate',   recipe: 'Whisk eggs with vegetables and cook in a non-stick pan until set.',                                             image: 'https://example.com/veggie-omelette.jpg' },
   ];
 
-  for (const dayId of dayIds.slice(0, 7)) {
+  for (const dayId of dayIds) {
     for (const meal of meals) {
       const mealTypeId = mealTypeMap[meal.mealTypeKey];
       if (!mealTypeId) continue;
@@ -300,6 +319,9 @@ async function seedMeditations() {
     { name: '4-7-8 Breathing Technique', type: 'breathing',     description: 'Reduce anxiety and stress via controlled breathing',       image: 'https://example.com/breathing.jpg',  soundUrl: 'https://example.com/478-breathing.mp3'       },
     { name: 'Body Scan Meditation',      type: 'body_scan',     description: 'Full body awareness with progressive muscle relaxation',   image: 'https://example.com/bodyscan.jpg',   soundUrl: 'https://example.com/body-scan.mp3'           },
     { name: 'Stress Relief Meditation',  type: 'stress_relief', description: 'Release daily stress and cultivate lasting inner peace',   image: 'https://example.com/stress.jpg',     soundUrl: 'https://example.com/stress-relief.mp3'       },
+    { name: 'Evening Gratitude',          type: 'mindfulness',   description: 'Close the day with gratitude and calm reflection',         image: 'https://example.com/evening-gratitude.jpg', soundUrl: 'https://example.com/evening-gratitude.mp3' },
+    { name: 'Focus Reset',                type: 'mindfulness',   description: 'Short reset to improve concentration and mental clarity',  image: 'https://example.com/focus-reset.jpg',      soundUrl: 'https://example.com/focus-reset.mp3'        },
+    { name: 'Sleepy Breathing',           type: 'sleep',         description: 'Gentle breathing audio to unwind before bed',              image: 'https://example.com/sleepy-breathing.jpg', soundUrl: 'https://example.com/sleepy-breathing.mp3'   },
   ];
 
   const created = [];
@@ -341,6 +363,9 @@ async function seedChallenges() {
     { name: '30-Day Push-Up Challenge',    purpose: 'strength', description: 'Build upper body strength progressively over 30 days',  status: 'active' },
     { name: '7-Day Hydration Challenge',   purpose: 'wellness', description: 'Drink 2.5L of water every day for 7 days',              status: 'active' },
     { name: 'Plank Progression Challenge', purpose: 'core',     description: 'Increase plank hold duration daily over 14 days',       status: 'active' },
+    { name: '15-Day Step Count Challenge', purpose: 'wellness', description: 'Hit a daily step target to improve activity levels',      status: 'active' },
+    { name: '21-Day Mobility Challenge',   purpose: 'recovery', description: 'Improve flexibility and reduce stiffness over 21 days',  status: 'active' },
+    { name: 'Morning Routine Challenge',   purpose: 'habit',    description: 'Build a consistent healthy morning routine',             status: 'active' },
   ];
 
   const created = [];
@@ -422,6 +447,27 @@ async function seedBlogs(adminUserId: string) {
       coverImage: 'https://example.com/morning-routine.jpg',
       excerpt: 'Build a morning routine that sets you up for peak health and productivity every day.',
       content: 'A consistent morning routine is the cornerstone of sustainable high performance. The non-negotiables: 1. Wake at the same time every day — including weekends. Circadian consistency improves sleep quality measurably. 2. Hydrate immediately — drink 500ml water before coffee. Overnight dehydration impairs cognition. 3. 10 minutes of movement or stretching — activates metabolism and reduces joint stiffness. 4. Protein-rich breakfast (30g+) — stabilizes blood sugar and supports muscle retention. 5. Review your top 3 daily priorities before opening email. Avoid your phone for the first 30 minutes. Build one habit at a time — habit formation takes an average of 66 days, not 21.',
+    },
+    {
+      title: 'Hydration Mistakes That Sabotage Your Progress', slug: 'hydration-mistakes-progress', status: 'published',
+      categoryId: catMap['Nutrition'], authorId: adminUserId,
+      coverImage: 'https://example.com/hydration-mistakes.jpg',
+      excerpt: 'Small hydration mistakes can make your daily water goals harder to reach than they need to be.',
+      content: 'Hydration is more than just hitting a number. Common mistakes include drinking too much at once, waiting until you feel thirsty, and ignoring electrolytes after long workouts. Spread intake across the day, pair water with meals, and track your intake against a consistent goal. If you train heavily or live in a hot climate, your needs may be higher than the default target.',
+    },
+    {
+      title: 'A Practical Guide to Meal Prep for Busy Weeks', slug: 'meal-prep-busy-weeks', status: 'published',
+      categoryId: catMap['Fitness'], authorId: adminUserId,
+      coverImage: 'https://example.com/meal-prep.jpg',
+      excerpt: 'Meal prep can make healthy eating much easier during busy weeks.',
+      content: 'Start with one protein, one carb, and two vegetables for each prep session. Batch-cook sauces and use simple seasonings so meals stay interesting. Keep a few flexible snack options ready for low-energy days. Consistency beats complexity when the goal is to stay aligned with a diet plan.',
+    },
+    {
+      title: 'Why Recovery Matters as Much as Training', slug: 'why-recovery-matters', status: 'published',
+      categoryId: catMap['Fitness'], authorId: adminUserId,
+      coverImage: 'https://example.com/recovery.jpg',
+      excerpt: 'Recovery is where adaptation happens, not just in the workout itself.',
+      content: 'Training creates the stimulus, but recovery builds the result. Sleep, hydration, nutrition, and mobility work all contribute to better adaptation. If progress stalls, look first at recovery quality before increasing workout volume.',
     },
   ];
 
@@ -537,6 +583,8 @@ async function seedWaterIntakeLogs(userId: string) {
     { amount: 400, drinkType: 'herbal_tea', timeStart: '15:00', timeEnd: '15:10', notes: 'Afternoon herbal tea'        },
     { amount: 700, drinkType: 'water',      timeStart: '18:00', timeEnd: '19:00', notes: 'Post-workout rehydration'    },
     { amount: 300, drinkType: 'water',      timeStart: '21:00', timeEnd: '21:10', notes: 'Evening glass before sleep'  },
+    { amount: 450, drinkType: 'water',      timeStart: '08:30', timeEnd: '08:40', notes: 'Between breakfast and work'   },
+    { amount: 350, drinkType: 'electrolyte', timeStart: '14:15', timeEnd: '14:25', notes: 'Hydration after walking'      },
   ];
 
   const date = new Date('2026-03-01');
@@ -561,6 +609,8 @@ async function seedFastingLogs(userId: string) {
     { date: '2026-03-03', timeStart: '20:00', timeEnd: '11:00', durationMinutes: 900 },
     { date: '2026-03-04', timeStart: '20:30', timeEnd: '12:30', durationMinutes: 960 },
     { date: '2026-03-05', timeStart: '21:00', timeEnd: '13:00', durationMinutes: 960 },
+    { date: '2026-03-06', timeStart: '20:15', timeEnd: '12:15', durationMinutes: 960 },
+    { date: '2026-03-07', timeStart: '19:45', timeEnd: '11:45', durationMinutes: 960 },
   ];
 
   const created = [];
@@ -586,6 +636,8 @@ async function seedSleepLogs(userId: string) {
     { date: '2026-03-05', timeStart: '22:15', timeEnd: '06:45', durationMinutes: 510, sleepQuality: 'good'      },
     { date: '2026-03-06', timeStart: '22:00', timeEnd: '07:00', durationMinutes: 540, sleepQuality: 'excellent' },
     { date: '2026-03-07', timeStart: '23:30', timeEnd: '07:30', durationMinutes: 480, sleepQuality: 'good'      },
+    { date: '2026-03-08', timeStart: '22:45', timeEnd: '06:45', durationMinutes: 480, sleepQuality: 'good'      },
+    { date: '2026-03-09', timeStart: '23:15', timeEnd: '06:15', durationMinutes: 420, sleepQuality: 'fair'      },
   ];
 
   const created = [];
@@ -608,6 +660,8 @@ async function seedMedications(userId: string) {
     { name: 'Omega-3 Fish Oil',    quantity: 2, dose: '1000mg',  frequency: 'daily', reminderTime: timeOf('21:00'), icon: '💊', appearanceColor: '#FFA500', appearanceIcon: 'capsule' },
     { name: 'Magnesium Glycinate', quantity: 1, dose: '400mg',   frequency: 'daily', reminderTime: timeOf('22:00'), icon: '💊', appearanceColor: '#9B59B6', appearanceIcon: 'tablet'  },
     { name: 'Vitamin B12',         quantity: 1, dose: '500mcg',  frequency: 'daily', reminderTime: timeOf('08:00'), icon: '💊', appearanceColor: '#E74C3C', appearanceIcon: 'tablet'  },
+    { name: 'Probiotic Complex',   quantity: 1, dose: '1 capsule',frequency: 'daily', reminderTime: timeOf('07:30'), icon: '💊', appearanceColor: '#2ECC71', appearanceIcon: 'capsule' },
+    { name: 'Iron Supplement',     quantity: 1, dose: '65mg',     frequency: 'daily', reminderTime: timeOf('13:00'), icon: '💊', appearanceColor: '#34495E', appearanceIcon: 'tablet'  },
   ];
 
   const created = [];
@@ -687,6 +741,8 @@ async function seedQuestionnaires(users: Array<{ id: string }>) {
     { gender: 'male',       goal: 'weight_loss', dietType: ['balanced'],     isDiabetic: false, allergenFood: [],        fitnessLevel: 'intermediate', typicalDayType: 'moderately_active', physicalLimitations: 'none',       bodyFocusArea: ['belly', 'arms'],  dateOfBirth: new Date('1990-05-15'), height: 178, heightUnit: 'cm', weight: 80, weightUnit: 'kg', goalWeight: 72, motivationFor: 'health'     },
     { gender: 'female',     goal: 'muscle_gain', dietType: ['high_protein'], isDiabetic: false, allergenFood: ['gluten'],fitnessLevel: 'beginner',     typicalDayType: 'lightly_active',    physicalLimitations: 'none',       bodyFocusArea: ['legs', 'glutes'], dateOfBirth: new Date('1992-08-22'), height: 165, heightUnit: 'cm', weight: 62, weightUnit: 'kg', goalWeight: 65, motivationFor: 'aesthetics' },
     { gender: 'non_binary', goal: 'maintenance', dietType: ['vegetarian'],   isDiabetic: false, allergenFood: ['nuts'],  fitnessLevel: 'intermediate', typicalDayType: 'very_active',       physicalLimitations: 'knee pain',  bodyFocusArea: ['core', 'back'],   dateOfBirth: new Date('1988-11-03'), height: 172, heightUnit: 'cm', weight: 71, weightUnit: 'kg', goalWeight: 71, motivationFor: 'wellbeing'  },
+    { gender: 'male',       goal: 'weight_loss', dietType: ['keto'],         isDiabetic: false, allergenFood: [],        fitnessLevel: 'advanced',       typicalDayType: 'very_active',       physicalLimitations: 'none',       bodyFocusArea: ['chest', 'back'],  dateOfBirth: new Date('1985-02-11'), height: 182, heightUnit: 'cm', weight: 95, weightUnit: 'kg', goalWeight: 82, motivationFor: 'performance' },
+    { gender: 'female',     goal: 'maintenance', dietType: ['mediterranean'], isDiabetic: false, allergenFood: ['dairy'],fitnessLevel: 'beginner',       typicalDayType: 'moderately_active', physicalLimitations: 'none',       bodyFocusArea: ['legs', 'core'],   dateOfBirth: new Date('1995-12-05'), height: 168, heightUnit: 'cm', weight: 66, weightUnit: 'kg', goalWeight: 66, motivationFor: 'energy' },
   ];
 
   for (let i = 0; i < Math.min(users.length, templates.length); i++) {
@@ -791,6 +847,8 @@ async function seedProgressDashboardDataForUser(userId: string, exercisePlanIds:
     { amount: 550, timeStart: '11:00', timeEnd: '11:10', drinkType: 'water', notes: 'Midday hydration' },
     { amount: 700, timeStart: '15:30', timeEnd: '15:45', drinkType: 'water', notes: 'Afternoon bottle' },
     { amount: 500, timeStart: '20:30', timeEnd: '20:40', drinkType: 'water', notes: 'Evening hydration' },
+    { amount: 450, timeStart: '09:15', timeEnd: '09:25', drinkType: 'water', notes: 'Between meetings' },
+    { amount: 400, timeStart: '17:45', timeEnd: '17:55', drinkType: 'electrolyte', notes: 'After walk' },
   ];
 
   for (const entry of waterEntries) {
