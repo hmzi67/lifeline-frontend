@@ -1,35 +1,38 @@
-# Use Node.js 20 as base image
+# Use Node.js 20 (Debian-based, Prisma compatible)
 FROM node:20-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy package files first for better caching
+# Install system dependencies (required for Prisma + OpenSSL)
+RUN apt-get update && apt-get install -y openssl
+
+# Copy package files first (better caching)
 COPY package*.json ./
 
-# Install dependencies (skip postinstall scripts during install)
-RUN npm install --ignore-scripts
+# Install dependencies (NO build here)
+RUN npm install
 
-# Copy source code
+# Copy full source code (IMPORTANT: Prisma schema must exist before generate)
 COPY . .
 
-# Ensure proper permissions
-RUN chown -R node:node /app
+# Generate Prisma client (now schema exists)
+RUN npx prisma generate
 
-# Switch to node user for security
-USER node
+# Build TypeScript project
+RUN npm run build
 
-# Run build and prisma generate manually
-RUN npm run build && npx prisma generate
-
-# Create necessary directories
+# Create runtime directories
 RUN mkdir -p uploads logs
 
-# Switch back to root for port binding
-USER root
+# Fix permissions (safe for production containers)
+RUN chown -R node:node /app
 
-# Expose port
+# Switch to non-root user
+USER node
+
+# Expose API port
 EXPOSE 3000
 
-# Start the application
+# Start app
 CMD ["npm", "start"]
