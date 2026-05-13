@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
+import { DEFAULT_WATER_GOAL_UNIT, getDefaultWaterGoalAmount } from '../utils/waterGoal.js';
 
 const prisma = new PrismaClient();
 
@@ -703,7 +704,7 @@ export const getProgressSummary = async (req: Request, res: Response) => {
 
     // --- Water intake ---
     const totalWater = todayWaterIntake.reduce((sum: number, w) => sum + (w.amount || 0), 0);
-    const waterGoalAmount = waterGoal?.goalAmount || 0;
+    const waterGoalAmount = waterGoal?.goalAmount || (await getDefaultWaterGoalAmount(prisma));
 
     res.status(200).json({
       success: true,
@@ -732,7 +733,7 @@ export const getProgressSummary = async (req: Request, res: Response) => {
         waterIntake: {
           today: totalWater,
           goal: waterGoalAmount,
-          unit: waterGoal?.unit || 'ml',
+          unit: waterGoal?.unit || DEFAULT_WATER_GOAL_UNIT,
           percentage: waterGoalAmount > 0 ? Math.round((totalWater / waterGoalAmount) * 100) : 0,
         },
         sleep: recentSleepLog

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { DEFAULT_WATER_GOAL_UNIT, getDefaultWaterGoalAmount } from '../utils/waterGoal.js';
 
 const prisma = new PrismaClient();
 
@@ -7,6 +8,23 @@ const prisma = new PrismaClient();
 export const getUserWaterGoal = async (req: Request, res: Response): Promise<void> => {
   try {
     const { userId } = req.params;
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        username: true
+      }
+    });
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+      return;
+    }
 
     const waterGoal = await prisma.userWaterGoal.findFirst({
       where: { userId },
@@ -25,9 +43,19 @@ export const getUserWaterGoal = async (req: Request, res: Response): Promise<voi
     });
 
     if (!waterGoal) {
-      res.status(404).json({
-        success: false,
-        message: 'No water goal found for this user'
+      const defaultGoalAmount = await getDefaultWaterGoalAmount(prisma);
+
+      res.status(200).json({
+        success: true,
+        data: {
+          id: null,
+          userId,
+          goalAmount: defaultGoalAmount,
+          unit: DEFAULT_WATER_GOAL_UNIT,
+          updatedAt: null,
+          user
+        },
+        message: 'Water goal retrieved successfully'
       });
       return;
     }
