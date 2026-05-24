@@ -86,11 +86,11 @@ waterIntakeRoutes.post("/", authenticate, validateTimeFormat, validateDateFormat
 // Get all water intake logs (with optional filtering)
 waterIntakeRoutes.get("/", authenticate, waterIntakeController.getAllWaterIntakes);
 
-// Get water intake log by ID
-waterIntakeRoutes.get("/:id", authenticate, waterIntakeController.getWaterIntakeById);
-
 // Get water intake logs by user ID
 waterIntakeRoutes.get("/user/:userId", authenticate, waterIntakeController.getWaterIntakesByUserId);
+
+// Get water intake log by ID
+waterIntakeRoutes.get("/:id", authenticate, waterIntakeController.getWaterIntakeById);
 
 // Update water intake log
 waterIntakeRoutes.put("/:id", authenticate, validateTimeFormat, validateDateFormat, waterIntakeController.updateWaterIntake);

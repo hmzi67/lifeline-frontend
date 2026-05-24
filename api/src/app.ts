@@ -20,6 +20,7 @@ import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import userRoute from './routes/userRoutes.js';
 import subscriptionPaymentRoutes from './routes/subscriptionPaymentRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
+import { handleStripeWebhook } from './controllers/paymentController.js';
 import dietPlanRoutes from './routes/dietPlanRoutes.js';
 import userDietPlanRoutes from './routes/userDietPlanRoutes.js';
 import exerciseRoutes from './routes/exerciseRoutes.js';
@@ -39,6 +40,7 @@ import blogsRoutes from './routes/blogRoutes.js';
 import mealTypeRoutes from './routes/mealTypeRoutes.js';
 import dietPlanDayRoutes from './routes/dietPlanDayRoutes.js';
 import dietPlanMealRoutes from './routes/dietPlanMealRoutes.js';
+import dietMealLogRoutes from './routes/dietMealLogRoutes.js';
 import exercisePlanRoutes from './routes/exercisePlanRoutes.js';
 import exercisePlanWeekRoutes from './routes/exercisePlanWeekRoutes.js';
 import exercisePlanScheduleRoutes from './routes/exercisePlanScheduleRoutes.js';
@@ -66,6 +68,7 @@ app.use(helmet);
 
 // Request processing middlewares
 app.use(compression);
+app.post('/api/payments/webhook', express.raw({ type: 'application/json' }), handleStripeWebhook);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/uploads', express.static(getUploadRootPath()));
@@ -167,6 +170,7 @@ app.use('/api/blogs', blogsRoutes);
 app.use('/api/meal-types', mealTypeRoutes);
 app.use('/api/diet-plan-days', dietPlanDayRoutes);
 app.use('/api/diet-plan-meals', dietPlanMealRoutes);
+app.use('/api/diet-meal-logs', dietMealLogRoutes);
 
 // Exercise plan structure routes
 app.use('/api/exercise-plans', exercisePlanRoutes);

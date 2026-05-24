@@ -4,6 +4,20 @@ import jwt from 'jsonwebtoken';
 import { DEFAULT_WATER_GOAL_UNIT, getDefaultWaterGoalAmount } from '../utils/waterGoal.js';
 
 const prisma = new PrismaClient();
+const DEFAULT_WATER_GOAL_ML = 2500;
+
+const getDefaultWaterGoal = async () => {
+  const setting = await prisma.appSetting.findFirst({
+    where: {
+      key: 'daily_water_goal_ml',
+      scope: 'user',
+    },
+  });
+
+  const parsedValue = setting?.value ? Number(setting.value) : NaN;
+
+  return Number.isFinite(parsedValue) && parsedValue > 0 ? parsedValue : DEFAULT_WATER_GOAL_ML;
+};
 
 // Helper function to get userId from token
 const getUserIdFromToken = (req: Request): string | null => {
@@ -596,6 +610,7 @@ export const getProgressSummary = async (req: Request, res: Response) => {
       userChallenges,
       waterGoal,
       todayWaterIntake,
+      defaultWaterGoalAmount,
       recentSleepLog,
       recentFastingLog,
       todayMealLogs,
@@ -655,11 +670,13 @@ export const getProgressSummary = async (req: Request, res: Response) => {
         where: {
           userId,
           date: {
-             gte: new Date(new Date().toISOString().split('T')[0] + 'T00:00:00Z'),
-             lt: new Date(new Date(Date.now() + 86400000).toISOString().split('T')[0] + 'T00:00:00Z'),
+            gte: todaySummaryStart,
+            lt: todaySummaryEnd,
           },
         },
       }),
+
+      getDefaultWaterGoal(),
 
       // Most recent sleep log
       prisma.sleepLog.findFirst({
@@ -704,7 +721,7 @@ export const getProgressSummary = async (req: Request, res: Response) => {
 
     // --- Water intake ---
     const totalWater = todayWaterIntake.reduce((sum: number, w) => sum + (w.amount || 0), 0);
-    const waterGoalAmount = waterGoal?.goalAmount || (await getDefaultWaterGoalAmount(prisma));
+    const waterGoalAmount = waterGoal?.goalAmount || defaultWaterGoalAmount;
 
     res.status(200).json({
       success: true,

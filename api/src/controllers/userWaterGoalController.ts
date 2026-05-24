@@ -1,8 +1,22 @@
-import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { DEFAULT_WATER_GOAL_UNIT, getDefaultWaterGoalAmount } from '../utils/waterGoal.js';
+import { Request, Response } from 'express';
 
 const prisma = new PrismaClient();
+
+const DEFAULT_WATER_GOAL_ML = 2500;
+
+const getDefaultWaterGoal = async () => {
+  const setting = await prisma.appSetting.findFirst({
+    where: {
+      key: 'daily_water_goal_ml',
+      scope: 'user'
+    }
+  });
+
+  const parsedValue = setting?.value ? Number(setting.value) : NaN;
+
+  return Number.isFinite(parsedValue) && parsedValue > 0 ? parsedValue : DEFAULT_WATER_GOAL_ML;
+};
 
 // Get user's water goal
 export const getUserWaterGoal = async (req: Request, res: Response): Promise<void> => {
@@ -43,7 +57,7 @@ export const getUserWaterGoal = async (req: Request, res: Response): Promise<voi
     });
 
     if (!waterGoal) {
-      const defaultGoalAmount = await getDefaultWaterGoalAmount(prisma);
+      const defaultGoalAmount = await getDefaultWaterGoal();
 
       res.status(200).json({
         success: true,
@@ -51,11 +65,11 @@ export const getUserWaterGoal = async (req: Request, res: Response): Promise<voi
           id: null,
           userId,
           goalAmount: defaultGoalAmount,
-          unit: DEFAULT_WATER_GOAL_UNIT,
+          unit: 'ml',
           updatedAt: null,
-          user
+          user: null
         },
-        message: 'Water goal retrieved successfully'
+        message: 'Default water goal retrieved successfully'
       });
       return;
     }
