@@ -690,8 +690,18 @@ export const getProgressSummary = async (req: Request, res: Response) => {
         orderBy: { date: 'desc' },
       }),
 
-      // Today's consumed meal logs are unavailable in current schema
-      Promise.resolve([] as Array<{ calories: number | null }>),
+      (prisma as any).dietMealLog.findMany({
+        where: {
+          userId,
+          date: {
+            gte: todaySummaryStart,
+            lt: todaySummaryEnd,
+          },
+        },
+        select: {
+          calories: true,
+        },
+      }) as Promise<Array<{ calories: number | null }>>,
     ]);
 
     // --- Calories ---

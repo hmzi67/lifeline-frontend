@@ -64,6 +64,15 @@ const getSubscriptionPaymentIntent = (subscription: Stripe.Subscription): Stripe
   return paymentIntent as Stripe.PaymentIntent;
 };
 
+const getSubscriptionClientSecret = (subscription: Stripe.Subscription): string | null => {
+  const invoice = (subscription as any).latest_invoice;
+  const confirmationSecret = invoice?.confirmation_secret;
+  const paymentIntent = getSubscriptionPaymentIntent(subscription);
+
+  if (confirmationSecret?.client_secret) return confirmationSecret.client_secret;
+  return paymentIntent?.client_secret || null;
+};
+
 const getCurrentPeriodEnd = (subscription: Stripe.Subscription): Date | null => {
   const periodEnd = (subscription as any).current_period_end;
   return typeof periodEnd === 'number' ? new Date(periodEnd * 1000) : null;
@@ -271,24 +280,28 @@ export const createSubscription = async (req: Request, res: Response) => {
       payment_settings: {
         save_default_payment_method: 'on_subscription',
       },
+      billing_mode: {
+        type: 'flexible',
+      },
       metadata: {
         userId,
         planId: validatedData.planId,
         planName: validatedData.planName,
       },
-      expand: ['latest_invoice.payment_intent'],
-    });
+      expand: ['latest_invoice.confirmation_secret'],
+    } as any);
 
     const paymentIntent = getSubscriptionPaymentIntent(subscription);
+    const clientSecret = getSubscriptionClientSecret(subscription);
 
-    if (!paymentIntent?.client_secret) {
+    if (!clientSecret) {
       return res.status(500).json({
         success: false,
-        message: 'Stripe did not return a payment intent for this subscription',
+        message: 'Stripe did not return a client secret for this subscription',
       });
     }
 
-    const amount = typeof price.unit_amount === 'number' ? price.unit_amount / 100 : paymentIntent.amount / 100;
+    const amount = typeof price.unit_amount === 'number' ? price.unit_amount / 100 : (paymentIntent?.amount || 0) / 100;
 
     await prisma.subscriptionPayment.create({
       data: {
@@ -300,7 +313,7 @@ export const createSubscription = async (req: Request, res: Response) => {
         createdAt: new Date(),
         stripeCustomerId: customerId,
         stripeSubscriptionId: subscription.id,
-        stripePaymentIntentId: paymentIntent.id,
+        stripePaymentIntentId: paymentIntent?.id,
         stripePriceId: priceId,
         currentPeriodEnd: getCurrentPeriodEnd(subscription),
         cancelAtPeriodEnd: !!subscription.cancel_at_period_end,
@@ -310,8 +323,8 @@ export const createSubscription = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       data: {
-        clientSecret: paymentIntent.client_secret,
-        paymentIntentId: paymentIntent.id,
+        clientSecret,
+        paymentIntentId: paymentIntent?.id || '',
         subscriptionId: subscription.id,
         customerId,
       },
@@ -350,7 +363,7 @@ export const confirmSubscriptionPayment = async (req: Request, res: Response) =>
 
     const validatedData = confirmSubscriptionSchema.parse(req.body);
     const subscription = await stripe.subscriptions.retrieve(validatedData.subscriptionId, {
-      expand: ['latest_invoice.payment_intent'],
+      expand: ['latest_invoice.confirmation_secret'],
     });
     const paymentIntent = getSubscriptionPaymentIntent(subscription);
     const paymentSucceeded = paymentIntent?.status === 'succeeded';

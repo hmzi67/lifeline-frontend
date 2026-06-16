@@ -31,7 +31,7 @@ export const createMedication = async (req: Request, res: Response) => {
       });
     }
 
-    const { name, quantity, dose, frequency, reminderTime, icon, appearanceColor, appearanceIcon } = req.body;
+    const { name, quantity, dose, frequency, reminderTime, image, icon, appearanceColor, appearanceIcon } = req.body;
 
     if (!name || !dose || !frequency) {
       return res.status(400).json({
@@ -48,11 +48,12 @@ export const createMedication = async (req: Request, res: Response) => {
         dose,
         frequency,
         reminderTime: reminderTime ? new Date(reminderTime) : null,
+        image: image || null,
         icon: icon || null,
         appearanceColor: appearanceColor || null,
         appearanceIcon: appearanceIcon || null,
         addedAt: new Date()
-      }
+      } as any
     });
 
     res.status(201).json({
@@ -193,7 +194,7 @@ export const updateMedication = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const userId = getUserIdFromToken(req);
-    const { name, quantity, dose, frequency, reminderTime, icon } = req.body;
+    const { name, quantity, dose, frequency, reminderTime, image, icon } = req.body;
 
     // First check if medication exists and belongs to user
     const existingMedication = await prisma.medication.findUnique({
@@ -222,8 +223,9 @@ export const updateMedication = async (req: Request, res: Response) => {
         dose,
         frequency,
         reminderTime: reminderTime === null ? null : (reminderTime ? new Date(reminderTime) : existingMedication.reminderTime),
+        image: image !== undefined ? image : (existingMedication as any).image,
         icon: icon !== undefined ? icon : existingMedication.icon
-      }
+      } as any
     });
 
     res.json({

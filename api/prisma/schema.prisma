@@ -48,6 +48,7 @@ model User {
   questionnaires          Questionnaire[]
   userDietPlans           UserDietPlan[]
   userActiveDietPlan      UserActiveDietPlan[]
+  dietMealLogs            DietMealLog[]
   userExercises           UserExercise[]
   userActiveExercisePlan  UserActiveExercisePlan[]
   userExerciseProgress    UserExerciseProgress[]
@@ -241,6 +242,7 @@ model DietPlanMeal {
   recipe      String?      @db.Text
   day         DietPlanDay  @relation(fields: [dayId], references: [id])
   mealType    MealType     @relation(fields: [mealTypeId], references: [id])
+  dietMealLogs DietMealLog[]
 
   @@map("diet_plan_meals")
 }
@@ -255,8 +257,29 @@ model UserActiveDietPlan {
   pausedAt   DateTime? @map("paused_at")
   user       User      @relation(fields: [userId], references: [id])
   diet       DietPlan  @relation(fields: [dietId], references: [id])
+  dietMealLogs DietMealLog[]
 
   @@map("user_active_diet_plan")
+}
+
+// Diet Meal Logs
+model DietMealLog {
+  id           String             @id @default(cuid())
+  userId       String             @map("user_id")
+  activePlanId String             @map("active_plan_id")
+  mealId       String             @map("meal_id")
+  mealName     String?            @map("meal_name") @db.VarChar(100)
+  mealType     String?            @map("meal_type") @db.VarChar(50)
+  calories     Int?
+  date         DateTime           @db.Date
+  loggedAt     DateTime           @default(now()) @map("logged_at")
+  user         User               @relation(fields: [userId], references: [id])
+  activePlan   UserActiveDietPlan @relation(fields: [activePlanId], references: [id], onDelete: Cascade)
+  meal         DietPlanMeal       @relation(fields: [mealId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, mealId, date])
+  @@index([userId, date])
+  @@map("diet_meal_logs")
 }
 
 // ============================
@@ -557,6 +580,7 @@ model Medication {
   dose              String?              @db.VarChar(50)
   frequency         String?              @db.VarChar(50)
   reminderTime      DateTime?            @map("reminder_time") @db.Time(6)
+  image             String?              @db.Text
   icon              String?              @db.Text
   appearanceColor   String?              @map("appearance_color") @db.VarChar(20)
   appearanceIcon    String?              @map("appearance_icon") @db.Text

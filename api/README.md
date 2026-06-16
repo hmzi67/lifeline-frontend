@@ -19,7 +19,7 @@ A production-ready Express.js API for the Lifeline Health & Wellness platform.
 ### Prerequisites
 
 - Node.js 18+
-- PostgreSQL
+- A managed PostgreSQL database, such as Neon, Supabase, Railway, or AWS RDS
 - Redis (optional, for caching)
 
 ### Installation
@@ -37,17 +37,21 @@ cp .env.example .env
 # Edit .env with your configuration
 ```
 
-3. Set up the database:
+3. Point `DATABASE_URL` at your cloud PostgreSQL instance.
+
+For Neon, use the pooled connection string from the dashboard and keep `sslmode=require` enabled.
+
+4. Set up the database:
 
 ```bash
 # Generate Prisma client
 npm run generate
 
-# Run database migrations
-npm run migrate
+# Apply database migrations to the cloud database
+npm run migrate:deploy
 ```
 
-4. Start the development server:
+5. Start the development server:
 
 ```bash
 npm run dev
@@ -83,6 +87,8 @@ The API will be available at `http://localhost:3000`
 ## Environment Variables
 
 See `.env.example` for all available environment variables.
+
+For production, set the same variables in your deployment platform and use a managed PostgreSQL connection string for `DATABASE_URL`.
 
 ## Scripts
 
