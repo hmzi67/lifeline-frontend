@@ -3,8 +3,17 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// Simple in-memory cache (60s TTL)
+let cachedData: any = null;
+let cacheTimestamp = 0;
+const CACHE_TTL = 60 * 1000; // 60 seconds
+
 export const getDashboardData = async (req: Request, res: Response) => {
   try {
+    // Return cached data if fresh
+    if (cachedData && Date.now() - cacheTimestamp < CACHE_TTL) {
+      return res.status(200).json(cachedData);
+    }
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const now = new Date();
 
@@ -66,24 +75,29 @@ export const getDashboardData = async (req: Request, res: Response) => {
       prisma.couponCode.count(),
     ]);
 
-    // Get daily user growth for the last 30 days
+    // Get daily user growth for the last 30 days (single query instead of 30)
+    const growthRows = await prisma.$queryRaw<Array<{ date: Date; count: bigint }>>`
+      SELECT DATE(created_at) as date, COUNT(*) as count
+      FROM users
+      WHERE created_at >= ${thirtyDaysAgo}
+      GROUP BY DATE(created_at)
+      ORDER BY date ASC
+    `;
+
+    // Build a map for quick lookup
+    const growthMap = new Map<string, number>();
+    growthRows.forEach((row) => {
+      const key = new Date(row.date).toISOString().split('T')[0];
+      growthMap.set(key, Number(row.count));
+    });
+
+    // Fill in all 30 days (days with 0 users show as 0)
     const dailyGrowth: Array<{ date: string; count: number }> = [];
     for (let i = 29; i >= 0; i--) {
-      const date = new Date(now);
-      date.setDate(date.getDate() - i);
-      const startOfDay = new Date(date.setHours(0, 0, 0, 0));
-      const endOfDay = new Date(date.setHours(23, 59, 59, 999));
-
-      const count = await prisma.user.count({
-        where: {
-          createdAt: { gte: startOfDay, lte: endOfDay },
-        },
-      });
-
-      dailyGrowth.push({
-        date: startOfDay.toISOString().split('T')[0],
-        count,
-      });
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      const key = d.toISOString().split('T')[0];
+      dailyGrowth.push({ date: key, count: growthMap.get(key) ?? 0 });
     }
 
     // Build status map
@@ -94,7 +108,7 @@ export const getDashboardData = async (req: Request, res: Response) => {
       }
     });
 
-    res.status(200).json({
+    const response = {
       success: true,
       data: {
         users: {
@@ -140,7 +154,12 @@ export const getDashboardData = async (req: Request, res: Response) => {
           coupons: totalCoupons,
         },
       },
-    });
+    };
+
+    cachedData = response;
+    cacheTimestamp = Date.now();
+
+    res.status(200).json(response);
   } catch (error) {
     console.error('Dashboard data error:', error);
     res.status(500).json({
