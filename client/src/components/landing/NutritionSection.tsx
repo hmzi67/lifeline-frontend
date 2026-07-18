@@ -9,6 +9,7 @@ import { Button } from '../ui/button';
 import { Check } from 'lucide-react';
 import nutritionImage from "@/assets/images/landing/nutrition-1.webp";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Optimized count-up hook with custom ref
 const useCountUp = (end: number, duration: number = 2000, elementRef: RefObject<HTMLElement | null>) => {
@@ -83,6 +84,9 @@ export const NutritionSection: React.FC = () => {
   const mobileCount = useCountUp(2345, 2000, mobileRef);
   const desktopCount = useCountUp(2345, 2000, desktopRef);
 
+  // check if the use is authenticated
+  const { isAuthenticated } = useAuth();
+
   return (
     <section className="pb-0 pt-8 md:pb-0 md:pt-20 ">
       <div className="container mx-auto px-4 md:px-6 py-10">
@@ -139,14 +143,25 @@ export const NutritionSection: React.FC = () => {
           </div>
 
           <div className="flex gap-3 justify-start">
-            <Link to="/signup">
-              <Button
-                size="sm"
-                className="bg-primary hover:bg-primary-600 text-white font-semibold rounded-full px-6 py-2 text-sm transition-all duration-300 transform hover:scale-105"
-              >
-                Try Now
-              </Button>
-            </Link>
+            {
+              isAuthenticated ?
+                <Link to="/questions">
+                  <Button
+                    size="sm"
+                    className="bg-primary hover:bg-primary-600 text-white font-semibold rounded-full px-6 py-2 text-sm transition-all duration-300 transform hover:scale-105"
+                  >
+                    Update Information
+                  </Button>
+                </Link> :
+                <Link to="/signup">
+                  <Button
+                    size="sm"
+                    className="bg-primary hover:bg-primary-600 text-white font-semibold rounded-full px-6 py-2 text-sm transition-all duration-300 transform hover:scale-105"
+                  >
+                    Try Now
+                  </Button>
+                </Link>
+            }
 
             <Button
               size="sm"
@@ -214,23 +229,34 @@ export const NutritionSection: React.FC = () => {
             </div>
 
             <div className="flex gap-3">
-              <Link to="/signup">
-              <Button
-                size="lg"
-                className="bg-primary hover:bg-primary-600 text-white font-semibold px-8 py-4 text-lg transition-all duration-300 transform hover:scale-105"
-              >
-                Try Now
-              </Button>
-              </Link>
-              
+              {
+                isAuthenticated ?
+                  <Link to="/questions">
+                    <Button
+                      size="lg"
+                      className="bg-primary hover:bg-primary-600 text-white font-semibold px-8 py-4 text-lg transition-all duration-300 transform hover:scale-105"
+                    >
+                      Review Information
+                    </Button>
+                  </Link> :
+                  <Link to="/signup">
+                    <Button
+                      size="lg"
+                      className="bg-primary hover:bg-primary-600 text-white font-semibold px-8 py-4 text-lg transition-all duration-300 transform hover:scale-105"
+                    >
+                      Try Now
+                    </Button>
+                  </Link>
+              }
+
               <Link to="/contact">
-              <Button
-                size="lg"
-                variant="ghost"
-                className="text-primary hover:text-primary-600 font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300"
-              >
-                Contact us
-              </Button>
+                <Button
+                  size="lg"
+                  variant="ghost"
+                  className="text-primary hover:text-primary-600 font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300"
+                >
+                  Contact us
+                </Button>
               </Link>
             </div>
           </div>

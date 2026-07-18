@@ -4,6 +4,7 @@ import hero1 from "@/assets/images/landing/hero-1.webp";
 import hero2 from "@/assets/images/landing/hero-2.webp";
 import hero3 from "@/assets/images/landing/hero-3.webp";
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const HeroSection: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -20,6 +21,9 @@ export const HeroSection: React.FC = () => {
     const interval = setInterval(nextImage, 5000);
     return () => clearInterval(interval);
   }, [nextImage]);
+
+  // check if the user is authenticated
+  const { isAuthenticated } = useAuth();
 
   return (
     <section className="relative min-h-[50vh] lg:min-h-screen overflow-hidden">
@@ -65,15 +69,25 @@ export const HeroSection: React.FC = () => {
               aerobic physical activity each week or vigorous-intensity aerobic
             </p>
             <div className="animate-bounce-subtle">
-              <Link to="/signup">
-                <Button
-                  size="lg"
-                  className="bg-primary hover:bg-primary-600 text-white font-semibold px-4 py-2 md:px-8 md:py-4 text-base md:text-lg rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
-                >
-                  Get Started
-                </Button>
+              {
+                isAuthenticated ? <Link to="/questions">
+                  <Button
+                    size="lg"
+                    className="bg-primary hover:bg-primary-600 text-white font-semibold px-4 py-2 md:px-8 md:py-4 text-base md:text-lg rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
+                  >
+                    Update Information
+                  </Button>
 
-              </Link>
+                </Link> : <Link to="/signup">
+                  <Button
+                    size="lg"
+                    className="bg-primary hover:bg-primary-600 text-white font-semibold px-4 py-2 md:px-8 md:py-4 text-base md:text-lg rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
+                  >
+                    Get Started
+                  </Button>
+
+                </Link>
+              }
 
 
             </div>

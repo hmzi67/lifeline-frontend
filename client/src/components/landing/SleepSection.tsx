@@ -2,17 +2,21 @@ import React, { useState } from 'react';
 import { Check, Download, X, Play } from 'lucide-react';
 import sleepimg from '@/assets/images/landing/sleeping img.png';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const SleepSection: React.FC = () => {
     const [isVideoOpen, setIsVideoOpen] = useState(false);
-    
+
     // Replace this with your actual YouTube video ID
     const youtubeVideoId = "dQw4w9WgXcQ"; // Example: Rick Roll video ID
-    
+
+
+    const { isAuthenticated } = useAuth();
+
     const openVideoDialog = () => {
         setIsVideoOpen(true);
     };
-    
+
     const closeVideoDialog = () => {
         setIsVideoOpen(false);
     };
@@ -23,7 +27,7 @@ export const SleepSection: React.FC = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-8 lg:gap-16 items-center">
                     {/* Left Side - Hero Video/Image - Hidden on mobile, shown on lg+ */}
                     <div className="lg:col-span-3 relative hidden lg:block">
-                        <div 
+                        <div
                             className="relative cursor-pointer group -translate-x-4"
                             onClick={openVideoDialog}
                         >
@@ -33,30 +37,30 @@ export const SleepSection: React.FC = () => {
                                 alt="sleeping img with mobile mockup"
                             />
                             {/* Play button overlay */}
-                          <div className="absolute sm:right-64 right-[150px] inset-0 flex items-center justify-center">
-                               <div className="relative">
-                                 {/* Animated border */}
-                                 <div className="absolute inset-0 w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-white/20 animate-ping"></div>
-                                 
-                                 {/* Main button */}
-                                 <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/90 rounded-full flex items-center justify-center">
-                                   <Play className="w-6 h-6 sm:w-8 sm:h-8 text-primary ml-1" fill="currentColor" />
-                                 </div>
-                               </div>
-                           </div>
+                            <div className="absolute sm:right-64 right-[150px] inset-0 flex items-center justify-center">
+                                <div className="relative">
+                                    {/* Animated border */}
+                                    <div className="absolute inset-0 w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-white/20 animate-ping"></div>
+
+                                    {/* Main button */}
+                                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/90 rounded-full flex items-center justify-center">
+                                        <Play className="w-6 h-6 sm:w-8 sm:h-8 text-primary ml-1" fill="currentColor" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
+
                     {/* Text Content */}
                     <div className="lg:col-span-2 text-left px-4 sm:px-0">
                         <h1 className="text-2xl sm:text-5xl lg:text-5xl font-bold mb-4 sm:mb-6 lg:mb-12 tracking-wider">
-                            Get <span className="text-primary">Better</span> Sleep <br className='hidden sm:block'/>
+                            Get <span className="text-primary">Better</span> Sleep <br className='hidden sm:block' />
                             Now With <span className="text-primary">Us!</span>
                         </h1>
 
                         {/* Mobile Image - Only shown on mobile screens, placed after h1 */}
                         <div className="lg:hidden mb-4 sm:mb-6 -translate-x-7 w-full">
-                            <div 
+                            <div
                                 className="relative cursor-pointer group"
                                 onClick={openVideoDialog}
                             >
@@ -66,17 +70,17 @@ export const SleepSection: React.FC = () => {
                                     alt="sleeping img with mobile mockup"
                                 />
                                 {/* Play button overlay */}
-                              <div className="absolute sm:right-64 right-[150px] inset-0 flex items-center justify-center">
-                                   <div className="relative">
-                                     {/* Animated border */}
-                                     <div className="absolute inset-0 w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-white/20 animate-ping"></div>
-                                     
-                                     {/* Main button */}
-                                     <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/90 rounded-full flex items-center justify-center">
-                                       <Play className="w-6 h-6 sm:w-8 sm:h-8 text-primary ml-1" fill="currentColor" />
-                                     </div>
-                                   </div>
-                               </div>
+                                <div className="absolute sm:right-64 right-[150px] inset-0 flex items-center justify-center">
+                                    <div className="relative">
+                                        {/* Animated border */}
+                                        <div className="absolute inset-0 w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-white/20 animate-ping"></div>
+
+                                        {/* Main button */}
+                                        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/90 rounded-full flex items-center justify-center">
+                                            <Play className="w-6 h-6 sm:w-8 sm:h-8 text-primary ml-1" fill="currentColor" />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -92,7 +96,7 @@ export const SleepSection: React.FC = () => {
                                     <div className="font-bold text-lg sm:text-xl lg:text-3xl">Calm & Mindful Sleep</div>
                                 </div>
                             </div>
-                            <hr className="my-1 sm:my-2"/>
+                            <hr className="my-1 sm:my-2" />
                             <div className="flex items-center gap-y-3 lg:gap-x-16">
                                 <div className="">
                                     <div className="text-sm sm:text-2xl font-bold sm:font-bold ">Stories</div>
@@ -128,16 +132,24 @@ export const SleepSection: React.FC = () => {
                         </div>
                         {/* Buttons */}
                         <div className="flex gap-2 sm:gap-4 mb-6 sm:mb-6 lg:mb-0">
-                            <Link to="/signup">
-                                <button className="px-5 py-1 sm:px-7 sm:py-2 lg:px-8 lg:py-3 bg-primary hover:bg-primary-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base lg:text-lg">
-                                    Try Now
+                            {
+                                isAuthenticated ?
+                                    <Link to="/questions">
+                                        <button className="px-5 py-1 sm:px-7 sm:py-2 lg:px-8 lg:py-3 bg-primary hover:bg-primary-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base lg:text-lg">
+                                            Review Information
+                                        </button>
+                                    </Link> :
+                                    <Link to="/signup">
+                                        <button className="px-5 py-1 sm:px-7 sm:py-2 lg:px-8 lg:py-3 bg-primary hover:bg-primary-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base lg:text-lg">
+                                            Try Now
+                                        </button>
+                                    </Link>
+                            }
+                            <Link to="/contact">
+                                <button className="px-5 py-1 sm:px-7 sm:py-2 lg:px-8 lg:py-3 bg-white/10 hover:bg-white/20 font-semibold rounded-full transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-white/20 flex items-center justify-center gap-1 sm:gap-2 text-sm sm:text-base lg:text-lg">
+                                    <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+                                    Contact us
                                 </button>
-                            </Link>
-                              <Link to="/contact">
-                            <button className="px-5 py-1 sm:px-7 sm:py-2 lg:px-8 lg:py-3 bg-white/10 hover:bg-white/20 font-semibold rounded-full transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-white/20 flex items-center justify-center gap-1 sm:gap-2 text-sm sm:text-base lg:text-lg">
-                                <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-                                Contact us
-                            </button>
                             </Link>
                         </div>
 
@@ -153,7 +165,7 @@ export const SleepSection: React.FC = () => {
                                     <div className="font-bold text-lg sm:text-xl lg:text-3xl">Calm & Mindful Sleep</div>
                                 </div>
                             </div>
-                            <hr className="my-1 sm:my-2 w-64"/>
+                            <hr className="my-1 sm:my-2 w-64" />
                             <div className="flex items-center gap-y-3 lg:gap-x-16">
                                 <div className="me-4">
                                     <div className="text-sm sm:text-2xl font-bold sm:font-bold ">Stories</div>
@@ -181,7 +193,7 @@ export const SleepSection: React.FC = () => {
                         >
                             <X className="w-5 h-5 text-white" />
                         </button>
-                        
+
                         {/* YouTube Video */}
                         <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
                             <iframe
