@@ -4,7 +4,10 @@ import type { StatData } from '@/types';
 
 
 // Animated Line Chart Component
-export const AnimatedLineChart: React.FC<{ data: number[]; gradient: string | number }> = ({ data, gradient }) => (
+export const AnimatedLineChart: React.FC<{ data: number[]; gradient: string | number }> = ({ data, gradient }) => {
+    if (!data || data.length === 0) return null;
+    const maxVal = Math.max(...data) || 1;
+    return (
     <div className="mt-4 h-12 relative">
         <svg className="w-full h-full" viewBox="0 0 200 50" aria-label="Activity chart">
             <defs>
@@ -19,7 +22,7 @@ export const AnimatedLineChart: React.FC<{ data: number[]; gradient: string | nu
                 strokeWidth="3"
                 strokeLinecap="round"
                 points={data.map((value, index) =>
-                    `${(index / (data.length - 1)) * 200},${50 - (value / Math.max(...data)) * 40}`
+                    `${(index / (data.length - 1)) * 200},${50 - (value / maxVal) * 40}`
                 ).join(' ')}
                 className="animate-pulse"
             />
@@ -27,7 +30,7 @@ export const AnimatedLineChart: React.FC<{ data: number[]; gradient: string | nu
                 <circle
                     key={index}
                     cx={(index / (data.length - 1)) * 200}
-                    cy={50 - (value / Math.max(...data)) * 40}
+                    cy={50 - (value / maxVal) * 40}
                     r="3"
                     fill="#3EC6C9"
                     className="animate-pulse"
@@ -36,7 +39,8 @@ export const AnimatedLineChart: React.FC<{ data: number[]; gradient: string | nu
             ))}
         </svg>
     </div>
-);
+    );
+};
 
 // Circular Progress Component
 export const CircularProgress: React.FC<{

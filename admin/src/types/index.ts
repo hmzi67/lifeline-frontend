@@ -56,4 +56,54 @@ export interface RevenueData {
   previous: number;
 }
 
+export interface DashboardUserData {
+  total: number;
+  newThisMonth: number;
+  verified: number;
+  verificationRate: number;
+  byStatus: {
+    active: number;
+    pending: number;
+    blocked: number;
+  };
+  dailyGrowth: Array<{ date: string; count: number }>;
+}
+
+export interface DashboardContentData {
+  dietPlans: number;
+  exercises: number;
+  meditations: number;
+  sleepStories: number;
+  sleepSounds: number;
+  blogs: number;
+  challenges: number;
+}
+
+export interface DashboardSubscriptionData {
+  active: number;
+  totalRevenue: number;
+  recentPayments: Array<{
+    id: string;
+    username: string;
+    planName: string;
+    amount: number;
+    method: string;
+    status: string;
+    createdAt: string;
+  }>;
+}
+
+export interface DashboardEngagementData {
+  challengesJoined: number;
+  referralCodes: number;
+  coupons: number;
+}
+
+export interface DashboardData {
+  users: DashboardUserData;
+  content: DashboardContentData;
+  subscriptions: DashboardSubscriptionData;
+  engagement: DashboardEngagementData;
+}
+
 

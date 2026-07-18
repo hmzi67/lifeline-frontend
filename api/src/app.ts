@@ -57,6 +57,7 @@ import userDailyRoutes from './routes/userDailyRoutineRoutes.js';
 import userDietPlanRoutes from './routes/userDietPlanRoutes.js';
 import userExerciseRoutes from './routes/userExerciseRoutes.js';
 import userFavoriteMeditationRoutes from './routes/userFavoriteMeditationRoutes.js';
+import adminDashboardRoutes from './routes/adminDashboardRoutes.js';
 import userRoute from './routes/userRoutes.js';
 import userWaterGoalRoutes from './routes/userWaterGoalRoutes.js';
 import waterIntakeRoutes from './routes/waterIntakeRoutes.js';
@@ -111,6 +112,9 @@ app.get('/health', healthCheck);
 
 // route for authentication
 app.use('/api/auth/', authRoute);
+
+// Admin dashboard route
+app.use('/api/admin/dashboard', adminDashboardRoutes);
 
 // media upload route
 app.use('/api/uploads', uploadRoutes);
