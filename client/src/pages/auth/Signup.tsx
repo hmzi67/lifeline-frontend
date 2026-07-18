@@ -43,7 +43,7 @@ const Signup: React.FC = () => {
     try {
       await signup(formData.name, formData.email, formData.password);
 
-      navigate("/login")
+      navigate("/verify")
 
     } catch (error: any) {
       setLoading(false);
