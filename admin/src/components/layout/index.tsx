@@ -134,25 +134,25 @@ export const Header: React.FC<{ activeNav: string }> = ({ activeNav }) => {
         <header className="flex items-center justify-between mb-10">
             <div className="flex items-center gap-6">
                 <div>
-                    <div className="flex items-center gap-2 mb-2">
+                    {/* <div className="flex items-center gap-2 mb-2">
                         <MapPin className="w-4 h-4 text-gray-500" />
                         <span className="text-sm text-gray-500">Seattle, United States</span>
                         <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" aria-label="Active" />
-                    </div>
+                    </div> */}
                     <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
                         {getPageTitle()}
                     </h1>
                     <p className="text-gray-500 mt-1 flex items-center gap-2">
-                        Thursday, 22 Sep
+                        {new Date().toDateString()}
                         <span className="px-2 py-1 bg-teal-100 text-teal-600 rounded-full text-xs font-medium">Live</span>
                     </p>
                 </div>
             </div>
             <div className="flex items-center gap-6">
-                <button className="relative" aria-label="Notifications">
+                {/* <button className="relative" aria-label="Notifications">
                     <Bell className="w-6 h-6 text-gray-400 hover:text-teal-500 transition-colors" />
                     <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse" aria-label="New notifications" />
-                </button>
+                </button> */}
                 <div className="text-right">
                     <p className="font-semibold text-gray-900">{displayName}</p>
                     <p className="text-sm text-gray-500">{displayEmail}</p>
@@ -165,12 +165,12 @@ export const Header: React.FC<{ activeNav: string }> = ({ activeNav }) => {
                     </div>
                     <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full" aria-label="Online" />
                 </div>
-                <button className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-6 py-3 rounded-xl 
+                {/* <button className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-6 py-3 rounded-xl 
                                  flex items-center gap-2 hover:from-teal-600 hover:to-cyan-600 
                                  transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                     <Plus className="w-5 h-5" />
                     <span className="font-medium">Add Activity</span>
-                </button>
+                </button> */}
             </div>
         </header>
     );
