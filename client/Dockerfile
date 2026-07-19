@@ -11,6 +11,14 @@ RUN npm install
 # Copy source code
 COPY . .
 
+# Vite bakes VITE_* vars into the bundle at build time, so they must be
+# passed in as build args (docker-compose `environment:` only applies at
+# container runtime and would never reach this RUN step).
+ARG VITE_API_URL
+ARG VITE_STRIPE_PUBLISHABLE_KEY
+ENV VITE_API_URL=$VITE_API_URL \
+    VITE_STRIPE_PUBLISHABLE_KEY=$VITE_STRIPE_PUBLISHABLE_KEY
+
 # Build the application
 RUN npm run build
 
