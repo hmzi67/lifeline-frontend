@@ -1,10 +1,13 @@
 import api from '@/lib/axios';
 import React, { useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { getPostLoginRedirectPath } from '@/lib/onboarding';
 
 const OAuthCallback: React.FC = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const { setToken, setUser } = useAuth();
 
     useEffect(() => {
         const token = searchParams.get('token');
@@ -14,9 +17,12 @@ const OAuthCallback: React.FC = () => {
             try {
                 const res = await api.get('/auth/me');
                 const user = res.data?.data?.user;
-                
-                // Store user in localStorage
-                localStorage.setItem('user', JSON.stringify(user));
+
+                // Sync user into AuthContext (also persists to localStorage)
+                setUser(user);
+
+                const redirectPath = await getPostLoginRedirectPath(user?.id);
+                navigate(redirectPath);
             } catch (err) {
                 console.error(err);
                 navigate('/auth/login?error=failed_to_fetch_user');
@@ -49,12 +55,9 @@ const OAuthCallback: React.FC = () => {
         }
 
         if (token) {
-            // Store the access token
-            localStorage.setItem('token', token);
-            fetchUser()
-
-            // Redirect to dashboard or home page
-            navigate('/questions');
+            // Sync the access token into AuthContext (also persists to localStorage)
+            setToken(token);
+            fetchUser();
             return;
         }
 

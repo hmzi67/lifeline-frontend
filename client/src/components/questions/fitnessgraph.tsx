@@ -10,10 +10,12 @@ interface FitnessGoalCardProps {
   onSelect?: (isSelected: boolean) => void;
   isSelected?: boolean;
   onBack?: () => void;
+  hasPaid?: boolean;
 }
 
 export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
-  gender
+  gender,
+  hasPaid = false,
 }) => {
 
   const navigate = useNavigate();
@@ -35,6 +37,13 @@ export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
   useEffect(() => {
     fetchCurrentUser()
 
+    // Already subscribed: let the user choose to skip or change their plan
+    // instead of forcing them back through checkout.
+    if (hasPaid) {
+      setMessage("");
+      return;
+    }
+
     const timer = setTimeout(() => {
       setMessage("")
       navigate('/plan')
@@ -42,7 +51,7 @@ export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
 
     // cleanup timer on unmount
     return () => clearTimeout(timer);
-  }, []);
+  }, [hasPaid]);
 
   if (isUserLoading) {
     return (
@@ -111,6 +120,23 @@ export const FitnessGraph: React.FC<FitnessGoalCardProps> = ({
             </>
           }
         </div>
+
+        {hasPaid && (
+          <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
+            <button
+              onClick={() => navigate('/')}
+              className="px-8 py-3 rounded-xl font-bold border border-primary text-primary hover:bg-primary-50 transition-all duration-300"
+            >
+              Skip
+            </button>
+            <button
+              onClick={() => navigate('/plan')}
+              className="px-8 py-3 rounded-xl font-bold bg-primary text-white hover:bg-primary-600 shadow-md hover:shadow-lg transition-all duration-300"
+            >
+              Update Plan
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

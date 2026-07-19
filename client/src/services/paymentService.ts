@@ -1,11 +1,18 @@
 import { api } from "./api";
 
+interface BackendResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+}
+
 export interface CreatePaymentIntentRequest {
   amount: number;
   currency?: string;
   planId?: string;
   planName?: string;
   paymentMethodId?: string;
+  couponCode?: string;
 }
 
 export interface CreatePaymentIntentResponse {
@@ -23,39 +30,48 @@ export interface CreateSubscriptionPaymentRequest {
 
 export interface ConfirmPaymentRequest {
   paymentIntentId: string;
-  paymentMethodId: string;
+  paymentMethodId?: string;
+  userId?: string;
 }
 
 export interface ConfirmPaymentResponse {
-  success: boolean;
   subscriptionId?: string;
-  message?: string;
+  paymentIntentId?: string;
 }
 
 class PaymentService {
   /**
    * Create a payment intent on the server
-   * Note: This requires backend implementation for Stripe payment intent creation
    */
   async createPaymentIntent(
     data: CreatePaymentIntentRequest
   ): Promise<CreatePaymentIntentResponse> {
     try {
-      // This endpoint needs to be implemented on the backend
-      const response = await api.post<CreatePaymentIntentResponse>(
+      const response = await api.post<BackendResponse<CreatePaymentIntentResponse>>(
         "/payments/create-intent",
         {
           amount: data.amount,
           currency: data.currency || "usd",
           planId: data.planId,
           planName: data.planName,
+          couponCode: data.couponCode,
         }
       );
-      return response.data;
+      return response.data.data;
     } catch (error) {
       console.error("Error creating payment intent:", error);
       throw error;
     }
+  }
+
+  /**
+   * Get the Stripe publishable key from the server
+   */
+  async getPublishableKey(): Promise<string> {
+    const response = await api.get<BackendResponse<{ publishableKey: string }>>(
+      "/payments/publishable-key"
+    );
+    return response.data.data.publishableKey;
   }
 
   /**
@@ -80,14 +96,15 @@ class PaymentService {
     data: ConfirmPaymentRequest
   ): Promise<ConfirmPaymentResponse> {
     try {
-      const response = await api.post<ConfirmPaymentResponse>(
+      const response = await api.post<BackendResponse<ConfirmPaymentResponse>>(
         "/payments/confirm",
         {
           paymentIntentId: data.paymentIntentId,
           paymentMethodId: data.paymentMethodId,
+          userId: data.userId,
         }
       );
-      return response.data;
+      return response.data.data;
     } catch (error) {
       console.error("Error confirming payment:", error);
       throw error;
