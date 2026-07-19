@@ -1,61 +1,66 @@
 import express from 'express';
 import 'express-async-errors';
 import session from 'express-session';
+import { healthCheck, prisma } from './config/database.js';
+import './config/index.js';
 import passport from './config/passport.js';
 import {
-  errorHandler,
-  requestLogger,
-  rateLimiter,
-  cors,
-  helmet,
   compression,
+  cors,
+  errorHandler,
+  helmet,
   notFound,
+  rateLimiter,
+  requestLogger,
   timeout,
 } from './middleware/index.js';
 import authRoute from './routes/authRoute.js';
 import questionnaireRoutes from './routes/questionnaireRoutes.js';
-import { healthCheck, prisma } from './config/database.js';
 // @ts-ignore - The compiler couldn't find the bundled type declarations for this package on your server
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
-import userRoute from './routes/userRoutes.js';
-import subscriptionPaymentRoutes from './routes/subscriptionPaymentRoutes.js';
-import paymentRoutes from './routes/paymentRoutes.js';
-import dietPlanRoutes from './routes/dietPlanRoutes.js';
-import userDietPlanRoutes from './routes/userDietPlanRoutes.js';
-import exerciseRoutes from './routes/exerciseRoutes.js';
-import userExerciseRoutes from './routes/userExerciseRoutes.js';
-import challengeRoutes from './routes/challengeRoutes.js';
-import challengeExerciseRouter from './routes/challengeExerciseRoutes.js';
-import fastingRoutes from './routes/fastingLogRoutes.js';
-import sleepRoutes from './routes/sleepLogRoutes.js';
-import sleepStoryRoutes from './routes/sleepStoryRoutes.js';
-import sleepSoundRoutes from './routes/sleepSoundRoutes.js';
-import waterIntakeRoutes from './routes/waterIntakeRoutes.js';
-import medicationRoutes from './routes/medicationRoutes.js';
-import meditationRoutes from './routes/meditationRoutes.js';
-import userDailyRoutes from './routes/userDailyRoutineRoutes.js';
+import { handleStripeWebhook } from './controllers/paymentController.js';
+import { getUploadRootPath } from './middleware/upload.js';
 import appSetttingsRoutes from './routes/appSettingRoutes.js';
 import blogsRoutes from './routes/blogRoutes.js';
-import mealTypeRoutes from './routes/mealTypeRoutes.js';
+import challengeExerciseRouter from './routes/challengeExerciseRoutes.js';
+import challengeRoutes from './routes/challengeRoutes.js';
+import cheatDayRoutes from './routes/cheatDayRoutes.js';
+import couponRoutes from './routes/couponRoutes.js';
+import dietMealLogRoutes from './routes/dietMealLogRoutes.js';
 import dietPlanDayRoutes from './routes/dietPlanDayRoutes.js';
 import dietPlanMealRoutes from './routes/dietPlanMealRoutes.js';
-import exercisePlanRoutes from './routes/exercisePlanRoutes.js';
-import exercisePlanWeekRoutes from './routes/exercisePlanWeekRoutes.js';
-import exercisePlanScheduleRoutes from './routes/exercisePlanScheduleRoutes.js';
+import dietPlanRoutes from './routes/dietPlanRoutes.js';
 import exerciseDetailRoutes from './routes/exerciseDetailRoutes.js';
+import exercisePlanRoutes from './routes/exercisePlanRoutes.js';
+import exercisePlanScheduleRoutes from './routes/exercisePlanScheduleRoutes.js';
+import exercisePlanWeekRoutes from './routes/exercisePlanWeekRoutes.js';
+import exerciseRoutes from './routes/exerciseRoutes.js';
+import fastingRoutes from './routes/fastingLogRoutes.js';
+import foodScanRoutes from './routes/foodScanRoutes.js';
+import mealTypeRoutes from './routes/mealTypeRoutes.js';
+import medicationReminderRoutes from './routes/medicationReminderRoutes.js';
+import medicationRoutes from './routes/medicationRoutes.js';
+import meditationRoutes from './routes/meditationRoutes.js';
+import meditationSessionRoutes from './routes/meditationSessionRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
+import progressRoutes from './routes/progressRoutes.js';
+import referralRoutes from './routes/referralRoutes.js';
+import roleRoutes from './routes/roleRoutes.js';
+import sleepRoutes from './routes/sleepLogRoutes.js';
+import sleepSoundRoutes from './routes/sleepSoundRoutes.js';
+import sleepStoryRoutes from './routes/sleepStoryRoutes.js';
+import subscriptionPaymentRoutes from './routes/subscriptionPaymentRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
 import userActiveDietPlanRoutes from './routes/userActiveDietPlanRoutes.js';
 import userActiveExercisePlanRoutes from './routes/userActiveExercisePlanRoutes.js';
-import meditationSessionRoutes from './routes/meditationSessionRoutes.js';
+import userDailyRoutes from './routes/userDailyRoutineRoutes.js';
+import userDietPlanRoutes from './routes/userDietPlanRoutes.js';
+import userExerciseRoutes from './routes/userExerciseRoutes.js';
 import userFavoriteMeditationRoutes from './routes/userFavoriteMeditationRoutes.js';
+import adminDashboardRoutes from './routes/adminDashboardRoutes.js';
+import userRoute from './routes/userRoutes.js';
 import userWaterGoalRoutes from './routes/userWaterGoalRoutes.js';
-import medicationReminderRoutes from './routes/medicationReminderRoutes.js';
-import cheatDayRoutes from './routes/cheatDayRoutes.js';
-import roleRoutes from './routes/roleRoutes.js';
-import progressRoutes from './routes/progressRoutes.js';
-import couponRoutes from './routes/couponRoutes.js';
-import referralRoutes from './routes/referralRoutes.js';
-import uploadRoutes from './routes/uploadRoutes.js';
-import { getUploadRootPath } from './middleware/upload.js';
+import waterIntakeRoutes from './routes/waterIntakeRoutes.js';
 
 const app = express();
 
@@ -66,8 +71,9 @@ app.use(helmet);
 
 // Request processing middlewares
 app.use(compression);
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.post('/api/payments/webhook', express.raw({ type: 'application/json' }), handleStripeWebhook);
+app.use(express.json({ limit: '30mb' }));
+app.use(express.urlencoded({ extended: true, limit: '30mb' }));
 app.use('/uploads', express.static(getUploadRootPath()));
 
 // Session middleware for Passport
@@ -76,14 +82,11 @@ app.use(
     secret: process.env.SESSION_SECRET || 'fallback-session-secret',
     resave: false,
     saveUninitialized: false,
-    store: new PrismaSessionStore(
-      prisma,
-      {
-        checkPeriod: 2 * 60 * 1000,  // ms
-        dbRecordIdIsSessionId: true,
-        dbRecordIdFunction: undefined,
-      }
-    ),
+    store: new PrismaSessionStore(prisma, {
+      checkPeriod: 2 * 60 * 1000, // ms
+      dbRecordIdIsSessionId: true,
+      dbRecordIdFunction: undefined,
+    }),
     cookie: {
       secure: process.env.NODE_ENV === 'production',
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
@@ -110,6 +113,9 @@ app.get('/health', healthCheck);
 // route for authentication
 app.use('/api/auth/', authRoute);
 
+// Admin dashboard route
+app.use('/api/admin/dashboard', adminDashboardRoutes);
+
 // media upload route
 app.use('/api/uploads', uploadRoutes);
 
@@ -124,6 +130,9 @@ app.use('/api/subscription-payments', subscriptionPaymentRoutes);
 
 // payment routes (Stripe)
 app.use('/api/payments', paymentRoutes);
+
+// Food scanner route
+app.use('/api/food-scan', foodScanRoutes);
 
 // diet plan routes
 app.use('/api/diet-plans', dietPlanRoutes);
@@ -167,6 +176,7 @@ app.use('/api/blogs', blogsRoutes);
 app.use('/api/meal-types', mealTypeRoutes);
 app.use('/api/diet-plan-days', dietPlanDayRoutes);
 app.use('/api/diet-plan-meals', dietPlanMealRoutes);
+app.use('/api/diet-meal-logs', dietMealLogRoutes);
 
 // Exercise plan structure routes
 app.use('/api/exercise-plans', exercisePlanRoutes);

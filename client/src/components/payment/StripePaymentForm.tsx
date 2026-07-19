@@ -9,11 +9,13 @@ import {
 } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-// import { paymentService } from "@/services/paymentService";
+import { paymentService } from "@/services/paymentService";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface StripePaymentFormProps {
     amount: number;
     planTitle: string;
+    couponCode?: string;
     onSuccess?: () => void;
     onError?: (error: string) => void;
 }
@@ -37,11 +39,13 @@ const cardElementOptions = {
 export default function StripePaymentForm({
     amount,
     planTitle,
+    couponCode,
     onSuccess,
     onError,
 }: StripePaymentFormProps) {
     const stripe = useStripe();
     const elements = useElements();
+    const { isAuthenticated } = useAuth();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [cardholderName, setCardholderName] = useState("");
@@ -51,6 +55,13 @@ export default function StripePaymentForm({
         event.preventDefault();
 
         if (!stripe || !elements) {
+            return;
+        }
+
+        if (!isAuthenticated) {
+            const message = "Please log in to complete your payment.";
+            setError(message);
+            onError?.(message);
             return;
         }
 
@@ -65,65 +76,52 @@ export default function StripePaymentForm({
                 throw new Error("Card element not found");
             }
 
-            // Create payment method
-            const { error: paymentMethodError, paymentMethod } =
-                await stripe.createPaymentMethod({
-                    type: "card",
-                    card: cardNumberElement,
-                    billing_details: {
-                        name: cardholderName,
-                        email: email,
+            // 1. Create a PaymentIntent on the backend
+            const { clientSecret } = await paymentService.createPaymentIntent({
+                amount,
+                currency: "usd",
+                planName: planTitle,
+                couponCode,
+            });
+
+            // 2. Confirm the card payment with Stripe using the client secret
+            const { error: confirmError, paymentIntent } =
+                await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardNumberElement,
+                        billing_details: {
+                            name: cardholderName,
+                            email: email,
+                        },
                     },
                 });
 
-            if (paymentMethodError) {
-                throw new Error(paymentMethodError.message);
+            if (confirmError) {
+                throw new Error(confirmError.message);
             }
 
-            console.log("Payment Method Created:", paymentMethod);
+            if (!paymentIntent || paymentIntent.status !== "succeeded") {
+                throw new Error("Payment was not completed successfully.");
+            }
 
-            // For now, we'll simulate successful payment since backend Stripe integration
-            // needs to be implemented. In production, you would:
-            // 1. Create payment intent on backend
-            // 2. Confirm payment with Stripe
-            // 3. Save payment record to database
-
-            // Simulate API call delay
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-
-            // TODO: Implement backend Stripe payment intent creation
-            // const { clientSecret } = await paymentService.createPaymentIntent({
-            //   amount: amount,
-            //   currency: "usd",
-            //   planName: planTitle,
-            // });
-
-            // const { error: confirmError, paymentIntent } =
-            //   await stripe.confirmCardPayment(clientSecret, {
-            //     payment_method: paymentMethod.id,
-            //   });
-
-            // if (confirmError) {
-            //   throw new Error(confirmError.message);
-            // }
-
-            // Create subscription payment record in database
-            // Note: This requires user ID from auth context
-            // await paymentService.createSubscriptionPayment({
-            //   userId: "user-id-from-auth",
-            //   planName: planTitle,
-            //   amount: amount,
-            //   method: "stripe",
-            //   status: "COMPLETED",
-            // });
+            // 3. Confirm with the backend so it records the subscription payment
+            await paymentService.confirmPayment({
+                paymentIntentId: paymentIntent.id,
+                paymentMethodId:
+                    typeof paymentIntent.payment_method === "string"
+                        ? paymentIntent.payment_method
+                        : undefined,
+            });
 
             // Call onSuccess callback
             if (onSuccess) {
                 onSuccess();
             }
-        } catch (err) {
+        } catch (err: any) {
             const errorMessage =
-                err instanceof Error ? err.message : "An error occurred";
+                err?.response?.data?.message ||
+                err?.response?.data?.error ||
+                (err instanceof Error ? err.message : "An error occurred");
             setError(errorMessage);
             if (onError) {
                 onError(errorMessage);
@@ -131,7 +129,9 @@ export default function StripePaymentForm({
         } finally {
             setLoading(false);
         }
-    }; return (
+    };
+
+    return (
         <form onSubmit={handleSubmit} className="space-y-6">
             <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="flex justify-between items-center mb-2">

@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import multer from 'multer';
+import authenticate from '../middleware/authenticate.js';
 import { mediaUpload, getMediaCategory } from '../middleware/upload.js';
 
 const router = Router();
 
-router.post('/', (req, res) => {
+router.post('/', authenticate, (req, res) => {
   mediaUpload.single('file')(req, res, (error) => {
     if (error instanceof multer.MulterError) {
       const message = error.code === 'LIMIT_FILE_SIZE'

@@ -8,7 +8,7 @@
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "postinstall": "npm run build && prisma generate",
+    "postinstall": "",
     "build:prod": "tsc && node dist/server.js",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -19,10 +19,12 @@
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "migrate": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
     "generate": "prisma generate",
     "studio": "prisma studio",
     "seed": "tsx src/database/seed.ts",
-    "seed:mock": "tsx src/database/mockSeed.ts"
+    "seed:mock": "tsx src/database/mockSeed.ts",
+    "seed:full": "tsx src/database/fullAppSeed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

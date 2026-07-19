@@ -105,7 +105,7 @@ const ReferralComponent: React.FC = () => {
             discountPercent: Number(data.discountPercent) || 10,
             maxUses: Number(data.maxUses),
             isActive: data.isActive !== 'false',
-            expiresAt: data.expiresAt || null,
+            expiresAt: data.expiresAt ? new Date(data.expiresAt).toISOString() : null,
         };
 
         if (editingCode) {
@@ -193,6 +193,7 @@ const ReferralComponent: React.FC = () => {
             label: 'Status',
             render: (value, row) => (
                 <button
+                    type="button"
                     onClick={() => handleToggleActive(row)}
                     className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
                         value
@@ -314,7 +315,7 @@ const ReferralComponent: React.FC = () => {
                 error={error}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
-                onCreate={handleCreate}
+                onAdd={handleCreate}
                 title="Referral Codes"
                 description="Create referral codes for doctors — each referred user gets 10% off their first payment"
                 icon={Link2}

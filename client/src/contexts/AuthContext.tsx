@@ -119,9 +119,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             const response = await api.post('/auth/signup', { name, email, password });
 
             if (response.data.success) {
-                const { user: userData, token: userToken } = response.data;
-                setToken(userToken);
-                updateUser(userData);
+                const { user, accessToken } = response.data.data;
+                setToken(accessToken);
+                updateUser(user);
             } else {
                 throw new Error(response.data.message || 'Signup failed');
             }

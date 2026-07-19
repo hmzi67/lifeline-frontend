@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import api from '@/lib/axios';
 
 interface PricingCardProps {
   title: string;
@@ -8,7 +9,9 @@ interface PricingCardProps {
   hasCoupon?: boolean;
   isSelected: boolean;
   onSelect: () => void;
-  onContinue: () => void;
+  onContinue: (finalPrice: number, couponCode?: string) => void;
+  onCouponApplied?: (discountPercent: number, couponCode: string) => void;
+  onCouponCleared?: () => void;
 }
 
 export const PricingCard: React.FC<PricingCardProps> = ({
@@ -19,39 +22,45 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   hasCoupon = true,
   isSelected,
   onSelect,
-  onContinue
+  onContinue,
+  onCouponApplied,
+  onCouponCleared,
 }) => {
   const [showCouponField, setShowCouponField] = useState(false);
   const [couponCode, setCouponCode] = useState('');
-  const [couponStatus, setCouponStatus] = useState<'idle' | 'valid' | 'invalid'>('idle');
+  const [couponStatus, setCouponStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid'>('idle');
+  const [couponError, setCouponError] = useState('');
   const [finalPrice, setFinalPrice] = useState(price);
+  const [appliedCode, setAppliedCode] = useState<string | undefined>(undefined);
 
-  const validateCoupon = (code: string): number | undefined => {
-    const validCoupons: { [key: string]: number } = {
-      'SAVE20': 0.8,
-      'SAVE50': 0.5,
-      'WELCOME10': 0.9
-    };
-    return validCoupons[code.toUpperCase()];
-  };
-
-  const handleCouponSubmit = () => {
+  const handleCouponSubmit = async () => {
     if (!couponCode.trim()) return;
-    const discount = validateCoupon(couponCode);
-    if (discount) {
+    setCouponStatus('checking');
+    setCouponError('');
+    try {
+      const response = await api.post('/coupons/validate', { code: couponCode });
+      const discountPercent = response.data?.data?.discountPercent;
+      const normalizedCode = couponCode.trim().toUpperCase();
       setCouponStatus('valid');
-      const newPrice = (parseFloat(price) * discount).toFixed(2);
+      setAppliedCode(normalizedCode);
+      const newPrice = (parseFloat(price) * (1 - discountPercent / 100)).toFixed(2);
       setFinalPrice(newPrice);
-    } else {
+      onCouponApplied?.(discountPercent, normalizedCode);
+    } catch (err: any) {
       setCouponStatus('invalid');
+      setCouponError(err.response?.data?.message || 'Invalid coupon code');
+      setAppliedCode(undefined);
       setFinalPrice(price);
+      onCouponCleared?.();
     }
   };
 
   const handleCouponChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCouponCode(e.target.value);
     setCouponStatus('idle');
+    setAppliedCode(undefined);
     setFinalPrice(price);
+    onCouponCleared?.();
   };
 
   const handleCouponToggle = () => {
@@ -59,7 +68,9 @@ export const PricingCard: React.FC<PricingCardProps> = ({
     if (showCouponField) {
       setCouponCode('');
       setCouponStatus('idle');
+      setAppliedCode(undefined);
       setFinalPrice(price);
+      onCouponCleared?.();
     }
   };
 
@@ -139,15 +150,16 @@ export const PricingCard: React.FC<PricingCardProps> = ({
                   />
                   <button
                     onClick={handleCouponSubmit}
+                    disabled={couponStatus === 'checking'}
                     className={`
-                      px-6 py-3 rounded-xl text-sm font-medium transition-all
+                      px-6 py-3 rounded-xl text-sm font-medium transition-all disabled:opacity-60
                       ${isSelected
                         ? 'bg-white text-teal-500 hover:bg-gray-50'
                         : 'bg-teal-500 text-white hover:bg-teal-600'
                       }
                     `}
                   >
-                    Apply
+                    {couponStatus === 'checking' ? 'Checking...' : 'Apply'}
                   </button>
                 </div>
 
@@ -171,7 +183,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
                       : 'bg-red-50 text-red-700 border border-red-200'
                     }
                   `}>
-                    ✗ Invalid coupon code
+                    ✗ {couponError || 'Invalid coupon code'}
                   </div>
                 )}
               </div>
@@ -200,7 +212,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onContinue();
+            onContinue(parseFloat(finalPrice), appliedCode);
           }}
           className={`
            py-3 px-8  rounded-xl font-bold transition-all duration-300 hover:transform hover:scale-105

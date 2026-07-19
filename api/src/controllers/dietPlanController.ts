@@ -31,7 +31,7 @@ interface UpdateDietPlanBody {
 }
 
 const GOAL_KEYWORDS: Record<string, string[]> = {
-  weight_loss: ['weight loss', 'weight_loss', 'fat loss', 'fat-loss', 'slimming'],
+  weight_loss: ['weight loss', 'weight_loss', 'lose weight', 'fat loss', 'fat-loss', 'slimming', 'caloric deficit', 'calorie deficit'],
   weight_gain: ['weight gain', 'weight_gain', 'gain weight', 'bulking'],
   build_muscle: ['build muscle', 'muscle gain', 'muscle_gain', 'high protein', 'hypertrophy'],
   muscle_gain: ['muscle gain', 'muscle_gain', 'build muscle', 'high protein', 'hypertrophy'],
@@ -55,12 +55,36 @@ const buildPlanSearchText = (plan: {
   name: string | null;
   description: string | null;
   cuisineName: string | null;
+  category?: string | null;
 }): string => {
-  return normalizeText([plan.name, plan.description, plan.cuisineName].filter(Boolean).join(' '));
+  return normalizeText([plan.name, plan.description, plan.cuisineName, plan.category].filter(Boolean).join(' '));
 };
 
 const includesAnyKeyword = (text: string, keywords: string[]): boolean => {
   return keywords.some((keyword) => text.includes(normalizeText(keyword)));
+};
+
+const getGoalKeywords = (rawGoal: string | null | undefined): string[] | null => {
+  const goal = normalizeText(rawGoal);
+  if (!goal) return null;
+
+  if (goal.includes('loss') || goal.includes('lose') || goal.includes('slim') || goal.includes('fat')) {
+    return GOAL_KEYWORDS.weight_loss;
+  }
+  if (goal.includes('gain') && !goal.includes('muscle')) {
+    return GOAL_KEYWORDS.weight_gain;
+  }
+  if (goal.includes('muscle') || goal.includes('strength') || goal.includes('hypertrophy')) {
+    return GOAL_KEYWORDS.build_muscle;
+  }
+  if (goal.includes('maintain') || goal.includes('maintenance')) {
+    return GOAL_KEYWORDS.maintenance;
+  }
+  if (goal.includes('fast')) {
+    return GOAL_KEYWORDS.intermittent_fasting;
+  }
+
+  return GOAL_KEYWORDS[goal] || [goal];
 };
 
 const parseUserIdFromToken = (authorizationHeader?: string): string | null => {
@@ -104,7 +128,7 @@ const toMeters = (height: number | null | undefined, unit: string | null | undef
 const getBmiCategory = (bmi: number): string => {
   if (bmi < 18.5) return 'underweight';
   if (bmi < 25) return 'normal_weight';
-  if (bmi < 30) return 'overweight';
+  if (bmi < 35) return 'overweight';
   return 'obese';
 };
 
@@ -155,7 +179,7 @@ export const getAllDietPlans = async (req: Request, res: Response): Promise<void
       });
 
       if (questionnaire) {
-        const goal = normalizeText(questionnaire.goal);
+        const goalKeywords = getGoalKeywords(questionnaire.goal);
         const selectedCuisine = normalizeText(questionnaire.dietType?.[0]);
 
         const weightKg = toKg(questionnaire.weight, questionnaire.weightUnit);
@@ -169,46 +193,27 @@ export const getAllDietPlans = async (req: Request, res: Response): Promise<void
           }
         }
 
-        if (goal) {
-          const goalKeywords = GOAL_KEYWORDS[goal] || [goal];
+        if (goalKeywords) {
           const byGoal = personalizedDietPlans.filter((plan) => {
             const planText = buildPlanSearchText(plan);
             return includesAnyKeyword(planText, goalKeywords);
           });
 
-          if (byGoal.length > 0) {
-            personalizedDietPlans = byGoal;
-          }
+          personalizedDietPlans = byGoal;
         }
 
-        if (bmiCategory) {
-          const categoryKeywords = BMI_CATEGORY_KEYWORDS[bmiCategory];
-
-          const hasBmiTaggedPlans = personalizedDietPlans.some((plan) => {
-            const planText = buildPlanSearchText(plan);
-            const allBmiKeywords = Object.values(BMI_CATEGORY_KEYWORDS).flat();
-            return includesAnyKeyword(planText, allBmiKeywords);
-          });
-
-          if (hasBmiTaggedPlans) {
-            const byBmi = personalizedDietPlans.filter((plan) => {
-              const planText = buildPlanSearchText(plan);
-              return includesAnyKeyword(planText, categoryKeywords);
-            });
-
-            if (byBmi.length > 0) {
-              personalizedDietPlans = byBmi;
-            }
-          }
-        }
-
-        if (selectedCuisine) {
+        if (bmiCategory || selectedCuisine) {
+          const categoryKeywords = bmiCategory ? BMI_CATEGORY_KEYWORDS[bmiCategory] : [];
           personalizedDietPlans = [...personalizedDietPlans].sort((a, b) => {
             const aText = buildPlanSearchText(a);
             const bText = buildPlanSearchText(b);
-            const aPreferred = includesAnyKeyword(aText, [selectedCuisine]) ? 0 : 1;
-            const bPreferred = includesAnyKeyword(bText, [selectedCuisine]) ? 0 : 1;
-            if (aPreferred !== bPreferred) return aPreferred - bPreferred;
+            const aScore =
+              (selectedCuisine && includesAnyKeyword(aText, [selectedCuisine]) ? 2 : 0) +
+              (categoryKeywords.length > 0 && includesAnyKeyword(aText, categoryKeywords) ? 1 : 0);
+            const bScore =
+              (selectedCuisine && includesAnyKeyword(bText, [selectedCuisine]) ? 2 : 0) +
+              (categoryKeywords.length > 0 && includesAnyKeyword(bText, categoryKeywords) ? 1 : 0);
+            if (aScore !== bScore) return bScore - aScore;
             return 0;
           });
         }

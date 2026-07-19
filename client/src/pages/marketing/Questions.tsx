@@ -21,10 +21,17 @@ import GoBack from "@/components/common/GoBack";
 import DietImage from "@/assets/Q-thankyou/Diet Applause.png";
 import ExerciseMenVideo from "@/assets/Q-thankyou/men-exercise.mp4"
 import ExerciseWomenVideo from "@/assets/Q-thankyou/women-exercise.mp4"
+import { useSearchParams } from "react-router-dom";
+import { findMissingQuestionnaireStep, hasCompletedPayment } from "@/lib/onboarding";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Questions() {
+  const [searchParams] = useSearchParams();
+  const restart = searchParams.get("restart") === "true";
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [hasPaid, setHasPaid] = useState(false);
 
   // questionnaire states
   const [gender, setGender] = useState("men");
@@ -63,9 +70,13 @@ export default function Questions() {
           if (q.height) setHeight(q.height);
           if (q.heightUnit) setHeightUnit(q.heightUnit);
 
-          // 👇 Jump to first missing step instead of 0
-          const missingStep = findMissingStep(q);
-          setCurrentStep(missingStep);
+          // "Update Information" always restarts from the first question
+          // (gender); otherwise resume at the first unanswered step.
+          setCurrentStep(restart ? 0 : findMissingQuestionnaireStep(q));
+        }
+
+        if (user?.id) {
+          setHasPaid(await hasCompletedPayment(user.id));
         }
       } catch (err) {
         console.error("Error fetching questionnaire:", err);
@@ -75,23 +86,7 @@ export default function Questions() {
     };
 
     fetchQuestionnaire();
-  }, []);
-
-  // helper function → which step is missing
-  const findMissingStep = (q: any) => {
-    if (!q.gender) return 0; // GenderSelector
-    if (!q.goal) return 2; // FitnessGoalSelector
-    if (!q.dietType) return 3; // DietTypeSelector
-    if (!q.allergenFood) return 4; // AllergenSelector
-    if (!q.fitnessLevel) return 6; // FitnessLevelSelector
-    if (!q.typicalDayType) return 7; // TypicalDaySelector
-    if (!q.bodyFocusArea) return 8; // FocusAreaSelector
-    if (!q.dateOfBirth) return 10; // AgeSelector
-    if (!q.height) return 11; // HeightSelector
-    if (!q.goalWeight) return 12; // GoalWeightSelector
-    if (!q.motivationFor) return 13; // FitnessMotivationSelector
-    return 15; // Done → go to summary
-  };
+  }, [restart, user?.id]);
 
   // step navigation
   const goToNext = (gender: string) => {
@@ -211,6 +206,7 @@ export default function Questions() {
     <FitnessGraph
       key="FitnessGraph"
       gender={gender}
+      hasPaid={hasPaid}
     />,
   ];
 
