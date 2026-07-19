@@ -185,10 +185,10 @@ export const FocusAreaSelector: React.FC<FocusAreaSelectorProps> = ({ gender, on
             type="button"
             onClick={() => toggleArea(area)}
             disabled={loading || saving}
-            className={`relative z-10 px-3 sm:px-6 py-2 rounded-lg border-2 transition duration-200 text-center text-sm sm:text-lg font-semibold bg-white
+            className={`relative z-10 px-3 sm:px-6 py-2 rounded-lg border-2 transition duration-200 text-center text-sm sm:text-lg font-semibold
         ${isSelected(area)
                     ? 'bg-primary text-white border-primary shadow-lg'
-                    : 'border-gray-300 text-gray-700 hover:bg-primary hover:text-white hover:border-primary cursor-pointer'}
+                    : 'bg-white border-gray-300 text-gray-700 hover:bg-primary hover:text-white hover:border-primary cursor-pointer'}
       `}
         >
             {area}

@@ -8,6 +8,15 @@ import { Elements } from "@stripe/react-stripe-js";
 import StripePaymentForm from "@/components/payment/StripePaymentForm";
 import { config } from "@/config";
 
+if (!config.stripePublishableKey) {
+  // VITE_* vars are baked in at build time, so a missing key here means the
+  // production build ran without VITE_STRIPE_PUBLISHABLE_KEY set - a rebuild
+  // (not just a server restart) is required after adding it.
+  console.error(
+    "Stripe publishable key is missing (VITE_STRIPE_PUBLISHABLE_KEY). Card fields will not render."
+  );
+}
+
 const stripePromise = loadStripe(config.stripePublishableKey);
 
 // Urgency countdown shown once a coupon is applied (15 minutes).

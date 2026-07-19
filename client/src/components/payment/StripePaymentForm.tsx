@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import {
     useStripe,
@@ -50,6 +50,23 @@ export default function StripePaymentForm({
     const [error, setError] = useState<string | null>(null);
     const [cardholderName, setCardholderName] = useState("");
     const [email, setEmail] = useState("");
+
+    useEffect(() => {
+        // stripe/elements resolve to null if Stripe.js failed to load (e.g. a
+        // missing/invalid publishable key baked into the build, or the page
+        // not being served over HTTPS), which leaves the card inputs mounted
+        // but non-interactive with no visible error.
+        if (!stripe || !elements) {
+            const timeout = setTimeout(() => {
+                if (!stripe || !elements) {
+                    setError(
+                        "Payment form failed to load. Please refresh the page or try again later."
+                    );
+                }
+            }, 5000);
+            return () => clearTimeout(timeout);
+        }
+    }, [stripe, elements]);
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
