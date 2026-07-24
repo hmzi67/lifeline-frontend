@@ -7,6 +7,7 @@ import { DashboardComponent } from '@/components/dashboard';
 import { useAuthStore } from '@/store/useAuthStore';
 import CouponComponent from './components/pages/CouponComponent';
 import ReferralComponent from './components/pages/ReferralComponent';
+import PricingPlanComponent from './components/pages/PricingPlanComponent';
 
 // ── Protected layout ──────────────────────────────────────────────────────────
 const AdminLayout: React.FC = () => {
@@ -39,6 +40,8 @@ const AdminLayout: React.FC = () => {
                 return <BlogCategoryComponent />;
             case 'blog':
                 return <BlogComponent />;
+            case 'pricingPlans':
+                return <PricingPlanComponent />;
             case 'coupons':
                 return <CouponComponent />;
             case 'referralCodes':
