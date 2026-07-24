@@ -8,6 +8,7 @@ import {
     updateMedication
 } from '../controllers/medicationController.js';
 import authenticate from '../middleware/authenticate.js';
+import { mediaUpload } from '../middleware/upload.js';
 
 const router = Router();
 
@@ -21,10 +22,10 @@ router.get('/', authenticate, getMedications);
 router.get('/:id', authenticate, getMedicationById);
 
 // Create a new medication
-router.post('/', authenticate, createMedication);
+router.post('/', authenticate, mediaUpload.single('file'), createMedication);
 
 // Update a medication
-router.put('/:id', authenticate, updateMedication);
+router.put('/:id', authenticate, mediaUpload.single('file'), updateMedication);
 
 // Delete a medication
 router.delete('/:id', authenticate, deleteMedication);

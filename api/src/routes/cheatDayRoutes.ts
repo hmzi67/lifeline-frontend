@@ -8,6 +8,7 @@ import {
     updateCheatDay
 } from '../controllers/cheatDayController.js';
 import authenticate from '../middleware/authenticate.js';
+import { mediaUpload } from '../middleware/upload.js';
 
 const router = Router();
 
@@ -21,10 +22,10 @@ router.get('/user/:userId', authenticate, getUserCheatDays);
 router.get('/:id', authenticate, getCheatDayById);
 
 // POST /api/cheat-days - Log a cheat day meal
-router.post('/', authenticate, logCheatDay);
+router.post('/', authenticate, mediaUpload.single('file'), logCheatDay);
 
 // PUT /api/cheat-days/:id - Update cheat day
-router.put('/:id', authenticate, updateCheatDay);
+router.put('/:id', authenticate, mediaUpload.single('file'), updateCheatDay);
 
 // DELETE /api/cheat-days/:id - Delete cheat day
 router.delete('/:id', authenticate, deleteCheatDay);
