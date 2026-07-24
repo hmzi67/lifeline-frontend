@@ -5,6 +5,7 @@ import { OAuth2Client } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import { z } from 'zod';
+import { config } from '../config/index.js';
 import { sendEmailVerificationEmail, sendPasswordResetEmail } from '../services/emailService.js';
 
 
@@ -38,13 +39,13 @@ const loginSchema = z.object({
 const generateTokens = (userId: string, email: string, roleId?: string) => {
   const accessToken = jwt.sign(
     { userId, email, roleId },
-    process.env.JWT_SECRET || 'fallback-secret',
+    config.jwt.secret,
     { expiresIn: '15m' }
   );
 
   const refreshToken = jwt.sign(
     { userId },
-    process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret',
+    config.jwt.refreshSecret,
     { expiresIn: '7d' }
   );
 
@@ -169,7 +170,6 @@ export const signup = async (req: Request, res: Response) => {
         data: {
           user,
           accessToken,
-          refreshToken,
         },
       });
     }
@@ -180,7 +180,6 @@ export const signup = async (req: Request, res: Response) => {
       data: {
         user,
         accessToken,
-        refreshToken,
       },
     });
   } catch (error) {
@@ -460,7 +459,6 @@ export const login = async (req: Request, res: Response) => {
       data: {
         user: userWithoutSensitiveData,
         accessToken,
-        refreshToken,
       },
     });
   } catch (error) {

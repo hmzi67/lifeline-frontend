@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import rateLimit from 'express-rate-limit';
 import {
     appleAuth,
     appleAuthCallback,
@@ -20,9 +21,21 @@ import {
 
 const authRoute = Router();
 
+// Stricter rate limit for auth endpoints (5 attempts per 15 minutes)
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    message: {
+        success: false,
+        message: 'Too many authentication attempts, please try again later.',
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
 // Authentication routes
-authRoute.post('/login', login);
-authRoute.post('/signup', signup);
+authRoute.post('/login', authLimiter, login);
+authRoute.post('/signup', authLimiter, signup);
 authRoute.post('/logout', logout);
 authRoute.post('/refresh-token', refreshToken);
 authRoute.get('/me', getCurrentUser);

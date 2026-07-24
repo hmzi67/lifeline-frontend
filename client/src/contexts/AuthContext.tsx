@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import type { AuthUser } from '../types/auth.types';
-import { api } from '../services/api';
+import api from '../lib/axios';
 
 interface AuthContextType {
     user: AuthUser | null;
@@ -48,7 +48,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             }
         };
 
-        initializeAuth().then(r => console.log(r));
+        initializeAuth();
     }, []);
 
     const clearAuthState = () => {
@@ -56,18 +56,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setTokenState(null);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        sessionStorage.removeItem('user');
-        sessionStorage.removeItem('token');
     };
 
     const setToken = (newToken: string | null) => {
         setTokenState(newToken);
         if (newToken) {
             localStorage.setItem('token', newToken);
-            sessionStorage.setItem('token', newToken);
         } else {
             localStorage.removeItem('token');
-            sessionStorage.removeItem('token');
         }
     };
 
@@ -75,10 +71,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(newUser);
         if (newUser) {
             localStorage.setItem('user', JSON.stringify(newUser));
-            sessionStorage.setItem('user', JSON.stringify(newUser));
         } else {
             localStorage.removeItem('user');
-            sessionStorage.removeItem('user');
         }
     };
 
