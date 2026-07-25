@@ -1,53 +1,45 @@
 import { PricingCard } from '@/components/marketing/PricingCard';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PricingHero from "@/components/marketing/PricingHero.tsx";
 import ProductShowcase from "@/components/Affiliate/ProductShowcase.tsx";
+import api from '@/lib/axios';
+
+interface PricingPlan {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  originalPrice: number | null;
+  durationMonths: number;
+  features: string[];
+  isHighlighted: boolean;
+  sortOrder: number;
+}
 
 const Pricing: React.FC = () => {
-  const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(1); // Default to middle card selected
+  const [plans, setPlans] = useState<PricingPlan[]>([]);
+  const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const features = [
-    "Steps Counter track by hand",
-    "Heart Rate by our premium fitness band",
-    "Calorie Counter on daily basis",
-    "Progress Tracking weekly and monthly as well",
-    "Water Intake by your every intake"
-  ];
-
-  const highlightedFeatures = [
-    "Steps Counter track by hand",
-    "Heart Rate by our premium fitness band",
-    "Calorie Counter on daily basis",
-    "Progress Tracking weekly and monthly as well",
-    "Water intake by your every intake",
-    "Steps Counter track by hand",
-    "Heart Rate by our premium fitness band",
-    "Calorie Counter on daily basis"
-  ];
-
-  const cardData = [
-    {
-      title: "12 Months Plan",
-      price: "19.99",
-      originalPrice: "$39.99/m",
-      features: features,
-      hasCoupon: true
-    },
-    {
-      title: "12 Months Plan",
-      price: "19.99",
-      originalPrice: "$39.99/m",
-      features: highlightedFeatures,
-      hasCoupon: true
-    },
-    {
-      title: "12 Months Plan",
-      price: "19.99",
-      originalPrice: "$39.99/m",
-      features: features,
-      hasCoupon: true
-    }
-  ];
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const res = await api.get('/pricing-plans');
+        const allPlans = res.data?.data ?? [];
+        const active = allPlans
+          .filter((p: PricingPlan) => p.isActive)
+          .sort((a: PricingPlan, b: PricingPlan) => a.sortOrder - b.sortOrder);
+        setPlans(active);
+        const highlightedIdx = active.findIndex((p: PricingPlan) => p.isHighlighted);
+        setSelectedCardIndex(highlightedIdx >= 0 ? highlightedIdx : active.length > 0 ? 0 : null);
+      } catch (err) {
+        console.error('Failed to load pricing plans', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPlans();
+  }, []);
 
   return (
     <>
@@ -63,21 +55,28 @@ const Pricing: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {cardData.map((card, index) => (
-              <PricingCard
-                key={index}
-                title={card.title}
-                price={card.price}
-                originalPrice={card.originalPrice}
-                features={card.features}
-                hasCoupon={card.hasCoupon}
-                isSelected={selectedCardIndex === index}
-                onSelect={() => setSelectedCardIndex(index)}
-                onContinue={() => console.log('clicked')}
-              />
-            ))}
-          </div>
+          {loading ? (
+            <div className="text-center py-12 text-gray-500">Loading plans...</div>
+          ) : plans.length === 0 ? (
+            <div className="text-center py-12 text-gray-500">No plans available yet.</div>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              {plans.map((plan, index) => (
+                <PricingCard
+                  key={plan.id}
+                  title={plan.name}
+                  price={String(plan.price)}
+                  originalPrice={plan.originalPrice != null ? `$${plan.originalPrice}/m` : ''}
+                  features={plan.features}
+                  hasCoupon
+                  isHighlighted={plan.isHighlighted}
+                  isSelected={selectedCardIndex === index}
+                  onSelect={() => setSelectedCardIndex(index)}
+                  onContinue={() => console.log('clicked')}
+                />
+              ))}
+            </div>
+          )}
 
           <div className="text-center mt-12">
             <p className="text-gray-600 max-w-2xl mx-auto mb-6">

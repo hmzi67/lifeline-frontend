@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { getMediaCategory } from '../middleware/upload.js';
 
 const prisma = new PrismaClient();
 
@@ -40,6 +41,15 @@ export const createMedication = async (req: Request, res: Response) => {
       });
     }
 
+    // Handle file upload - construct URL from uploaded file
+    let imageUrl = image || null;
+    if (req.file) {
+      const category = getMediaCategory(req.file.mimetype);
+      const relativePath = `/uploads/${category}/${req.file.filename}`;
+      const baseUrl = `${req.protocol}://${req.get('host')}`;
+      imageUrl = `${baseUrl}${relativePath}`;
+    }
+
     const medication = await prisma.medication.create({
       data: {
         userId,
@@ -48,7 +58,7 @@ export const createMedication = async (req: Request, res: Response) => {
         dose,
         frequency,
         reminderTime: reminderTime ? new Date(reminderTime) : null,
-        image: image || null,
+        image: imageUrl,
         icon: icon || null,
         appearanceColor: appearanceColor || null,
         appearanceIcon: appearanceIcon || null,
@@ -215,6 +225,15 @@ export const updateMedication = async (req: Request, res: Response) => {
       });
     }
 
+    // Handle file upload - construct URL from uploaded file
+    let imageUrl = image !== undefined ? image : (existingMedication as any).image;
+    if (req.file) {
+      const category = getMediaCategory(req.file.mimetype);
+      const relativePath = `/uploads/${category}/${req.file.filename}`;
+      const baseUrl = `${req.protocol}://${req.get('host')}`;
+      imageUrl = `${baseUrl}${relativePath}`;
+    }
+
     const medication = await prisma.medication.update({
       where: { id },
       data: {
@@ -223,7 +242,7 @@ export const updateMedication = async (req: Request, res: Response) => {
         dose,
         frequency,
         reminderTime: reminderTime === null ? null : (reminderTime ? new Date(reminderTime) : existingMedication.reminderTime),
-        image: image !== undefined ? image : (existingMedication as any).image,
+        image: imageUrl,
         icon: icon !== undefined ? icon : existingMedication.icon
       } as any
     });

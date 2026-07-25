@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { getMediaCategory } from '../middleware/upload.js';
 
 const prisma = new PrismaClient();
 
@@ -526,6 +527,14 @@ export const updateUser = async (req: Request, res: Response) => {
       if (req.body[key] !== undefined && req.body[key] !== null && req.body[key] !== '') {
         data[key] = req.body[key];
       }
+    }
+
+    // Handle file upload - construct URL from uploaded file
+    if (req.file) {
+      const category = getMediaCategory(req.file.mimetype);
+      const relativePath = `/uploads/${category}/${req.file.filename}`;
+      const baseUrl = `${req.protocol}://${req.get('host')}`;
+      data.profileImage = `${baseUrl}${relativePath}`;
     }
 
     if (Object.keys(data).length === 0) {

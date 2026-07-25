@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import { AuthenticatedRequest } from '../types/middlewareTypes.js';
+import { getMediaCategory } from '../middleware/upload.js';
 
 const prisma = new PrismaClient();
 
@@ -125,11 +126,20 @@ export const logCheatDay = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
+    // Handle file upload - construct URL from uploaded file
+    let imageUrl = image || null;
+    if (req.file) {
+      const category = getMediaCategory(req.file.mimetype);
+      const relativePath = `/uploads/${category}/${req.file.filename}`;
+      const baseUrl = `${req.protocol}://${req.get('host')}`;
+      imageUrl = `${baseUrl}${relativePath}`;
+    }
+
     const cheatDay = await prisma.cheatDay.create({
       data: {
         userId,
         foodName,
-        image: image || null,
+        image: imageUrl,
         mealType: mealType || null,
         portionSize: portionSize || null,
         loggedAt: new Date()
@@ -184,9 +194,18 @@ export const updateCheatDay = async (req: Request, res: Response): Promise<void>
       return;
     }
 
+    // Handle file upload - construct URL from uploaded file
+    let imageUrl = image !== undefined ? image : existingCheatDay.image;
+    if (req.file) {
+      const category = getMediaCategory(req.file.mimetype);
+      const relativePath = `/uploads/${category}/${req.file.filename}`;
+      const baseUrl = `${req.protocol}://${req.get('host')}`;
+      imageUrl = `${baseUrl}${relativePath}`;
+    }
+
     const updateData: any = {};
     if (foodName !== undefined) updateData.foodName = foodName;
-    if (image !== undefined) updateData.image = image;
+    if (imageUrl !== undefined) updateData.image = imageUrl;
     if (mealType !== undefined) updateData.mealType = mealType;
     if (portionSize !== undefined) updateData.portionSize = portionSize;
 

@@ -24,8 +24,6 @@ const Login: React.FC = () => {
       rememberMe: boolean
     };
 
-    console.log('Login attempt:', { email, password, rememberMe });
-
     setLoading(true);
 
     try {
@@ -44,7 +42,7 @@ const Login: React.FC = () => {
         });
         setFieldErrors(formattedErrors);
       } else {
-        setFieldErrors({ general: error.message || 'Signup failed' });
+        setFieldErrors({ general: error.message || 'Login failed' });
       }
     }
 

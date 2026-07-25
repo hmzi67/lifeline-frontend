@@ -106,6 +106,25 @@ model RefreshToken {
 // Subscription & Payment Module
 // ============================
 
+// Pricing Plans Table
+model PricingPlan {
+  id              String   @id @default(cuid())
+  name            String   @db.VarChar(100)
+  description     String?  @db.Text
+  price           Decimal  @db.Decimal(10, 2)
+  originalPrice   Decimal? @map("original_price") @db.Decimal(10, 2)
+  durationMonths  Int      @map("duration_months")
+  stripePriceId   String?  @map("stripe_price_id") @db.VarChar(255) @unique
+  features        String[] @db.Text
+  isActive        Boolean  @default(true) @map("is_active")
+  isHighlighted   Boolean  @default(false) @map("is_highlighted")
+  sortOrder       Int      @default(0) @map("sort_order")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("pricing_plans")
+}
+
 // Subscription Payments Table
 model SubscriptionPayment {
   id              String        @id @default(cuid())

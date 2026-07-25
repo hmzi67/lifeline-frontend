@@ -50,6 +50,7 @@ import sleepRoutes from './routes/sleepLogRoutes.js';
 import sleepSoundRoutes from './routes/sleepSoundRoutes.js';
 import sleepStoryRoutes from './routes/sleepStoryRoutes.js';
 import subscriptionPaymentRoutes from './routes/subscriptionPaymentRoutes.js';
+import pricingPlanRoutes from './routes/pricingPlanRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
 import userActiveDietPlanRoutes from './routes/userActiveDietPlanRoutes.js';
 import userActiveExercisePlanRoutes from './routes/userActiveExercisePlanRoutes.js';
@@ -127,6 +128,9 @@ app.use('/api/questionnaire', questionnaireRoutes);
 
 // subscription payment routes
 app.use('/api/subscription-payments', subscriptionPaymentRoutes);
+
+// pricing plan routes
+app.use('/api/pricing-plans', pricingPlanRoutes);
 
 // payment routes (Stripe)
 app.use('/api/payments', paymentRoutes);

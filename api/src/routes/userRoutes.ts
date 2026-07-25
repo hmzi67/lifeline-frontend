@@ -13,6 +13,7 @@ import {
 } from '../controllers/userController.js';
 import authenticate from '../middleware/authenticate.js';
 import authorize from '../middleware/authorize.js';
+import { mediaUpload, getMediaCategory } from '../middleware/upload.js';
 import { AuthenticatedRequest } from '../types/middlewareTypes.js';
 
 const userRoute = Router();
@@ -31,7 +32,7 @@ const checkProfileOwnership = (req: Request, res: Response, next: NextFunction) 
 
 // Regular user routes
 userRoute.get('/profile', authenticate, getCurrentUser);
-userRoute.put('/profile/:id', authenticate, checkProfileOwnership, updateUser);
+userRoute.put('/profile/:id', authenticate, checkProfileOwnership, mediaUpload.single('file'), updateUser);
 userRoute.delete('/profile/:id', authenticate, checkProfileOwnership, deleteUser);
 userRoute.get('/settings', authenticate, getUserSettings);
 userRoute.put('/settings', authenticate, updateUserSettings);
@@ -41,7 +42,7 @@ userRoute.post('/push-token', authenticate, registerPushToken);
 userRoute.get('/admin/users', authenticate, authorize(['admin']), getAllUsers);
 userRoute.get('/admin/stats', authenticate, authorize(['admin']), getUserStats);
 userRoute.get('/admin/users/:id', authenticate, authorize(['admin']), getUserWithRelations);
-userRoute.put('/admin/users/:id', authenticate, authorize(['admin']), updateUser);
+userRoute.put('/admin/users/:id', authenticate, authorize(['admin']), mediaUpload.single('file'), updateUser);
 userRoute.post('/admin/users', authenticate, authorize(['admin']), createUser);
 userRoute.delete('/admin/users/:id', authenticate, authorize(['admin']), deleteUser);
 
