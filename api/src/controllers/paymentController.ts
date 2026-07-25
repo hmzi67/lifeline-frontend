@@ -215,6 +215,23 @@ export const confirmPayment = async (req: Request, res: Response) => {
       },
     });
 
+    // ponytail: record coupon usage if a coupon was applied
+    const couponCode = paymentIntent.metadata.couponCode;
+    if (couponCode) {
+      const coupon = await prisma.couponCode.findUnique({ where: { code: couponCode.toUpperCase() } });
+      if (coupon && coupon.isActive && coupon.currentUses < coupon.maxUses) {
+        await prisma.$transaction([
+          prisma.couponUsage.create({
+            data: { couponId: coupon.id, userId, paymentId: subscriptionPayment.id },
+          }),
+          prisma.couponCode.update({
+            where: { id: coupon.id },
+            data: { currentUses: { increment: 1 } },
+          }),
+        ]);
+      }
+    }
+
     res.status(200).json({
       success: true,
       data: {
