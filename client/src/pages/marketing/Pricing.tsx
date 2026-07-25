@@ -14,6 +14,7 @@ interface PricingPlan {
   features: string[];
   isHighlighted: boolean;
   sortOrder: number;
+  isActive: boolean;
 }
 
 const Pricing: React.FC = () => {

@@ -17,11 +17,9 @@ const Login: React.FC = () => {
     const {
       email,
       password,
-      rememberMe
     } = data as {
       email: string;
       password: string;
-      rememberMe: boolean
     };
 
     setLoading(true);

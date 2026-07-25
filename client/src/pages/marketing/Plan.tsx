@@ -41,6 +41,7 @@ interface PricingPlan {
   features: string[];
   isHighlighted: boolean;
   sortOrder: number;
+  isActive: boolean;
 }
 
 export default function Plan() {
