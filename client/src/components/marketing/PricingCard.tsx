@@ -8,6 +8,7 @@ interface PricingCardProps {
   features: string[];
   hasCoupon?: boolean;
   isSelected: boolean;
+  isHighlighted?: boolean;
   onSelect: () => void;
   onContinue: (finalPrice: number, couponCode?: string) => void;
   onCouponApplied?: (discountPercent: number, couponCode: string) => void;
@@ -21,6 +22,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   features,
   hasCoupon = true,
   isSelected,
+  isHighlighted = false,
   onSelect,
   onContinue,
   onCouponApplied,
@@ -85,6 +87,15 @@ export const PricingCard: React.FC<PricingCardProps> = ({
         }
       `}
     >
+      {/* Featured Badge */}
+      {isHighlighted && (
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+          <span className={`px-4 py-1 rounded-full text-xs font-bold tracking-wide ${isSelected ? 'bg-white text-primary' : 'bg-primary text-white'}`}>
+            Featured
+          </span>
+        </div>
+      )}
+
       {/* Title */}
       <h3 className={`text-xl font-medium mb-8 text-center ${isSelected ? 'text-white' : 'text-gray-900'}`}>
         {title}

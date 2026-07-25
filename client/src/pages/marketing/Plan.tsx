@@ -7,6 +7,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import StripePaymentForm from "@/components/payment/StripePaymentForm";
 import { config } from "@/config";
+import api from "@/lib/axios";
 
 if (!config.stripePublishableKey) {
   // VITE_* vars are baked in at build time, so a missing key here means the
@@ -30,15 +31,49 @@ const formatCountdown = (totalSeconds: number): string => {
   return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 };
 
+interface PricingPlan {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  originalPrice: number | null;
+  durationMonths: number;
+  features: string[];
+  isHighlighted: boolean;
+  sortOrder: number;
+}
+
 export default function Plan() {
   const navigate = useNavigate();
+  const [plans, setPlans] = useState<PricingPlan[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showPayment, setShowPayment] = useState(false);
-  const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(1);
+  const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null);
   const [showStripeForm, setShowStripeForm] = useState(false);
   const [checkoutAmount, setCheckoutAmount] = useState<number | null>(null);
   const [checkoutCouponCode, setCheckoutCouponCode] = useState<string | undefined>(undefined);
   const [couponSecondsLeft, setCouponSecondsLeft] = useState<number | null>(null);
   const couponTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const res = await api.get('/pricing-plans');
+        const allPlans = res.data?.data ?? [];
+        const active = allPlans
+          .filter((p: PricingPlan) => p.isActive)
+          .sort((a: PricingPlan, b: PricingPlan) => a.sortOrder - b.sortOrder);
+        setPlans(active);
+        const highlightedIdx = active.findIndex((p: PricingPlan) => p.isHighlighted);
+        setSelectedCardIndex(highlightedIdx >= 0 ? highlightedIdx : active.length > 0 ? 0 : null);
+      } catch (err) {
+        console.error('Failed to load pricing plans', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPlans();
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -67,7 +102,7 @@ export default function Plan() {
     setCouponSecondsLeft(null);
   };
 
-  const features = ["Steps Counter track by hand", "Heart Rate by our premium fitness band", "Calorie Counter on daily basis", "Progress Tracking weekly and monthly as well", "Water Intake by your every intake"]; const highlightedFeatures = ["Steps Counter track by hand", "Heart Rate by our premium fitness band", "Calorie Counter on daily basis", "Progress Tracking weekly and monthly as well", "Water intake by your every intake", "Steps Counter track by hand", "Heart Rate by our premium fitness band", "Calorie Counter on daily basis"]; const cardData = [{ title: "12 Months Plan", price: "19.99", originalPrice: "$39.99/m", features: features, hasCoupon: true }, { title: "12 Months Plan", price: "19.99", originalPrice: "$39.99/m", features: highlightedFeatures, hasCoupon: true }, { title: "12 Months Plan", price: "19.99", originalPrice: "$39.99/m", features: features, hasCoupon: true }];
+  const selectedPlan = selectedCardIndex !== null ? plans[selectedCardIndex] : null;
 
   return (
     <>
@@ -99,25 +134,32 @@ export default function Plan() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl w-full">
-              {cardData.map((card, index) => (
-                <PricingCard
-                  key={index}
-                  title={card.title}
-                  price={card.price}
-                  originalPrice={card.originalPrice}
-                  features={card.features}
-                  hasCoupon={card.hasCoupon}
-                  isSelected={selectedCardIndex === index}
-                  onSelect={() => setSelectedCardIndex(index)}
-                  onContinue={(finalPrice, couponCode) => {
-                    setCheckoutAmount(finalPrice);
-                    setCheckoutCouponCode(couponCode);
-                    setShowPayment(true);
-                  }}
-                  onCouponApplied={handleCouponApplied}
-                  onCouponCleared={handleCouponCleared}
-                />
-              ))}
+              {loading ? (
+                <div className="col-span-3 text-center py-12 text-gray-500">Loading plans...</div>
+              ) : plans.length === 0 ? (
+                <div className="col-span-3 text-center py-12 text-gray-500">No plans available yet.</div>
+              ) : (
+                plans.map((plan, index) => (
+                  <PricingCard
+                    key={plan.id}
+                    title={plan.name}
+                    price={String(plan.price)}
+                    originalPrice={plan.originalPrice != null ? `$${plan.originalPrice}/m` : ''}
+                    features={plan.features}
+                    hasCoupon
+                    isHighlighted={plan.isHighlighted}
+                    isSelected={selectedCardIndex === index}
+                    onSelect={() => setSelectedCardIndex(index)}
+                    onContinue={(finalPrice, couponCode) => {
+                      setCheckoutAmount(finalPrice);
+                      setCheckoutCouponCode(couponCode);
+                      setShowPayment(true);
+                    }}
+                    onCouponApplied={handleCouponApplied}
+                    onCouponCleared={handleCouponCleared}
+                  />
+                ))
+              )}
             </div>
 
             <p className="text-gray-700 font-semibold max-w-4xl text-center mt-12 text-sm sm:text-base">
@@ -215,14 +257,14 @@ export default function Plan() {
             </div>
             <Elements stripe={stripePromise}>
               <StripePaymentForm
-                amount={checkoutAmount ?? parseFloat(cardData[selectedCardIndex ?? 1].price)}
-                planTitle={cardData[selectedCardIndex ?? 1].title}
+                amount={checkoutAmount ?? (selectedPlan ? parseFloat(String(selectedPlan.price)) : 0)}
+                planTitle={selectedPlan?.name ?? ''}
                 couponCode={checkoutCouponCode}
                 onSuccess={() => {
                   navigate("/", {
                     state: {
                       paymentSuccess: true,
-                      planTitle: cardData[selectedCardIndex ?? 1].title,
+                      planTitle: selectedPlan?.name ?? '',
                     },
                   });
                 }}
