@@ -80,9 +80,9 @@ export const PricingCard: React.FC<PricingCardProps> = ({
     <div
       onClick={onSelect}
       className={`
-        relative p-8 rounded-3xl transition-all duration-300 cursor-pointer flex flex-col 
+        relative p-5 sm:p-8 rounded-3xl transition-all duration-300 cursor-pointer flex flex-col 
         ${isSelected
-          ? 'bg-primary text-white shadow-lg transform scale-105'
+          ? 'bg-primary text-white shadow-lg sm:transform sm:scale-105'
           : 'bg-white text-gray-800 shadow-sm hover:shadow-md border border-gray-100'
         }
       `}
@@ -103,26 +103,22 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
       {/* Price Section */}
       <div className="text-center mb-6">
-        <div className="mb-2 relative inline-flex items-baseline">
-          <span className={`text-sm font-bold absolute left-0 ${isSelected ? 'text-white' : 'text-gray-900'}`}>$</span>
-          <span className={`text-5xl font-bold ml-3 ${isSelected ? 'text-white' : 'text-gray-900'}`}>{finalPrice}</span>
-          <span className={`text-lg font-bold ${isSelected ? 'text-white' : 'text-gray-900'}`}>/m</span>
-        </div>
-
-        <br />
-
-        {/* Original Price Badge */}
-        <div className='absolute right-0 top-[160px]'>
+        {originalPrice && (
           <div className={`
-            line-through w-28 flex items-center justify-center px-3 py-1 font-medium rounded-l-full text-lg
+            line-through inline-block px-3 py-1 mb-2 font-medium rounded-full text-sm sm:text-lg
             ${isSelected ? 'bg-white text-primary' : 'bg-primary text-white'}
           `}>
             {originalPrice}
           </div>
+        )}
+        <div className="mb-2 inline-flex items-baseline">
+          <span className={`text-sm font-bold ${isSelected ? 'text-white' : 'text-gray-900'}`}>$</span>
+          <span className={`text-3xl sm:text-5xl font-bold ml-1 ${isSelected ? 'text-white' : 'text-gray-900'}`}>{finalPrice}</span>
+          <span className={`text-base sm:text-lg font-bold ${isSelected ? 'text-white' : 'text-gray-900'}`}>/m</span>
         </div>
 
         {/* Description */}
-        <p className={`mt-16 text-sm leading-relaxed mb-6 ${isSelected ? 'text-white/90' : 'text-gray-600'}`}>
+        <p className={`mt-4 text-sm leading-relaxed mb-6 ${isSelected ? 'text-white/90' : 'text-gray-600'}`}>
           Get our Monthly Plan, now discounted to just ${finalPrice}! Act now and start achieving your fitness goals for less!
         </p>
 
@@ -144,14 +140,14 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
             {showCouponField && (
               <div className="mt-4 space-y-3" onClick={(e) => e.stopPropagation()}>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="text"
                     value={couponCode}
                     onChange={handleCouponChange}
                     placeholder="Enter coupon code"
                     className={`
-                      flex-1 px-4 py-3 rounded-xl text-sm
+                      flex-1 min-w-0 px-4 py-3 rounded-xl text-sm
                       ${isSelected
                         ? 'bg-white/20 border border-white/30 text-white placeholder-white/70'
                         : 'bg-gray-50 border border-gray-200 text-gray-800 placeholder-gray-500'
@@ -163,7 +159,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
                     onClick={handleCouponSubmit}
                     disabled={couponStatus === 'checking'}
                     className={`
-                      px-6 py-3 rounded-xl text-sm font-medium transition-all disabled:opacity-60
+                      px-6 py-3 rounded-xl text-sm font-medium transition-all disabled:opacity-60 whitespace-nowrap
                       ${isSelected
                         ? 'bg-white text-teal-500 hover:bg-gray-50'
                         : 'bg-teal-500 text-white hover:bg-teal-600'
@@ -219,14 +215,14 @@ export const PricingCard: React.FC<PricingCardProps> = ({
       </div>
 
       {/* Get Started Button */}
-      <div className='w-full flex items-center justify-center'>
+      <div className='w-full flex items-center justify-center mt-auto'>
         <button
           onClick={(e) => {
             e.stopPropagation();
             onContinue(parseFloat(finalPrice), appliedCode);
           }}
           className={`
-           py-3 px-8  rounded-xl font-bold transition-all duration-300 hover:transform hover:scale-105
+           w-full sm:w-auto py-3 px-8 rounded-xl font-bold transition-all duration-300 hover:transform hover:scale-105
           ${isSelected
               ? 'bg-white text-primary hover:bg-gray-50 shadow-md'
               : 'bg-primary text-white hover:bg-teal-500 shadow-md'
