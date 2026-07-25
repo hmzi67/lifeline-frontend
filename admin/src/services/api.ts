@@ -33,8 +33,8 @@ api.interceptors.response.use(
   (error: AxiosError<ApiError>) => {
     // Handle common error cases
     if (error.response?.status === 401) {
-      // Unauthorized - clear token and redirect to login
       localStorage.removeItem('token');
+      localStorage.removeItem('admin-auth-store'); // ponytail: clear zustand persist to prevent infinite reload loop
       window.location.href = '/login';
     }
     

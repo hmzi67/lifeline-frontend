@@ -40,6 +40,7 @@ let refreshPromise: Promise<string> | null = null;
 
 const redirectToLogin = () => {
   localStorage.removeItem('token');
+  localStorage.removeItem('admin-auth-store'); // ponytail: clear zustand persist to prevent infinite reload loop
   if (window.location.pathname !== '/login') {
     window.location.href = '/login';
   }
