@@ -106,6 +106,7 @@ export function CrudTable<T extends { id: string }>({
 
                     {onAdd && (
                         <Button
+                            type="button"
                             className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                             onClick={onAdd}
                         >
@@ -196,6 +197,7 @@ export function CrudTable<T extends { id: string }>({
                                                         <div className="flex justify-end gap-2">
                                                             {onEdit && (
                                                                 <Button
+                                                                    type="button"
                                                                     variant="ghost"
                                                                     size="sm"
                                                                     className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
@@ -206,6 +208,7 @@ export function CrudTable<T extends { id: string }>({
                                                             )}
                                                             {onDelete && (
                                                                 <Button
+                                                                    type="button"
                                                                     variant="ghost"
                                                                     size="sm"
                                                                     className="text-red-600 hover:text-red-700 hover:bg-red-50"
@@ -233,6 +236,7 @@ export function CrudTable<T extends { id: string }>({
                                     </p>
                                     <div className="flex gap-2">
                                         <Button
+                                            type="button"
                                             variant="outline"
                                             size="sm"
                                             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
@@ -244,6 +248,7 @@ export function CrudTable<T extends { id: string }>({
                                             Page {currentPage} of {totalPages}
                                         </span>
                                         <Button
+                                            type="button"
                                             variant="outline"
                                             size="sm"
                                             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}

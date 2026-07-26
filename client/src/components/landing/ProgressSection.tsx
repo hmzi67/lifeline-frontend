@@ -3,6 +3,7 @@ import { Check } from "lucide-react";
 import progressTrackerImage from "../../assets/images/landing/trackerSectionBoth.png"
 import { Button } from '../ui/button';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Fixed mobile layout to match the design image
 
@@ -20,6 +21,8 @@ export const ProgressSection: React.FC = () => {
         "Be Healthier than before",
         "Increase Stamina"
     ];
+
+    const { isAuthenticated } = useAuth();
 
     return (
         <div className="py-12 sm:py-16 lg:py-20 bg-white">
@@ -39,7 +42,7 @@ export const ProgressSection: React.FC = () => {
                                 {desktopFeatures.map((item) => (
                                     <li key={item} className="flex items-center text-lg xl:text-xl">
                                         <div className="w-4 h-4 sm:w-5 sm:h-5 me-2 bg-primary-400 text-white rounded-full flex items-center justify-center">
-                                          <Check className="w-4 h-4 " />
+                                            <Check className="w-4 h-4 " />
                                         </div>
                                         <span className="text-gray-700">{item}</span>
                                     </li>
@@ -47,11 +50,18 @@ export const ProgressSection: React.FC = () => {
                             </ul>
 
                             <div className="mt-10 flex items-center gap-6">
-                                <Link to="/signup">
-                                    <Button className="bg-teal-400 hover:bg-primary-500 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition-all duration-300">
-                                        Buy Now
-                                    </Button>
-                                </Link>
+                                {
+                                    isAuthenticated ?
+                                        <Link to="/questions">
+                                            <Button className="bg-teal-400 hover:bg-primary-500 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition-all duration-300">
+                                                Update Information
+                                            </Button>
+                                        </Link> : <Link to="/signup">
+                                            <Button className="bg-teal-400 hover:bg-primary-500 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition-all duration-300">
+                                                Buy Now
+                                            </Button>
+                                        </Link>
+                                }
                                 <button className="text-lg font-semibold text-gray-700 hover:text-primary-400 transition-colors duration-300">
                                     Download App
                                 </button>
@@ -90,12 +100,12 @@ export const ProgressSection: React.FC = () => {
                     </div>
 
                     {/* Features List Below Image - Positioned to the right */}
-                   <div className="mb-4 sm:mb-8 flex justify-end">
+                    <div className="mb-4 sm:mb-8 flex justify-end">
                         <ul className="space-y-3 sm:space-y-4">
                             {mobileFeatures.map((item) => (
                                 <li key={item} className="flex items-center text-base sm:text-lg md:text-xl">
                                     <div className="w-5 h-5 sm:w-7 sm:h-7 me-1 bg-primary-400 rounded-full text-white flex items-center justify-center">
-                                      <Check className="w-3 h-3"/>
+                                        <Check className="w-3 h-3" />
                                     </div>
                                     <span className="text-black font-normal">{item}</span>
                                 </li>

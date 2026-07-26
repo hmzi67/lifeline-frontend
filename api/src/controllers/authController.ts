@@ -495,7 +495,7 @@ export const login = async (req: Request, res: Response) => {
 export const logout = async (req: Request, res: Response) => {
   try {
     // Accept refresh token from request body (for React Native) or cookie (for web)
-    const refreshToken = req.body.refreshToken || req.cookies.refreshToken;
+    const refreshToken = req.body?.refreshToken || req.cookies?.refreshToken;
 
     if (refreshToken) {
       // Remove refresh token from database
@@ -524,7 +524,7 @@ export const logout = async (req: Request, res: Response) => {
 export const refreshToken = async (req: Request, res: Response) => {
   try {
     // Accept refresh token from request body (for React Native) or cookie (for web)
-    const refreshToken = req.body.refreshToken || req.cookies.refreshToken;
+    const refreshToken = req.body?.refreshToken || req.cookies?.refreshToken;
 
     if (!refreshToken) {
       return res.status(401).json({

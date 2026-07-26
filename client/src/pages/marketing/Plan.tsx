@@ -1,8 +1,8 @@
 import Footer from "@/components/common/Footer";
 import { PricingCard } from "@/components/marketing/PricingCard";
-import { Button } from "@/components/ui/button";
 import { Tag, ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import StripePaymentForm from "@/components/payment/StripePaymentForm";
@@ -10,10 +10,53 @@ import { config } from "@/config";
 
 const stripePromise = loadStripe(config.stripePublishableKey);
 
+// Urgency countdown shown once a coupon is applied (15 minutes).
+const COUPON_COUNTDOWN_SECONDS = 15 * 60;
+
+const formatCountdown = (totalSeconds: number): string => {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+};
+
 export default function Plan() {
+  const navigate = useNavigate();
   const [showPayment, setShowPayment] = useState(false);
   const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(1);
   const [showStripeForm, setShowStripeForm] = useState(false);
+  const [checkoutAmount, setCheckoutAmount] = useState<number | null>(null);
+  const [checkoutCouponCode, setCheckoutCouponCode] = useState<string | undefined>(undefined);
+  const [couponSecondsLeft, setCouponSecondsLeft] = useState<number | null>(null);
+  const couponTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (couponTimerRef.current) clearInterval(couponTimerRef.current);
+    };
+  }, []);
+
+  const handleCouponApplied = () => {
+    if (couponTimerRef.current) clearInterval(couponTimerRef.current);
+    setCouponSecondsLeft(COUPON_COUNTDOWN_SECONDS);
+    couponTimerRef.current = setInterval(() => {
+      setCouponSecondsLeft((prev) => {
+        if (prev === null || prev <= 1) {
+          if (couponTimerRef.current) clearInterval(couponTimerRef.current);
+          couponTimerRef.current = null;
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  const handleCouponCleared = () => {
+    if (couponTimerRef.current) clearInterval(couponTimerRef.current);
+    couponTimerRef.current = null;
+    setCouponSecondsLeft(null);
+  };
 
   const features = ["Steps Counter track by hand", "Heart Rate by our premium fitness band", "Calorie Counter on daily basis", "Progress Tracking weekly and monthly as well", "Water Intake by your every intake"]; const highlightedFeatures = ["Steps Counter track by hand", "Heart Rate by our premium fitness band", "Calorie Counter on daily basis", "Progress Tracking weekly and monthly as well", "Water intake by your every intake", "Steps Counter track by hand", "Heart Rate by our premium fitness band", "Calorie Counter on daily basis"]; const cardData = [{ title: "12 Months Plan", price: "19.99", originalPrice: "$39.99/m", features: features, hasCoupon: true }, { title: "12 Months Plan", price: "19.99", originalPrice: "$39.99/m", features: highlightedFeatures, hasCoupon: true }, { title: "12 Months Plan", price: "19.99", originalPrice: "$39.99/m", features: features, hasCoupon: true }];
 
@@ -23,17 +66,12 @@ export default function Plan() {
       <div className="container mx-auto py-4 px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <img src="/logo.svg" className="w-16 h-16 sm:w-20 sm:h-20" />
-          <div className="flex items-center justify-center gap-4">
-            <p className="hidden md:flex items-center justify-center gap-2 text-gray-800">
+          {couponSecondsLeft !== null && (
+            <p className="hidden md:flex items-center justify-center gap-2 font-semibold text-primary-600">
               <Tag />
-              Your Discount is applied for 12:00
+              Your Discount is applied for {formatCountdown(couponSecondsLeft)}
             </p>
-            <Button
-              className="bg-primary hover:bg-primary-500 text-white font-semibold rounded-lg py-3 text-base transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
-            >
-              Get Started
-            </Button>
-          </div>
+          )}
         </div>
       </div>
 
@@ -62,7 +100,13 @@ export default function Plan() {
                   hasCoupon={card.hasCoupon}
                   isSelected={selectedCardIndex === index}
                   onSelect={() => setSelectedCardIndex(index)}
-                  onContinue={() => setShowPayment(true)}
+                  onContinue={(finalPrice, couponCode) => {
+                    setCheckoutAmount(finalPrice);
+                    setCheckoutCouponCode(couponCode);
+                    setShowPayment(true);
+                  }}
+                  onCouponApplied={handleCouponApplied}
+                  onCouponCleared={handleCouponCleared}
                 />
               ))}
             </div>
@@ -162,11 +206,16 @@ export default function Plan() {
             </div>
             <Elements stripe={stripePromise}>
               <StripePaymentForm
-                amount={parseFloat(cardData[selectedCardIndex ?? 1].price)}
+                amount={checkoutAmount ?? parseFloat(cardData[selectedCardIndex ?? 1].price)}
                 planTitle={cardData[selectedCardIndex ?? 1].title}
+                couponCode={checkoutCouponCode}
                 onSuccess={() => {
-                  alert("Payment successful! Your subscription is now active.");
-                  // You can redirect to dashboard or confirmation page here
+                  navigate("/", {
+                    state: {
+                      paymentSuccess: true,
+                      planTitle: cardData[selectedCardIndex ?? 1].title,
+                    },
+                  });
                 }}
                 onError={(error) => {
                   console.error("Payment error:", error);

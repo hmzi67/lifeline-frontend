@@ -6,9 +6,13 @@ import meditationImage1 from "@/assets/images/landing/meditation-1.webp";
 import meditationImage2 from "@/assets/images/landing/meditation-2.webp";
 import meditationImage3 from "@/assets/images/landing/meditation-3.webp";
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const MeditationSection: React.FC = () => {
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
+
+    // check if the user is authenticated
+    const { isAuthenticated } = useAuth();
 
     // Card data
     const cards = [
@@ -63,23 +67,33 @@ export const MeditationSection: React.FC = () => {
                     <div className="max-w-2xl mt-20 md:mt-40">
                         {/* Small subtitle */}
                         <p className="text-white text-xl md:text-2xl mb-4 font-medium">
-                           Breathe and relax
+                            Breathe and relax
                         </p>
                         {/* Main heading */}
                         <h1 className="text-2xl md:text-3xl lg:text-5xl font-bold text-white mb-6 md:mb-12 leading-relaxed">
                             Balance Your Mind & Body <br /> with Guided Meditation and<br /> Mindfulness
-                           
+
                         </h1>
                         {/* CTA Button */}
-                        <Link to="/signup">
-                            <Button
-                                size="lg"
-                                className="bg-white hover:bg-gray-100 text-gray-900 font-semibold px-6 py-4 md:px-10 md:py-6 text-base md:text-lg rounded-full transition-all duration-300 transform hover:scale-105"
-                            >
-                                Start doing today
-                            </Button>
-                        </Link>
-                        
+                        {
+                            isAuthenticated ? <Link to="/questions">
+                                <Button
+                                    size="lg"
+                                    className="bg-white hover:bg-gray-100 text-gray-900 font-semibold px-6 py-4 md:px-10 md:py-6 text-base md:text-lg rounded-full transition-all duration-300 transform hover:scale-105"
+                                >
+                                    Review Information
+                                </Button>
+                            </Link> :
+                                <Link to="/signup">
+                                    <Button
+                                        size="lg"
+                                        className="bg-white hover:bg-gray-100 text-gray-900 font-semibold px-6 py-4 md:px-10 md:py-6 text-base md:text-lg rounded-full transition-all duration-300 transform hover:scale-105"
+                                    >
+                                        Start doing today
+                                    </Button>
+                                </Link>
+                        }
+
                     </div>
                 </div>
             </div>

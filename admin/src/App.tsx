@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Sidebar, Header } from '@/components/layout';
 import { LoginPage, UsersComponent, DietComponent, ExerciseComponent, BlogComponent, MeditationComponent, RoleComponent, BlogCategoryComponent, MealTypeComponent, ChallengeComponent, SleepStoriesComponent, SleepSoundsComponent } from '@/components/pages';
-import { navigationItems, getStatsData } from '@/components/constants';
+import { navigationItems } from '@/components/constants';
 import { DashboardComponent } from '@/components/dashboard';
-import { useAnimation } from '@/hooks/useAnimation';
 import { useAuthStore } from '@/store/useAuthStore';
 import CouponComponent from './components/pages/CouponComponent';
 import ReferralComponent from './components/pages/ReferralComponent';
@@ -13,13 +12,11 @@ import ReferralComponent from './components/pages/ReferralComponent';
 const AdminLayout: React.FC = () => {
     const [activeNav, setActiveNav] = useState<string>('dashboard');
     const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
-    const animatedValues = useAnimation();
-    const statsData = getStatsData(animatedValues);
 
     const renderContent = () => {
         switch (activeNav) {
             case 'dashboard':
-                return <DashboardComponent statsData={statsData} animatedValues={animatedValues} />;
+                return <DashboardComponent />;
             case 'users':
                 return <UsersComponent />;
             case 'roles':
@@ -47,7 +44,7 @@ const AdminLayout: React.FC = () => {
             case 'referralCodes':
                 return <ReferralComponent />;
             default:
-                return <DashboardComponent statsData={statsData} animatedValues={animatedValues} />;
+                return <DashboardComponent />;
         }
     };
 

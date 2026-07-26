@@ -1,8 +1,11 @@
 import React from 'react';
 import heroImg2 from '../../assets/images/affiliatehero/business hero.jpeg'
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 const EmployeeWellbeingLanding: React.FC = () => {
+
+  const { isAuthenticated } = useAuth();
   return (
     <>
       <div className="h-full aspect-square lg:aspect-video  overflow-hidden">
@@ -22,7 +25,7 @@ const EmployeeWellbeingLanding: React.FC = () => {
             <h1 className="text-5xl lg:text-4xl font-semibold leading-tight mt-10">
               RETHINK{' '}
               <span className="text-primary">EMPLOYEE</span>
-              <br/>
+              <br />
             </h1>
             <h1 className="text-4xl lg:text-8xl leading-tight text mb-6">
               WELLBEING
@@ -31,11 +34,18 @@ const EmployeeWellbeingLanding: React.FC = () => {
               Cultivate a healthy, thriving, and unstoppable workforce with BetterMe's health transformation ecosystem
             </p>
 
-            <Link to='/signup'>
-              <button className="bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-600 transition-all duration-300 transform hover:scale-105">
-                Get Started
-              </button>
-            </Link>
+            {
+              isAuthenticated ?
+                <Link to='/questions'>
+                  <button className="bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-600 transition-all duration-300 transform hover:scale-105">
+                    Update Information
+                  </button>
+                </Link> : <Link to='/signup'>
+                  <button className="bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-600 transition-all duration-300 transform hover:scale-105">
+                    Get Started
+                  </button>
+                </Link>
+            }
 
           </div>
         </div>
@@ -47,7 +57,7 @@ const EmployeeWellbeingLanding: React.FC = () => {
           <h1 className="text-4xl lg:text-5xl font-semibold leading-tight mt-10 text-gray-900">
             YOUR{' '}
             <span className="text-primary">FITNESS</span>
-            <br/>
+            <br />
           </h1>
           <h1 className="text-4xl lg:text-9xl leading-tight font-semibold text mb-6 text-gray-900">
             PARTNER

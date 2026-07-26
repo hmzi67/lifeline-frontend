@@ -4,6 +4,7 @@ import AuthForm from '../../components/auth/AuthForm';
 import AuthLayout from '../../components/auth/AuthLayout';
 import SocialAuthButtons from '../../components/auth/SocialAuthButtons';
 import { useAuth } from '../../contexts/AuthContext';
+import { getPostLoginRedirectPath } from '@/lib/onboarding';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -30,7 +31,9 @@ const Login: React.FC = () => {
     try {
       await login(email, password);
 
-      navigate("/questions")
+      const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
+      const redirectPath = await getPostLoginRedirectPath(storedUser?.id);
+      navigate(redirectPath);
 
     } catch (error: any) {
       setLoading(false);

@@ -15,9 +15,13 @@ import {
     Waves,
     Music,
     Ticket,
-    Link2
+    Link2,
+    UserPlus,
+    Activity,
+    TrendingUp,
+    CheckCircle
 } from 'lucide-react';
-import type { NavigationItem, StatData } from '@/types';
+import type { NavigationItem, StatData, DashboardData } from '@/types';
 
 export const navigationItems: NavigationItem[] = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
@@ -36,53 +40,51 @@ export const navigationItems: NavigationItem[] = [
     { id: 'referralCodes', label: 'Referral Codes', icon: Link2 },
 ];
 
-export const getStatsData = (animatedValues: Record<string, number>): StatData[] => [
+export const getStatsData = (dashboardData: DashboardData | null): StatData[] => [
     {
-        title: 'Total Balance',
-        value: `${animatedValues.totalBalance || 0}.10`,
-        unit: 'USD',
-        icon: DollarSign,
+        title: 'Total Users',
+        value: dashboardData?.users.total ?? 0,
+        unit: 'Users',
+        icon: Users,
         gradient: 'from-emerald-400 to-teal-500',
         bgGradient: 'from-emerald-50 to-teal-50',
         iconBg: 'from-emerald-100 to-teal-100',
-        chart: [40, 60, 30, 80, 45, 70, 35, 90, 25, 55, 75, 40],
-        trend: '+42.9%',
+        chart: dashboardData?.users.dailyGrowth.map(d => d.count) ?? [],
+        trend: `+${dashboardData?.users.newThisMonth ?? 0} this month`,
         trendDirection: 'up'
     },
     {
-        title: 'Total Sales',
-        value: `${(animatedValues.totalSales || 0) / 1000}k`,
-        unit: 'Sales',
-        icon: ShoppingCart,
+        title: 'New Users (30d)',
+        value: dashboardData?.users.newThisMonth ?? 0,
+        unit: 'Users',
+        icon: UserPlus,
         gradient: 'from-orange-400 to-red-500',
         bgGradient: 'from-orange-50 to-red-50',
         iconBg: 'from-orange-100 to-red-100',
-        chart: [60, 80, 45, 70, 55, 85, 40, 65, 50, 75, 35, 60],
-        trend: '+18.2%',
+        trend: `${dashboardData?.users.verificationRate ?? 0}% verified`,
         trendDirection: 'up'
     },
     {
-        title: 'Total Orders',
-        value: animatedValues.totalOrders || 0,
-        unit: 'Orders',
-        icon: Package,
+        title: 'Active Subscriptions',
+        value: dashboardData?.subscriptions.active ?? 0,
+        unit: 'Subscriptions',
+        icon: CreditCard,
         gradient: 'from-blue-400 to-purple-500',
         bgGradient: 'from-blue-50 to-purple-50',
         iconBg: 'from-blue-100 to-purple-100',
-        chart: [30, 45, 60, 40, 70, 55, 80, 45, 65, 50, 75, 40],
-        trend: '+25.4%',
+        trend: `$${(dashboardData?.subscriptions.totalRevenue ?? 0).toLocaleString()} revenue`,
         trendDirection: 'up'
     },
     {
-        title: 'Expenses This Week',
-        value: `${animatedValues.expenses || 0}`,
-        unit: 'USD',
-        icon: CreditCard,
+        title: 'Verification Rate',
+        value: `${dashboardData?.users.verificationRate ?? 0}%`,
+        unit: 'Verified',
+        icon: CheckCircle,
         gradient: 'from-cyan-400 to-blue-500',
         bgGradient: 'from-cyan-50 to-blue-50',
         iconBg: 'from-cyan-100 to-blue-100',
-        percentage: 85,
-        trend: '$39 less',
-        trendDirection: 'down'
+        percentage: dashboardData?.users.verificationRate ?? 0,
+        trend: `${dashboardData?.users.verified ?? 0} of ${dashboardData?.users.total ?? 0}`,
+        trendDirection: 'up'
     }
 ];

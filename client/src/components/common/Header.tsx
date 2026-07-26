@@ -122,7 +122,7 @@ export default function Header() {
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link
-                            to="/questions"
+                            to="/questions?restart=true"
                             className="flex items-center cursor-pointer w-full"
                         >
                           <User className="w-4 h-4 mr-2" />

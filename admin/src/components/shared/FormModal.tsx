@@ -116,8 +116,8 @@ export const FormModal: React.FC<FormModalProps> = ({
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async (e?: React.SyntheticEvent) => {
+        e?.preventDefault();
 
         if (!validate()) {
             return;
@@ -150,6 +150,7 @@ export const FormModal: React.FC<FormModalProps> = ({
                 <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-cyan-50">
                     <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
                     <button
+                        type="button"
                         onClick={onClose}
                         className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                         disabled={loading}
@@ -327,8 +328,8 @@ export const FormModal: React.FC<FormModalProps> = ({
                         {cancelLabel}
                     </Button>
                     <Button
-                        type="submit"
-                        onClick={handleSubmit}
+                        type="button"
+                        onClick={() => { void handleSubmit(); }}
                         disabled={loading}
                         className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600"
                     >
