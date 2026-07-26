@@ -454,13 +454,21 @@ export const login = async (req: Request, res: Response) => {
     // Remove sensitive data from response
     const { password: _, otp: __, ...userWithoutSensitiveData } = user;
 
-    res.status(200).json({
+    // Native clients cannot reliably use the httpOnly browser cookie, so the
+    // refresh token is part of the JSON session contract as well. Prevent
+    // proxies and clients from caching either token.
+    res.set({
+      'Cache-Control': 'no-store',
+      Pragma: 'no-cache',
+    });
+
+    return res.status(200).json({
       success: true,
       message: 'Login successful',
       data: {
         user: userWithoutSensitiveData,
         accessToken,
-        refreshToken,
+        refreshToken: refreshToken,
       },
     });
   } catch (error) {
