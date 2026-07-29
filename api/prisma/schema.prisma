@@ -36,6 +36,7 @@ model User {
   password        String?  @db.VarChar(255)
   otp             String?  @db.VarChar(20)
   status          String?  @db.VarChar(20)
+  trialUsedAt     DateTime? @map("trial_used_at")
   roleId          String?  @map("role_id")
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
@@ -114,13 +115,14 @@ model PricingPlan {
   price           Decimal  @db.Decimal(10, 2)
   originalPrice   Decimal? @map("original_price") @db.Decimal(10, 2)
   durationMonths  Int      @map("duration_months")
-  stripePriceId   String?  @map("stripe_price_id") @db.VarChar(255) @unique
+  trialDays       Int      @default(0) @map("trial_days")
   features        String[] @db.Text
   isActive        Boolean  @default(true) @map("is_active")
   isHighlighted   Boolean  @default(false) @map("is_highlighted")
   sortOrder       Int      @default(0) @map("sort_order")
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
+  subscriptionPayments SubscriptionPayment[]
 
   @@map("pricing_plans")
 }
@@ -129,7 +131,9 @@ model PricingPlan {
 model SubscriptionPayment {
   id              String        @id @default(cuid())
   userId          String?       @map("user_id")
+  pricingPlanId   String?       @map("pricing_plan_id")
   planName        String?       @map("plan_name") @db.VarChar(100)
+  durationMonths  Int?          @map("duration_months")
   originalAmount  Decimal?      @map("original_amount") @db.Decimal(10, 2)
   discountAmount  Decimal?      @map("discount_amount") @db.Decimal(10, 2)
   amount          Decimal?      @db.Decimal(10, 2)
@@ -140,13 +144,17 @@ model SubscriptionPayment {
   stripeCustomerId String?      @map("stripe_customer_id") @db.VarChar(255)
   stripeSubscriptionId String?  @map("stripe_subscription_id") @db.VarChar(255)
   stripePaymentIntentId String? @map("stripe_payment_intent_id") @db.VarChar(255)
+  stripeSetupIntentId String?   @map("stripe_setup_intent_id") @db.VarChar(255)
+  stripePaymentMethodId String? @map("stripe_payment_method_id") @db.VarChar(255)
   stripePriceId   String?       @map("stripe_price_id") @db.VarChar(255)
   currentPeriodEnd DateTime?    @map("current_period_end")
   cancelAtPeriodEnd Boolean     @default(false) @map("cancel_at_period_end")
   createdAt       DateTime?     @map("created_at")
   user            User?         @relation(fields: [userId], references: [id])
+  pricingPlan     PricingPlan?  @relation(fields: [pricingPlanId], references: [id], onDelete: SetNull)
   userLicenses    UserLicense[]
 
+  @@index([pricingPlanId])
   @@index([stripeSubscriptionId])
   @@index([stripeCustomerId])
   @@map("subscription_payments")

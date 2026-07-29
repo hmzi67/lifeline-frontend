@@ -68,5 +68,4 @@ temp/
 # Test
 test-results/
 
-# Prisma
-prisma/migrations/
+# Prisma migrations are source-controlled so production receives schema changes.

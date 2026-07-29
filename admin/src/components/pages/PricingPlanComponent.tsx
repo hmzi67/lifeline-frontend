@@ -13,7 +13,7 @@ interface PricingPlan {
     price: number;
     originalPrice: number | null;
     durationMonths: number;
-    stripePriceId: string | null;
+    trialDays: number;
     features: string[];
     isActive: boolean;
     isHighlighted: boolean;
@@ -43,7 +43,7 @@ const PricingPlanComponent: React.FC = () => {
         setLoading(true);
         setError('');
         try {
-            const response = await pricingPlanService.getAll({ limit: 100 });
+            const response = await pricingPlanService.customGet<PricingPlan[]>('/admin');
             if (response.success && Array.isArray(response.data)) {
                 setPlans(response.data);
             }
@@ -65,7 +65,7 @@ const PricingPlanComponent: React.FC = () => {
     };
 
     const handleDelete = async (plan: PricingPlan) => {
-        if (!window.confirm(`Delete plan "${plan.name}"? This cannot be undone.`)) return;
+        if (!window.confirm(`Archive plan "${plan.name}"? It will no longer be available for new purchases.`)) return;
         try {
             await pricingPlanService.delete(plan.id);
             fetchPlans();
@@ -95,7 +95,7 @@ const PricingPlanComponent: React.FC = () => {
             price: Number(data.price) || 0,
             originalPrice: data.originalPrice ? Number(data.originalPrice) : null,
             durationMonths: Number(data.durationMonths) || 1,
-            stripePriceId: data.stripePriceId || null,
+            trialDays: Number(data.trialDays) || 0,
             features,
             isActive: data.isActive !== 'false',
             isHighlighted: data.isHighlighted === 'true',
@@ -163,6 +163,15 @@ const PricingPlanComponent: React.FC = () => {
                     <Calendar className="w-4 h-4" />
                     {formatDuration(value)}
                 </div>
+            ),
+        },
+        {
+            key: 'trialDays',
+            label: 'Trial',
+            render: (value) => (
+                <span className="text-sm text-gray-600">
+                    {value > 0 ? `${value} days` : 'No trial'}
+                </span>
             ),
         },
         {
@@ -255,11 +264,11 @@ const PricingPlanComponent: React.FC = () => {
             placeholder: '1',
         },
         {
-            name: 'stripePriceId',
-            label: 'Stripe Price ID (optional)',
-            type: 'text',
+            name: 'trialDays',
+            label: 'Free Trial (days)',
+            type: 'number',
             required: false,
-            placeholder: 'price_xxxxx',
+            placeholder: '0',
         },
         {
             name: 'features',
@@ -356,13 +365,13 @@ const PricingPlanComponent: React.FC = () => {
                               price: editingPlan.price,
                               originalPrice: editingPlan.originalPrice ?? '',
                               durationMonths: editingPlan.durationMonths,
-                              stripePriceId: editingPlan.stripePriceId || '',
+                              trialDays: editingPlan.trialDays,
                               features: (editingPlan.features || []).join('\n'),
                               sortOrder: editingPlan.sortOrder,
                               isHighlighted: String(editingPlan.isHighlighted),
                               isActive: String(editingPlan.isActive),
                           }
-                        : { durationMonths: 1, sortOrder: 0, isHighlighted: 'false', isActive: 'true' }
+                        : { durationMonths: 1, trialDays: 0, sortOrder: 0, isHighlighted: 'false', isActive: 'true' }
                 }
                 submitLabel={editingPlan ? 'Save Changes' : 'Create Plan'}
             />

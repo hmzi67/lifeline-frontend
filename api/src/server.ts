@@ -1,7 +1,21 @@
 import app from './app.js';
 import { config } from './config/index.js';
 import {connectDatabase, disconnectDatabase} from './config/database.js';
+import { processDueTrialCharges } from './controllers/paymentController.js';
 
+let trialChargeJobRunning = false;
+
+const runTrialChargeJob = async () => {
+  if (trialChargeJobRunning) return;
+  trialChargeJobRunning = true;
+  try {
+    await processDueTrialCharges();
+  } catch (error) {
+    console.error('Trial charge job failed:', error);
+  } finally {
+    trialChargeJobRunning = false;
+  }
+};
 
 const startServer = async () => {
   try {
@@ -14,6 +28,10 @@ const startServer = async () => {
       console.log(`🚀 Server running on port ${config.port}`);
       console.log(`📊 Health check available at http://localhost:${config.port}/health`);
     });
+
+    void runTrialChargeJob();
+    const trialChargeTimer = setInterval(() => void runTrialChargeJob(), 60_000);
+    trialChargeTimer.unref();
   } catch (error) {
     console.error('❌ Failed to start server:', error);
     process.exit(1);

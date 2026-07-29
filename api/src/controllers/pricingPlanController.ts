@@ -9,8 +9,8 @@ const pricingPlanSchema = z.object({
     description: z.string().optional(),
     price: z.number().positive('Price must be positive'),
     originalPrice: z.number().positive().optional().nullable(),
-    durationMonths: z.number().int().positive('Duration must be positive'),
-    stripePriceId: z.string().optional().nullable(),
+    durationMonths: z.number().int().min(1).max(120),
+    trialDays: z.number().int().min(0).max(730).default(0),
     features: z.array(z.string()).default([]),
     isActive: z.boolean().default(true),
     isHighlighted: z.boolean().default(false),
@@ -20,11 +20,24 @@ const pricingPlanSchema = z.object({
 export const getAllPricingPlans = async (_req: Request, res: Response) => {
     try {
         const plans = await prisma.pricingPlan.findMany({
+            where: { isActive: true },
             orderBy: { sortOrder: 'asc' },
         });
         res.json({ success: true, data: plans });
     } catch (error) {
         console.error('Error fetching pricing plans:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch pricing plans' });
+    }
+};
+
+export const getAllPricingPlansAdmin = async (_req: Request, res: Response) => {
+    try {
+        const plans = await prisma.pricingPlan.findMany({
+            orderBy: { sortOrder: 'asc' },
+        });
+        res.json({ success: true, data: plans });
+    } catch (error) {
+        console.error('Error fetching admin pricing plans:', error);
         res.status(500).json({ success: false, message: 'Failed to fetch pricing plans' });
     }
 };
@@ -83,8 +96,11 @@ export const updatePricingPlan = async (req: Request, res: Response) => {
 export const deletePricingPlan = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        await prisma.pricingPlan.delete({ where: { id } });
-        res.json({ success: true, message: 'Pricing plan deleted' });
+        const plan = await prisma.pricingPlan.update({
+            where: { id },
+            data: { isActive: false },
+        });
+        res.json({ success: true, data: plan, message: 'Pricing plan archived' });
     } catch (error) {
         console.error('Error deleting pricing plan:', error);
         res.status(500).json({ success: false, message: 'Failed to delete pricing plan' });

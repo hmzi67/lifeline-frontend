@@ -267,7 +267,7 @@ export const getPaymentsByUserId = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    const [payments, total] = await Promise.all([
+    const [paymentRecords, total] = await Promise.all([
       prisma.subscriptionPayment.findMany({
         where: { userId },
         skip,
@@ -289,6 +289,14 @@ export const getPaymentsByUserId = async (req: Request, res: Response) => {
         where: { userId }
       })
     ]);
+    const now = new Date();
+    const payments = paymentRecords.map((payment) => ({
+      ...payment,
+      isEntitled:
+        ['COMPLETED', 'TRIALING'].includes((payment.status || '').toUpperCase())
+        && !!payment.currentPeriodEnd
+        && payment.currentPeriodEnd > now,
+    }));
 
     res.status(200).json({
       payments,
