@@ -170,6 +170,8 @@ export const signup = async (req: Request, res: Response) => {
         data: {
           user,
           accessToken,
+          // Native clients cannot rely on the httpOnly browser cookie.
+          refreshToken,
         },
       });
     }
@@ -180,6 +182,8 @@ export const signup = async (req: Request, res: Response) => {
       data: {
         user,
         accessToken,
+        // Native clients cannot rely on the httpOnly browser cookie.
+        refreshToken,
       },
     });
   } catch (error) {
