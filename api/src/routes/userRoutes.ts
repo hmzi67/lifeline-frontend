@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import {
     createUser,
+    deleteOwnAccount,
     deleteUser,
     getAllUsers,
     getCurrentUser,
@@ -34,6 +35,8 @@ const checkProfileOwnership = (req: Request, res: Response, next: NextFunction) 
 userRoute.get('/profile', authenticate, getCurrentUser);
 userRoute.put('/profile/:id', authenticate, checkProfileOwnership, mediaUpload.single('file'), updateUser);
 userRoute.delete('/profile/:id', authenticate, checkProfileOwnership, deleteUser);
+// Self-service account deletion — requires email + password confirmation in the body
+userRoute.delete('/account', authenticate, deleteOwnAccount);
 userRoute.get('/settings', authenticate, getUserSettings);
 userRoute.put('/settings', authenticate, updateUserSettings);
 userRoute.post('/push-token', authenticate, registerPushToken);

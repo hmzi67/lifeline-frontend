@@ -12,6 +12,9 @@ const PUBLIC_ROUTES = [
   '/blogs',
   '/blog-categories',
   '/health',
+  // Login failures return 401 by design — never treat them as an expired
+  // session, or a wrong password would trigger a refresh and a hard redirect.
+  '/auth/login',
 ];
 
 // Helper function to check if route is public

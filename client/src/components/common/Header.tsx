@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import {X, User, LogOut, Settings, Hand} from 'lucide-react';
+import {X, User, LogOut, Settings} from 'lucide-react';
 import menu from "../../assets/images/comming-soon/menu.png";
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -116,9 +116,13 @@ export default function Header() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-48">
                       <DropdownMenuItem asChild>
-                        <p>
-                          <Hand className={'w-4 h-4 mr-2'} />
-                          hi, {user?.username && user.username.length > 5 ? user.username.slice(0, 8) + " ..." : user?.username}</p>
+                        <Link
+                            to="/profile"
+                            className="flex items-center cursor-pointer w-full"
+                        >
+                          <User className="w-4 h-4 mr-2" />
+                          Profile
+                        </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link
@@ -218,10 +222,14 @@ export default function Header() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="w-56 ml-4">
                           <DropdownMenuItem asChild>
-                            <p className="flex items-center px-2 py-2">
-                              <Hand className="w-4 h-4 mr-2" />
-                              Hi, {user?.firstName}
-                            </p>
+                            <Link
+                                to="/profile"
+                                className="flex items-center cursor-pointer w-full px-2 py-2"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                              <User className="w-4 h-4 mr-2" />
+                              Profile
+                            </Link>
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem asChild>

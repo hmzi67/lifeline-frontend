@@ -108,6 +108,12 @@ export default function Footer() {
                 Privacy
               </Link>
               <Link
+                to="/delete-account"
+                className="text-white hover:text-white/80 transition-colors duration-200 text-sm sm:text-base"
+              >
+                Delete Account
+              </Link>
+              <Link
                 to="/cookies"
                 className="text-white hover:text-white/80 transition-colors duration-200 text-sm sm:text-base"
               >

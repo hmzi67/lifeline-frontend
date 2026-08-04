@@ -764,6 +764,78 @@ export const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+// delete the authenticated user's own account after email + password confirmation
+export const deleteOwnAccount = async (req: Request, res: Response) => {
+  try {
+    const userId = getUserIdFromAuth(req);
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'No token provided',
+      });
+    }
+
+    const { email, password } = (req.body ?? {}) as { email?: string; password?: string };
+
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email and password are required to delete your account',
+      });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, email: true, password: true },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    if (user.email.toLowerCase() !== email.trim().toLowerCase()) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password',
+      });
+    }
+
+    if (!user.password) {
+      return res.status(400).json({
+        success: false,
+        message:
+          'This account signs in with Google and has no password. Please contact support to delete it.',
+      });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password',
+      });
+    }
+
+    await prisma.user.delete({ where: { id: user.id } });
+
+    res.status(200).json({
+      success: true,
+      message: 'Account deleted successfully',
+    });
+  } catch (e: any) {
+    console.error('Delete own account error:', e);
+    res.status(400).json({
+      success: false,
+      message: 'Failed to delete account',
+    });
+  }
+};
+
 // Additional helper function to get user with all relations
 export const getUserWithRelations = async (req: Request, res: Response) => {
   const { id } = req.params;

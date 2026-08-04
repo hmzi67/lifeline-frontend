@@ -1,66 +1,170 @@
-
+import { useState } from "react";
 import {
-    AlertDialog,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import {Button} from "@/components/ui/button.tsx";
-import {Trash2} from "lucide-react";
-import {useState} from "react";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button.tsx";
+import { Input } from "@/components/ui/input.tsx";
+import { Label } from "@/components/ui/label.tsx";
+import { AlertTriangle, Eye, EyeOff, Trash2 } from "lucide-react";
 import api from "@/lib/axios.ts";
-import {toast} from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
-export default function DeleteAccount(id: { id?: string }) {
+export default function DeleteAccount() {
+  const { logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
-  const deleteUser = async () => {
+  const resetForm = () => {
+    setEmail("");
+    setPassword("");
+    setShowPassword(false);
+    setError("");
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (!open) resetForm();
+  };
+
+  const deleteAccount = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    if (!email.trim() || !password) {
+      setError("Please enter both your email and password to confirm.");
+      return;
+    }
+
     setLoading(true);
     try {
-      await api.delete(`/user/profile/${id.id}`);
-      toast.success("Profile updated successfully");
+      await api.delete("/user/account", {
+        data: { email: email.trim(), password },
+      });
+
       setIsOpen(false);
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      sessionStorage.removeItem("token");
-      sessionStorage.removeItem("user");
-      window.location.reload();
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to delete account");
+      // Clears stored credentials and redirects to the home page
+      logout();
+    } catch (err: any) {
+      setError(
+        err?.response?.data?.message ||
+          "Failed to delete account. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogTrigger asChild>
-        <Button variant="destructive">
-          <Trash2 className="w-5 h-5" />
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        <Button
+          variant="destructive"
+          className="rounded-full px-6 py-2.5 h-auto font-semibold shadow-md hover:shadow-lg transition-all duration-300"
+        >
+          <Trash2 className="w-4 h-4" />
           Delete Account
         </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <Button variant="destructive" onClick={deleteUser} disabled={loading}>
-            {loading ? "Deleting..." : "Continue"}
-          </Button>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+      </DialogTrigger>
+
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-2">
+            <AlertTriangle className="w-6 h-6 text-red-600" />
+          </div>
+          <DialogTitle className="text-xl font-bold text-gray-900">
+            Delete your account?
+          </DialogTitle>
+          <DialogDescription className="text-gray-600">
+            This action cannot be undone. Your profile, plans and all tracked
+            progress will be permanently removed from our servers. Confirm with
+            your email and password to continue.
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={deleteAccount} className="space-y-4 mt-2">
+          <div className="space-y-2">
+            <Label htmlFor="delete-email" className="text-gray-700">
+              Email
+            </Label>
+            <Input
+              id="delete-email"
+              type="email"
+              autoComplete="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="h-11"
+              disabled={loading}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="delete-password" className="text-gray-700">
+              Password
+            </Label>
+            <div className="relative">
+              <Input
+                id="delete-password"
+                type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-11 pr-10"
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {error && (
+            <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-md px-3 py-2">
+              {error}
+            </p>
+          )}
+
+          <DialogFooter className="gap-2 sm:gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-full"
+              onClick={() => handleOpenChange(false)}
+              disabled={loading}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="destructive"
+              className="rounded-full"
+              disabled={loading}
+            >
+              {loading ? "Deleting..." : "Delete my account"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
