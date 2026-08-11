@@ -891,7 +891,7 @@ export const googleMobileAuth = async (req: Request, res: Response) => {
     try {
       ticket = await client.verifyIdToken({
         idToken,
-        audience: process.env.GOOGLE_CLIENT_ID,
+        audience: [process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_ANDROID_CLIENT_ID].filter(Boolean) as string[],
       });
     } catch (error) {
       console.error('Google ID token verification failed:', error);
