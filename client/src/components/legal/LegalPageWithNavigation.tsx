@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { LegalPageData } from '@/types/legal';
 import LegalNavigation from './LegalNavigation';
+import LegalSectionBody from './LegalSectionBody';
 
 interface LegalPageWithNavigationProps {
     data: LegalPageData;
@@ -85,11 +86,7 @@ const LegalPageWithNavigation: React.FC<LegalPageWithNavigationProps> = ({ data 
                                         <h2 className="text-xl font-semibold text-primary-500 mb-4">
                                             {section.title}
                                         </h2>
-                                        <div className="prose prose-gray max-w-none">
-                                            <p className="text-gray-700 leading-relaxed text-base whitespace-pre-line">
-                                                {section.content}
-                                            </p>
-                                        </div>
+                                        <LegalSectionBody section={section} />
                                     </section>
                                 ))}
                             </div>
@@ -101,14 +98,15 @@ const LegalPageWithNavigation: React.FC<LegalPageWithNavigationProps> = ({ data 
                                         Questions or Concerns?
                                     </h3>
                                     <p className="text-gray-600 text-sm leading-relaxed">
-                                        If you have any questions about this {data.title.toLowerCase()}, please contact us at{' '}
+                                        If you have any questions about this {data.title.toLowerCase()}, please contact{' '}
+                                        {data.contact?.company ?? 'Lifeline Dev Pvt Ltd'} at{' '}
                                         <a
-                                            href="mailto:legal@fitapp.com"
+                                            href={`mailto:${data.contact?.email ?? 'info@makelifeline.com'}`}
                                             className="text-primary-500 hover:text-primary-600 font-medium"
                                         >
-                                            legal@fitapp.com
-                                        </a>{' '}
-                                        or write to us at: FitApp Inc., 123 Fitness Street, Health City, HC 12345, United States.
+                                            {data.contact?.email ?? 'info@makelifeline.com'}
+                                        </a>
+                                        .
                                     </p>
                                 </div>
                             </div>

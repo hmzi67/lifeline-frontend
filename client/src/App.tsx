@@ -28,6 +28,7 @@ const Questions = lazy(() => import('@/pages/marketing/Questions'));
 const Error = lazy(() => import('./pages/utility/Error'));
 const PrivacyPolicy = lazy(() => import('./pages/legal/PrivacyPolicy'));
 const TermsAndConditions = lazy(() => import('./pages/legal/TermsAndConditions'));
+const CookiePolicy = lazy(() => import('./pages/legal/CookiePolicy'));
 const CommingSoon = lazy(() => import('./pages/utility/CommingSoon'));
 const Profile = lazy(() => import('./pages/auth/Profile'));
 const DeleteAccount = lazy(() => import('./pages/legal/DeleteAccount'));
@@ -53,6 +54,9 @@ function App() {
               <Route path="/error" element={<Error type="error4" />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+              <Route path="/terms" element={<TermsAndConditions />} />
+              <Route path="/cookies" element={<CookiePolicy />} />
+              <Route path="/cookie-policy" element={<CookiePolicy />} />
               <Route path="/coming-soon" element={<CommingSoon />} />
               {/* Public account-deletion page — required by the Play Store listing */}
               <Route path="/delete-account" element={<DeleteAccount />} />

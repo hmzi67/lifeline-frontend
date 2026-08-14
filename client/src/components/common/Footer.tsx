@@ -64,8 +64,7 @@ export default function Footer() {
         <div className="flex items-start">
           <div className="w-full lg:max-w-3xl xl:max-w-4xl">
             <p className="text-white text-sm sm:text-base lg:text-lg leading-relaxed text-center sm:text-left">
-              Hello, we are Lift Media. Our goal is to translate the positive effects from
-              revolutionizing how companies engage with their clients & their team.
+              Transform your fitness journey with LifeLine. Smart tracking for a healthier you.
             </p>
           </div>
         </div>
