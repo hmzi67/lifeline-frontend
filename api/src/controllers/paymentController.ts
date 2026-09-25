@@ -101,6 +101,136 @@ const getOrCreateStripeCustomer = async (stripe: Stripe, userId: string): Promis
   return customer.id;
 };
 
+const getWalletPaymentMethod = async (
+  stripe: Stripe,
+  paymentMethod: string | Stripe.PaymentMethod | null,
+): Promise<{ id?: string; method: 'apple_pay' | 'stripe' }> => {
+  if (!paymentMethod) return { method: 'stripe' };
+
+  const paymentMethodId = typeof paymentMethod === 'string' ? paymentMethod : paymentMethod.id;
+
+  try {
+    const details = typeof paymentMethod === 'string'
+      ? await stripe.paymentMethods.retrieve(paymentMethod)
+      : paymentMethod;
+    const isApplePay = details.type === 'card'
+      && details.card?.wallet?.type === 'apple_pay';
+
+    return {
+      id: paymentMethodId,
+      method: isApplePay ? 'apple_pay' : 'stripe',
+    };
+  } catch (error) {
+    // Payment completion must not be blocked by a transient metadata lookup.
+    console.warn('Unable to identify Stripe wallet type:', error);
+    return { id: paymentMethodId, method: 'stripe' };
+  }
+};
+
+const finalizePaidAccess = async (
+  stripe: Stripe,
+  paymentId: string,
+  paymentIntent: Stripe.PaymentIntent,
+): Promise<void> => {
+  const paymentMethod = await getWalletPaymentMethod(stripe, paymentIntent.payment_method);
+
+  await prisma.$transaction(async tx => {
+    const payment = await tx.subscriptionPayment.findUnique({ where: { id: paymentId } });
+    if (!payment?.userId) return;
+
+    const expiresAt = payment.currentPeriodEnd
+      || addMonths(new Date(), payment.durationMonths || 1);
+
+    await tx.subscriptionPayment.update({
+      where: { id: payment.id },
+      data: {
+        status: 'COMPLETED',
+        method: paymentMethod.method,
+        stripePaymentMethodId: paymentMethod.id,
+        currentPeriodEnd: expiresAt,
+      },
+    });
+
+    const license = await tx.userLicense.findFirst({
+      where: { paymentId: payment.id, userId: payment.userId },
+    });
+
+    if (license) {
+      if (!license.expiresAt || license.expiresAt < expiresAt) {
+        await tx.userLicense.update({
+          where: { id: license.id },
+          data: { expiresAt },
+        });
+      }
+    } else {
+      await tx.userLicense.create({
+        data: {
+          userId: payment.userId,
+          paymentId: payment.id,
+          createdAt: new Date(),
+          expiresAt,
+        },
+      });
+    }
+  });
+};
+
+const finalizeTrialAccess = async (
+  stripe: Stripe,
+  paymentId: string,
+  setupIntent: Stripe.SetupIntent,
+): Promise<void> => {
+  const paymentMethod = await getWalletPaymentMethod(stripe, setupIntent.payment_method);
+
+  await prisma.$transaction(async tx => {
+    const payment = await tx.subscriptionPayment.findUnique({ where: { id: paymentId } });
+    if (!payment?.userId) return;
+
+    const existingLicense = await tx.userLicense.findFirst({
+      where: { paymentId: payment.id, userId: payment.userId },
+    });
+
+    if (payment.status !== 'TRIALING') {
+      const trialClaim = await tx.user.updateMany({
+        where: { id: payment.userId, trialUsedAt: null },
+        data: { trialUsedAt: new Date() },
+      });
+
+      if (trialClaim.count !== 1) {
+        throw new Error('Free trial has already been used');
+      }
+    }
+
+    const expiresAt = payment.currentPeriodEnd || new Date();
+    await tx.subscriptionPayment.update({
+      where: { id: payment.id },
+      data: {
+        status: 'TRIALING',
+        method: paymentMethod.method,
+        stripePaymentMethodId: paymentMethod.id,
+      },
+    });
+
+    if (existingLicense) {
+      if (!existingLicense.expiresAt || existingLicense.expiresAt < expiresAt) {
+        await tx.userLicense.update({
+          where: { id: existingLicense.id },
+          data: { expiresAt },
+        });
+      }
+    } else {
+      await tx.userLicense.create({
+        data: {
+          userId: payment.userId,
+          paymentId: payment.id,
+          createdAt: new Date(),
+          expiresAt,
+        },
+      });
+    }
+  });
+};
+
 /**
  * Create a Stripe Payment Intent
  */
@@ -472,31 +602,7 @@ export const confirmSubscriptionPayment = async (req: Request, res: Response) =>
         });
       }
 
-      const paymentMethodId = typeof setupIntent.payment_method === 'string'
-        ? setupIntent.payment_method
-        : setupIntent.payment_method.id;
-      const expiresAt = payment.currentPeriodEnd || new Date();
-
-      await prisma.$transaction(async (tx) => {
-        const trialClaim = await tx.user.updateMany({
-          where: { id: userId, trialUsedAt: null },
-          data: { trialUsedAt: new Date() },
-        });
-        if (trialClaim.count !== 1) {
-          throw new Error('Free trial has already been used');
-        }
-
-        await tx.subscriptionPayment.update({
-          where: { id: payment.id },
-          data: {
-            status: 'TRIALING',
-            stripePaymentMethodId: paymentMethodId,
-          },
-        });
-        await tx.userLicense.create({
-          data: { userId, paymentId: payment.id, createdAt: new Date(), expiresAt },
-        });
-      });
+      await finalizeTrialAccess(stripe, payment.id, setupIntent);
 
       return res.status(200).json({
         success: true,
@@ -514,24 +620,7 @@ export const confirmSubscriptionPayment = async (req: Request, res: Response) =>
       return res.status(400).json({ success: false, message: 'Payment has not succeeded' });
     }
 
-    const expiresAt = addMonths(new Date(), payment.durationMonths || 1);
-    const paymentMethodId = typeof paymentIntent.payment_method === 'string'
-      ? paymentIntent.payment_method
-      : paymentIntent.payment_method?.id;
-
-    await prisma.$transaction([
-      prisma.subscriptionPayment.update({
-        where: { id: payment.id },
-        data: {
-          status: 'COMPLETED',
-          stripePaymentMethodId: paymentMethodId,
-          currentPeriodEnd: expiresAt,
-        },
-      }),
-      prisma.userLicense.create({
-        data: { userId, paymentId: payment.id, createdAt: new Date(), expiresAt },
-      }),
-    ]);
+    await finalizePaidAccess(stripe, payment.id, paymentIntent);
 
     res.status(200).json({
       success: true,
@@ -672,10 +761,22 @@ export const handleStripeWebhook = async (req: Request, res: Response) => {
     case 'payment_intent.succeeded': {
       const paymentIntent = event.data.object as Stripe.PaymentIntent;
       console.log('PaymentIntent succeeded:', paymentIntent.id);
-      await prisma.subscriptionPayment.updateMany({
-        where: { stripePaymentIntentId: paymentIntent.id } as any,
-        data: { status: 'COMPLETED' } as any,
+      const payment = await prisma.subscriptionPayment.findFirst({
+        where: { stripePaymentIntentId: paymentIntent.id },
+        select: { id: true },
       });
+      if (payment) await finalizePaidAccess(stripe, payment.id, paymentIntent);
+      break;
+    }
+
+    case 'setup_intent.succeeded': {
+      const setupIntent = event.data.object as Stripe.SetupIntent;
+      console.log('SetupIntent succeeded:', setupIntent.id);
+      const payment = await prisma.subscriptionPayment.findFirst({
+        where: { stripeSetupIntentId: setupIntent.id },
+        select: { id: true },
+      });
+      if (payment) await finalizeTrialAccess(stripe, payment.id, setupIntent);
       break;
     }
 

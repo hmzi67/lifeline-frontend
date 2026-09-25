@@ -7,6 +7,11 @@ import passport from 'passport';
 import { z } from 'zod';
 import { config } from '../config/index.js';
 import { sendEmailVerificationEmail, sendPasswordResetEmail } from '../services/emailService.js';
+import {
+  AppleIdentityConfigurationError,
+  AppleIdentityProviderError,
+  verifyAppleIdentityToken,
+} from '../services/appleIdentityService.js';
 
 
 // JWT Payload interfaces
@@ -884,17 +889,43 @@ export const googleMobileAuth = async (req: Request, res: Response) => {
       });
     }
 
+    // Web OAuth and the native app may use clients from different Google
+    // projects. Only accept the explicit server-side allowlist so a token for
+    // an unrelated Google application can never be used here.
+    const allowedAudiences = [
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_ANDROID_CLIENT_ID,
+    ]
+      .flatMap(value => value?.split(',') ?? [])
+      .map(value => value.trim())
+      .filter((value, index, values) => value && values.indexOf(value) === index);
+
+    if (allowedAudiences.length === 0) {
+      console.error('Google authentication is not configured');
+      return res.status(500).json({
+        success: false,
+        message: 'Google authentication is not configured',
+      });
+    }
+
     // Verify the ID token with Google
-    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+    const client = new OAuth2Client();
     
     let ticket;
     try {
       ticket = await client.verifyIdToken({
         idToken,
-        audience: [process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_ANDROID_CLIENT_ID].filter(Boolean) as string[],
+        audience: allowedAudiences,
       });
     } catch (error) {
-      console.error('Google ID token verification failed:', error);
+      const verificationError = error instanceof Error ? error.message : String(error);
+      if (verificationError.includes('Wrong recipient')) {
+        console.error(
+          'Google ID token audience mismatch. Ensure GOOGLE_ANDROID_CLIENT_ID matches the mobile app EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID.'
+        );
+      } else {
+        console.error('Google ID token verification failed:', verificationError);
+      }
       return res.status(401).json({
         success: false,
         message: 'Invalid or expired Google ID token',
@@ -1041,59 +1072,39 @@ export const appleMobileAuth = async (req: Request, res: Response) => {
       });
     }
 
-    // Decode the Apple identity token (JWT) to extract claims
-    // Apple identity tokens are JWTs signed by Apple's keys
-    let decoded: any;
+    let payload;
     try {
-      // Apple tokens are JWTs - decode to get the payload
-      // In production, you should verify the signature against Apple's public keys
-      // For now, we decode and verify essential claims
-      decoded = jwt.decode(identityToken, { complete: true });
-      if (!decoded || !decoded.payload) {
-        throw new Error('Failed to decode token');
-      }
+      payload = await verifyAppleIdentityToken(identityToken);
     } catch (error) {
-      console.error('Apple identity token decode failed:', error);
+      if (error instanceof AppleIdentityConfigurationError) {
+        console.error('Apple authentication is not configured:', error.message);
+        return res.status(503).json({
+          success: false,
+          message: 'Apple authentication is not configured',
+        });
+      }
+
+      if (error instanceof AppleIdentityProviderError) {
+        console.error('Apple identity provider unavailable:', error.message);
+        return res.status(503).json({
+          success: false,
+          message: 'Apple authentication is temporarily unavailable',
+        });
+      }
+
+      console.error('Apple identity token verification failed:', error);
       return res.status(401).json({
         success: false,
-        message: 'Invalid Apple identity token',
+        message: 'Invalid or expired Apple identity token',
       });
     }
 
-    const payload = decoded.payload;
     const { sub: appleUserId, email } = payload;
 
-    if (!appleUserId) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid token payload - Apple user ID not found',
-      });
-    }
-
-    // Verify issuer and audience
-    if (payload.iss !== 'https://appleid.apple.com') {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid token issuer',
-      });
-    }
-
-    // Check token expiration
-    if (payload.exp && payload.exp * 1000 < Date.now()) {
-      return res.status(401).json({
-        success: false,
-        message: 'Apple identity token has expired',
-      });
-    }
-
-    // Try to find user by subject first, then by email
-    let user = await prisma.user.findFirst({
-      where: {
-        OR: [
-          { subject: appleUserId },
-          ...(email ? [{ email }] : []),
-        ],
-      },
+    // The provider subject is authoritative. Only fall back to a verified
+    // Apple email when this identity has not been linked before.
+    let user = await prisma.user.findUnique({
+      where: { subject: appleUserId },
       select: {
         id: true,
         email: true,
@@ -1106,7 +1117,30 @@ export const appleMobileAuth = async (req: Request, res: Response) => {
       },
     });
 
+    if (!user && email) {
+      user = await prisma.user.findUnique({
+        where: { email },
+        select: {
+          id: true,
+          email: true,
+          username: true,
+          subject: true,
+          profileImage: true,
+          roleId: true,
+          isEmailVerified: true,
+          status: true,
+        },
+      });
+    }
+
     if (user) {
+      if (user.subject && user.subject !== appleUserId) {
+        return res.status(409).json({
+          success: false,
+          message: 'This email is already linked to a different Apple account',
+        });
+      }
+
       // User exists, update their Apple subject if not set
       if (!user.subject) {
         user = await prisma.user.update({
@@ -1130,7 +1164,11 @@ export const appleMobileAuth = async (req: Request, res: Response) => {
       const userEmail = email || `${appleUserId}@privaterelay.appleid.com`;
       
       // Generate a unique username
-      const baseUsername = (firstName || email?.split('@')[0] || 'user').toLowerCase().replace(/[^a-zA-Z0-9]/g, '');
+      const baseUsername = (
+        (typeof firstName === 'string' ? firstName : '') ||
+        email?.split('@')[0] ||
+        'appleuser'
+      ).toLowerCase().replace(/[^a-zA-Z0-9]/g, '') || 'appleuser';
       let username = baseUsername;
       let counter = 1;
 

@@ -11,6 +11,8 @@
     "postinstall": "",
     "build:prod": "tsc && node dist/server.js",
     "test": "jest",
+    "test:google-auth": "jest --config jest.google-auth.config.cjs --runInBand",
+    "test:apple-onboarding": "jest --config jest.apple-onboarding.config.cjs --runInBand",
     "test:watch": "jest --watch",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",

@@ -9,6 +9,7 @@ const pricingPlanSchema = z.object({
     description: z.string().optional(),
     price: z.number().positive('Price must be positive'),
     originalPrice: z.number().positive().optional().nullable(),
+    appleProductId: z.string().trim().min(1).max(255).optional().nullable(),
     durationMonths: z.number().int().min(1).max(120),
     trialDays: z.number().int().min(0).max(730).default(0),
     features: z.array(z.string()).default([]),

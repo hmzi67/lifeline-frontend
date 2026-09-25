@@ -32,7 +32,7 @@ model User {
   googleId        String?  @unique @map("google_id") @db.VarChar(255)
   profileImage    String?  @map("profile_image") @db.Text
   isEmailVerified Boolean  @default(false) @map("is_email_verified")
-  subject         String?  @db.VarChar(255)
+  subject         String?  @unique @db.VarChar(255)
   password        String?  @db.VarChar(255)
   otp             String?  @db.VarChar(20)
   status          String?  @db.VarChar(20)
@@ -44,6 +44,7 @@ model User {
   role                    Role?                    @relation(fields: [roleId], references: [id])
   authTokens              AuthToken[]
   refreshTokens           RefreshToken[]
+  onboardingProgress      OnboardingProgress?
   subscriptionPayments    SubscriptionPayment[]
   userLicenses            UserLicense[]
   questionnaires          Questionnaire[]
@@ -103,6 +104,23 @@ model RefreshToken {
   @@map("refresh_tokens")
 }
 
+// Server-owned onboarding resume state. Questionnaire answers remain in the
+// questionnaires table; this record stores navigation-only state.
+model OnboardingProgress {
+  id                String    @id @default(cuid())
+  userId            String    @unique @map("user_id")
+  lastRoute         String?   @map("last_route") @db.VarChar(255)
+  pricingPlanId     String?   @map("pricing_plan_id") @db.VarChar(191)
+  isComplete        Boolean   @default(false) @map("is_complete")
+  visitedGenderInfo Boolean   @default(false) @map("visited_gender_info")
+  completedAt       DateTime? @map("completed_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("onboarding_progress")
+}
+
 // ============================
 // Subscription & Payment Module
 // ============================
@@ -114,6 +132,7 @@ model PricingPlan {
   description     String?  @db.Text
   price           Decimal  @db.Decimal(10, 2)
   originalPrice   Decimal? @map("original_price") @db.Decimal(10, 2)
+  appleProductId  String?  @unique @map("apple_product_id") @db.VarChar(255)
   durationMonths  Int      @map("duration_months")
   trialDays       Int      @default(0) @map("trial_days")
   features        String[] @db.Text
@@ -147,6 +166,9 @@ model SubscriptionPayment {
   stripeSetupIntentId String?   @map("stripe_setup_intent_id") @db.VarChar(255)
   stripePaymentMethodId String? @map("stripe_payment_method_id") @db.VarChar(255)
   stripePriceId   String?       @map("stripe_price_id") @db.VarChar(255)
+  appStoreEntitlementKey String? @unique @map("app_store_entitlement_key") @db.VarChar(255)
+  storeProductId  String?       @map("store_product_id") @db.VarChar(255)
+  storeEnvironment String?      @map("store_environment") @db.VarChar(20)
   currentPeriodEnd DateTime?    @map("current_period_end")
   cancelAtPeriodEnd Boolean     @default(false) @map("cancel_at_period_end")
   createdAt       DateTime?     @map("created_at")
@@ -165,6 +187,7 @@ model UserLicense {
   id        String               @id @default(cuid())
   userId    String?              @map("user_id")
   paymentId String?              @map("payment_id")
+  appStoreEntitlementKey String? @unique @map("app_store_entitlement_key") @db.VarChar(255)
   createdAt DateTime?            @map("created_at")
   expiresAt DateTime?            @map("expires_at")
   user      User?                @relation(fields: [userId], references: [id])

@@ -1,0 +1,38 @@
+module.exports = {
+  clearMocks: true,
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+  },
+  setupFiles: ['<rootDir>/tests/google-auth.setup.cjs'],
+  testEnvironment: 'node',
+  testMatch: [
+    '<rootDir>/tests/appleMobileAuth.test.ts',
+    '<rootDir>/tests/onboardingProgress.test.ts',
+    '<rootDir>/tests/paymentWebhook.test.ts',
+    '<rootDir>/tests/inAppPurchaseController.test.ts',
+    '<rootDir>/tests/revenueCatService.test.ts',
+    '<rootDir>/tests/subscriptionAccess.test.ts',
+    '<rootDir>/tests/subscriptionPaymentSecurity.test.ts',
+    '<rootDir>/tests/catalogRouteSecurity.test.ts',
+    '<rootDir>/tests/blogCommentSecurity.test.ts',
+    '<rootDir>/tests/meditationControllerSecurity.test.ts',
+  ],
+  transform: {
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          allowSyntheticDefaultImports: true,
+          esModuleInterop: true,
+          module: 'CommonJS',
+          moduleResolution: 'Node',
+          rootDir: '../..',
+          skipLibCheck: true,
+          strict: true,
+          target: 'ES2022',
+          types: ['node', 'jest'],
+        },
+      },
+    ],
+  },
+};

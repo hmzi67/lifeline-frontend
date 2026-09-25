@@ -102,24 +102,7 @@ export const getMeditationById = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const meditation = await prisma.meditation.findUnique({
-      where: {
-        id
-      },
-      include: {
-        userDailyRoutines: {
-          select: {
-            id: true,
-            userId: true,
-            user: {
-              select: {
-                id: true,
-                email: true,
-                username: true
-              }
-            }
-          }
-        }
-      }
+      where: { id }
     });
     
     if (!meditation) {

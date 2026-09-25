@@ -1,6 +1,7 @@
 // controllers/blog.controller.ts
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { AuthenticatedRequest } from '../types/middlewareTypes.js';
 
 const prisma = new PrismaClient();
 
@@ -336,7 +337,12 @@ export const getBlogsByAuthor = async (req: Request, res: Response) => {
 export const createBlogComment = async (req: Request, res: Response) => {
   try {
     const { blogId } = req.params;
-    const { userId, content, parentId } = req.body;
+    const { content, parentId } = req.body;
+    const userId = (req as AuthenticatedRequest).user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ success: false, error: 'Authentication required' });
+    }
     
     const comment = await prisma.blogComment.create({
       data: {
@@ -411,6 +417,24 @@ export const updateBlogComment = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { content } = req.body;
+    const user = (req as AuthenticatedRequest).user;
+
+    if (!user) {
+      return res.status(401).json({ success: false, error: 'Authentication required' });
+    }
+
+    const existingComment = await prisma.blogComment.findUnique({
+      where: { id },
+      select: { userId: true }
+    });
+
+    if (!existingComment) {
+      return res.status(404).json({ success: false, error: 'Comment not found' });
+    }
+
+    if (existingComment.userId !== user.id && user.role !== 'admin') {
+      return res.status(403).json({ success: false, error: 'Insufficient permissions' });
+    }
     
     const comment = await prisma.blogComment.update({
       where: { id },
@@ -430,6 +454,24 @@ export const updateBlogComment = async (req: Request, res: Response) => {
 export const deleteBlogComment = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const user = (req as AuthenticatedRequest).user;
+
+    if (!user) {
+      return res.status(401).json({ success: false, error: 'Authentication required' });
+    }
+
+    const existingComment = await prisma.blogComment.findUnique({
+      where: { id },
+      select: { userId: true }
+    });
+
+    if (!existingComment) {
+      return res.status(404).json({ success: false, error: 'Comment not found' });
+    }
+
+    if (existingComment.userId !== user.id && user.role !== 'admin') {
+      return res.status(403).json({ success: false, error: 'Insufficient permissions' });
+    }
     
     // Delete all nested replies first
     const deleteReplies = async (commentId: string) => {

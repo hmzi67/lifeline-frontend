@@ -55,6 +55,6 @@ authRoute.get('/google/callback', googleAuthCallback);
 authRoute.post('/google/mobile', googleMobileAuth); // Mobile Google authentication
 authRoute.get('/apple', appleAuth);
 authRoute.post('/apple/callback', appleAuthCallback);
-authRoute.post('/apple/mobile', appleMobileAuth); // Mobile Apple authentication
+authRoute.post('/apple/mobile', authLimiter, appleMobileAuth); // Mobile Apple authentication
 
 export default authRoute;

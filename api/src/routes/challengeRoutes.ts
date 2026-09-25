@@ -8,6 +8,7 @@ import {
     updateChallenge,
 } from '../controllers/challengeController.js';
 import authenticate from '../middleware/authenticate.js';
+import authorize from '../middleware/authorize.js';
 
 
 const challengeRoute = express.Router();
@@ -25,17 +26,17 @@ challengeRoute.get('/:id', getChallengeById);
 // @route   POST /api/challenges
 // @desc    Create new challenge
 // @access  Private (add authentication middleware as needed)
-challengeRoute.post('/', createChallenge);
+challengeRoute.post('/', authenticate, authorize(['admin']), createChallenge);
 
 // @route   PUT /api/challenges/:id
 // @desc    Update challenge
 // @access  Private (add authentication middleware as needed)
-challengeRoute.put('/:id', updateChallenge);
+challengeRoute.put('/:id', authenticate, authorize(['admin']), updateChallenge);
 
 // @route   DELETE /api/challenges/:id
 // @desc    Delete challenge
 // @access  Private (add authentication middleware as needed)
-challengeRoute.delete('/:id', deleteChallenge);
+challengeRoute.delete('/:id', authenticate, authorize(['admin']), deleteChallenge);
 
 // @route   POST /api/challenges/:id/join
 // @desc    Join a challenge

@@ -37,12 +37,14 @@ import exercisePlanWeekRoutes from './routes/exercisePlanWeekRoutes.js';
 import exerciseRoutes from './routes/exerciseRoutes.js';
 import fastingRoutes from './routes/fastingLogRoutes.js';
 import foodScanRoutes from './routes/foodScanRoutes.js';
+import inAppPurchaseRoutes from './routes/inAppPurchaseRoutes.js';
 import mealTypeRoutes from './routes/mealTypeRoutes.js';
 import medicationReminderRoutes from './routes/medicationReminderRoutes.js';
 import medicationRoutes from './routes/medicationRoutes.js';
 import meditationRoutes from './routes/meditationRoutes.js';
 import meditationSessionRoutes from './routes/meditationSessionRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
+import onboardingProgressRoutes from './routes/onboardingProgressRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
 import referralRoutes from './routes/referralRoutes.js';
 import roleRoutes from './routes/roleRoutes.js';
@@ -50,6 +52,7 @@ import sleepRoutes from './routes/sleepLogRoutes.js';
 import sleepSoundRoutes from './routes/sleepSoundRoutes.js';
 import sleepStoryRoutes from './routes/sleepStoryRoutes.js';
 import subscriptionPaymentRoutes from './routes/subscriptionPaymentRoutes.js';
+import subscriptionRoutes from './routes/subscriptionRoutes.js';
 import pricingPlanRoutes from './routes/pricingPlanRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
 import userActiveDietPlanRoutes from './routes/userActiveDietPlanRoutes.js';
@@ -126,14 +129,23 @@ app.use('/api/user/', userRoute);
 // questionnaire route
 app.use('/api/questionnaire', questionnaireRoutes);
 
+// Backend-owned onboarding resume state
+app.use('/api/onboarding-progress', onboardingProgressRoutes);
+
 // subscription payment routes
 app.use('/api/subscription-payments', subscriptionPaymentRoutes);
+
+// Backend-owned subscription entitlement status
+app.use('/api/subscription', subscriptionRoutes);
 
 // pricing plan routes
 app.use('/api/pricing-plans', pricingPlanRoutes);
 
 // payment routes (Stripe)
 app.use('/api/payments', paymentRoutes);
+
+// App Store subscriptions (RevenueCat-verified StoreKit purchases)
+app.use('/api/iap', inAppPurchaseRoutes);
 
 // Food scanner route
 app.use('/api/food-scan', foodScanRoutes);

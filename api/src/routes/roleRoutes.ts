@@ -6,6 +6,8 @@ import {
     updateRole,
     deleteRole,
 } from '../controllers/roleController.js';
+import authenticate from '../middleware/authenticate.js';
+import authorize from '../middleware/authorize.js';
 
 const router = Router();
 
@@ -16,12 +18,12 @@ router.get('/', getAllRoles);
 router.get('/:id', getRoleById);
 
 // POST /api/roles - Create new role
-router.post('/', createRole);
+router.post('/', authenticate, authorize(['admin']), createRole);
 
 // PUT /api/roles/:id - Update role
-router.put('/:id', updateRole);
+router.put('/:id', authenticate, authorize(['admin']), updateRole);
 
 // DELETE /api/roles/:id - Delete role
-router.delete('/:id', deleteRole);
+router.delete('/:id', authenticate, authorize(['admin']), deleteRole);
 
 export default router;
