@@ -14,6 +14,7 @@ interface PricingPlan {
     originalPrice: number | null;
     durationMonths: number;
     trialDays: number;
+    appleProductId: string | null;
     features: string[];
     isActive: boolean;
     isHighlighted: boolean;
@@ -96,6 +97,7 @@ const PricingPlanComponent: React.FC = () => {
             originalPrice: data.originalPrice ? Number(data.originalPrice) : null,
             durationMonths: Number(data.durationMonths) || 1,
             trialDays: Number(data.trialDays) || 0,
+            appleProductId: String(data.appleProductId || '').trim() || null,
             features,
             isActive: data.isActive !== 'false',
             isHighlighted: data.isHighlighted === 'true',
@@ -171,6 +173,15 @@ const PricingPlanComponent: React.FC = () => {
             render: (value) => (
                 <span className="text-sm text-gray-600">
                     {value > 0 ? `${value} days` : 'No trial'}
+                </span>
+            ),
+        },
+        {
+            key: 'appleProductId',
+            label: 'App Store',
+            render: (value) => (
+                <span className={`text-xs ${value ? 'text-gray-700 font-mono' : 'text-gray-400'}`}>
+                    {value || 'Not on iOS'}
                 </span>
             ),
         },
@@ -271,6 +282,13 @@ const PricingPlanComponent: React.FC = () => {
             placeholder: '0',
         },
         {
+            name: 'appleProductId',
+            label: 'App Store Product ID (iOS)',
+            type: 'text',
+            required: false,
+            placeholder: 'com.irtaza.lifeline.vip.monthly',
+        },
+        {
             name: 'features',
             label: 'Features (one per line)',
             type: 'textarea',
@@ -366,6 +384,7 @@ const PricingPlanComponent: React.FC = () => {
                               originalPrice: editingPlan.originalPrice ?? '',
                               durationMonths: editingPlan.durationMonths,
                               trialDays: editingPlan.trialDays,
+                              appleProductId: editingPlan.appleProductId || '',
                               features: (editingPlan.features || []).join('\n'),
                               sortOrder: editingPlan.sortOrder,
                               isHighlighted: String(editingPlan.isHighlighted),

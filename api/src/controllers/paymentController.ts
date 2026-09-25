@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import Stripe from 'stripe';
 import { z } from 'zod';
+import { findActiveLicense } from '../services/subscriptionAccessService.js';
 
 const prisma = new PrismaClient();
 
@@ -424,6 +425,15 @@ export const createSubscription = async (req: Request, res: Response) => {
 
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Apple bills App Store subscribers; a Stripe checkout would charge twice.
+    const activeLicense = await findActiveLicense(userId);
+    if (activeLicense?.payment?.method === 'app_store') {
+      return res.status(409).json({
+        success: false,
+        message: 'Your VIP subscription is billed through the App Store. Manage it from your Apple ID subscription settings.',
+      });
     }
 
     const customerId = await getOrCreateStripeCustomer(stripe, userId);

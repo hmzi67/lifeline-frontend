@@ -10,7 +10,7 @@ module.exports = {
     '<rootDir>/tests/onboardingProgress.test.ts',
     '<rootDir>/tests/paymentWebhook.test.ts',
     '<rootDir>/tests/inAppPurchaseController.test.ts',
-    '<rootDir>/tests/revenueCatService.test.ts',
+    '<rootDir>/tests/appStoreService.test.ts',
     '<rootDir>/tests/subscriptionAccess.test.ts',
     '<rootDir>/tests/subscriptionPaymentSecurity.test.ts',
     '<rootDir>/tests/catalogRouteSecurity.test.ts',

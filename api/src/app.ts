@@ -144,7 +144,7 @@ app.use('/api/pricing-plans', pricingPlanRoutes);
 // payment routes (Stripe)
 app.use('/api/payments', paymentRoutes);
 
-// App Store subscriptions (RevenueCat-verified StoreKit purchases)
+// App Store subscriptions (StoreKit 2 transactions verified with Apple)
 app.use('/api/iap', inAppPurchaseRoutes);
 
 // Food scanner route

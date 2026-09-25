@@ -30,6 +30,7 @@ model User {
   email           String   @unique @db.VarChar(255)
   username        String?  @unique @db.VarChar(100)
   googleId        String?  @unique @map("google_id") @db.VarChar(255)
+  appStoreAccountToken String? @unique @map("app_store_account_token") @db.VarChar(36)
   profileImage    String?  @map("profile_image") @db.Text
   isEmailVerified Boolean  @default(false) @map("is_email_verified")
   subject         String?  @unique @db.VarChar(255)
@@ -167,6 +168,7 @@ model SubscriptionPayment {
   stripePaymentMethodId String? @map("stripe_payment_method_id") @db.VarChar(255)
   stripePriceId   String?       @map("stripe_price_id") @db.VarChar(255)
   appStoreEntitlementKey String? @unique @map("app_store_entitlement_key") @db.VarChar(255)
+  appStoreOriginalTransactionId String? @unique @map("app_store_original_transaction_id") @db.VarChar(64)
   storeProductId  String?       @map("store_product_id") @db.VarChar(255)
   storeEnvironment String?      @map("store_environment") @db.VarChar(20)
   currentPeriodEnd DateTime?    @map("current_period_end")
