@@ -14,6 +14,7 @@ import {
   requestLogger,
   timeout,
 } from './middleware/index.js';
+import { appleAuthCallback } from './controllers/authController.js';
 import authRoute from './routes/authRoute.js';
 import questionnaireRoutes from './routes/questionnaireRoutes.js';
 // @ts-ignore - The compiler couldn't find the bundled type declarations for this package on your server
@@ -68,6 +69,9 @@ import waterIntakeRoutes from './routes/waterIntakeRoutes.js';
 
 const app = express();
 
+// Apple form-POSTs Sign in with Apple results from https://appleid.apple.com,
+// which the CORS allowlist would reject, so this route is mounted before CORS.
+app.post('/api/auth/apple/callback', express.urlencoded({ extended: false, limit: '64kb' }), appleAuthCallback);
 app.use(cors);
 app.set('trust proxy', 1);
 // Security middlewares (should be first)

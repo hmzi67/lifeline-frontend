@@ -24,3 +24,17 @@ export const findActiveLicense = (userId: string, now = new Date()) =>
       },
     },
   });
+
+/** Active VIP access billed by Apple, even when a newer non-App Store license exists. */
+export const findActiveAppStoreLicense = (userId: string, now = new Date()) =>
+  prisma.userLicense.findFirst({
+    where: {
+      userId,
+      payment: { method: 'app_store' },
+      OR: [
+        { expiresAt: null },
+        { expiresAt: { gt: now } },
+      ],
+    },
+    select: { id: true },
+  });

@@ -47,6 +47,18 @@ const OAuthCallback: React.FC = () => {
                 case 'token_generation_failed':
                     errorMessage = 'Failed to generate authentication tokens.';
                     break;
+                case 'apple_cancelled':
+                    navigate('/auth/login');
+                    return;
+                case 'apple_failed':
+                    errorMessage = 'Apple authentication failed. Please try again.';
+                    break;
+                case 'apple_account_conflict':
+                    errorMessage = 'This email is already linked to a different Apple account.';
+                    break;
+                case 'apple_not_configured':
+                    errorMessage = 'Sign in with Apple is not available right now.';
+                    break;
             }
 
             // Redirect to login with error message

@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import Stripe from 'stripe';
 import { z } from 'zod';
-import { findActiveLicense } from '../services/subscriptionAccessService.js';
+import { findActiveAppStoreLicense } from '../services/subscriptionAccessService.js';
 
 const prisma = new PrismaClient();
 
@@ -428,8 +428,7 @@ export const createSubscription = async (req: Request, res: Response) => {
     }
 
     // Apple bills App Store subscribers; a Stripe checkout would charge twice.
-    const activeLicense = await findActiveLicense(userId);
-    if (activeLicense?.payment?.method === 'app_store') {
+    if (await findActiveAppStoreLicense(userId)) {
       return res.status(409).json({
         success: false,
         message: 'Your VIP subscription is billed through the App Store. Manage it from your Apple ID subscription settings.',
@@ -678,6 +677,16 @@ export const processDueTrialCharges = async (): Promise<void> => {
 
   for (const payment of dueTrials) {
     try {
+      // The user subscribed through the App Store during the trial; Apple bills
+      // them now, so charging the saved card would bill them twice.
+      if (payment.userId && await findActiveAppStoreLicense(payment.userId)) {
+        await prisma.subscriptionPayment.update({
+          where: { id: payment.id },
+          data: { status: 'CANCELLED' },
+        });
+        continue;
+      }
+
       const paymentIntent = await stripe.paymentIntents.create(
         {
           amount: Math.round(Number(payment.amount || 0) * 100),

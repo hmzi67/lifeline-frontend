@@ -2,7 +2,6 @@ import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import {
     appleAuth,
-    appleAuthCallback,
     appleMobileAuth,
     checkVerificationStatus,
     getCurrentUser,
@@ -54,7 +53,7 @@ authRoute.get('/google', googleAuth);
 authRoute.get('/google/callback', googleAuthCallback);
 authRoute.post('/google/mobile', googleMobileAuth); // Mobile Google authentication
 authRoute.get('/apple', appleAuth);
-authRoute.post('/apple/callback', appleAuthCallback);
+// POST /apple/callback is mounted in app.ts, before CORS.
 authRoute.post('/apple/mobile', authLimiter, appleMobileAuth); // Mobile Apple authentication
 
 export default authRoute;

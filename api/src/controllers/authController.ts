@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { randomBytes, timingSafeEqual } from 'node:crypto';
 import { Request, Response } from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
@@ -1045,25 +1046,242 @@ export const googleMobileAuth = async (req: Request, res: Response) => {
   }
 };
 
-// Apple OAuth - web redirect (not used for mobile)
-export const appleAuth = (req: Request, res: Response) => {
-  res.status(501).json({
-    success: false,
-    message: 'Apple OAuth web flow not implemented. Use /auth/apple/mobile for mobile apps.',
+// ---------------------------------------------------------------------------
+// Sign in with Apple
+// ---------------------------------------------------------------------------
+
+const appleUserSelect = {
+  id: true,
+  email: true,
+  username: true,
+  subject: true,
+  profileImage: true,
+  roleId: true,
+  isEmailVerified: true,
+  status: true,
+} as const;
+
+class AppleAccountConflictError extends Error {}
+
+/**
+ * Finds the Lifeline account for an Apple identity, linking it to an existing
+ * account with the same verified email or creating a new one. Shared by the
+ * native (iOS) and web flows so both resolve to the same user.
+ */
+const findOrCreateAppleUser = async (
+  appleUserId: string,
+  email: string | undefined,
+  firstName: unknown,
+) => {
+  // The provider subject is authoritative. Only fall back to a verified
+  // Apple email when this identity has not been linked before.
+  let user = await prisma.user.findUnique({
+    where: { subject: appleUserId },
+    select: appleUserSelect,
+  });
+
+  if (!user && email) {
+    user = await prisma.user.findUnique({
+      where: { email },
+      select: appleUserSelect,
+    });
+  }
+
+  if (user) {
+    if (user.subject && user.subject !== appleUserId) {
+      throw new AppleAccountConflictError('This email is already linked to a different Apple account');
+    }
+
+    if (!user.subject) {
+      user = await prisma.user.update({
+        where: { id: user.id },
+        data: { subject: appleUserId },
+        select: appleUserSelect,
+      });
+    }
+    return user;
+  }
+
+  // Apple may not provide email on subsequent sign-ins, so we use the appleUserId as fallback
+  const userEmail = email || `${appleUserId}@privaterelay.appleid.com`;
+
+  const baseUsername = (
+    (typeof firstName === 'string' ? firstName : '') ||
+    email?.split('@')[0] ||
+    'appleuser'
+  ).toLowerCase().replace(/[^a-zA-Z0-9]/g, '') || 'appleuser';
+  let username = baseUsername;
+  let counter = 1;
+
+  while (await prisma.user.findUnique({ where: { username } })) {
+    username = `${baseUsername}${counter}`;
+    counter++;
+  }
+
+  return prisma.user.create({
+    data: {
+      username,
+      email: userEmail,
+      subject: appleUserId,
+      isEmailVerified: true, // Apple emails are verified
+      status: 'active',
+    },
+    select: appleUserSelect,
   });
 };
 
-export const appleAuthCallback = (req: Request, res: Response) => {
-  res.status(501).json({
-    success: false,
-    message: 'Apple OAuth web callback not implemented. Use /auth/apple/mobile for mobile apps.',
+const issueAppleSession = async (user: { id: string; email: string; roleId: string | null }) => {
+  const tokens = generateTokens(user.id, user.email, user.roleId || undefined);
+
+  await prisma.refreshToken.create({
+    data: {
+      token: tokens.refreshToken,
+      userId: user.id,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+    },
   });
+
+  return tokens;
+};
+
+const APPLE_AUTHORIZE_URL = 'https://appleid.apple.com/auth/authorize';
+const APPLE_WEB_STATE_COOKIE = 'apple_oauth';
+const APPLE_WEB_STATE_COOKIE_OPTIONS = {
+  httpOnly: true,
+  // Apple returns with a cross-site form POST, so the cookie must be
+  // SameSite=None (which browsers only accept together with Secure).
+  secure: true,
+  sameSite: 'none' as const,
+  path: '/api/auth/apple',
+};
+
+const getAppleWebConfig = () => {
+  const clientId = process.env.APPLE_WEB_SERVICES_ID?.trim();
+  const redirectUri = process.env.APPLE_WEB_REDIRECT_URI?.trim();
+  return clientId && redirectUri ? { clientId, redirectUri } : null;
+};
+
+const readCookie = (req: Request, name: string): string | undefined => {
+  const header = req.headers.cookie;
+  if (!header) return undefined;
+  for (const part of header.split(';')) {
+    const separator = part.indexOf('=');
+    if (separator > 0 && part.slice(0, separator).trim() === name) {
+      return decodeURIComponent(part.slice(separator + 1).trim());
+    }
+  }
+  return undefined;
+};
+
+const safeEqual = (a: string, b: string) => {
+  const left = Buffer.from(a);
+  const right = Buffer.from(b);
+  return left.length === right.length && timingSafeEqual(left, right);
+};
+
+const redirectToAppleResult = (res: Response, params: Record<string, string>) => (
+  res.redirect(`${process.env.FRONTEND_URL}/auth/callback?${new URLSearchParams(params)}`)
+);
+
+// Apple OAuth - web: redirect the browser to Apple's consent screen
+export const appleAuth = (req: Request, res: Response) => {
+  const appleConfig = getAppleWebConfig();
+  if (!appleConfig) {
+    console.error('Sign in with Apple (web) is not configured: set APPLE_WEB_SERVICES_ID and APPLE_WEB_REDIRECT_URI');
+    return redirectToAppleResult(res, { error: 'apple_not_configured' });
+  }
+
+  const state = randomBytes(32).toString('base64url');
+  const nonce = randomBytes(32).toString('base64url');
+
+  res.cookie(APPLE_WEB_STATE_COOKIE, `${state}.${nonce}`, {
+    ...APPLE_WEB_STATE_COOKIE_OPTIONS,
+    maxAge: 10 * 60 * 1000,
+  });
+
+  const params = new URLSearchParams({
+    client_id: appleConfig.clientId,
+    redirect_uri: appleConfig.redirectUri,
+    // Apple returns the signed id_token directly, so no client secret or
+    // code exchange is needed to identify the user.
+    response_type: 'code id_token',
+    response_mode: 'form_post',
+    scope: 'name email',
+    state,
+    nonce,
+  });
+
+  return res.redirect(`${APPLE_AUTHORIZE_URL}?${params}`);
+};
+
+// Apple OAuth - web: Apple form-POSTs the result here (mounted before CORS in app.ts)
+export const appleAuthCallback = async (req: Request, res: Response) => {
+  const stored = readCookie(req, APPLE_WEB_STATE_COOKIE);
+  res.clearCookie(APPLE_WEB_STATE_COOKIE, APPLE_WEB_STATE_COOKIE_OPTIONS);
+
+  const { state, id_token: identityToken, user: userJson, error } = req.body ?? {};
+
+  if (error) {
+    return redirectToAppleResult(res, {
+      error: error === 'user_cancelled_authorize' ? 'apple_cancelled' : 'apple_failed',
+    });
+  }
+
+  const [expectedState, expectedNonce] = stored?.split('.') ?? [];
+  if (
+    !expectedState ||
+    !expectedNonce ||
+    typeof state !== 'string' ||
+    typeof identityToken !== 'string' ||
+    !safeEqual(state, expectedState)
+  ) {
+    return redirectToAppleResult(res, { error: 'apple_failed' });
+  }
+
+  try {
+    const payload = await verifyAppleIdentityToken(identityToken);
+    if (typeof payload.nonce !== 'string' || !safeEqual(payload.nonce, expectedNonce)) {
+      return redirectToAppleResult(res, { error: 'apple_failed' });
+    }
+
+    // Apple sends the user's name only on the first authorization, as JSON.
+    let firstName: unknown;
+    if (typeof userJson === 'string') {
+      try {
+        firstName = JSON.parse(userJson)?.name?.firstName;
+      } catch {
+        firstName = undefined;
+      }
+    }
+
+    const user = await findOrCreateAppleUser(payload.sub, payload.email, firstName);
+    const { accessToken, refreshToken } = await issueAppleSession(user);
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    return redirectToAppleResult(res, { token: accessToken });
+  } catch (error) {
+    if (error instanceof AppleAccountConflictError) {
+      return redirectToAppleResult(res, { error: 'apple_account_conflict' });
+    }
+    if (error instanceof AppleIdentityConfigurationError) {
+      console.error('Apple authentication is not configured:', error.message);
+      return redirectToAppleResult(res, { error: 'apple_not_configured' });
+    }
+    console.error('Apple web auth error:', error);
+    return redirectToAppleResult(res, { error: 'apple_failed' });
+  }
 };
 
 // Apple Mobile Authentication - For mobile apps using identity tokens
 export const appleMobileAuth = async (req: Request, res: Response) => {
   try {
-    const { identityToken, firstName, lastName } = req.body;
+    const { identityToken, firstName } = req.body;
 
     if (!identityToken) {
       return res.status(400).json({
@@ -1099,120 +1317,17 @@ export const appleMobileAuth = async (req: Request, res: Response) => {
       });
     }
 
-    const { sub: appleUserId, email } = payload;
-
-    // The provider subject is authoritative. Only fall back to a verified
-    // Apple email when this identity has not been linked before.
-    let user = await prisma.user.findUnique({
-      where: { subject: appleUserId },
-      select: {
-        id: true,
-        email: true,
-        username: true,
-        subject: true,
-        profileImage: true,
-        roleId: true,
-        isEmailVerified: true,
-        status: true,
-      },
-    });
-
-    if (!user && email) {
-      user = await prisma.user.findUnique({
-        where: { email },
-        select: {
-          id: true,
-          email: true,
-          username: true,
-          subject: true,
-          profileImage: true,
-          roleId: true,
-          isEmailVerified: true,
-          status: true,
-        },
-      });
+    let user;
+    try {
+      user = await findOrCreateAppleUser(payload.sub, payload.email, firstName);
+    } catch (error) {
+      if (error instanceof AppleAccountConflictError) {
+        return res.status(409).json({ success: false, message: error.message });
+      }
+      throw error;
     }
 
-    if (user) {
-      if (user.subject && user.subject !== appleUserId) {
-        return res.status(409).json({
-          success: false,
-          message: 'This email is already linked to a different Apple account',
-        });
-      }
-
-      // User exists, update their Apple subject if not set
-      if (!user.subject) {
-        user = await prisma.user.update({
-          where: { id: user.id },
-          data: { subject: appleUserId },
-          select: {
-            id: true,
-            email: true,
-            username: true,
-            subject: true,
-            profileImage: true,
-            roleId: true,
-            isEmailVerified: true,
-            status: true,
-          },
-        });
-      }
-    } else {
-      // Create new user
-      // Apple may not provide email on subsequent sign-ins, so we use the appleUserId as fallback
-      const userEmail = email || `${appleUserId}@privaterelay.appleid.com`;
-      
-      // Generate a unique username
-      const baseUsername = (
-        (typeof firstName === 'string' ? firstName : '') ||
-        email?.split('@')[0] ||
-        'appleuser'
-      ).toLowerCase().replace(/[^a-zA-Z0-9]/g, '') || 'appleuser';
-      let username = baseUsername;
-      let counter = 1;
-
-      while (await prisma.user.findUnique({ where: { username } })) {
-        username = `${baseUsername}${counter}`;
-        counter++;
-      }
-
-      user = await prisma.user.create({
-        data: {
-          username,
-          email: userEmail,
-          subject: appleUserId,
-          isEmailVerified: true, // Apple emails are verified
-          status: 'active',
-        },
-        select: {
-          id: true,
-          email: true,
-          username: true,
-          subject: true,
-          profileImage: true,
-          roleId: true,
-          isEmailVerified: true,
-          status: true,
-        },
-      });
-    }
-
-    // Generate JWT tokens for the app
-    const { accessToken, refreshToken } = generateTokens(
-      user.id,
-      user.email,
-      user.roleId || undefined
-    );
-
-    // Save refresh token to database
-    await prisma.refreshToken.create({
-      data: {
-        token: refreshToken,
-        userId: user.id,
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-      },
-    });
+    const { accessToken, refreshToken } = await issueAppleSession(user);
 
     // Return tokens and user info to mobile app
     return res.status(200).json({
