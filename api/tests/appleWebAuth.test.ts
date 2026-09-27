@@ -65,10 +65,15 @@ const createIdentityToken = (nonce: string, audience = SERVICES_ID) => jwt.sign(
   },
 );
 
+const appleStartRequest = (host = 'www.makelifeline.com', query: Record<string, string> = {}) => ({
+  get: (name: string) => (name.toLowerCase() === 'host' ? host : undefined),
+  query,
+}) as any;
+
 /** Starts the flow and returns the state/nonce Apple would echo back. */
 const startFlow = () => {
   const response = createResponse();
-  appleAuth({} as any, response);
+  appleAuth(appleStartRequest(), response);
   const authorizeUrl = new URL(response.location);
   return {
     cookie: `apple_oauth=${encodeURIComponent(response.cookies.apple_oauth.value)}`,
@@ -121,9 +126,26 @@ describe('Apple web authentication', () => {
     jest.spyOn(console, 'error').mockImplementation(() => undefined);
     const response = createResponse();
 
-    appleAuth({} as any, response);
+    appleAuth(appleStartRequest(), response);
 
     expect(response.location).toBe(`${FRONTEND_URL}/auth/callback?error=apple_not_configured`);
+  });
+
+  it('moves the flow to the return URL host so the state cookie comes back', () => {
+    const response = createResponse();
+
+    appleAuth(appleStartRequest('makelifeline.com'), response);
+
+    expect(response.location).toBe('https://www.makelifeline.com/api/auth/apple?canonical=1');
+    expect(response.cookies.apple_oauth).toBeUndefined();
+  });
+
+  it('does not redirect twice when a proxy hides the original host', () => {
+    const response = createResponse();
+
+    appleAuth(appleStartRequest('api:3000', { canonical: '1' }), response);
+
+    expect(response.location.startsWith('https://appleid.apple.com/auth/authorize?')).toBe(true);
   });
 
   it('signs the user in after verifying state, nonce and the Apple signature', async () => {

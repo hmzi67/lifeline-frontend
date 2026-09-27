@@ -25,7 +25,7 @@ const OAuthCallback: React.FC = () => {
                 navigate(redirectPath);
             } catch (err) {
                 console.error(err);
-                navigate('/auth/login?error=failed_to_fetch_user');
+                navigate(`/login?error=${encodeURIComponent('Signed in, but your account could not be loaded. Please try again.')}`);
             }
         };
 
@@ -48,7 +48,7 @@ const OAuthCallback: React.FC = () => {
                     errorMessage = 'Failed to generate authentication tokens.';
                     break;
                 case 'apple_cancelled':
-                    navigate('/auth/login');
+                    navigate('/login');
                     return;
                 case 'apple_failed':
                     errorMessage = 'Apple authentication failed. Please try again.';
@@ -62,7 +62,7 @@ const OAuthCallback: React.FC = () => {
             }
 
             // Redirect to login with error message
-            navigate(`/auth/login?error=${encodeURIComponent(errorMessage)}`);
+            navigate(`/login?error=${encodeURIComponent(errorMessage)}`);
             return;
         }
 
@@ -74,7 +74,7 @@ const OAuthCallback: React.FC = () => {
         }
 
         // If no token or error, redirect to login
-        navigate('/auth/login');
+        navigate('/login');
     }, [searchParams, navigate]);
 
     return (

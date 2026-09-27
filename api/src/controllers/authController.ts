@@ -830,16 +830,16 @@ export const googleAuthCallback = (req: Request, res: Response) => {
   passport.authenticate(
     'google',
     {
-      failureRedirect: `${process.env.FRONTEND_URL}/login?error=oauth_failed`,
+      failureRedirect: `${process.env.FRONTEND_URL}/auth/callback?error=oauth_failed`,
     },
     async (err: any, user: any) => {
       if (err) {
         console.error('Google OAuth callback error:', err);
-        return res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_error`);
+        return res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=oauth_error`);
       }
 
       if (!user) {
-        return res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_denied`);
+        return res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=oauth_denied`);
       }
 
       try {
@@ -872,7 +872,7 @@ export const googleAuthCallback = (req: Request, res: Response) => {
         res.redirect(redirectUrl);
       } catch (error) {
         console.error('Error generating tokens for Google OAuth:', error);
-        res.redirect(`${process.env.FRONTEND_URL}/auth/login?error=token_generation_failed`);
+        res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=token_generation_failed`);
       }
     }
   )(req, res);
@@ -1189,6 +1189,15 @@ export const appleAuth = (req: Request, res: Response) => {
   if (!appleConfig) {
     console.error('Sign in with Apple (web) is not configured: set APPLE_WEB_SERVICES_ID and APPLE_WEB_REDIRECT_URI');
     return redirectToAppleResult(res, { error: 'apple_not_configured' });
+  }
+
+  // Apple posts back to the registered return URL's host, and the state
+  // cookie is only sent there. Start on that host (e.g. www) so the flow also
+  // works when the site was opened without "www". The flag stops a loop if a
+  // proxy hides the original Host header.
+  const callbackOrigin = new URL(appleConfig.redirectUri).origin;
+  if (req.get('host') !== new URL(callbackOrigin).host && req.query.canonical !== '1') {
+    return res.redirect(`${callbackOrigin}/api/auth/apple?canonical=1`);
   }
 
   const state = randomBytes(32).toString('base64url');
